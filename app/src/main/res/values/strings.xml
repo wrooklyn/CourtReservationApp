@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CourtReservationApp</string>
+    <string name="profile_picture">profile_picture</string>
 </resources>
