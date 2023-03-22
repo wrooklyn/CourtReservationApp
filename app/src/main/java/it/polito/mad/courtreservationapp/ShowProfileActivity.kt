@@ -49,10 +49,10 @@ class ShowProfileActivity : AppCompatActivity() {
         heightElement.text = if(height != null) "$height cm" else "-"
         val weightElement = findViewById<TextView>(R.id.weight)
         weightElement.text = if(weight != null) "$weight cm" else "-"
-        //setting appbar
+
 
     }
-
+    //setting appbar
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu, menu)

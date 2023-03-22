@@ -17,255 +17,265 @@
 
             android:gravity="center|center_horizontal|center_vertical">
         <ImageView
-                android:layout_width="225dp"
-                android:layout_height="180dp" tools:srcCompat="@drawable/gesu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" tools:srcCompat="@drawable/gesu"
                 tools:src="@drawable/gesu"
                 android:id="@+id/imageView3"
                 android:contentDescription="@string/profile_picture"
-                />
+        />
     </LinearLayout>
-    <ScrollView
+    <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="0dp" android:layout_weight="66.7">
-        <LinearLayout
-                android:orientation="vertical"
+        <TextView
+                android:text="Account Info"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="66.7" android:gravity="center_horizontal">
+                android:layout_height="wrap_content" android:id="@+id/textView2"
+                android:textAppearance="@style/CategoryTitle" android:layout_marginStart="16dp"/>
+        <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_marginTop="16dp">
             <LinearLayout
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:gravity="center" android:weightSum="100"
-                    android:layout_marginBottom="10sp">
-                <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="60sp" app:srcCompat="@drawable/icons8_android_96"
-                        android:layout_weight="25" android:padding="5sp"/>
+                    android:layout_height="wrap_content"
+                    android:layout_weight="66.7" android:gravity="center_horizontal">
                 <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content" android:layout_weight="75">
-                    <TextView
-                            android:text="Username"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="18sp"
-                            android:textAppearance="@style/ListItemTitle"/>
-                    <TextView
-                            android:text="username_placeholder"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" android:id="@+id/username"
-                            android:textAppearance="@style/ListItemSubtitle"
-                    />
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:gravity="center" android:weightSum="100"
+                        android:layout_marginBottom="10sp">
+                    <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="50sp" app:srcCompat="@drawable/icons8_user_100"
+                            android:layout_weight="25" android:padding="5sp"/>
+                    <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content" android:layout_weight="75">
+                        <TextView
+                                android:text="Username"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textAppearance="@style/ListItemTitle"/>
+                        <TextView
+                                android:text="username_placeholder"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" android:id="@+id/username"
+                                android:textAppearance="@style/ListItemSubtitle"
+                        />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:gravity="center" android:weightSum="100"
-                    android:layout_marginBottom="10sp">
-                <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="60sp" app:srcCompat="@drawable/icons8_identification_documents_96"
-                        android:layout_weight="25" android:padding="5sp"/>
                 <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content" android:layout_weight="75">
-                    <TextView
-                            android:text="Full Name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="18sp"
-                            android:textAppearance="@style/ListItemTitle"/>
-                    <TextView
-                            android:text="fullname_placeholder"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" android:id="@+id/fullname"
-                            android:textAppearance="@style/ListItemSubtitle"
-                    />
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:gravity="center" android:weightSum="100"
+                        android:layout_marginBottom="10sp">
+                    <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="50sp" app:srcCompat="@drawable/icons8_identification_documents_100"
+                            android:layout_weight="25" android:padding="5sp"/>
+                    <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content" android:layout_weight="75">
+                        <TextView
+                                android:text="Full Name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textAppearance="@style/ListItemTitle"/>
+                        <TextView
+                                android:text="fullname_placeholder"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" android:id="@+id/fullname"
+                                android:textAppearance="@style/ListItemSubtitle"
+                        />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:gravity="center" android:weightSum="100"
-                    android:layout_marginBottom="10sp">
-                <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="60sp" app:srcCompat="@drawable/icons8_secured_letter_96"
-                        android:layout_weight="25" android:padding="5sp"/>
                 <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content" android:layout_weight="75">
-                    <TextView
-                            android:text="Email"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="18sp"
-                            android:textAppearance="@style/ListItemTitle"/>
-                    <TextView
-                            android:text="email_placeholder"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" android:id="@+id/email"
-                            android:textAppearance="@style/ListItemSubtitle"
-                    />
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:gravity="center" android:weightSum="100"
+                        android:layout_marginBottom="10sp">
+                    <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="45sp" app:srcCompat="@drawable/icons8_mail_100"
+                            android:layout_weight="25" android:padding="5sp"/>
+                    <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content" android:layout_weight="75">
+                        <TextView
+                                android:text="Email"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textAppearance="@style/ListItemTitle"/>
+                        <TextView
+                                android:text="email_placeholder"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" android:id="@+id/email"
+                                android:textAppearance="@style/ListItemSubtitle"
+                        />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:gravity="center" android:weightSum="100"
-                    android:layout_marginBottom="10sp">
-                <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="60sp" app:srcCompat="@drawable/icons8_location_96"
-                        android:layout_weight="25" android:padding="5sp"/>
                 <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content" android:layout_weight="75">
-                    <TextView
-                            android:text="Address"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="18sp"
-                            android:textAppearance="@style/ListItemTitle"/>
-                    <TextView
-                            android:text="address_placeholder"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" android:id="@+id/address"
-                            android:textAppearance="@style/ListItemSubtitle"
-                    />
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:gravity="center" android:weightSum="100"
+                        android:layout_marginBottom="10sp">
+                    <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="50sp" app:srcCompat="@drawable/icons8_location_100__1_"
+                            android:layout_weight="25" android:padding="5sp"/>
+                    <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content" android:layout_weight="75">
+                        <TextView
+                                android:text="Address"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textAppearance="@style/ListItemTitle"/>
+                        <TextView
+                                android:text="address_placeholder"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" android:id="@+id/address"
+                                android:textAppearance="@style/ListItemSubtitle"
+                        />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
-            <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@android:color/darker_gray" android:layout_marginBottom="10sp"/>
-            <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:gravity="center" android:weightSum="100"
-                    android:layout_marginBottom="10sp">
-                <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="60sp" app:srcCompat="@drawable/icons8_gender_equality_96"
-                        android:layout_weight="25" android:padding="5sp"/>
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@android:color/darker_gray" android:layout_marginBottom="10sp"/>
                 <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content" android:layout_weight="75">
-                    <TextView
-                            android:text="Gender"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="18sp"
-                            android:textAppearance="@style/ListItemTitle"/>
-                    <TextView
-                            android:text="gender_placeholder"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" android:id="@+id/gender"
-                            android:textAppearance="@style/ListItemSubtitle"
-                    />
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:gravity="center" android:weightSum="100"
+                        android:layout_marginBottom="10sp">
+                    <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="50sp" app:srcCompat="@drawable/icons8_gender_equality_100"
+                            android:layout_weight="25" android:padding="5sp"/>
+                    <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content" android:layout_weight="75">
+                        <TextView
+                                android:text="Gender"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textAppearance="@style/ListItemTitle"/>
+                        <TextView
+                                android:text="gender_placeholder"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" android:id="@+id/gender"
+                                android:textAppearance="@style/ListItemSubtitle"
+                        />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
 
-            <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" android:gravity="center" android:weightSum="100"
-                    android:layout_marginBottom="10sp" android:padding="5sp">
-                <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="60sp" app:srcCompat="@drawable/icons8_sewing_tape_measure_96"
-                        android:layout_weight="25" android:padding="5sp"/>
                 <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content" android:layout_weight="75">
-                    <TextView
-                            android:text="Height"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="18sp"
-                            android:textAppearance="@style/ListItemTitle"/>
-                    <TextView
-                            android:text="height_placeholder"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" android:id="@+id/height"
-                            android:textAppearance="@style/ListItemSubtitle"
-                    />
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:gravity="center" android:weightSum="100"
+                        android:layout_marginBottom="10sp" android:padding="5sp">
+                    <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="50sp" app:srcCompat="@drawable/icons8_length_100"
+                            android:layout_weight="25" android:padding="5sp"/>
+                    <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content" android:layout_weight="75">
+                        <TextView
+                                android:text="Height"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textAppearance="@style/ListItemTitle"/>
+                        <TextView
+                                android:text="height_placeholder"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" android:id="@+id/height"
+                                android:textAppearance="@style/ListItemSubtitle"
+                        />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" android:gravity="center" android:weightSum="100"
-                    android:layout_marginBottom="10sp" android:padding="5sp">
-                <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="60sp" app:srcCompat="@drawable/icons8_scale_96"
-                        android:layout_weight="25" android:padding="5sp"/>
                 <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content" android:layout_weight="75">
-                    <TextView
-                            android:text="Weight"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="18sp"
-                            android:textAppearance="@style/ListItemTitle"/>
-                    <TextView
-                            android:text="weight_placeholder"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" android:id="@+id/weight"
-                            android:textAppearance="@style/ListItemSubtitle"
-                    />
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:gravity="center" android:weightSum="100"
+                        android:layout_marginBottom="10sp" android:padding="5sp">
+                    <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="50sp" app:srcCompat="@drawable/icons8_scale_100"
+                            android:layout_weight="25" android:padding="5sp"/>
+                    <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content" android:layout_weight="75">
+                        <TextView
+                                android:text="Weight"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textAppearance="@style/ListItemTitle"/>
+                        <TextView
+                                android:text="weight_placeholder"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" android:id="@+id/weight"
+                                android:textAppearance="@style/ListItemSubtitle"
+                        />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
 
-            <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@android:color/darker_gray" android:id="@+id/view"
-                    android:layout_marginBottom="10sp"/>
-            <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:gravity="center" android:weightSum="100"
-                    android:layout_marginBottom="10sp">
-                <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="60sp" app:srcCompat="@drawable/icons8_inscription_96"
-                        android:layout_weight="25" android:padding="5sp"/>
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@android:color/darker_gray" android:id="@+id/view"
+                        android:layout_marginBottom="10sp"/>
                 <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content" android:layout_weight="75">
-                    <TextView
-                            android:text="Phone Number"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="18sp"
-                            android:textAppearance="@style/ListItemTitle"/>
-                    <TextView
-                            android:text="phone_placeholder"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" android:id="@+id/phone"
-                            android:textAppearance="@style/ListItemSubtitle"
-                    />
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:gravity="center" android:weightSum="100"
+                        android:layout_marginBottom="10sp">
+                    <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="45sp" app:srcCompat="@drawable/icons8_phone_100"
+                            android:layout_weight="25" android:padding="5sp"/>
+                    <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content" android:layout_weight="75">
+                        <TextView
+                                android:text="Phone Number"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textAppearance="@style/ListItemTitle"/>
+                        <TextView
+                                android:text="phone_placeholder"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" android:id="@+id/phone"
+                                android:textAppearance="@style/ListItemSubtitle"
+                        />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
-            <TextView
-                    android:text="Version 1.0.1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/textView"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" android:layout_marginTop="30sp"
-                    android:layout_marginBottom="30sp" android:textAlignment="center"/>
+                <TextView
+                        android:text="Version 1.0.1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" android:layout_marginTop="30sp"
+                        android:layout_marginBottom="30sp" android:textAlignment="center"/>
 
-        </LinearLayout>
-    </ScrollView>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
 </LinearLayout>

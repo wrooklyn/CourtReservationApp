@@ -2,8 +2,8 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/edit"
-        android:icon="@drawable/gesu"
-        android:title="Edit"
-        app:showAsAction="always" />
+          android:icon="@drawable/colored_icon"
+          android:title="Edit"
+          app:showAsAction="always"/>
 
 </menu>
