@@ -7,7 +7,7 @@
         android:layout_height="match_parent"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:orientation="horizontal" android:id="@+id/profilePicture">
+        android:orientation="horizontal" android:id="@+id/mainLL">
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="0dp"
