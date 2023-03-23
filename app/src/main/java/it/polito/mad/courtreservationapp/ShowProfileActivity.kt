@@ -1,4 +1,5 @@
 package it.polito.mad.courtreservationapp
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -71,8 +72,11 @@ class ShowProfileActivity : AppCompatActivity() {
     }
 
     fun editUsername() {
+        //todo start a new intent
         username = "Cristo"
         val usernameElement = findViewById<TextView>(R.id.username)
         usernameElement.text = username
+        val myIntent = Intent(this, EditProfileActivity::class.java)
+        startActivity(myIntent)
     }
 }
