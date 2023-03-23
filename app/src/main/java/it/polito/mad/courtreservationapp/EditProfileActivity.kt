@@ -7,14 +7,16 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.PopupMenu
+import android.widget.Spinner
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import java.util.*
 
 
@@ -81,8 +83,14 @@ class EditProfileActivity : AppCompatActivity() {
         emailElement.text = email
         val addressElement = findViewById<TextView>(R.id.editAddress)
         addressElement.text = address
-        val genderElement = findViewById<TextView>(R.id.editGender)
-        genderElement.text = gender?.toString()
+
+//        val genderElement = findViewById<TextView>(R.id.editGender)
+//        genderElement.text = gender?.toString()
+        val genderElement: Spinner = findViewById(R.id.editGender)
+        val genderItems: List<Gender> = listOf(Gender.FEMALE, Gender.MALE, Gender.OTHER)
+        val adapter: ArrayAdapter<Gender> =
+            ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, genderItems)
+        genderElement.adapter = adapter
         val phoneElement = findViewById<TextView>(R.id.editPhone)
         phoneElement.text = phone
         val heightElement = findViewById<TextView>(R.id.editHeight)
