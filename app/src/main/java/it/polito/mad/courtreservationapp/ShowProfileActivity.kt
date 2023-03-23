@@ -21,7 +21,7 @@ class ShowProfileActivity : AppCompatActivity() {
     private var birthDate = Calendar.getInstance()
 
     private var gender : Gender? = null
-    private var height : Double? = null
+    private var height : Int? = null
     private var weight : Double? = null
     private var phone : String?  = null
     private var bio : String? = null
@@ -49,7 +49,7 @@ class ShowProfileActivity : AppCompatActivity() {
         val heightElement = findViewById<TextView>(R.id.height)
         heightElement.text = if(height != null) "$height cm" else "-"
         val weightElement = findViewById<TextView>(R.id.weight)
-        weightElement.text = if(weight != null) "$weight cm" else "-"
+        weightElement.text = if(weight != null) "$weight kg" else "-"
 
 
     }
@@ -73,10 +73,20 @@ class ShowProfileActivity : AppCompatActivity() {
 
     fun editUsername() {
         //todo start a new intent
-        username = "Cristo"
-        val usernameElement = findViewById<TextView>(R.id.username)
-        usernameElement.text = username
         val myIntent = Intent(this, EditProfileActivity::class.java)
+        passData(myIntent)
         startActivity(myIntent)
+    }
+
+    fun passData(intent: Intent){
+        intent.putExtra("username", username)
+        intent.putExtra("firstname", firstName)
+        intent.putExtra("lastname", lastName)
+        intent.putExtra("email", email)
+        intent.putExtra("address", address)
+        intent.putExtra("gender", gender)
+        intent.putExtra("height", height)
+        intent.putExtra("weight", weight)
+        intent.putExtra("phone", phone)
     }
 }

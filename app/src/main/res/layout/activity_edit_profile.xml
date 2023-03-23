@@ -64,7 +64,7 @@
                                 android:id="@+id/editUsername"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="Type your username . . ."
+                                android:hint="Username"
                                 android:inputType="text"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -87,12 +87,26 @@
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"
                                 android:textAppearance="@style/ListItemTitle" android:layout_marginStart="4sp"/>
-                        <EditText
-                                android:id="@+id/editFullName"
-                                android:layout_width="match_parent"
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <EditText
+                                android:id="@+id/editFirstName"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:hint="Type your full name . . ."
+                                android:layout_weight="50"
+                                android:hint="First name"
                                 android:inputType="text"/>
+                            <EditText
+                                android:id="@+id/editLastName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="50"
+                                android:hint="Last name"
+                                android:inputType="text"/>
+                        </LinearLayout>
+
                     </LinearLayout>
                 </LinearLayout>
                 <LinearLayout
@@ -114,12 +128,13 @@
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"
                                 android:textAppearance="@style/ListItemTitle" android:layout_marginStart="4sp"/>
+
                         <EditText
-                                android:id="@+id/editEmail"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:hint="Type your email . . ."
-                                android:inputType="text"/>
+                            android:id="@+id/editEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Email"
+                            android:inputType="text|textEmailAddress" />
                     </LinearLayout>
                 </LinearLayout>
                 <LinearLayout
@@ -145,7 +160,7 @@
                                 android:id="@+id/editAddress"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="Type your address . . ."
+                                android:hint="Address"
                                 android:inputType="text"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -176,7 +191,7 @@
                                 android:id="@+id/editGender"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="Type your gender . . ."
+                                android:hint="Gender"
                                 android:inputType="text"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -195,17 +210,18 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content" android:layout_weight="85">
                         <TextView
-                                android:text="Height"
+                                android:text="Height (cm)"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"
                                 android:textAppearance="@style/ListItemTitle" android:layout_marginStart="4sp"/>
+
                         <EditText
-                                android:id="@+id/editHeight"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:hint="Type your height in cm . . ."
-                                android:inputType="text"/>
+                            android:id="@+id/editHeight"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Height"
+                            android:inputType="text|numberDecimal" />
                     </LinearLayout>
                 </LinearLayout>
                 <LinearLayout
@@ -222,17 +238,18 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content" android:layout_weight="85">
                         <TextView
-                                android:text="Weight"
+                                android:text="Weight (Kg)"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"
                                 android:textAppearance="@style/ListItemTitle" android:layout_marginStart="4sp"/>
+
                         <EditText
-                                android:id="@+id/editWeight"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:hint="Type your weight in Kg . . ."
-                                android:inputType="text"/>
+                            android:id="@+id/editWeight"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Weight"
+                            android:inputType="text|numberDecimal" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -260,12 +277,13 @@
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"
                                 android:textAppearance="@style/ListItemTitle" android:layout_marginStart="4sp"/>
+
                         <EditText
-                                android:id="@+id/editPhone"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:hint="Type your phone number . . ."
-                                android:inputType="text"/>
+                            android:id="@+id/editPhone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Phoone number"
+                            android:inputType="text|phone" />
                     </LinearLayout>
                 </LinearLayout>
                 <TextView
