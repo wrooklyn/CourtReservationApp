@@ -56,7 +56,7 @@ class ShowProfileActivity : AppCompatActivity() {
     //setting appbar
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.menu, menu)
+        inflater.inflate(R.menu.menu_edit, menu)
         return true
     }
 

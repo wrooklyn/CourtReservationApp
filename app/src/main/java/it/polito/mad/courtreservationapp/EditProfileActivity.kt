@@ -1,10 +1,22 @@
 package it.polito.mad.courtreservationapp
 
-import androidx.appcompat.app.AppCompatActivity
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
+import android.view.View
 import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.TextView
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import java.util.*
+
 
 class EditProfileActivity : AppCompatActivity() {
     var photo : String? = null
@@ -21,6 +33,36 @@ class EditProfileActivity : AppCompatActivity() {
     private var weight : Double = 0.0
     private var phone : String?  = null
     private var bio : String? = null
+
+    var galleryActivityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult(),
+        ActivityResultCallback {
+            @Override
+            fun onActivityResult(result: ActivityResult){
+                if (result.resultCode === Activity.RESULT_OK) {
+                    val tag = "PHOTO"
+                    val image_uri: Uri? = result.data!!.data
+                    Log.i(tag, image_uri.toString())
+                    val pfpElement=findViewById<ImageView>(R.id.imageView3)
+                    pfpElement.setImageURI(image_uri)
+//
+                }
+            }
+        }
+//        ActivityResultCallback<ActivityResult>() {
+//            @Override
+//            fun onActivityResult(result: ActivityResult) {
+//                if (result.resultCode === Activity.RESULT_OK) {
+//                    val tag = "PHOTO"
+//                    val image_uri: Uri? = result.data!!.data
+//                    Log.i(tag, image_uri.toString())
+//                    val pfpElement=findViewById<ImageView>(R.id.imageView3)
+//                    pfpElement.setImageURI(image_uri)
+//
+//                }
+//            }
+//        }
+    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
@@ -39,7 +81,6 @@ class EditProfileActivity : AppCompatActivity() {
         emailElement.text = email
         val addressElement = findViewById<TextView>(R.id.editAddress)
         addressElement.text = address
-
         val genderElement = findViewById<TextView>(R.id.editGender)
         genderElement.text = gender?.toString()
         val phoneElement = findViewById<TextView>(R.id.editPhone)
@@ -48,6 +89,10 @@ class EditProfileActivity : AppCompatActivity() {
         heightElement.text = if(height != 0) height.toString() else null
         val weightElement = findViewById<TextView>(R.id.editWeight)
         weightElement.text = if(weight != 0.0) weight.toString() else null
+
+        pfpElement.setOnClickListener(){
+            selectPhoto(it)
+        }
     }
 
     private fun getData(){
@@ -67,7 +112,40 @@ class EditProfileActivity : AppCompatActivity() {
         weight = intent.getDoubleExtra("weight", 0.0)
         intent.putExtra("weight", weight)
         intent.putExtra("phone", phone)
+    }
 
+    private fun selectPhoto(view: View){
+        val tag: String = "PHOTO"
+        Log.i(tag, "Starting")
+        val popupMenu = PopupMenu(this, view)
+        popupMenu.menuInflater.inflate(R.menu.menu_photo, popupMenu.menu)
 
+        popupMenu.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.gallery -> {
+                    // Code to run when menu item 1 is clicked
+                    Log.i(tag, "Selected gallery")
+                    fromGallery()
+                    true
+                }
+                R.id.camera -> {
+                    // Code to run when menu item 2 is clicked
+                    Log.i(tag, "Selected camera")
+                    fromCamera()
+                    true
+                }
+                else -> false
+            }
+        }
+
+        popupMenu.show()
+    }
+
+    private fun fromCamera(){
+
+    }
+    private fun fromGallery(){
+        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        galleryActivityResultLauncher.launch(galleryIntent)
     }
 }
