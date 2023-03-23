@@ -7,11 +7,11 @@
         android:layout_height="match_parent"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:orientation="vertical" android:id="@+id/mainLL">
+        android:orientation="horizontal" android:id="@+id/mainLL">
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="33.3"
             android:padding="16dp"
 
@@ -27,7 +27,7 @@
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="0dp" android:layout_weight="66.7">
+            android:layout_height="wrap_content" android:layout_weight="66.7">
         <TextView
                 android:text="Account Info"
                 android:layout_width="match_parent"
@@ -61,6 +61,7 @@
                                 android:textSize="18sp"
                                 android:textAppearance="@style/ListItemTitle" android:layout_marginStart="4sp"/>
                         <EditText
+                                android:imeOptions="flagNoExtractUi"
                                 android:id="@+id/editUsername"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -91,14 +92,17 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
+
                             <EditText
+                                android:imeOptions="flagNoExtractUi"
                                 android:id="@+id/editFirstName"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="50"
                                 android:hint="First name"
-                                android:inputType="text"/>
+                                android:inputType="text" />
                             <EditText
+                                android:imeOptions="flagNoExtractUi"
                                 android:id="@+id/editLastName"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -130,6 +134,7 @@
                                 android:textAppearance="@style/ListItemTitle" android:layout_marginStart="4sp"/>
 
                         <EditText
+                            android:imeOptions="flagNoExtractUi"
                             android:id="@+id/editEmail"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -157,6 +162,7 @@
                                 android:textSize="18sp"
                                 android:textAppearance="@style/ListItemTitle" android:layout_marginStart="4sp"/>
                         <EditText
+                                android:imeOptions="flagNoExtractUi"
                                 android:id="@+id/editAddress"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -188,11 +194,11 @@
                                 android:textSize="18sp"
                                 android:textAppearance="@style/ListItemTitle" android:layout_marginStart="4sp"/>
                         <Spinner
-                                android:id="@+id/editGender"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@android:drawable/btn_dropdown"
-                                android:spinnerMode="dropdown"/>
+                            android:id="@+id/editGender"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:drawable/btn_dropdown"
+                            android:spinnerMode="dropdown"/>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -210,17 +216,18 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content" android:layout_weight="85">
                         <TextView
-                                android:text="Height (cm)"
+                                android:text="Heigth (cm)"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"
                                 android:textAppearance="@style/ListItemTitle" android:layout_marginStart="4sp"/>
 
                         <EditText
+                            android:imeOptions="flagNoExtractUi"
                             android:id="@+id/editHeight"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Height"
+                            android:hint="Heigth"
                             android:inputType="text|numberDecimal" />
                     </LinearLayout>
                 </LinearLayout>
@@ -238,17 +245,18 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content" android:layout_weight="85">
                         <TextView
-                                android:text="Weight (Kg)"
+                                android:text="Weigth (Kg)"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"
                                 android:textAppearance="@style/ListItemTitle" android:layout_marginStart="4sp"/>
 
                         <EditText
+                            android:imeOptions="flagNoExtractUi"
                             android:id="@+id/editWeight"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Weight"
+                            android:hint="Weigth (Kg)"
                             android:inputType="text|numberDecimal" />
                     </LinearLayout>
                 </LinearLayout>
@@ -279,10 +287,11 @@
                                 android:textAppearance="@style/ListItemTitle" android:layout_marginStart="4sp"/>
 
                         <EditText
+                            android:imeOptions="flagNoExtractUi"
                             android:id="@+id/editPhone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Phoone number"
+                            android:hint="Phone number"
                             android:inputType="text|phone" />
                     </LinearLayout>
                 </LinearLayout>

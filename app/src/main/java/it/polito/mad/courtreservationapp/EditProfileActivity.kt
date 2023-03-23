@@ -1,9 +1,11 @@
 package it.polito.mad.courtreservationapp
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import java.util.*
 
 class EditProfileActivity : AppCompatActivity() {
@@ -40,8 +42,13 @@ class EditProfileActivity : AppCompatActivity() {
         val addressElement = findViewById<TextView>(R.id.editAddress)
         addressElement.text = address
 
-        val genderElement = findViewById<TextView>(R.id.editGender)
-        genderElement.text = gender?.toString()
+//        val genderElement = findViewById<TextView>(R.id.editGender)
+//        genderElement.text = gender?.toString()
+        val genderElement: Spinner = findViewById(R.id.editGender)
+        val genderItems: List<Gender> = listOf(Gender.FEMALE, Gender.MALE, Gender.OTHER)
+        val adapter: ArrayAdapter<Gender> =
+            ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, genderItems)
+        genderElement.adapter = adapter
         val phoneElement = findViewById<TextView>(R.id.editPhone)
         phoneElement.text = phone
         val heightElement = findViewById<TextView>(R.id.editHeight)
