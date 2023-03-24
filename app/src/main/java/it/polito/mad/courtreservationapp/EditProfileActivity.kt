@@ -22,6 +22,7 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
@@ -67,24 +68,29 @@ class EditProfileActivity : AppCompatActivity() {
 
     private fun loadDataFromSharedPreferences() {
         val sharedPref = getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
-        username = sharedPref.getString("username", "")
-        firstName = sharedPref.getString("firstname", "")
-        lastName = sharedPref.getString("lastname", "")
-        email = sharedPref.getString("email", "")
-        address = sharedPref.getString("address", "")
-        val genderString = sharedPref.getString("gender", "")
-        gender = when (genderString) {
-            "FEMALE" -> Gender.FEMALE
-            "MALE" -> Gender.MALE
-            "OTHER" -> Gender.OTHER
-            else -> null
-        }
-        height = sharedPref.getInt("height", 0)
-        weight = sharedPref.getFloat("weight", 0f).toDouble()
-        phone = sharedPref.getString("phone", "")
-        val photoString = sharedPref.getString("photo", null)
-        if (photoString != null) {
-            photo = Uri.parse(photoString)
+        val profileString = sharedPref.getString("profile", null)
+
+        if (profileString != null) {
+            val profileData = JSONObject(profileString)
+            username = profileData.optString("username", "")
+            firstName = profileData.optString("firstname", "")
+            lastName = profileData.optString("lastname", "")
+            email = profileData.optString("email", "")
+            address = profileData.optString("address", "")
+            phone = profileData.optString("phone", "")
+            val genderString = profileData.optString("gender", "")
+            gender = when (genderString) {
+                "FEMALE" -> Gender.FEMALE
+                "MALE" -> Gender.MALE
+                "OTHER" -> Gender.OTHER
+                else -> null
+            }
+            height = profileData.optInt("height",0)
+            weight = profileData.optDouble("weight",0.0)
+            val photoString = profileData.optString("photo", "")
+            if (!photoString.isNullOrEmpty()) {
+                photo = Uri.parse(photoString)
+            }
         }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -162,24 +168,29 @@ class EditProfileActivity : AppCompatActivity() {
     private fun saveChanges() {
         val sharedPref = getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
-        editor.putString("username", findViewById<TextView>(R.id.editUsername).text.toString())
-        editor.putString("firstname", findViewById<TextView>(R.id.editFirstName).text.toString())
-        editor.putString("lastname", findViewById<TextView>(R.id.editLastName).text.toString())
-        editor.putString("email", findViewById<TextView>(R.id.editEmail).text.toString())
-        editor.putString("address", findViewById<TextView>(R.id.editAddress).text.toString())
-        editor.putString("gender", (findViewById<Spinner>(R.id.editGender).selectedItem as Gender).toString())
-        editor.putInt("height", findViewById<TextView>(R.id.editHeight).text.toString().toIntOrNull() ?: 0)
-        editor.putFloat("weight", findViewById<TextView>(R.id.editWeight).text.toString().toFloatOrNull() ?: 0f)
-        editor.putString("phone", findViewById<TextView>(R.id.editPhone).text.toString())
+
+        val profileData = JSONObject()
+        profileData.put("username", findViewById<TextView>(R.id.editUsername).text.toString())
+        profileData.put("firstname", findViewById<TextView>(R.id.editFirstName).text.toString())
+        profileData.put("lastname", findViewById<TextView>(R.id.editLastName).text.toString())
+        profileData.put("email", findViewById<TextView>(R.id.editEmail).text.toString())
+        profileData.put("address", findViewById<TextView>(R.id.editAddress).text.toString())
+        profileData.put("gender", (findViewById<Spinner>(R.id.editGender).selectedItem as Gender).toString())
+        profileData.put("height", findViewById<TextView>(R.id.editHeight).text.toString().toIntOrNull() ?: 0)
+        profileData.put("weight", findViewById<TextView>(R.id.editWeight).text.toString().toDoubleOrNull() ?: 0.0)
+        profileData.put("phone", findViewById<TextView>(R.id.editPhone).text.toString())
         if (photo != null) {
-            editor.putString("photo", photo.toString())
+            profileData.put("photo", photo.toString())
         } else {
-            editor.putString("photo", "")
+            profileData.put("photo", "")
         }
+
+        editor.putString("profile", profileData.toString())
         editor.apply()
 
         val myIntent = Intent(this, ShowProfileActivity::class.java)
         startActivity(myIntent)
+
     }
 
     private fun selectPhoto(view: View){

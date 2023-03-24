@@ -10,11 +10,12 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
+import org.json.JSONObject
 import java.util.*
 
 enum class Gender{MALE, FEMALE, OTHER}
 class ShowProfileActivity : AppCompatActivity() {
-    var photo : Uri? = null
+    private var photo : Uri? = null
     private var username = "Gesú"
     private var firstName = "Gabri"
     private var lastName = "Fine"
@@ -25,24 +26,29 @@ class ShowProfileActivity : AppCompatActivity() {
 
     private var gender : Gender? = null
     private var height : Int? = null
-    private var weight : Float? = null
+    private var weight : Double? = null
     private var phone : String?  = null
     private var bio : String? = null
 
     private fun storeInitialValues() {
+
         val sharedPref = getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
         val editor = sharedPref.edit()
-        editor.putString("username", username)
-        editor.putString("firstname", firstName)
-        editor.putString("lastname", lastName)
-        editor.putString("email", email)
-        editor.putString("address", address)
-        editor.putString("gender", gender?.toString())
-        editor.putInt("height", height ?: 0)
-        editor.putFloat("weight", weight?.toFloat() ?: 0f)
-        editor.putString("phone", phone)
-        //editor.putString("photo", photo?.toString()) // Store the photo URI as a string
 
+        val profileData = JSONObject().apply {
+            put("username", username)
+            put("firstname", firstName)
+            put("lastname", lastName)
+            put("email", email)
+            put("address", address)
+            put("gender", gender?.toString())
+            put("height", height ?: 0)
+            put("weight", weight?.toFloat() ?: 0f)
+            put("phone", phone)
+            put("photo",photo?.toString())
+        }
+
+        editor.putString("profile", profileData.toString())
         editor.apply()
     }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,18 +65,7 @@ class ShowProfileActivity : AppCompatActivity() {
             editor.putBoolean("isFirstLaunch", false)
             editor.apply()
         }
-        /*val photoString = sharedPref.getString("photo", null)
-        if (photoString != null) {
-            photo = Uri.parse(photoString)
-        }
 
-        val pfpElement = findViewById<ImageView>(R.id.imageView3)
-
-        if (photo == null || photo.toString().isEmpty()) {
-            pfpElement.setImageResource(R.drawable.gesu)
-        } else {
-            pfpElement.setImageURI(photo)
-        }*/
     }
     //setting appbar
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -105,15 +100,26 @@ class ShowProfileActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun updateUI() {
         val sharedPref = getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
-        username = sharedPref.getString("username", "").toString()
-        firstName = sharedPref.getString("firstname", "").toString()
-        lastName = sharedPref.getString("lastname", "").toString()
-        email = sharedPref.getString("email", "").toString()
-        address = sharedPref.getString("address", "").toString()
-        val newGender = sharedPref.getString("gender", "")
-        height = sharedPref.getInt("height", 0)
-        weight = sharedPref.getFloat("weight", 0f)
-        phone = sharedPref.getString("phone", "")
+        val profileString = sharedPref.getString("profile", null)
+        var newGender = gender.toString()
+
+        if (profileString != null) {
+            val profileData = JSONObject(profileString)
+            username = profileData.optString("username", "")
+            firstName = profileData.optString("firstname", "")
+            lastName = profileData.optString("lastname", "")
+            email = profileData.optString("email", "")
+            address = profileData.optString("address", "")
+            phone = profileData.optString("phone", "")
+            newGender = profileData.optString("gender", newGender)
+            height = profileData.optInt("height",0)
+            weight = profileData.optDouble("weight",0.0)
+            val photoString = profileData.optString("photo", "")
+            if (!photoString.isNullOrEmpty()) {
+                photo = Uri.parse(photoString)
+            }
+
+        }
         findViewById<TextView>(R.id.username).text = username
         findViewById<TextView>(R.id.fullname).text = "$firstName $lastName"
         findViewById<TextView>(R.id.email).text = email
@@ -122,10 +128,6 @@ class ShowProfileActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.height).text = height.toString()
         findViewById<TextView>(R.id.weight).text = weight.toString()
         findViewById<TextView>(R.id.phone).text = phone
-        val photoString = sharedPref.getString("photo", "")
-        if (!photoString.isNullOrEmpty()) {
-            photo = Uri.parse(photoString)
-        }
 
         val pfpElement = findViewById<ImageView>(R.id.imageView3)
         if (photo == null || photo.toString().isEmpty()) {
@@ -133,5 +135,6 @@ class ShowProfileActivity : AppCompatActivity() {
         } else {
             pfpElement.setImageURI(photo)
         }
+
     }
 }
