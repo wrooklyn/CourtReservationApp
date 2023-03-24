@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">CourtReservationApp</string>
     <string name="profile_picture">profile_picture</string>
+    <string name="save">Save</string>
 </resources>
