@@ -16,13 +16,28 @@
             android:padding="16dp"
 
             android:gravity="center|center_horizontal|center_vertical">
-        <ImageView
+        <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" tools:srcCompat="@drawable/gesu"
-                tools:src="@drawable/gesu"
-                android:id="@+id/imageView3"
-                android:contentDescription="@string/profile_picture"
-        />
+                android:layout_height="match_parent" android:layout_gravity="center|center_horizontal">
+
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" tools:srcCompat="@drawable/gesu"
+                    tools:src="@drawable/gesu"
+                    android:id="@+id/imageView3"
+                    android:contentDescription="@string/profile_picture"
+            />
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="235dp"
+                    android:layout_height="wrap_content" android:background="#AD2C2C2C" android:gravity="center"
+                    android:layout_marginStart="55sp" android:id="@+id/camera_button">
+                <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="47dp"
+                        app:srcCompat="@drawable/colored_camera_icon" android:id="@+id/imageView2"/>
+            </LinearLayout>
+        </FrameLayout>
     </LinearLayout>
     <LinearLayout
             android:orientation="vertical"

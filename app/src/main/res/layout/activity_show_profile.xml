@@ -16,13 +16,15 @@
             android:padding="16dp"
 
             android:gravity="center|center_horizontal|center_vertical">
-        <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" tools:srcCompat="@drawable/gesu"
-                tools:src="@drawable/gesu"
-                android:id="@+id/imageView3"
-                android:contentDescription="@string/profile_picture"
-        />
+
+            <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" tools:srcCompat="@drawable/gesu"
+                    tools:src="@drawable/gesu"
+                    android:id="@+id/imageView3"
+                    android:contentDescription="@string/profile_picture"
+            />
+
     </LinearLayout>
     <LinearLayout
             android:orientation="vertical"

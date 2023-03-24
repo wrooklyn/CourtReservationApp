@@ -1,27 +1,26 @@
 package it.polito.mad.courtreservationapp
 
+import android.Manifest
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.ImageView
-import android.widget.PopupMenu
-import android.widget.Spinner
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.activity.result.ActivityResult
+import android.widget.*
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import java.util.*
 
 
 class EditProfileActivity : AppCompatActivity() {
-    var photo : String? = null
+    var photo : Uri? = null
     private var username : String? = null
     private var firstName : String? = null
     private var lastName : String? = null
@@ -36,43 +35,50 @@ class EditProfileActivity : AppCompatActivity() {
     private var phone : String?  = null
     private var bio : String? = null
 
-    var galleryActivityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult(),
-        ActivityResultCallback {
-            @Override
-            fun onActivityResult(result: ActivityResult){
-                if (result.resultCode === Activity.RESULT_OK) {
-                    val tag = "PHOTO"
-                    val image_uri: Uri? = result.data!!.data
-                    Log.i(tag, image_uri.toString())
-                    val pfpElement=findViewById<ImageView>(R.id.imageView3)
-                    pfpElement.setImageURI(image_uri)
-//
-                }
-            }
+    private val galleryActivityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
+    ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val tag = "PHOTO"
+            photo = result.data?.data
+            val pfpElement = findViewById<ImageView>(R.id.imageView3)
+            pfpElement.setImageURI(photo)
         }
-//        ActivityResultCallback<ActivityResult>() {
-//            @Override
-//            fun onActivityResult(result: ActivityResult) {
-//                if (result.resultCode === Activity.RESULT_OK) {
-//                    val tag = "PHOTO"
-//                    val image_uri: Uri? = result.data!!.data
-//                    Log.i(tag, image_uri.toString())
-//                    val pfpElement=findViewById<ImageView>(R.id.imageView3)
-//                    pfpElement.setImageURI(image_uri)
-//
-//                }
-//            }
-//        }
-    )
+    }
+
+    //TODO capture the image using camera and display it
+    private val cameraActivityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ){
+        result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val pfpElement = findViewById<ImageView>(R.id.imageView3)
+            pfpElement.setImageURI(photo)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
 
+        //TODO ask for permission of camera upon first launch of application
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(
+                   Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+                == PackageManager.PERMISSION_DENIED
+            ) {
+                val permission = arrayOf<String>(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                requestPermissions(permission, 112)
+            }
+        }
         getData()
 
         val pfpElement=findViewById<ImageView>(R.id.imageView3)
-        pfpElement.setImageResource(R.drawable.gesu)
+        if(photo == null)
+            pfpElement.setImageResource(R.drawable.gesu)
+        else
+            pfpElement.setImageURI(photo)
         val firstNameElement = findViewById<TextView>(R.id.editFirstName)
         firstNameElement.text =  firstName
         val lastNameElement = findViewById<TextView>(R.id.editLastName)
@@ -98,7 +104,8 @@ class EditProfileActivity : AppCompatActivity() {
         val weightElement = findViewById<TextView>(R.id.editWeight)
         weightElement.text = if(weight != 0.0) weight.toString() else null
 
-        pfpElement.setOnClickListener(){
+        val cameraButton = findViewById<LinearLayout>(R.id.camera_button)
+        cameraButton.setOnClickListener(){
             selectPhoto(it)
         }
     }
@@ -139,7 +146,22 @@ class EditProfileActivity : AppCompatActivity() {
                 R.id.camera -> {
                     // Code to run when menu item 2 is clicked
                     Log.i(tag, "Selected camera")
-                    fromCamera()
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                            )
+                            == PackageManager.PERMISSION_DENIED
+                        ) {
+                            val permission =
+                                arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            requestPermissions(permission, 112)
+                        } else {
+                            fromCamera()
+                        }
+                    } else {
+                        fromCamera()
+                    }
+
                     true
                 }
                 else -> false
@@ -150,7 +172,13 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     private fun fromCamera(){
-
+        val values = ContentValues()
+        values.put(MediaStore.Images.Media.TITLE, "New Picture")
+        values.put(MediaStore.Images.Media.DESCRIPTION, "From the Camera")
+        photo = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photo)
+        cameraActivityResultLauncher.launch(cameraIntent)
     }
     private fun fromGallery(){
         val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)

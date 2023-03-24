@@ -1,5 +1,6 @@
 package it.polito.mad.courtreservationapp
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -11,7 +12,7 @@ import java.util.*
 
 enum class Gender{MALE, FEMALE, OTHER}
 class ShowProfileActivity : AppCompatActivity() {
-    var photo : String? = null
+    var photo : Uri? = null
     private var username = "Gesú"
     private var firstName = "Gabri"
     private var lastName = "Fine"
@@ -32,7 +33,10 @@ class ShowProfileActivity : AppCompatActivity() {
 
         //setting the values of the fields
         val pfpElement=findViewById<ImageView>(R.id.imageView3)
-        pfpElement.setImageResource(R.drawable.gesu)
+        if(photo == null)
+            pfpElement.setImageResource(R.drawable.gesu)
+        else
+            pfpElement.setImageURI(photo)
         val fullNameElement = findViewById<TextView>(R.id.fullname)
         fullNameElement.text =  "$firstName $lastName"
         val usernameElement = findViewById<TextView>(R.id.username)
