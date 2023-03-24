@@ -3,6 +3,7 @@ package it.polito.mad.courtreservationapp
 import android.Manifest
 import android.app.Activity
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -10,6 +11,9 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.activity.result.ActivityResultCallback
@@ -57,6 +61,28 @@ class EditProfileActivity : AppCompatActivity() {
         }
     }
 
+    private fun loadDataFromSharedPreferences() {
+        val sharedPref = getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
+        username = sharedPref.getString("username", "")
+        firstName = sharedPref.getString("firstname", "")
+        lastName = sharedPref.getString("lastname", "")
+        email = sharedPref.getString("email", "")
+        address = sharedPref.getString("address", "")
+        val genderString = sharedPref.getString("gender", "")
+        gender = when (genderString) {
+            "FEMALE" -> Gender.FEMALE
+            "MALE" -> Gender.MALE
+            "OTHER" -> Gender.OTHER
+            else -> null
+        }
+        height = sharedPref.getInt("height", 0)
+        weight = sharedPref.getFloat("weight", 0f).toDouble()
+        phone = sharedPref.getString("phone", "")
+        val photoString = sharedPref.getString("photo", null)
+        if (photoString != null) {
+            photo = Uri.parse(photoString)
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
@@ -72,13 +98,16 @@ class EditProfileActivity : AppCompatActivity() {
                 requestPermissions(permission, 112)
             }
         }
-        getData()
 
-        val pfpElement=findViewById<ImageView>(R.id.imageView3)
-        if(photo == null)
+        loadDataFromSharedPreferences()
+        val pfpElement = findViewById<ImageView>(R.id.imageView3)
+
+        if (photo == null || photo.toString().isEmpty()) {
             pfpElement.setImageResource(R.drawable.gesu)
-        else
+        } else {
             pfpElement.setImageURI(photo)
+        }
+
         val firstNameElement = findViewById<TextView>(R.id.editFirstName)
         firstNameElement.text =  firstName
         val lastNameElement = findViewById<TextView>(R.id.editLastName)
@@ -90,8 +119,6 @@ class EditProfileActivity : AppCompatActivity() {
         val addressElement = findViewById<TextView>(R.id.editAddress)
         addressElement.text = address
 
-//        val genderElement = findViewById<TextView>(R.id.editGender)
-//        genderElement.text = gender?.toString()
         val genderElement: Spinner = findViewById(R.id.editGender)
         val genderItems: List<Gender> = listOf(Gender.FEMALE, Gender.MALE, Gender.OTHER)
         val adapter: ArrayAdapter<Gender> =
@@ -110,23 +137,45 @@ class EditProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun getData(){
-        username = intent.getStringExtra("username")
-        firstName = intent.getStringExtra("firstname")
-        lastName = intent.getStringExtra("lastname")
-        email = intent.getStringExtra("email")
-        address = intent.getStringExtra("address")
-        val genderString = intent.getStringExtra("gender")
-        gender = when(genderString) {
-            "FEMALE" -> Gender.FEMALE
-            "MALE" -> Gender.MALE
-            "OTHER" -> Gender.OTHER
-            else -> null
+    //setting appbar
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.menu_save, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            R.id.save_changes -> {
+                saveChanges()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
-        height = intent.getIntExtra("height", 0)
-        weight = intent.getDoubleExtra("weight", 0.0)
-        intent.putExtra("weight", weight)
-        intent.putExtra("phone", phone)
+    }
+
+    private fun saveChanges() {
+        val sharedPref = getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putString("username", findViewById<TextView>(R.id.editUsername).text.toString())
+        editor.putString("firstname", findViewById<TextView>(R.id.editFirstName).text.toString())
+        editor.putString("lastname", findViewById<TextView>(R.id.editLastName).text.toString())
+        editor.putString("email", findViewById<TextView>(R.id.editEmail).text.toString())
+        editor.putString("address", findViewById<TextView>(R.id.editAddress).text.toString())
+        editor.putString("gender", (findViewById<Spinner>(R.id.editGender).selectedItem as Gender).toString())
+        editor.putInt("height", findViewById<TextView>(R.id.editHeight).text.toString().toIntOrNull() ?: 0)
+        editor.putFloat("weight", findViewById<TextView>(R.id.editWeight).text.toString().toFloatOrNull() ?: 0f)
+        editor.putString("phone", findViewById<TextView>(R.id.editPhone).text.toString())
+        if (photo != null) {
+            editor.putString("photo", photo.toString())
+        } else {
+            editor.putString("photo", "")
+        }
+        editor.apply()
+
+        val myIntent = Intent(this, ShowProfileActivity::class.java)
+        startActivity(myIntent)
     }
 
     private fun selectPhoto(view: View){
@@ -146,7 +195,10 @@ class EditProfileActivity : AppCompatActivity() {
                 R.id.camera -> {
                     // Code to run when menu item 2 is clicked
                     Log.i(tag, "Selected camera")
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    Log.i(Manifest.permission.CAMERA, "Manifest Camera")
+                    Log.i(Manifest.permission.WRITE_EXTERNAL_STORAGE, "external storage")
+                    Log.i(PackageManager.PERMISSION_DENIED.toString(), "permission denied")
+                    if (Build.VERSION.SDK_INT <= 30) {
                         if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE
                             )
@@ -173,6 +225,8 @@ class EditProfileActivity : AppCompatActivity() {
 
     private fun fromCamera(){
         val values = ContentValues()
+        Log.i("PHOTO", "Opening camera")
+
         values.put(MediaStore.Images.Media.TITLE, "New Picture")
         values.put(MediaStore.Images.Media.DESCRIPTION, "From the Camera")
         photo = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
