@@ -6,9 +6,11 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
@@ -20,6 +22,8 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import java.io.File
+import java.io.FileOutputStream
 import java.util.*
 
 
@@ -40,7 +44,7 @@ class EditProfileActivity : AppCompatActivity() {
     private var bio : String? = null
 
     private val galleryActivityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
-    ActivityResultContracts.StartActivityForResult()
+        ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val tag = "PHOTO"
@@ -54,7 +58,7 @@ class EditProfileActivity : AppCompatActivity() {
     private val cameraActivityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ){
-        result ->
+            result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val pfpElement = findViewById<ImageView>(R.id.imageView3)
             pfpElement.setImageURI(photo)
@@ -100,6 +104,7 @@ class EditProfileActivity : AppCompatActivity() {
         }
 
         loadDataFromSharedPreferences()
+
         val pfpElement = findViewById<ImageView>(R.id.imageView3)
 
         if (photo == null || photo.toString().isEmpty()) {
@@ -107,7 +112,6 @@ class EditProfileActivity : AppCompatActivity() {
         } else {
             pfpElement.setImageURI(photo)
         }
-
         val firstNameElement = findViewById<TextView>(R.id.editFirstName)
         firstNameElement.text =  firstName
         val lastNameElement = findViewById<TextView>(R.id.editLastName)
