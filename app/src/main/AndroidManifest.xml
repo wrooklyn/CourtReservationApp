@@ -16,7 +16,6 @@
         <activity
                 android:name=".EditProfileActivity"
                 android:exported="false"
-                android:configChanges="orientation|screenSize|keyboardHidden"
             >
             <meta-data
                     android:name="android.app.lib_name"

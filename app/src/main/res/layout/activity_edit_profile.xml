@@ -7,51 +7,51 @@
         android:layout_height="match_parent"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:orientation="vertical" android:id="@+id/mainLL">
+        android:orientation="vertical" android:id="@+id/mainLL" android:layout_marginTop="5dp">
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="33.3"
-            android:padding="16dp">
+            android:layout_weight="1"
+    >
 
         <ImageView
                 android:id="@+id/imageView3"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
                 android:contentDescription="@string/profile_picture"
-                android:scaleType="centerCrop"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                tools:src="@drawable/gesu"
+                tools:srcCompat="@drawable/gesu"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@drawable/gesu" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintDimensionRatio="W,1:1"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+        />
 
-        <LinearLayout
-                android:id="@+id/camera_button"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:background="#AD2C2C2C"
-                android:gravity="top|center_horizontal"
-                android:orientation="horizontal"
-                android:padding="8dp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView3"
-                app:layout_constraintEnd_toEndOf="@+id/imageView3"
+        <View
+                android:layout_width="0dp"
+                android:layout_height="0dp" android:id="@+id/view2"
                 app:layout_constraintStart_toStartOf="@+id/imageView3"
-                app:layout_constraintTop_toTopOf="@+id/imageView3" app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintVertical_bias="0.0">
-
-            <ImageView
-                    android:id="@+id/imageView2"
-                    android:layout_width="48dp"
-                    android:layout_height="47dp"
-                    app:srcCompat="@drawable/colored_camera_icon"/>
-        </LinearLayout>
+                app:layout_constraintTop_toTopOf="@+id/imageView3" app:layout_constraintEnd_toEndOf="@+id/imageView3"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView3" android:background="#58222222"/>
+        <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="0dp" app:srcCompat="@drawable/colored_camera_icon"
+                android:id="@+id/camera_button"
+                app:layout_constraintEnd_toEndOf="@+id/imageView3"
+                app:layout_constraintTop_toTopOf="@+id/imageView3"
+                app:layout_constraintStart_toStartOf="@+id/imageView3"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView3" app:layout_constraintVertical_bias="0.0"
+                android:rotation="0" app:layout_constraintHorizontal_bias="0.0"
+                android:background="#771E1E1E"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="0dp" android:layout_weight="66.7">
+            android:layout_height="0dp" android:layout_weight="2">
         <TextView
                 android:text="Account Info"
                 android:layout_width="match_parent"
@@ -158,7 +158,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="Email"
-                                android:inputType="text|textEmailAddress" />
+                                android:inputType="text|textEmailAddress"/>
                     </LinearLayout>
                 </LinearLayout>
                 <LinearLayout
@@ -245,7 +245,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="Height"
-                                android:inputType="text|numberDecimal" />
+                                android:inputType="text|numberDecimal"/>
                     </LinearLayout>
                 </LinearLayout>
                 <LinearLayout
@@ -273,7 +273,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="Weight"
-                                android:inputType="text|numberDecimal" />
+                                android:inputType="text|numberDecimal"/>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -307,7 +307,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="Phoone number"
-                                android:inputType="text|phone" />
+                                android:inputType="text|phone"/>
                     </LinearLayout>
                 </LinearLayout>
                 <TextView

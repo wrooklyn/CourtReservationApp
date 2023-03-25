@@ -130,10 +130,11 @@ class EditProfileActivity : AppCompatActivity() {
         addressElement.text = address
 
         val genderElement: Spinner = findViewById(R.id.editGender)
-        val genderItems: List<Gender> = listOf(Gender.FEMALE, Gender.MALE, Gender.OTHER)
+        val genderItems: List<Gender> = listOf(Gender.MALE, Gender.FEMALE, Gender.OTHER)
         val adapter: ArrayAdapter<Gender> =
             ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, genderItems)
         genderElement.adapter = adapter
+        genderElement.setSelection(gender?.ordinal ?: 0)
         val phoneElement = findViewById<TextView>(R.id.editPhone)
         phoneElement.text = phone
         val heightElement = findViewById<TextView>(R.id.editHeight)
@@ -141,7 +142,7 @@ class EditProfileActivity : AppCompatActivity() {
         val weightElement = findViewById<TextView>(R.id.editWeight)
         weightElement.text = if(weight != 0.0) weight.toString() else null
 
-        val cameraButton = findViewById<LinearLayout>(R.id.camera_button)
+        val cameraButton = findViewById<ImageButton>(R.id.camera_button)
         cameraButton.setOnClickListener(){
             selectPhoto(it)
         }

@@ -1,409 +1,431 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mainLL"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/mainLL"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:paddingLeft="16dp"
+              android:paddingRight="16dp">
 
-    <LinearLayout
-        android:layout_width="0sp"
-        android:layout_height="wrap_content"
-        android:layout_weight="33.3"
-        android:gravity="center|center_horizontal|center_vertical"
-        android:orientation="vertical"
-
-        android:padding="16dp">
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginRight="5dp">
 
         <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/profile_picture"
-            tools:src="@drawable/gesu"
-            tools:srcCompat="@drawable/gesu" />
-    </LinearLayout>
+                android:id="@+id/imageView3"
+                android:contentDescription="@string/profile_picture"
+                tools:src="@drawable/gesu"
+                tools:srcCompat="@drawable/gesu"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintDimensionRatio="H,1:1"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+        />
+
+        <View
+                android:layout_width="0dp"
+                android:layout_height="0dp" android:id="@+id/view2"
+                app:layout_constraintStart_toStartOf="@+id/imageView3"
+                app:layout_constraintTop_toTopOf="@+id/imageView3" app:layout_constraintEnd_toEndOf="@+id/imageView3"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView3" android:background="#58222222"/>
+        <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="0dp" app:srcCompat="@drawable/colored_camera_icon"
+                android:id="@+id/camera_button"
+                app:layout_constraintEnd_toEndOf="@+id/imageView3"
+                app:layout_constraintTop_toTopOf="@+id/imageView3"
+                app:layout_constraintStart_toStartOf="@+id/imageView3"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView3" app:layout_constraintVertical_bias="0.0"
+                android:rotation="0" app:layout_constraintHorizontal_bias="0.0"
+                android:background="#771E1E1E"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
-        android:layout_width="0sp"
-        android:layout_height="wrap_content"
-        android:layout_weight="66.7"
-        android:orientation="vertical">
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="Account Info"
-            android:textAppearance="@style/CategoryTitle" />
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
-
-            <LinearLayout
+                android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="66.7"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:layout_marginStart="16dp"
+                android:text="Account Info"
+                android:textAppearance="@style/CategoryTitle"/>
 
-                <LinearLayout
+        <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp">
+
+            <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10sp"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:weightSum="100">
+                    android:layout_weight="66.7"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10sp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:weightSum="100">
 
                     <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="50sp"
-                        android:layout_weight="15"
-                        android:padding="5sp"
-                        app:srcCompat="@drawable/icons8_user_100" />
+                            android:layout_width="0dp"
+                            android:layout_height="50sp"
+                            android:layout_weight="15"
+                            android:padding="5sp"
+                            app:srcCompat="@drawable/icons8_user_100"/>
 
                     <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="85"
-                        android:orientation="vertical">
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="85"
+                            android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4sp"
-                            android:text="Username"
-                            android:textAppearance="@style/ListItemTitle"
-                            android:textSize="18sp" />
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4sp"
+                                android:text="Username"
+                                android:textAppearance="@style/ListItemTitle"
+                                android:textSize="18sp"/>
 
                         <EditText
-                            android:id="@+id/editUsername"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="Username"
-                            android:imeOptions="flagNoExtractUi"
-                            android:inputType="text" />
+                                android:id="@+id/editUsername"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Username"
+                                android:imeOptions="flagNoExtractUi"
+                                android:inputType="text"/>
                     </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10sp"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:weightSum="100">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10sp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:weightSum="100">
 
                     <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="50sp"
-                        android:layout_weight="15"
-                        android:padding="5sp"
-                        app:srcCompat="@drawable/icons8_identification_documents_100" />
+                            android:layout_width="0dp"
+                            android:layout_height="50sp"
+                            android:layout_weight="15"
+                            android:padding="5sp"
+                            app:srcCompat="@drawable/icons8_identification_documents_100"/>
 
                     <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="85"
-                        android:orientation="vertical">
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="85"
+                            android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4sp"
-                            android:text="Full Name"
-                            android:textAppearance="@style/ListItemTitle"
-                            android:textSize="18sp" />
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4sp"
+                                android:text="Full Name"
+                                android:textAppearance="@style/ListItemTitle"
+                                android:textSize="18sp"/>
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
 
                             <EditText
-                                android:id="@+id/editFirstName"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="50"
-                                android:hint="First name"
-                                android:imeOptions="flagNoExtractUi"
-                                android:inputType="text" />
+                                    android:id="@+id/editFirstName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="50"
+                                    android:hint="First name"
+                                    android:imeOptions="flagNoExtractUi"
+                                    android:inputType="text"/>
 
                             <EditText
-                                android:id="@+id/editLastName"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="50"
-                                android:hint="Last name"
-                                android:imeOptions="flagNoExtractUi"
-                                android:inputType="text" />
+                                    android:id="@+id/editLastName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="50"
+                                    android:hint="Last name"
+                                    android:imeOptions="flagNoExtractUi"
+                                    android:inputType="text"/>
                         </LinearLayout>
 
                     </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10sp"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:weightSum="100">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10sp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:weightSum="100">
 
                     <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="45sp"
-                        android:layout_weight="15"
-                        android:padding="5sp"
-                        app:srcCompat="@drawable/icons8_mail_100" />
+                            android:layout_width="0dp"
+                            android:layout_height="45sp"
+                            android:layout_weight="15"
+                            android:padding="5sp"
+                            app:srcCompat="@drawable/icons8_mail_100"/>
 
                     <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="85"
-                        android:orientation="vertical">
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="85"
+                            android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4sp"
-                            android:text="Email"
-                            android:textAppearance="@style/ListItemTitle"
-                            android:textSize="18sp" />
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4sp"
+                                android:text="Email"
+                                android:textAppearance="@style/ListItemTitle"
+                                android:textSize="18sp"/>
 
                         <EditText
-                            android:id="@+id/editEmail"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="Email"
-                            android:imeOptions="flagNoExtractUi"
-                            android:inputType="text|textEmailAddress" />
+                                android:id="@+id/editEmail"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Email"
+                                android:imeOptions="flagNoExtractUi"
+                                android:inputType="text|textEmailAddress"/>
                     </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10sp"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:weightSum="100">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10sp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:weightSum="100">
 
                     <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="50sp"
-                        android:layout_weight="15"
-                        android:padding="5sp"
-                        app:srcCompat="@drawable/icons8_location_100__1_" />
+                            android:layout_width="0dp"
+                            android:layout_height="50sp"
+                            android:layout_weight="15"
+                            android:padding="5sp"
+                            app:srcCompat="@drawable/icons8_location_100__1_"/>
 
                     <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="85"
-                        android:orientation="vertical">
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="85"
+                            android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4sp"
-                            android:text="Address"
-                            android:textAppearance="@style/ListItemTitle"
-                            android:textSize="18sp" />
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4sp"
+                                android:text="Address"
+                                android:textAppearance="@style/ListItemTitle"
+                                android:textSize="18sp"/>
 
                         <EditText
-                            android:id="@+id/editAddress"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="Address"
-                            android:imeOptions="flagNoExtractUi"
-                            android:inputType="text" />
+                                android:id="@+id/editAddress"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Address"
+                                android:imeOptions="flagNoExtractUi"
+                                android:inputType="text"/>
                     </LinearLayout>
                 </LinearLayout>
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="10sp"
-                    android:background="@android:color/darker_gray" />
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="10sp"
+                        android:background="@android:color/darker_gray"/>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10sp"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:weightSum="100">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10sp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:weightSum="100">
 
                     <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="50sp"
-                        android:layout_weight="15"
-                        android:padding="5sp"
-                        app:srcCompat="@drawable/icons8_gender_equality_100" />
+                            android:layout_width="0dp"
+                            android:layout_height="50sp"
+                            android:layout_weight="15"
+                            android:padding="5sp"
+                            app:srcCompat="@drawable/icons8_gender_equality_100"/>
 
                     <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="85"
-                        android:orientation="vertical">
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="85"
+                            android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4sp"
-                            android:text="Gender"
-                            android:textAppearance="@style/ListItemTitle"
-                            android:textSize="18sp" />
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4sp"
+                                android:text="Gender"
+                                android:textAppearance="@style/ListItemTitle"
+                                android:textSize="18sp"/>
 
                         <Spinner
-                            android:id="@+id/editGender"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@android:drawable/btn_dropdown"
-                            android:spinnerMode="dropdown" />
+                                android:id="@+id/editGender"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@android:drawable/btn_dropdown"
+                                android:spinnerMode="dropdown"/>
                     </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="10sp"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="5sp"
-                    android:weightSum="100">
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="10sp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:padding="5sp"
+                        android:weightSum="100">
 
                     <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="50sp"
-                        android:layout_weight="15"
-                        android:padding="5sp"
-                        app:srcCompat="@drawable/icons8_length_100" />
+                            android:layout_width="0dp"
+                            android:layout_height="50sp"
+                            android:layout_weight="15"
+                            android:padding="5sp"
+                            app:srcCompat="@drawable/icons8_length_100"/>
 
                     <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="85"
-                        android:orientation="vertical">
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="85"
+                            android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4sp"
-                            android:text="Heigth (cm)"
-                            android:textAppearance="@style/ListItemTitle"
-                            android:textSize="18sp" />
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4sp"
+                                android:text="Heigth (cm)"
+                                android:textAppearance="@style/ListItemTitle"
+                                android:textSize="18sp"/>
 
                         <EditText
-                            android:id="@+id/editHeight"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="Heigth"
-                            android:imeOptions="flagNoExtractUi"
-                            android:inputType="text|numberDecimal" />
+                                android:id="@+id/editHeight"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Heigth"
+                                android:imeOptions="flagNoExtractUi"
+                                android:inputType="text|numberDecimal"/>
                     </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="10sp"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="5sp"
-                    android:weightSum="100">
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="10sp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:padding="5sp"
+                        android:weightSum="100">
 
                     <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="50sp"
-                        android:layout_weight="15"
-                        android:padding="5sp"
-                        app:srcCompat="@drawable/icons8_scale_100" />
+                            android:layout_width="0dp"
+                            android:layout_height="50sp"
+                            android:layout_weight="15"
+                            android:padding="5sp"
+                            app:srcCompat="@drawable/icons8_scale_100"/>
 
                     <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="85"
-                        android:orientation="vertical">
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="85"
+                            android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4sp"
-                            android:text="Weigth (Kg)"
-                            android:textAppearance="@style/ListItemTitle"
-                            android:textSize="18sp" />
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4sp"
+                                android:text="Weigth (Kg)"
+                                android:textAppearance="@style/ListItemTitle"
+                                android:textSize="18sp"/>
 
                         <EditText
-                            android:id="@+id/editWeight"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="Weigth (Kg)"
-                            android:imeOptions="flagNoExtractUi"
-                            android:inputType="text|numberDecimal" />
+                                android:id="@+id/editWeight"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Weigth (Kg)"
+                                android:imeOptions="flagNoExtractUi"
+                                android:inputType="text|numberDecimal"/>
                     </LinearLayout>
                 </LinearLayout>
 
                 <View
-                    android:id="@+id/view"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="10sp"
-                    android:background="@android:color/darker_gray" />
+                        android:id="@+id/view"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="10sp"
+                        android:background="@android:color/darker_gray"/>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10sp"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:weightSum="100">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10sp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:weightSum="100">
 
                     <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="45sp"
-                        android:layout_weight="15"
-                        android:padding="5sp"
-                        app:srcCompat="@drawable/icons8_phone_100" />
+                            android:layout_width="0dp"
+                            android:layout_height="45sp"
+                            android:layout_weight="15"
+                            android:padding="5sp"
+                            app:srcCompat="@drawable/icons8_phone_100"/>
 
                     <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="85"
-                        android:orientation="vertical">
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="85"
+                            android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4sp"
-                            android:text="Phone Number"
-                            android:textAppearance="@style/ListItemTitle"
-                            android:textSize="18sp" />
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4sp"
+                                android:text="Phone Number"
+                                android:textAppearance="@style/ListItemTitle"
+                                android:textSize="18sp"/>
 
                         <EditText
-                            android:id="@+id/editPhone"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="Phone number"
-                            android:imeOptions="flagNoExtractUi"
-                            android:inputType="text|phone" />
+                                android:id="@+id/editPhone"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Phone number"
+                                android:imeOptions="flagNoExtractUi"
+                                android:inputType="text|phone"/>
                     </LinearLayout>
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="30sp"
-                    android:layout_marginBottom="30sp"
-                    android:text="Version 1.0.1"
-                    android:textAlignment="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                        android:id="@+id/textView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30sp"
+                        android:layout_marginBottom="30sp"
+                        android:text="Version 1.0.1"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"/>
 
             </LinearLayout>
         </ScrollView>
