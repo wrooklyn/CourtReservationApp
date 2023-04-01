@@ -19,6 +19,7 @@
         <activity
                 android:name=".EditProfileActivity"
                 android:exported="false"
+                android:label="@string/edit_profile"
             >
             <meta-data
                     android:name="android.app.lib_name"

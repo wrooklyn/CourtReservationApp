@@ -7,12 +7,14 @@
         android:layout_height="match_parent"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:orientation="vertical" android:id="@+id/mainLL" android:layout_marginTop="5dp"
+        android:orientation="vertical" android:id="@+id/mainLL"
+        android:foreground="@drawable/shape_window_dim"
     >
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:layout_marginTop="5dp"
     >
 
         <ImageView
