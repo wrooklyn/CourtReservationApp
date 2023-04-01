@@ -6,6 +6,8 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -16,8 +18,13 @@ import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import it.polito.mad.utils.DiskUtil
 import org.json.JSONObject
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.util.Calendar
 
 
 class EditProfileActivity : AppCompatActivity() {
@@ -35,16 +42,48 @@ class EditProfileActivity : AppCompatActivity() {
 
     lateinit var mainLL: LinearLayout
 
+    lateinit var filename: File
+
     private val galleryActivityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            val tag = "PHOTO"
-            photo = result.data?.data
+            //bitmap
+            val inputImage = uriToBitmap(result.data?.data!!)
+            val date = Calendar.getInstance().time
+//            photo = result.data?.data
             Log.i("Gallery", "Gallery URI: ${result.data?.toString()}")
             val pfpElement = findViewById<ImageView>(R.id.imageView3)
-            pfpElement.setImageURI(photo)
+//            pfpElement.setImageURI(photo)
+            pfpElement.setImageBitmap(inputImage)
+
+            val path = DiskUtil.getInternalFolder(this)
+            filename = File(path, "$date.jpg")
+            try {
+                val fOut = FileOutputStream(filename)
+                inputImage?.compress(Bitmap.CompressFormat.PNG, 100, fOut)
+
+            }catch(e: IOException) {
+                e.printStackTrace()
+            }
+
+
+
+
         }
+    }
+
+    private fun uriToBitmap(selectedFileUri: Uri): Bitmap? {
+        try {
+            val parcelFileDescriptor = contentResolver.openFileDescriptor(selectedFileUri, "r")
+            val fileDescriptor = parcelFileDescriptor!!.fileDescriptor
+            val image = BitmapFactory.decodeFileDescriptor(fileDescriptor)
+            parcelFileDescriptor.close()
+            return image
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return null
     }
 
     //TODO capture the image using camera and display it
@@ -54,9 +93,24 @@ class EditProfileActivity : AppCompatActivity() {
             result ->
 //        Log.i("DBG", "Result cb: $photo")
         if (result.resultCode == Activity.RESULT_OK) {
+            val inputImage = uriToBitmap(photo!!)
+            val date = Calendar.getInstance().time
+
+
             val pfpElement = findViewById<ImageView>(R.id.imageView3)
             Log.i("D", "result is: $photo")
-            pfpElement.setImageURI(photo)
+            //pfpElement.setImageURI(photo)
+            pfpElement.setImageBitmap(inputImage)
+
+            val path = DiskUtil.getInternalFolder(this)
+            filename = File(path, "$date.jpg")
+            try {
+                val fOut = FileOutputStream(filename)
+                inputImage?.compress(Bitmap.CompressFormat.PNG, 100, fOut)
+
+            }catch(e: IOException) {
+                e.printStackTrace()
+            }
         }
     }
 
@@ -85,6 +139,9 @@ class EditProfileActivity : AppCompatActivity() {
             if (!photoString.isNullOrEmpty()) {
                 photo = Uri.parse(photoString)
             }
+
+            val path = profileData.optString("photopath", "")
+            filename = File(path)
         }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,12 +168,14 @@ class EditProfileActivity : AppCompatActivity() {
         loadDataFromSharedPreferences()
 
         val pfpElement = findViewById<ImageView>(R.id.imageView3)
-
-        if (photo == null || photo.toString().isEmpty()) {
-            pfpElement.setImageResource(R.drawable.gesu)
+        if(filename.isFile){
+            val photoURI = Uri.fromFile(filename)
+            pfpElement.setImageURI(photoURI)
         } else {
-            pfpElement.setImageURI(photo)
+            pfpElement.setImageResource(R.drawable.gesu)
         }
+
+
         val firstNameElement = findViewById<TextView>(R.id.editFirstName)
         firstNameElement.text =  firstName
         val lastNameElement = findViewById<TextView>(R.id.editLastName)
@@ -180,6 +239,7 @@ class EditProfileActivity : AppCompatActivity() {
         profileData.put("height", findViewById<TextView>(R.id.editHeight).text.toString().toIntOrNull() ?: 0)
         profileData.put("weight", findViewById<TextView>(R.id.editWeight).text.toString().toDoubleOrNull() ?: 0.0)
         profileData.put("phone", findViewById<TextView>(R.id.editPhone).text.toString())
+        profileData.put("photopath", filename)
         if (photo != null) {
             profileData.put("photo", photo.toString())
         } else {

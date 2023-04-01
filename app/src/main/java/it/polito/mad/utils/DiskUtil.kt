@@ -1,8 +1,6 @@
 package it.polito.mad.utils
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Environment
 import android.util.Log
 import java.io.File
@@ -39,6 +37,14 @@ object DiskUtil {
         } else {
             Log.i(tag, "Folder already present")
         }
+    }
+
+    fun getExternalFolder(): String {
+        return File(Environment.getExternalStorageDirectory(), dir).toString()
+    }
+
+    fun getInternalFolder(context: Context): String {
+        return File(context.getExternalFilesDir(null), dir).toString()
     }
 
 }

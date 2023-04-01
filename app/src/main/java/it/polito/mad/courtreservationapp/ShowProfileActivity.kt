@@ -38,6 +38,8 @@ class ShowProfileActivity : AppCompatActivity() {
     private var weight : Double? = null
     private var phone : String?  = null
 
+    lateinit var filename: File
+
     private fun storeInitialValues() {
 
         val sharedPref = getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
@@ -54,10 +56,13 @@ class ShowProfileActivity : AppCompatActivity() {
             put("weight", weight?.toFloat() ?: 0f)
             put("phone", phone)
             put("photo",photo?.toString())
+            put("photopath", "")
         }
 
         editor.putString("profile", profileData.toString())
         editor.apply()
+
+        Log.i("Pref", "${profileData.optString("photopath")}")
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -120,6 +125,7 @@ class ShowProfileActivity : AppCompatActivity() {
         val sharedPref = getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
         val profileString = sharedPref.getString("profile", null)
         var newGender = gender.toString()
+        var path = ""
 
         if (profileString != null) {
             val profileData = JSONObject(profileString)
@@ -137,6 +143,7 @@ class ShowProfileActivity : AppCompatActivity() {
                 photo = Uri.parse(photoString)
             }
 
+             path = profileData.optString("photopath", "")
         }
         findViewById<TextView>(R.id.username).text = username
         findViewById<TextView>(R.id.fullname).text = "$firstName $lastName"
@@ -148,11 +155,19 @@ class ShowProfileActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.phone).text = phone
 
         val pfpElement = findViewById<ImageView>(R.id.imageView3)
-        if (photo == null || photo.toString().isEmpty()) {
-            pfpElement.setImageResource(R.drawable.gesu)
+        if(path.isNotEmpty() && File(path).isFile){
+            filename = File(path)
+            val photoURI = Uri.fromFile(filename)
+            pfpElement.setImageURI(photoURI)
         } else {
-            pfpElement.setImageURI(photo)
+            pfpElement.setImageResource(R.drawable.gesu)
         }
+
+//        if (photo == null || photo.toString().isEmpty()) {
+//            pfpElement.setImageResource(R.drawable.gesu)
+//        } else {
+//            pfpElement.setImageURI(photo)
+//        }
 
     }
 
