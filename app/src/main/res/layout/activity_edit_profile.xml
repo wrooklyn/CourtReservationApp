@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp" android:layout_weight="2">
         <TextView
-                android:text="Account Info"
+                android:text="@string/account_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/textView2"
                 android:textAppearance="@style/CategoryTitle" android:layout_marginStart="16dp"/>
@@ -80,7 +80,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content" android:layout_weight="85">
                         <TextView
-                                android:text="Username"
+                                android:text="@string/username"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"
@@ -89,7 +89,7 @@
                                 android:id="@+id/editUsername"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="Username"
+                                android:hint="@string/hint_username"
                                 android:inputType="text"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -107,7 +107,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content" android:layout_weight="85">
                         <TextView
-                                android:text="Full Name"
+                                android:text="@string/full_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"
@@ -121,14 +121,14 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="50"
-                                    android:hint="First name"
+                                    android:hint="@string/hint_first_name"
                                     android:inputType="text"/>
                             <EditText
                                     android:id="@+id/editLastName"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="50"
-                                    android:hint="Last name"
+                                    android:hint="@string/hint_last_name"
                                     android:inputType="text"/>
                         </LinearLayout>
 
@@ -148,7 +148,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content" android:layout_weight="85">
                         <TextView
-                                android:text="Email"
+                                android:text="@string/email"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"
@@ -158,7 +158,7 @@
                                 android:id="@+id/editEmail"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="Email"
+                                android:hint="@string/hint_email"
                                 android:inputType="text|textEmailAddress"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -176,7 +176,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content" android:layout_weight="85">
                         <TextView
-                                android:text="Address"
+                                android:text="@string/address"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"
@@ -185,7 +185,7 @@
                                 android:id="@+id/editAddress"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="Address"
+                                android:hint="@string/hint_address"
                                 android:inputType="text"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -207,7 +207,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content" android:layout_weight="85">
                         <TextView
-                                android:text="Gender"
+                                android:text="@string/gender"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"
@@ -235,7 +235,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content" android:layout_weight="85">
                         <TextView
-                                android:text="Height (cm)"
+                                android:text="@string/height"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"
@@ -245,7 +245,7 @@
                                 android:id="@+id/editHeight"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="Height"
+                                android:hint="@string/hint_height"
                                 android:inputType="text|numberDecimal"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -263,7 +263,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content" android:layout_weight="85">
                         <TextView
-                                android:text="Weight (Kg)"
+                                android:text="@string/weight"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"
@@ -273,7 +273,7 @@
                                 android:id="@+id/editWeight"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="Weight"
+                                android:hint="@string/hint_weight"
                                 android:inputType="text|numberDecimal"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -297,7 +297,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content" android:layout_weight="85">
                         <TextView
-                                android:text="Phone Number"
+                                android:text="@string/phone_number"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"
@@ -307,12 +307,12 @@
                                 android:id="@+id/editPhone"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="Phoone number"
+                                android:hint="@string/hint_phone_number"
                                 android:inputType="text|phone"/>
                     </LinearLayout>
                 </LinearLayout>
                 <TextView
-                        android:text="Version 1.0.1"
+                        android:text="@string/version"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" android:id="@+id/textView"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small" android:layout_marginTop="30sp"

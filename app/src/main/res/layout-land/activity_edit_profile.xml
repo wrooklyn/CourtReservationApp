@@ -59,7 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="Account Info"
+                android:text="@string/account_info"
                 android:textAppearance="@style/CategoryTitle"/>
 
         <ScrollView
@@ -99,7 +99,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4sp"
-                                android:text="Username"
+                                android:text="@string/username"
                                 android:textAppearance="@style/ListItemTitle"
                                 android:textSize="18sp"/>
 
@@ -107,7 +107,7 @@
                                 android:id="@+id/editUsername"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="Username"
+                                android:hint="@string/hint_username"
                                 android:imeOptions="flagNoExtractUi"
                                 android:inputType="text"/>
                     </LinearLayout>
@@ -138,7 +138,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4sp"
-                                android:text="Full Name"
+                                android:text="@string/full_name"
                                 android:textAppearance="@style/ListItemTitle"
                                 android:textSize="18sp"/>
 
@@ -152,7 +152,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="50"
-                                    android:hint="First name"
+                                    android:hint="@string/hint_first_name"
                                     android:imeOptions="flagNoExtractUi"
                                     android:inputType="text"/>
 
@@ -161,7 +161,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="50"
-                                    android:hint="Last name"
+                                    android:hint="@string/hint_last_name"
                                     android:imeOptions="flagNoExtractUi"
                                     android:inputType="text"/>
                         </LinearLayout>
@@ -194,7 +194,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4sp"
-                                android:text="Email"
+                                android:text="@string/email"
                                 android:textAppearance="@style/ListItemTitle"
                                 android:textSize="18sp"/>
 
@@ -202,7 +202,7 @@
                                 android:id="@+id/editEmail"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="Email"
+                                android:hint="@string/hint_email"
                                 android:imeOptions="flagNoExtractUi"
                                 android:inputType="text|textEmailAddress"/>
                     </LinearLayout>
@@ -233,7 +233,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4sp"
-                                android:text="Address"
+                                android:text="@string/address"
                                 android:textAppearance="@style/ListItemTitle"
                                 android:textSize="18sp"/>
 
@@ -241,7 +241,7 @@
                                 android:id="@+id/editAddress"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="Address"
+                                android:hint="@string/hint_address"
                                 android:imeOptions="flagNoExtractUi"
                                 android:inputType="text"/>
                     </LinearLayout>
@@ -278,7 +278,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4sp"
-                                android:text="Gender"
+                                android:text="@string/gender"
                                 android:textAppearance="@style/ListItemTitle"
                                 android:textSize="18sp"/>
 
@@ -317,7 +317,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4sp"
-                                android:text="Heigth (cm)"
+                                android:text="@string/height"
                                 android:textAppearance="@style/ListItemTitle"
                                 android:textSize="18sp"/>
 
@@ -325,7 +325,7 @@
                                 android:id="@+id/editHeight"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="Heigth"
+                                android:hint="@string/hint_height"
                                 android:imeOptions="flagNoExtractUi"
                                 android:inputType="text|numberDecimal"/>
                     </LinearLayout>
@@ -357,7 +357,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4sp"
-                                android:text="Weigth (Kg)"
+                                android:text="@string/weight"
                                 android:textAppearance="@style/ListItemTitle"
                                 android:textSize="18sp"/>
 
@@ -365,7 +365,7 @@
                                 android:id="@+id/editWeight"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="Weigth (Kg)"
+                                android:hint="@string/hint_weight"
                                 android:imeOptions="flagNoExtractUi"
                                 android:inputType="text|numberDecimal"/>
                     </LinearLayout>
@@ -403,7 +403,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4sp"
-                                android:text="Phone Number"
+                                android:text="@string/phone_number"
                                 android:textAppearance="@style/ListItemTitle"
                                 android:textSize="18sp"/>
 
@@ -411,7 +411,7 @@
                                 android:id="@+id/editPhone"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="Phone number"
+                                android:hint="@string/hint_phone_number"
                                 android:imeOptions="flagNoExtractUi"
                                 android:inputType="text|phone"/>
                     </LinearLayout>
@@ -423,7 +423,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="30sp"
                         android:layout_marginBottom="30sp"
-                        android:text="Version 1.0.1"
+                        android:text="@string/version"
                         android:textAlignment="center"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"/>
 

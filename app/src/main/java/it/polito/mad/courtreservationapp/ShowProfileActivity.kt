@@ -1,34 +1,42 @@
 package it.polito.mad.courtreservationapp
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
+import it.polito.mad.utils.DiskUtil
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 import java.util.*
 
 enum class Gender{MALE, FEMALE, OTHER}
 class ShowProfileActivity : AppCompatActivity() {
     private var photo : Uri? = null
-    private var username = "Gesú"
-    private var firstName = "Gabri"
-    private var lastName = "Fine"
-    private var email = "email@email.it"
-    private var password = ""
-    private var address = "via carnival in Brazil 3"
-    private var birthDate = Calendar.getInstance()
+    private var username = ""
+    private var firstName = ""
+    private var lastName = ""
+    private var email = ""
+    private var address = ""
 
     private var gender : Gender? = null
     private var height : Int? = null
     private var weight : Double? = null
     private var phone : String?  = null
-    private var bio : String? = null
 
     private fun storeInitialValues() {
 
@@ -55,6 +63,14 @@ class ShowProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_profile)
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED
+            ) {
+                val permission = arrayOf<String>(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                requestPermissions(permission, 112)
+            }
+        }
+
         val sharedPref = getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
 
         val isFirstLaunch = sharedPref.getBoolean("isFirstLaunch", true)
@@ -67,6 +83,7 @@ class ShowProfileActivity : AppCompatActivity() {
         }
 
     }
+
     //setting appbar
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater: MenuInflater = menuInflater
@@ -89,6 +106,7 @@ class ShowProfileActivity : AppCompatActivity() {
         val myIntent = Intent(this, EditProfileActivity::class.java)
         //passData(myIntent)
         startActivity(myIntent)
+
     }
 
     //show updated values
@@ -137,4 +155,5 @@ class ShowProfileActivity : AppCompatActivity() {
         }
 
     }
+
 }

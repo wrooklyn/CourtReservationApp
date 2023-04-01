@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp" android:layout_weight="2">
         <TextView
-                android:text="Account Info"
+                android:text="@string/account_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/textView2"
                 android:textAppearance="@style/CategoryTitle" android:layout_marginStart="16dp"/>
@@ -63,13 +63,13 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content" android:layout_weight="75">
                         <TextView
-                                android:text="Username"
+                                android:text="@string/username"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"
                                 android:textAppearance="@style/ListItemTitle"/>
                         <TextView
-                                android:text="username_placeholder"
+                                android:text="@string/username_placeholder"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" android:id="@+id/username"
                                 android:textAppearance="@style/ListItemSubtitle"
@@ -90,13 +90,13 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content" android:layout_weight="75">
                         <TextView
-                                android:text="Full Name"
+                                android:text="@string/full_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"
                                 android:textAppearance="@style/ListItemTitle"/>
                         <TextView
-                                android:text="fullname_placeholder"
+                                android:text="@string/full_name_placeholder"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" android:id="@+id/fullname"
                                 android:textAppearance="@style/ListItemSubtitle"
@@ -117,13 +117,13 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content" android:layout_weight="75">
                         <TextView
-                                android:text="Email"
+                                android:text="@string/email"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"
                                 android:textAppearance="@style/ListItemTitle"/>
                         <TextView
-                                android:text="email_placeholder"
+                                android:text="@string/email_placeholder"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" android:id="@+id/email"
                                 android:textAppearance="@style/ListItemSubtitle"
@@ -144,13 +144,13 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content" android:layout_weight="75">
                         <TextView
-                                android:text="Address"
+                                android:text="@string/address"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"
                                 android:textAppearance="@style/ListItemTitle"/>
                         <TextView
-                                android:text="address_placeholder"
+                                android:text="@string/address_placeholder"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" android:id="@+id/address"
                                 android:textAppearance="@style/ListItemSubtitle"
@@ -175,13 +175,13 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content" android:layout_weight="75">
                         <TextView
-                                android:text="Gender"
+                                android:text="@string/gender"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"
                                 android:textAppearance="@style/ListItemTitle"/>
                         <TextView
-                                android:text="gender_placeholder"
+                                android:text="@string/gender_placeholder"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" android:id="@+id/gender"
                                 android:textAppearance="@style/ListItemSubtitle"
@@ -203,13 +203,13 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content" android:layout_weight="75">
                         <TextView
-                                android:text="Height"
+                                android:text="@string/height"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"
                                 android:textAppearance="@style/ListItemTitle"/>
                         <TextView
-                                android:text="height_placeholder"
+                                android:text="@string/height_placeholder"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" android:id="@+id/height"
                                 android:textAppearance="@style/ListItemSubtitle"
@@ -230,13 +230,13 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content" android:layout_weight="75">
                         <TextView
-                                android:text="Weight"
+                                android:text="@string/weight"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"
                                 android:textAppearance="@style/ListItemTitle"/>
                         <TextView
-                                android:text="weight_placeholder"
+                                android:text="@string/weight_placeholder"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" android:id="@+id/weight"
                                 android:textAppearance="@style/ListItemSubtitle"
@@ -263,13 +263,13 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content" android:layout_weight="75">
                         <TextView
-                                android:text="Phone Number"
+                                android:text="@string/phone_number"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="18sp"
                                 android:textAppearance="@style/ListItemTitle"/>
                         <TextView
-                                android:text="phone_placeholder"
+                                android:text="@string/phone_placeholder"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" android:id="@+id/phone"
                                 android:textAppearance="@style/ListItemSubtitle"
@@ -277,7 +277,7 @@
                     </LinearLayout>
                 </LinearLayout>
                 <TextView
-                        android:text="Version 1.0.1"
+                        android:text="@string/version"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" android:id="@+id/textView"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small" android:layout_marginTop="30sp"

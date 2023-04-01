@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/edit"
           android:icon="@drawable/colored_icon"
-          android:title="Edit"
+          android:title="@string/edit"
           app:showAsAction="always"/>
 
 </menu>

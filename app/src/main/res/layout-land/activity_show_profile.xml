@@ -44,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="Account Info"
+                android:text="@string/account_info"
                 android:textAppearance="@style/CategoryTitle"/>
 
         <ScrollView
@@ -83,7 +83,7 @@
                         <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Username"
+                                android:text="@string/username"
                                 android:textAppearance="@style/ListItemTitle"
                                 android:textSize="18sp"/>
 
@@ -91,7 +91,7 @@
                                 android:id="@+id/username"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="username_placeholder"
+                                android:text="@string/username_placeholder"
                                 android:textAppearance="@style/ListItemSubtitle"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -120,7 +120,7 @@
                         <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Full Name"
+                                android:text="@string/full_name"
                                 android:textAppearance="@style/ListItemTitle"
                                 android:textSize="18sp"/>
 
@@ -128,7 +128,7 @@
                                 android:id="@+id/fullname"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="fullname_placeholder"
+                                android:text="@string/full_name_placeholder"
                                 android:textAppearance="@style/ListItemSubtitle"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -157,7 +157,7 @@
                         <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Email"
+                                android:text="@string/email"
                                 android:textAppearance="@style/ListItemTitle"
                                 android:textSize="18sp"/>
 
@@ -165,7 +165,7 @@
                                 android:id="@+id/email"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="email_placeholder"
+                                android:text="@string/email_placeholder"
                                 android:textAppearance="@style/ListItemSubtitle"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -194,7 +194,7 @@
                         <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Address"
+                                android:text="@string/address"
                                 android:textAppearance="@style/ListItemTitle"
                                 android:textSize="18sp"/>
 
@@ -202,7 +202,7 @@
                                 android:id="@+id/address"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="address_placeholder"
+                                android:text="@string/address_placeholder"
                                 android:textAppearance="@style/ListItemSubtitle"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -237,7 +237,7 @@
                         <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Gender"
+                                android:text="@string/gender"
                                 android:textAppearance="@style/ListItemTitle"
                                 android:textSize="18sp"/>
 
@@ -245,7 +245,7 @@
                                 android:id="@+id/gender"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="gender_placeholder"
+                                android:text="@string/gender_placeholder"
                                 android:textAppearance="@style/ListItemSubtitle"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -275,7 +275,7 @@
                         <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Height"
+                                android:text="@string/height"
                                 android:textAppearance="@style/ListItemTitle"
                                 android:textSize="18sp"/>
 
@@ -283,7 +283,7 @@
                                 android:id="@+id/height"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="height_placeholder"
+                                android:text="@string/height_placeholder"
                                 android:textAppearance="@style/ListItemSubtitle"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -313,7 +313,7 @@
                         <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Weight"
+                                android:text="@string/weight"
                                 android:textAppearance="@style/ListItemTitle"
                                 android:textSize="18sp"/>
 
@@ -321,7 +321,7 @@
                                 android:id="@+id/weight"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="weight_placeholder"
+                                android:text="@string/weight_placeholder"
                                 android:textAppearance="@style/ListItemSubtitle"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -357,7 +357,7 @@
                         <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Phone Number"
+                                android:text="@string/phone_number"
                                 android:textAppearance="@style/ListItemTitle"
                                 android:textSize="18sp"/>
 
@@ -365,7 +365,7 @@
                                 android:id="@+id/phone"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="phone_placeholder"
+                                android:text="@string/phone_placeholder"
                                 android:textAppearance="@style/ListItemSubtitle"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -376,7 +376,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="30sp"
                         android:layout_marginBottom="30sp"
-                        android:text="Version 1.0.1"
+                        android:text="@string/version"
                         android:textAlignment="center"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"/>
 
