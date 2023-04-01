@@ -33,6 +33,8 @@ class EditProfileActivity : AppCompatActivity() {
     private var weight : Double = 0.0
     private var phone : String?  = null
 
+    lateinit var mainLL: LinearLayout
+
     private val galleryActivityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -88,6 +90,8 @@ class EditProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
+        mainLL = findViewById(R.id.mainLL)
+        mainLL.foreground.alpha = 0
 
         //TODO ask for permission of camera upon first launch of application
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -257,6 +261,7 @@ class EditProfileActivity : AppCompatActivity() {
         val width = LinearLayout.LayoutParams.WRAP_CONTENT
         val height = LinearLayout.LayoutParams.WRAP_CONTENT
         val focusable = true // lets taps outside the popup also dismiss it
+        mainLL.foreground.alpha = 160
 
         val popupWindow = PopupWindow(popupView, width, height, focusable)
         popupWindow.showAtLocation(findViewById(R.id.mainLL), Gravity.CENTER, 0, 0)
@@ -272,6 +277,7 @@ class EditProfileActivity : AppCompatActivity() {
             finish()
         }
         popupView.setOnTouchListener { view, motionEvent ->
+            mainLL.foreground.alpha = 0
             true
         }
 
