@@ -4,14 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Environment
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -19,14 +13,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import it.polito.mad.utils.DiskUtil
 import org.json.JSONObject
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
 import java.util.*
 
 enum class Gender{MALE, FEMALE, OTHER}
 class ShowProfileActivity : AppCompatActivity() {
-    private var photo : Uri? = null
+
     private var username = ""
     private var firstName = ""
     private var lastName = ""
@@ -34,11 +25,11 @@ class ShowProfileActivity : AppCompatActivity() {
     private var address = ""
 
     private var gender : Gender? = null
-    private var height : Int = -1
-    private var weight : Double = -1.0
+    private var height : Int = Int.MIN_VALUE
+    private var weight : Double = Double.MIN_VALUE
     private var phone : String?  = null
 
-    lateinit var filename: File
+    private lateinit var photoPath: String
 
     private fun storeInitialValues() {
 
@@ -55,25 +46,21 @@ class ShowProfileActivity : AppCompatActivity() {
             put("height", height)
             put("weight", weight)
             put("phone", phone)
-            put("photo",photo?.toString())
-            put("photopath", "")
+            put("photoPath", "")
         }
 
         editor.putString("profile", profileData.toString())
         editor.apply()
 
-        Log.i("Pref", "${profileData.optString("photopath")}")
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_profile)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED
-            ) {
-                val permission = arrayOf<String>(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                requestPermissions(permission, 112)
-            }
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED
+        ) {
+            val permission = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            requestPermissions(permission, 112)
         }
 
         val sharedPref = getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
@@ -107,11 +94,8 @@ class ShowProfileActivity : AppCompatActivity() {
         }
     }
     private fun editUsername() {
-        //todo start a new intent
         val myIntent = Intent(this, EditProfileActivity::class.java)
-        //passData(myIntent)
         startActivity(myIntent)
-
     }
 
     //show updated values
@@ -125,7 +109,6 @@ class ShowProfileActivity : AppCompatActivity() {
         val sharedPref = getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
         val profileString = sharedPref.getString("profile", null)
         var newGender = gender.toString()
-        var path = ""
 
         if (profileString != null) {
             val profileData = JSONObject(profileString)
@@ -136,38 +119,29 @@ class ShowProfileActivity : AppCompatActivity() {
             address = profileData.optString("address", "")
             phone = profileData.optString("phone", "")
             newGender = profileData.optString("gender", "")
-            height = profileData.optInt("height",-1)
-            weight = profileData.optDouble("weight",-1.0)
-            val photoString = profileData.optString("photo", "")
-            if (!photoString.isNullOrEmpty()) {
-                photo = Uri.parse(photoString)
-            }
+            height = profileData.optInt("height", Int.MIN_VALUE)
+            weight = profileData.optDouble("weight", Double.MIN_VALUE)
 
-             path = profileData.optString("photopath", "")
+            photoPath = profileData.optString("photoPath", "")
         }
+
         findViewById<TextView>(R.id.username).text = username
-        findViewById<TextView>(R.id.fullname).text = if(firstName.isNullOrEmpty() && lastName.isNullOrEmpty()) "" else "$firstName $lastName"
+        findViewById<TextView>(R.id.fullname).text = if(firstName.isEmpty() && lastName.isEmpty()) "" else "$firstName $lastName"
         findViewById<TextView>(R.id.email).text = email
         findViewById<TextView>(R.id.address).text = address
         findViewById<TextView>(R.id.gender).text = newGender
-        findViewById<TextView>(R.id.height).text = if(height == -1) null else height.toString()
-        findViewById<TextView>(R.id.weight).text = if(weight == -1.0)null else weight.toString()
+        findViewById<TextView>(R.id.height).text = if(height == Int.MIN_VALUE) null else height.toString()
+        findViewById<TextView>(R.id.weight).text = if(weight == Double.MIN_VALUE)null else weight.toString()
         findViewById<TextView>(R.id.phone).text = phone
 
         val pfpElement = findViewById<ImageView>(R.id.imageView3)
-        if(path.isNotEmpty() && File(path).isFile){
-            filename = File(path)
-            val photoURI = Uri.fromFile(filename)
-            pfpElement.setImageURI(photoURI)
+        val photoUri = DiskUtil.getUriFromPath(photoPath)
+        if(photoUri != null){
+            pfpElement.setImageURI(photoUri)
         } else {
             pfpElement.setImageResource(R.drawable.gesu)
         }
 
-//        if (photo == null || photo.toString().isEmpty()) {
-//            pfpElement.setImageResource(R.drawable.gesu)
-//        } else {
-//            pfpElement.setImageURI(photo)
-//        }
 
     }
 
