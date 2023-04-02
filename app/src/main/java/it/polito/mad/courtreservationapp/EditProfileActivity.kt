@@ -203,6 +203,7 @@ class EditProfileActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("InflateParams")
     private fun saveChanges() {
         if(validateData()){
             val sharedPref = getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
@@ -223,6 +224,25 @@ class EditProfileActivity : AppCompatActivity() {
             editor.putString("profile", profileData.toString())
             editor.apply()
             finish()
+        } else {
+            val inflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val popupView = inflater.inflate(R.layout.popup_warning, null)
+            val width = LinearLayout.LayoutParams.WRAP_CONTENT
+            val height = LinearLayout.LayoutParams.WRAP_CONTENT
+            val focusable = true // lets taps outside the popup also dismiss it
+            val popupWindow = PopupWindow(popupView, width, height, focusable)
+            val dismissButton = popupView.findViewById<Button>(R.id.dismissButton)
+
+            popupWindow.showAtLocation(findViewById(R.id.mainLL), Gravity.CENTER, 0, 0)
+            mainLL.foreground.alpha = 160
+
+            popupWindow.setOnDismissListener {
+                mainLL.foreground.alpha = 0
+            }
+
+            dismissButton.setOnClickListener {
+                popupWindow.dismiss()
+            }
         }
 
     }

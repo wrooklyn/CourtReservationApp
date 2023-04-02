@@ -35,4 +35,6 @@
     <string name="edit">Edit</string>
     <string name="gallery">Gallery</string>
     <string name="camera">Camera</string>
+    <string name="edit_profile_warning">Invalid height/weight</string>
+    <string name="dismiss">Dismiss</string>
 </resources>
