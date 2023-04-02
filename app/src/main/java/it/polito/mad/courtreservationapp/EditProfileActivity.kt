@@ -27,7 +27,7 @@ import java.util.*
 
 
 class EditProfileActivity : AppCompatActivity() {
-    var photo : Uri? = null
+    private var photo : Uri? = null
     private var username : String? = null
     private var firstName : String? = null
     private var lastName : String? = null
@@ -39,7 +39,7 @@ class EditProfileActivity : AppCompatActivity() {
     private var weight : Double = 0.0
     private var phone : String?  = null
 
-    lateinit var mainLL: LinearLayout
+    private lateinit var mainLL: LinearLayout
 
     private lateinit var filename: File
 
@@ -59,10 +59,10 @@ class EditProfileActivity : AppCompatActivity() {
             cursor?.moveToFirst()
 
             val columnIndex = cursor?.getColumnIndex(filePathColumn[0])
-            val imagePath = cursor?.getString(columnIndex!!);
+            val imagePath = cursor?.getString(columnIndex!!)
             cursor?.close()
             Log.i("Gallery", "Gallery path: $imagePath")
-            filename = File(imagePath)
+            filename = imagePath?.let { File(it) }!!
 
 
 
@@ -147,15 +147,13 @@ class EditProfileActivity : AppCompatActivity() {
         mainLL.foreground.alpha = 0
         Log.i("Background", "alpha value${mainLL.foreground.alpha}")
         //TODO ask for permission of camera upon first launch of application
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(
-                   Manifest.permission.WRITE_EXTERNAL_STORAGE
-                )
-                == PackageManager.PERMISSION_DENIED
-            ) {
-                val permission = arrayOf<String>(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                requestPermissions(permission, 112)
-            }
+        if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(
+               Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            == PackageManager.PERMISSION_DENIED
+        ) {
+            val permission = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            requestPermissions(permission, 112)
         }
 
         DiskUtil.createFolderInt(this)
@@ -197,7 +195,7 @@ class EditProfileActivity : AppCompatActivity() {
         weightElement.text = if(weight != -1.0) weight.toString() else null
 
         val cameraButton = findViewById<ImageButton>(R.id.camera_button)
-        cameraButton.setOnClickListener(){
+        cameraButton.setOnClickListener{
             selectPhoto(it)
         }
     }
@@ -249,7 +247,7 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     private fun selectPhoto(view: View){
-        val tag: String = "PHOTO"
+        val tag = "PHOTO"
         Log.i(tag, "Starting")
         val popupMenu = PopupMenu(this, view)
         popupMenu.menuInflater.inflate(R.menu.menu_photo, popupMenu.menu)
@@ -348,7 +346,5 @@ class EditProfileActivity : AppCompatActivity() {
 
 
     }
-
-
 
 }
