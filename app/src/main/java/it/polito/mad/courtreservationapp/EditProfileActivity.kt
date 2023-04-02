@@ -18,13 +18,12 @@ import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.FileProvider
 import it.polito.mad.utils.DiskUtil
 import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.util.Calendar
+import java.util.*
 
 
 class EditProfileActivity : AppCompatActivity() {
@@ -42,31 +41,28 @@ class EditProfileActivity : AppCompatActivity() {
 
     lateinit var mainLL: LinearLayout
 
-    lateinit var filename: File
+    private lateinit var filename: File
 
     private val galleryActivityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             //bitmap
-            val inputImage = uriToBitmap(result.data?.data!!)
-            val date = Calendar.getInstance().time
-//            photo = result.data?.data
-            Log.i("Gallery", "Gallery URI: ${result.data?.toString()}")
+            val inputImage: Bitmap = uriToBitmap(result.data?.data!!)!!
+//            Log.i("Gallery", "Gallery URI: ${result.data?.toString()}")
             val pfpElement = findViewById<ImageView>(R.id.imageView3)
-//            pfpElement.setImageURI(photo)
             pfpElement.setImageBitmap(inputImage)
 
-            val path = DiskUtil.getInternalFolder(this)
-            filename = File(path, "$date.jpg")
-            try {
-                val fOut = FileOutputStream(filename)
-                inputImage?.compress(Bitmap.CompressFormat.PNG, 100, fOut)
+            val imageURI: Uri = result.data?.data!!
+            val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
+            val cursor = contentResolver.query(imageURI, filePathColumn, null, null, null)
+            cursor?.moveToFirst()
 
-            }catch(e: IOException) {
-                e.printStackTrace()
-            }
-
+            val columnIndex = cursor?.getColumnIndex(filePathColumn[0])
+            val imagePath = cursor?.getString(columnIndex!!);
+            cursor?.close()
+            Log.i("Gallery", "Gallery path: $imagePath")
+            filename = File(imagePath)
 
 
 
@@ -133,8 +129,8 @@ class EditProfileActivity : AppCompatActivity() {
                 "OTHER" -> Gender.OTHER
                 else -> null
             }
-            height = profileData.optInt("height",0)
-            weight = profileData.optDouble("weight",0.0)
+            height = profileData.optInt("height",-1)
+            weight = profileData.optDouble("weight",-1.0)
             val photoString = profileData.optString("photo", "")
             if (!photoString.isNullOrEmpty()) {
                 photo = Uri.parse(photoString)
@@ -149,7 +145,7 @@ class EditProfileActivity : AppCompatActivity() {
         setContentView(R.layout.activity_edit_profile)
         mainLL = findViewById(R.id.mainLL)
         mainLL.foreground.alpha = 0
-
+        Log.i("Background", "alpha value${mainLL.foreground.alpha}")
         //TODO ask for permission of camera upon first launch of application
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(
@@ -196,9 +192,9 @@ class EditProfileActivity : AppCompatActivity() {
         val phoneElement = findViewById<TextView>(R.id.editPhone)
         phoneElement.text = phone
         val heightElement = findViewById<TextView>(R.id.editHeight)
-        heightElement.text = if(height != 0) height.toString() else null
+        heightElement.text = if(height != -1) height.toString() else null
         val weightElement = findViewById<TextView>(R.id.editWeight)
-        weightElement.text = if(weight != 0.0) weight.toString() else null
+        weightElement.text = if(weight != -1.0) weight.toString() else null
 
         val cameraButton = findViewById<ImageButton>(R.id.camera_button)
         cameraButton.setOnClickListener(){
@@ -322,9 +318,22 @@ class EditProfileActivity : AppCompatActivity() {
         val height = LinearLayout.LayoutParams.WRAP_CONTENT
         val focusable = true // lets taps outside the popup also dismiss it
         mainLL.foreground.alpha = 160
-
+        Log.i("Background", "alpha value${mainLL.foreground.alpha}")
         val popupWindow = PopupWindow(popupView, width, height, focusable)
         popupWindow.showAtLocation(findViewById(R.id.mainLL), Gravity.CENTER, 0, 0)
+
+//        popupView.setOnTouchListener { view, motionEvent ->
+//            mainLL.foreground.alpha = 0
+//            Log.i("Background", "alpha value${mainLL.foreground.alpha}")
+//            true
+//        }
+
+        popupWindow.setOnDismissListener {
+            mainLL.foreground.alpha = 0
+            Log.i("Background", "alpha value${mainLL.foreground.alpha}")
+        }
+
+
         val yesButton = popupView.findViewById<Button>(R.id.yesButton)
         yesButton.setOnClickListener{
             saveChanges()
@@ -336,10 +345,7 @@ class EditProfileActivity : AppCompatActivity() {
             popupWindow.dismiss()
             finish()
         }
-        popupView.setOnTouchListener { view, motionEvent ->
-            mainLL.foreground.alpha = 0
-            true
-        }
+
 
     }
 
