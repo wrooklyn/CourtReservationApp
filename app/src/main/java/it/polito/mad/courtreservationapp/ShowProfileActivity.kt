@@ -34,8 +34,8 @@ class ShowProfileActivity : AppCompatActivity() {
     private var address = ""
 
     private var gender : Gender? = null
-    private var height : Int? = null
-    private var weight : Double? = null
+    private var height : Int = -1
+    private var weight : Double = -1.0
     private var phone : String?  = null
 
     lateinit var filename: File
@@ -52,8 +52,8 @@ class ShowProfileActivity : AppCompatActivity() {
             put("email", email)
             put("address", address)
             put("gender", gender?.toString())
-            put("height", height ?: 0)
-            put("weight", weight?.toFloat() ?: 0f)
+            put("height", height)
+            put("weight", weight)
             put("phone", phone)
             put("photo",photo?.toString())
             put("photopath", "")
@@ -135,9 +135,9 @@ class ShowProfileActivity : AppCompatActivity() {
             email = profileData.optString("email", "")
             address = profileData.optString("address", "")
             phone = profileData.optString("phone", "")
-            newGender = profileData.optString("gender", newGender)
-            height = profileData.optInt("height",0)
-            weight = profileData.optDouble("weight",0.0)
+            newGender = profileData.optString("gender", "")
+            height = profileData.optInt("height",-1)
+            weight = profileData.optDouble("weight",-1.0)
             val photoString = profileData.optString("photo", "")
             if (!photoString.isNullOrEmpty()) {
                 photo = Uri.parse(photoString)
@@ -146,12 +146,12 @@ class ShowProfileActivity : AppCompatActivity() {
              path = profileData.optString("photopath", "")
         }
         findViewById<TextView>(R.id.username).text = username
-        findViewById<TextView>(R.id.fullname).text = "$firstName $lastName"
+        findViewById<TextView>(R.id.fullname).text = if(firstName.isNullOrEmpty() && lastName.isNullOrEmpty()) "" else "$firstName $lastName"
         findViewById<TextView>(R.id.email).text = email
         findViewById<TextView>(R.id.address).text = address
         findViewById<TextView>(R.id.gender).text = newGender
-        findViewById<TextView>(R.id.height).text = height.toString()
-        findViewById<TextView>(R.id.weight).text = weight.toString()
+        findViewById<TextView>(R.id.height).text = if(height == -1) null else height.toString()
+        findViewById<TextView>(R.id.weight).text = if(weight == -1.0)null else weight.toString()
         findViewById<TextView>(R.id.phone).text = phone
 
         val pfpElement = findViewById<ImageView>(R.id.imageView3)

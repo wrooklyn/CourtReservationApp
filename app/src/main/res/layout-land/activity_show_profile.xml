@@ -91,7 +91,7 @@
                                 android:id="@+id/username"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/username_placeholder"
+                                android:hint="@string/username_placeholder"
                                 android:textAppearance="@style/ListItemSubtitle"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -128,7 +128,7 @@
                                 android:id="@+id/fullname"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/full_name_placeholder"
+                                android:hint="@string/full_name_placeholder"
                                 android:textAppearance="@style/ListItemSubtitle"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -165,7 +165,7 @@
                                 android:id="@+id/email"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/email_placeholder"
+                                android:hint="@string/email_placeholder"
                                 android:textAppearance="@style/ListItemSubtitle"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -202,7 +202,7 @@
                                 android:id="@+id/address"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/address_placeholder"
+                                android:hint="@string/address_placeholder"
                                 android:textAppearance="@style/ListItemSubtitle"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -245,7 +245,7 @@
                                 android:id="@+id/gender"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/gender_placeholder"
+                                android:hint="@string/gender_placeholder"
                                 android:textAppearance="@style/ListItemSubtitle"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -283,7 +283,7 @@
                                 android:id="@+id/height"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/height_placeholder"
+                                android:hint="@string/height_placeholder"
                                 android:textAppearance="@style/ListItemSubtitle"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -321,7 +321,7 @@
                                 android:id="@+id/weight"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/weight_placeholder"
+                                android:hint="@string/weight_placeholder"
                                 android:textAppearance="@style/ListItemSubtitle"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -365,7 +365,7 @@
                                 android:id="@+id/phone"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/phone_placeholder"
+                                android:hint="@string/phone_placeholder"
                                 android:textAppearance="@style/ListItemSubtitle"/>
                     </LinearLayout>
                 </LinearLayout>
