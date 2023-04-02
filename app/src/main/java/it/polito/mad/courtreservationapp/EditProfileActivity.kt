@@ -1,13 +1,13 @@
 package it.polito.mad.courtreservationapp
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -18,16 +18,16 @@ import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import it.polito.mad.utils.BitmapUtil
 import it.polito.mad.utils.DiskUtil
 import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.util.*
 
 
 class EditProfileActivity : AppCompatActivity() {
-    private var photo : Uri? = null
+
     private var username : String? = null
     private var firstName : String? = null
     private var lastName : String? = null
@@ -41,70 +41,47 @@ class EditProfileActivity : AppCompatActivity() {
 
     private lateinit var mainLL: LinearLayout
 
-    private lateinit var filename: File
+    private lateinit var photoFile: File
+
+    private var newPhotoUri : Uri? = null
+    private lateinit var newPhotoPath: String
 
     private val galleryActivityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            //bitmap
-            val inputImage: Bitmap = uriToBitmap(result.data?.data!!)!!
-//            Log.i("Gallery", "Gallery URI: ${result.data?.toString()}")
+            val inputImage: Bitmap = BitmapUtil.uriToBitmap(result.data?.data!!, this)!!
             val pfpElement = findViewById<ImageView>(R.id.imageView3)
             pfpElement.setImageBitmap(inputImage)
-
             val imageURI: Uri = result.data?.data!!
-            val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
-            val cursor = contentResolver.query(imageURI, filePathColumn, null, null, null)
-            cursor?.moveToFirst()
+            val imagePath = DiskUtil.getImagePathFromUri(imageURI, this)
 
-            val columnIndex = cursor?.getColumnIndex(filePathColumn[0])
-            val imagePath = cursor?.getString(columnIndex!!)
-            cursor?.close()
             Log.i("Gallery", "Gallery path: $imagePath")
-            filename = imagePath?.let { File(it) }!!
-
-
+            photoFile = DiskUtil.getFileFromPath(imagePath)!!
 
         }
     }
 
-    private fun uriToBitmap(selectedFileUri: Uri): Bitmap? {
-        try {
-            val parcelFileDescriptor = contentResolver.openFileDescriptor(selectedFileUri, "r")
-            val fileDescriptor = parcelFileDescriptor!!.fileDescriptor
-            val image = BitmapFactory.decodeFileDescriptor(fileDescriptor)
-            parcelFileDescriptor.close()
-            return image
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-        return null
-    }
 
-    //TODO capture the image using camera and display it
+
+    //capture the image using camera and display it
     private val cameraActivityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ){
             result ->
-//        Log.i("DBG", "Result cb: $photo")
         if (result.resultCode == Activity.RESULT_OK) {
-            val inputImage = uriToBitmap(photo!!)
-            val date = Calendar.getInstance().time
-
-
+            val inputImage = BitmapUtil.uriToBitmap(newPhotoUri!!, this)
             val pfpElement = findViewById<ImageView>(R.id.imageView3)
-            Log.i("D", "result is: $photo")
-            //pfpElement.setImageURI(photo)
+
             pfpElement.setImageBitmap(inputImage)
 
-            val path = DiskUtil.getInternalFolder(this)
-            filename = File(path, "$date.jpg")
+            photoFile = DiskUtil.getSaveFile(this)
+            Log.i("Camera", "Photo path: ${photoFile.absoluteFile}")
             try {
-                val fOut = FileOutputStream(filename)
+                val fOut = FileOutputStream(photoFile)
                 inputImage?.compress(Bitmap.CompressFormat.PNG, 100, fOut)
 
-            }catch(e: IOException) {
+            } catch (e: IOException) {
                 e.printStackTrace()
             }
         }
@@ -131,22 +108,19 @@ class EditProfileActivity : AppCompatActivity() {
             }
             height = profileData.optInt("height",-1)
             weight = profileData.optDouble("weight",-1.0)
-            val photoString = profileData.optString("photo", "")
-            if (!photoString.isNullOrEmpty()) {
-                photo = Uri.parse(photoString)
-            }
 
-            val path = profileData.optString("photopath", "")
-            filename = File(path)
+            val path = profileData.optString("photoPath", "")
+            photoFile = DiskUtil.getFileFromPath(path) ?: DiskUtil.getDefaultImage(this)
         }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
+
         mainLL = findViewById(R.id.mainLL)
         mainLL.foreground.alpha = 0
-        Log.i("Background", "alpha value${mainLL.foreground.alpha}")
-        //TODO ask for permission of camera upon first launch of application
+
+        // ask for permission of camera upon first launch of application
         if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(
                Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
@@ -157,29 +131,23 @@ class EditProfileActivity : AppCompatActivity() {
         }
 
         DiskUtil.createFolderInt(this)
-        DiskUtil.createRootFolderExt()
 
         loadDataFromSharedPreferences()
 
         val pfpElement = findViewById<ImageView>(R.id.imageView3)
-        if(filename.isFile){
-            val photoURI = Uri.fromFile(filename)
+        if(photoFile.isFile){
+            val photoURI = Uri.fromFile(photoFile)
             pfpElement.setImageURI(photoURI)
         } else {
             pfpElement.setImageResource(R.drawable.gesu)
         }
 
 
-        val firstNameElement = findViewById<TextView>(R.id.editFirstName)
-        firstNameElement.text =  firstName
-        val lastNameElement = findViewById<TextView>(R.id.editLastName)
-        lastNameElement.text =  lastName
-        val usernameElement = findViewById<TextView>(R.id.editUsername)
-        usernameElement.text = username
-        val emailElement = findViewById<TextView>(R.id.editEmail)
-        emailElement.text = email
-        val addressElement = findViewById<TextView>(R.id.editAddress)
-        addressElement.text = address
+        findViewById<TextView>(R.id.editFirstName).text =  firstName
+        findViewById<TextView>(R.id.editLastName).text =  lastName
+        findViewById<TextView>(R.id.editUsername).text = username
+        findViewById<TextView>(R.id.editEmail).text = email
+        findViewById<TextView>(R.id.editAddress).text = address
 
         val genderElement: Spinner = findViewById(R.id.editGender)
         val genderItems: List<Gender> = listOf(Gender.MALE, Gender.FEMALE, Gender.OTHER)
@@ -187,16 +155,15 @@ class EditProfileActivity : AppCompatActivity() {
             ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, genderItems)
         genderElement.adapter = adapter
         genderElement.setSelection(gender?.ordinal ?: 0)
-        val phoneElement = findViewById<TextView>(R.id.editPhone)
-        phoneElement.text = phone
-        val heightElement = findViewById<TextView>(R.id.editHeight)
-        heightElement.text = if(height != -1) height.toString() else null
-        val weightElement = findViewById<TextView>(R.id.editWeight)
-        weightElement.text = if(weight != -1.0) weight.toString() else null
 
-        val cameraButton = findViewById<ImageButton>(R.id.camera_button)
-        cameraButton.setOnClickListener{
-            selectPhoto(it)
+        findViewById<TextView>(R.id.editPhone).text = phone
+
+        findViewById<TextView>(R.id.editHeight).text = if(height != -1) height.toString() else null
+
+        findViewById<TextView>(R.id.editWeight).text = if(weight != -1.0) weight.toString() else null
+
+        findViewById<ImageButton>(R.id.camera_button).setOnClickListener{
+            modifyPicture(it)
         }
     }
 
@@ -209,7 +176,6 @@ class EditProfileActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle item selection
-        Log.i("DBG", "$item")
         return when (item.itemId) {
             R.id.save_changes -> {
                 saveChanges()
@@ -233,12 +199,7 @@ class EditProfileActivity : AppCompatActivity() {
         profileData.put("height", findViewById<TextView>(R.id.editHeight).text.toString().toIntOrNull() ?: 0)
         profileData.put("weight", findViewById<TextView>(R.id.editWeight).text.toString().toDoubleOrNull() ?: 0.0)
         profileData.put("phone", findViewById<TextView>(R.id.editPhone).text.toString())
-        profileData.put("photopath", filename)
-        if (photo != null) {
-            profileData.put("photo", photo.toString())
-        } else {
-            profileData.put("photo", "")
-        }
+        profileData.put("photoPath", photoFile)
 
         editor.putString("profile", profileData.toString())
         editor.apply()
@@ -246,23 +207,23 @@ class EditProfileActivity : AppCompatActivity() {
 
     }
 
-    private fun selectPhoto(view: View){
-        val tag = "PHOTO"
-        Log.i(tag, "Starting")
+    private fun revertChanges(){
+        DiskUtil.deleteFile(newPhotoPath)
+        photoFile.delete()
+    }
+
+    private fun modifyPicture(view: View){
         val popupMenu = PopupMenu(this, view)
         popupMenu.menuInflater.inflate(R.menu.menu_photo, popupMenu.menu)
-
         popupMenu.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.gallery -> {
                     // Code to run when menu item 1 is clicked
-                    Log.i(tag, "Selected gallery")
                     fromGallery()
                     true
                 }
                 R.id.camera -> {
                     // Code to run when menu item 2 is clicked
-                    Log.i(tag, "Selected camera")
                     Log.i(Manifest.permission.CAMERA, "Manifest Camera")
                     Log.i(Manifest.permission.WRITE_EXTERNAL_STORAGE, "external storage")
                     Log.i(PackageManager.PERMISSION_DENIED.toString(), "permission denied")
@@ -293,15 +254,15 @@ class EditProfileActivity : AppCompatActivity() {
 
     private fun fromCamera(){
         val values = ContentValues()
-        Log.i("PHOTO", "Opening camera")
-
         values.put(MediaStore.Images.Media.TITLE, "New Picture")
         values.put(MediaStore.Images.Media.DESCRIPTION, "From the Camera")
 
-        photo = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        newPhotoUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        newPhotoPath = DiskUtil.getImagePathFromUri(newPhotoUri!!, this)
+
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photo)
-        Log.i("D", "$photo")
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, newPhotoUri)
+
         cameraActivityResultLauncher.launch(cameraIntent)
     }
     private fun fromGallery(){
@@ -309,41 +270,36 @@ class EditProfileActivity : AppCompatActivity() {
         galleryActivityResultLauncher.launch(galleryIntent)
     }
 
+    @Deprecated("Deprecated in Java")
+    @SuppressLint("InflateParams")
     override fun onBackPressed() {
         val inflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val popupView = inflater.inflate(R.layout.popup_window, null)
         val width = LinearLayout.LayoutParams.WRAP_CONTENT
         val height = LinearLayout.LayoutParams.WRAP_CONTENT
         val focusable = true // lets taps outside the popup also dismiss it
-        mainLL.foreground.alpha = 160
-        Log.i("Background", "alpha value${mainLL.foreground.alpha}")
         val popupWindow = PopupWindow(popupView, width, height, focusable)
-        popupWindow.showAtLocation(findViewById(R.id.mainLL), Gravity.CENTER, 0, 0)
+        val yesButton = popupView.findViewById<Button>(R.id.yesButton)
+        val noButton = popupView.findViewById<Button>(R.id.noButton)
 
-//        popupView.setOnTouchListener { view, motionEvent ->
-//            mainLL.foreground.alpha = 0
-//            Log.i("Background", "alpha value${mainLL.foreground.alpha}")
-//            true
-//        }
+        popupWindow.showAtLocation(findViewById(R.id.mainLL), Gravity.CENTER, 0, 0)
+        mainLL.foreground.alpha = 160
 
         popupWindow.setOnDismissListener {
             mainLL.foreground.alpha = 0
-            Log.i("Background", "alpha value${mainLL.foreground.alpha}")
         }
 
-
-        val yesButton = popupView.findViewById<Button>(R.id.yesButton)
         yesButton.setOnClickListener{
             saveChanges()
             popupWindow.dismiss()
             finish()
         }
-        val noButton = popupView.findViewById<Button>(R.id.noButton)
+
         noButton.setOnClickListener {
             popupWindow.dismiss()
+            revertChanges()
             finish()
         }
-
 
     }
 
