@@ -8,16 +8,17 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doAfterTextChanged
 import it.polito.mad.utils.BitmapUtil
 import it.polito.mad.utils.DiskUtil
 import org.json.JSONObject
@@ -35,8 +36,8 @@ class EditProfileActivity : AppCompatActivity() {
     private var address : String? = null
 
     private var gender : Gender? = null
-    private var height : Int = 0
-    private var weight : Double = 0.0
+    private var height : Int = Int.MIN_VALUE
+    private var weight : Double = Double.MIN_VALUE
     private var phone : String?  = null
 
     private lateinit var mainLL: LinearLayout
@@ -44,7 +45,7 @@ class EditProfileActivity : AppCompatActivity() {
     private lateinit var photoFile: File
 
     private var newPhotoUri : Uri? = null
-    private lateinit var newPhotoPath: String
+    private var newPhotoPath: String? = null
 
     private val galleryActivityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -56,7 +57,6 @@ class EditProfileActivity : AppCompatActivity() {
             val imageURI: Uri = result.data?.data!!
             val imagePath = DiskUtil.getImagePathFromUri(imageURI, this)
 
-            Log.i("Gallery", "Gallery path: $imagePath")
             photoFile = DiskUtil.getFileFromPath(imagePath)!!
 
         }
@@ -76,7 +76,7 @@ class EditProfileActivity : AppCompatActivity() {
             pfpElement.setImageBitmap(inputImage)
 
             photoFile = DiskUtil.getSaveFile(this)
-            Log.i("Camera", "Photo path: ${photoFile.absoluteFile}")
+
             try {
                 val fOut = FileOutputStream(photoFile)
                 inputImage?.compress(Bitmap.CompressFormat.PNG, 100, fOut)
@@ -158,9 +158,27 @@ class EditProfileActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.editPhone).text = phone
 
-        findViewById<TextView>(R.id.editHeight).text = if(height != -1) height.toString() else null
+        val heightView = findViewById<TextView>(R.id.editHeight)
+        heightView.text = if(height != Int.MIN_VALUE) height.toString() else null
+        heightView.doAfterTextChanged {
+            val value = heightView.text.toString().toIntOrNull() ?: Int.MIN_VALUE
+            if( value < 0 || value > 260){
+                heightView.setTextColor(Color.RED)
+            } else {
+                heightView.setTextColor(Color.BLACK)
+            }
+        }
 
-        findViewById<TextView>(R.id.editWeight).text = if(weight != -1.0) weight.toString() else null
+        val weightView = findViewById<TextView>(R.id.editWeight)
+        weightView.text = if(weight != Double.MIN_VALUE) weight.toString() else null
+        weightView.doAfterTextChanged {
+            val value = weightView.text.toString().toDoubleOrNull() ?: Double.MIN_VALUE
+            if( value < 0.0 || value > 150.0){
+                weightView.setTextColor(Color.RED)
+            } else {
+                weightView.setTextColor(Color.BLACK)
+            }
+        }
 
         findViewById<ImageButton>(R.id.camera_button).setOnClickListener{
             modifyPicture(it)
@@ -186,29 +204,33 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     private fun saveChanges() {
-        val sharedPref = getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
-        val editor = sharedPref.edit()
+        if(validateData()){
+            val sharedPref = getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
+            val editor = sharedPref.edit()
 
-        val profileData = JSONObject()
-        profileData.put("username", findViewById<TextView>(R.id.editUsername).text.toString())
-        profileData.put("firstname", findViewById<TextView>(R.id.editFirstName).text.toString())
-        profileData.put("lastname", findViewById<TextView>(R.id.editLastName).text.toString())
-        profileData.put("email", findViewById<TextView>(R.id.editEmail).text.toString())
-        profileData.put("address", findViewById<TextView>(R.id.editAddress).text.toString())
-        profileData.put("gender", (findViewById<Spinner>(R.id.editGender).selectedItem as Gender).toString())
-        profileData.put("height", findViewById<TextView>(R.id.editHeight).text.toString().toIntOrNull() ?: 0)
-        profileData.put("weight", findViewById<TextView>(R.id.editWeight).text.toString().toDoubleOrNull() ?: 0.0)
-        profileData.put("phone", findViewById<TextView>(R.id.editPhone).text.toString())
-        profileData.put("photoPath", photoFile)
+            val profileData = JSONObject()
+            profileData.put("username", findViewById<TextView>(R.id.editUsername).text.toString())
+            profileData.put("firstname", findViewById<TextView>(R.id.editFirstName).text.toString())
+            profileData.put("lastname", findViewById<TextView>(R.id.editLastName).text.toString())
+            profileData.put("email", findViewById<TextView>(R.id.editEmail).text.toString())
+            profileData.put("address", findViewById<TextView>(R.id.editAddress).text.toString())
+            profileData.put("gender", (findViewById<Spinner>(R.id.editGender).selectedItem as Gender).toString())
+            profileData.put("height", findViewById<TextView>(R.id.editHeight).text.toString().toIntOrNull() ?: Int.MIN_VALUE)
+            profileData.put("weight", findViewById<TextView>(R.id.editWeight).text.toString().toDoubleOrNull() ?: Double.MIN_VALUE)
+            profileData.put("phone", findViewById<TextView>(R.id.editPhone).text.toString())
+            profileData.put("photoPath", photoFile)
 
-        editor.putString("profile", profileData.toString())
-        editor.apply()
-        finish()
+            editor.putString("profile", profileData.toString())
+            editor.apply()
+            finish()
+        }
 
     }
 
     private fun revertChanges(){
-        DiskUtil.deleteFile(newPhotoPath)
+        if(!newPhotoPath.isNullOrEmpty()){
+            DiskUtil.deleteFile(newPhotoPath!!)
+        }
         photoFile.delete()
     }
 
@@ -224,9 +246,6 @@ class EditProfileActivity : AppCompatActivity() {
                 }
                 R.id.camera -> {
                     // Code to run when menu item 2 is clicked
-                    Log.i(Manifest.permission.CAMERA, "Manifest Camera")
-                    Log.i(Manifest.permission.WRITE_EXTERNAL_STORAGE, "external storage")
-                    Log.i(PackageManager.PERMISSION_DENIED.toString(), "permission denied")
                     if (Build.VERSION.SDK_INT <= 30) {
                         if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED || checkSelfPermission(
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -303,4 +322,17 @@ class EditProfileActivity : AppCompatActivity() {
 
     }
 
+    private fun validateData(): Boolean{
+        var success = true
+        val height = findViewById<TextView>(R.id.editHeight).text.toString().toIntOrNull() ?: Int.MIN_VALUE
+        val weight = findViewById<TextView>(R.id.editWeight).text.toString().toDoubleOrNull() ?: Double.MIN_VALUE
+        if(height <= 0 || height > 260) {
+            success = false
+        }
+        if( weight <= 0 || weight > 150) {
+            success = false
+        }
+
+        return success
+    }
 }

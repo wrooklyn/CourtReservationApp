@@ -248,7 +248,9 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="@string/hint_height"
-                                android:inputType="text|numberDecimal"/>
+                                android:inputType="numberDecimal"
+                                android:maxLength="3"
+                            />
                     </LinearLayout>
                 </LinearLayout>
                 <LinearLayout
@@ -276,7 +278,9 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="@string/hint_weight"
-                                android:inputType="text|numberDecimal"/>
+                                android:inputType="numberDecimal"
+                                android:maxLength="5"
+                            />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -310,7 +314,9 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="@string/hint_phone_number"
-                                android:inputType="text|phone"/>
+                                android:inputType="text|phone"
+                                android:maxLength="15"
+                            />
                     </LinearLayout>
                 </LinearLayout>
                 <TextView

@@ -25,8 +25,8 @@ class ShowProfileActivity : AppCompatActivity() {
     private var address = ""
 
     private var gender : Gender? = null
-    private var height : Int = -1
-    private var weight : Double = -1.0
+    private var height : Int = Int.MIN_VALUE
+    private var weight : Double = Double.MIN_VALUE
     private var phone : String?  = null
 
     private lateinit var photoPath: String
@@ -119,8 +119,8 @@ class ShowProfileActivity : AppCompatActivity() {
             address = profileData.optString("address", "")
             phone = profileData.optString("phone", "")
             newGender = profileData.optString("gender", "")
-            height = profileData.optInt("height",-1)
-            weight = profileData.optDouble("weight",-1.0)
+            height = profileData.optInt("height", Int.MIN_VALUE)
+            weight = profileData.optDouble("weight", Double.MIN_VALUE)
 
             photoPath = profileData.optString("photoPath", "")
         }
@@ -130,8 +130,8 @@ class ShowProfileActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.email).text = email
         findViewById<TextView>(R.id.address).text = address
         findViewById<TextView>(R.id.gender).text = newGender
-        findViewById<TextView>(R.id.height).text = if(height == -1) null else height.toString()
-        findViewById<TextView>(R.id.weight).text = if(weight == -1.0)null else weight.toString()
+        findViewById<TextView>(R.id.height).text = if(height == Int.MIN_VALUE) null else height.toString()
+        findViewById<TextView>(R.id.weight).text = if(weight == Double.MIN_VALUE)null else weight.toString()
         findViewById<TextView>(R.id.phone).text = phone
 
         val pfpElement = findViewById<ImageView>(R.id.imageView3)
