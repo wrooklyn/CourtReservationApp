@@ -32,6 +32,8 @@
                 app:layout_constraintWidth_percent="0.6"
                 app:layout_constraintHeight_percent="0.6"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintDimensionRatio="W,1:1"
+
         />
 
         <androidx.constraintlayout.widget.ConstraintLayout

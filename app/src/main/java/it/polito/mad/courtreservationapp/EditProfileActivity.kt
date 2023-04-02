@@ -18,6 +18,7 @@ import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.doAfterTextChanged
 import it.polito.mad.utils.BitmapUtil
 import it.polito.mad.utils.DiskUtil
@@ -40,7 +41,7 @@ class EditProfileActivity : AppCompatActivity() {
     private var weight : Double = Double.MIN_VALUE
     private var phone : String?  = null
 
-    private lateinit var mainLL: LinearLayout
+    private lateinit var mainLL: ConstraintLayout
 
     private lateinit var photoFile: File
 
