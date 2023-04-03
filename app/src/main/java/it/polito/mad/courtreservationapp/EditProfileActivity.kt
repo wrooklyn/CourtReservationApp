@@ -13,6 +13,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
@@ -52,6 +53,7 @@ class EditProfileActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
+            Log.i("DEBUG", "Gallery Uri:${result.data?.data!!}")
             val inputImage: Bitmap = BitmapUtil.uriToBitmap(result.data?.data!!, this)!!
             val pfpElement = findViewById<ImageView>(R.id.imageView3)
             pfpElement.setImageBitmap(inputImage)
@@ -70,6 +72,7 @@ class EditProfileActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ){
             result ->
+        Log.i("DEBUG", "result uri ${newPhotoUri}")
         if (result.resultCode == Activity.RESULT_OK) {
             val inputImage = BitmapUtil.uriToBitmap(newPhotoUri!!, this)
             val pfpElement = findViewById<ImageView>(R.id.imageView3)
@@ -80,9 +83,11 @@ class EditProfileActivity : AppCompatActivity() {
 
             try {
                 val fOut = FileOutputStream(photoFile)
-                inputImage?.compress(Bitmap.CompressFormat.PNG, 100, fOut)
+                inputImage?.compress(Bitmap.CompressFormat.PNG, 30, fOut)
+                Log.i("DEBUG", "saved ${photoFile.absoluteFile}")
 
             } catch (e: IOException) {
+                Log.e("DEBUG", "Error on ${photoFile.absoluteFile}")
                 e.printStackTrace()
             }
         }
@@ -116,6 +121,7 @@ class EditProfileActivity : AppCompatActivity() {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.i("DEBUG", "onCreate called")
         setContentView(R.layout.activity_edit_profile)
 
         mainLL = findViewById(R.id.mainLL)
@@ -188,9 +194,12 @@ class EditProfileActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        Log.i("DEBUG", "onResume called")
         val pfpElement = findViewById<ImageView>(R.id.imageView3)
         if(photoFile.isFile){
+            Log.i("DEBUG", "${photoFile}")
             val photoURI = Uri.fromFile(photoFile)
+            Log.i("DEBUG", "${photoURI}")
             pfpElement.setImageURI(photoURI)
         } else {
             pfpElement.setImageResource(R.drawable.default_pfp)
