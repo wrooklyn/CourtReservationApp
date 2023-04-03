@@ -186,6 +186,16 @@ class EditProfileActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        val pfpElement = findViewById<ImageView>(R.id.imageView3)
+        if(photoFile.isFile){
+            val photoURI = Uri.fromFile(photoFile)
+            pfpElement.setImageURI(photoURI)
+        } else {
+            pfpElement.setImageResource(R.drawable.default_pfp)
+        }
+    }
     //setting appbar
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater: MenuInflater = menuInflater
@@ -249,10 +259,21 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     private fun revertChanges(){
+        val sharedPref = getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
+        val profileString = sharedPref.getString("profile", null)
+        var path = ""
+
+        if (profileString != null) {
+            val profileData = JSONObject(profileString)
+             path = profileData.optString("photoPath", "")
+        }
         if(!newPhotoPath.isNullOrEmpty()){
             DiskUtil.deleteFile(newPhotoPath!!)
         }
-        photoFile.delete()
+        if (path != photoFile.absolutePath){
+            photoFile.delete()
+        }
+
     }
 
     private fun modifyPicture(view: View){
