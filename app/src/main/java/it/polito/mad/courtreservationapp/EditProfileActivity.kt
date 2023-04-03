@@ -140,7 +140,7 @@ class EditProfileActivity : AppCompatActivity() {
             val photoURI = Uri.fromFile(photoFile)
             pfpElement.setImageURI(photoURI)
         } else {
-            pfpElement.setImageResource(R.drawable.gesu)
+            pfpElement.setImageResource(R.drawable.default_pfp)
         }
 
 

@@ -139,7 +139,7 @@ class ShowProfileActivity : AppCompatActivity() {
         if(photoUri != null){
             pfpElement.setImageURI(photoUri)
         } else {
-            pfpElement.setImageResource(R.drawable.gesu)
+            pfpElement.setImageResource(R.drawable.default_pfp)
         }
 
 
