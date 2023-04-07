@@ -57,9 +57,16 @@ class ShowProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_profile)
 
-        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
+            checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
+            checkSelfPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
+            checkSelfPermission(Manifest.permission.ACCESS_MEDIA_LOCATION) == PackageManager.PERMISSION_DENIED
         ) {
-            val permission = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            val permission = arrayOf(Manifest.permission.CAMERA,
+                                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                     Manifest.permission.READ_EXTERNAL_STORAGE,
+                                     Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+                                     Manifest.permission.ACCESS_MEDIA_LOCATION)
             requestPermissions(permission, 112)
         }
 
