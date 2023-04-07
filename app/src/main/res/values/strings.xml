@@ -37,4 +37,10 @@
     <string name="camera">Camera</string>
     <string name="edit_profile_warning">Invalid height/weight</string>
     <string name="dismiss">Dismiss</string>
+    <string name="home_button_title">Home</string>
+    <string name="explore_button_title">Explore</string>
+    <string name="calendar_button_title">My Reservations</string>
+    <string name="profile_button_title">Profile</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
