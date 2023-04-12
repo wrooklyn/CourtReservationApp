@@ -1,11 +1,16 @@
 package it.polito.mad.courtreservationapp
+
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -16,7 +21,8 @@ import org.json.JSONObject
 import java.util.*
 
 enum class Gender{MALE, FEMALE, OTHER}
-class ShowProfileActivity : AppCompatActivity() {
+
+class Profile : Fragment(R.layout.activity_show_profile) {
 
     private var username = ""
     private var firstName = ""
@@ -33,8 +39,8 @@ class ShowProfileActivity : AppCompatActivity() {
 
     private fun storeInitialValues() {
 
-        val sharedPref = getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
-        val editor = sharedPref.edit()
+        val sharedPref = this.activity?.getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
+        val editor = sharedPref?.edit()
 
         val profileData = JSONObject().apply {
             put("username", username)
@@ -49,48 +55,53 @@ class ShowProfileActivity : AppCompatActivity() {
             put("photoPath", "")
         }
 
-        editor.putString("profile", profileData.toString())
-        editor.apply()
+        editor?.putString("profile", profileData.toString())
+        editor?.apply()
 
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_show_profile)
 
-        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
-            checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
-            checkSelfPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
-            checkSelfPermission(Manifest.permission.ACCESS_MEDIA_LOCATION) == PackageManager.PERMISSION_DENIED
+        if (this.activity?.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
+            this.activity?.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
+            this.activity?.checkSelfPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
+            this.activity?.checkSelfPermission(Manifest.permission.ACCESS_MEDIA_LOCATION) == PackageManager.PERMISSION_DENIED
         ) {
             val permission = arrayOf(Manifest.permission.CAMERA,
-                                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                     Manifest.permission.READ_EXTERNAL_STORAGE,
-                                     Manifest.permission.MANAGE_EXTERNAL_STORAGE,
-                                     Manifest.permission.ACCESS_MEDIA_LOCATION)
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_MEDIA_LOCATION)
             requestPermissions(permission, 112)
         }
 
-        val sharedPref = getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
+        val sharedPref = this.activity?.getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
 
-        val isFirstLaunch = sharedPref.getBoolean("isFirstLaunch", true)
-        if (isFirstLaunch) {
+        val isFirstLaunch = sharedPref?.getBoolean("isFirstLaunch", true)
+        if (isFirstLaunch == true) {
             storeInitialValues()
 
             val editor = sharedPref.edit()
             editor.putBoolean("isFirstLaunch", false)
             editor.apply()
         }
+    }
 
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.activity_show_profile, container, false)
     }
 
     //setting appbar
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater: MenuInflater = menuInflater
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        val inflater: MenuInflater = inflater
         inflater.inflate(R.menu.menu_edit, menu)
-        return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+/*    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle item selection
         return when (item.itemId) {
             R.id.edit -> {
@@ -99,11 +110,11 @@ class ShowProfileActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-    private fun editUsername() {
-        val myIntent = Intent(this, EditProfileActivity::class.java)
+    }*/
+/*    private fun editUsername() {
+        val myIntent = Intent(activity, EditProfileActivity::class.java) //TODO
         startActivity(myIntent)
-    }
+    }*/
 
     //show updated values
     override fun onResume() {
@@ -113,8 +124,8 @@ class ShowProfileActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun updateUI() {
-        val sharedPref = getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
-        val profileString = sharedPref.getString("profile", null)
+        val sharedPref = this.activity?.getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
+        val profileString = sharedPref?.getString("profile", null)
         var newGender = gender.toString()
 
         if (profileString != null) {
@@ -132,21 +143,21 @@ class ShowProfileActivity : AppCompatActivity() {
             photoPath = profileData.optString("photoPath", "")
         }
 
-        findViewById<TextView>(R.id.username).text = username
-        findViewById<TextView>(R.id.fullname).text = if(firstName.isEmpty() && lastName.isEmpty()) "" else "$firstName $lastName"
-        findViewById<TextView>(R.id.email).text = email
-        findViewById<TextView>(R.id.address).text = address
-        findViewById<TextView>(R.id.gender).text = newGender
-        findViewById<TextView>(R.id.height).text = if(height == Int.MIN_VALUE) null else height.toString()
-        findViewById<TextView>(R.id.weight).text = if(weight == Double.MIN_VALUE)null else weight.toString()
-        findViewById<TextView>(R.id.phone).text = phone
+        this.activity?.findViewById<TextView>(R.id.username)?.text  = username
+        this.activity?.findViewById<TextView>(R.id.fullname)?.text = if(firstName.isEmpty() && lastName.isEmpty()) "" else "$firstName $lastName"
+        this.activity?.findViewById<TextView>(R.id.email)?.text = email
+        this.activity?.findViewById<TextView>(R.id.address)?.text = address
+        this.activity?.findViewById<TextView>(R.id.gender)?.text = newGender
+        this.activity?.findViewById<TextView>(R.id.height)?.text = if(height == Int.MIN_VALUE) null else height.toString()
+        this.activity?.findViewById<TextView>(R.id.weight)?.text = if(weight == Double.MIN_VALUE)null else weight.toString()
+        this.activity?.findViewById<TextView>(R.id.phone)?.text = phone
 
-        val pfpElement = findViewById<ImageView>(R.id.imageView3)
+        val pfpElement = this.activity?.findViewById<ImageView>(R.id.imageView3)
         val photoUri = DiskUtil.getUriFromPath(photoPath)
         if(photoUri != null){
-            pfpElement.setImageURI(photoUri)
+            pfpElement?.setImageURI(photoUri)
         } else {
-            pfpElement.setImageResource(R.drawable.default_pfp)
+            pfpElement?.setImageResource(R.drawable.default_pfp)
         }
 
 
