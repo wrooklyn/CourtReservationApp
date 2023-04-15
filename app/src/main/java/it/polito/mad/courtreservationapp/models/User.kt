@@ -1,8 +1,9 @@
 package it.polito.mad.courtreservationapp.models
 
-enum class Gender{MALE, FEMALE, OTHER}
 
-data class User(var username: String,
+
+data class User(val Uid: String,
+                var username: String,
                 var firstName: String,
                 var lastName: String,
                 var email: String,
@@ -11,4 +12,6 @@ data class User(var username: String,
                 var height: Int,
                 var weight: Double,
                 var phone: String,
-                var photoPath: String)
+                var photoPath: String,
+                var favorites: List<OfferedCourt> = mutableListOf()
+)
