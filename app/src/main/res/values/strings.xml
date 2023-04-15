@@ -42,6 +42,15 @@
     <string name="calendar_button_title">Calendar</string>
     <string name="chat_button_title">Chat</string>
     <string name="profile_button_title">Profile</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="profile_page_title">Profile</string>
+    <string name="at_username">\u0040username</string>
+    <string name="email_example">email@example.com</string>
+    <string name="address_example">Via Roma 1, Riva presso Chieri</string>
+    <string name="first_name_example">Hideo</string>
+    <string name="last_name_example">Kojima</string>
+    <string name="height_example">183 cm</string>
+    <string name="weight_example">89 kg</string>
+    <string name="phone_example">+39 331 12345678</string>
+    <string name="logout">Log out</string>
+    <string name="confirm">Confirm</string>
 </resources>

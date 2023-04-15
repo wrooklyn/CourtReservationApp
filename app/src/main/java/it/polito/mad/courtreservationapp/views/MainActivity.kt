@@ -1,9 +1,10 @@
-package it.polito.mad.courtreservationapp
+package it.polito.mad.courtreservationapp.views
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -14,8 +15,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        replaceFragment(Profile())
-        val bottomNav=findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        replaceFragment(ShowProfileFragment())
         binding.bottomNavigation.setOnItemSelectedListener {
             when(it.itemId) {
                 R.id.home -> Log.i("DBG", "Home button pressed")
@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.calendar -> Log.i("DBG", "Calendar button pressed")
                 R.id.chat -> Log.i("DBG", "Calendar button pressed")
                 R.id.profile -> {
-                    replaceFragment(Profile())
+                    replaceFragment(ShowProfileFragment())
                 }
                 else -> Log.i("DBG", "Invalid")
             }
