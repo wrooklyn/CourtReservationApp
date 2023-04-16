@@ -1,4 +1,4 @@
-package it.polito.mad.courtreservationapp.views
+package it.polito.mad.courtreservationapp.views.reservationManager
 
 import android.Manifest
 import android.annotation.SuppressLint
