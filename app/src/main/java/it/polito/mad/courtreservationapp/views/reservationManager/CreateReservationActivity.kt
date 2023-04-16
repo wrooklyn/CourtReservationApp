@@ -10,7 +10,7 @@ import it.polito.mad.courtreservationapp.views.reservationManager.ShowSummaryFra
 import java.util.*
 
 class CreateReservationActivity : AppCompatActivity() {
-    private var myReservation: Reservation = Reservation("","", Date(),1,"")
+    //private var myReservation: Reservation = Reservation("","", Date(),1,"")
     private var pageNumber : Int = 0
     lateinit var binding: ActivityCreateReservationBinding
     override fun onCreate(savedInstanceState: Bundle?) {
