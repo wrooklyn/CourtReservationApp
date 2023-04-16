@@ -11,7 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout13"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="400dp"
         android:padding="25dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,7 +39,7 @@
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
             android:background="@drawable/custom_rectangle_4rounded"
-            android:backgroundTint="#CA5353"
+            android:padding="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -49,8 +49,8 @@
 
             <com.stacktips.view.CustomCalendarView
                 android:id="@+id/calendar_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:background="@color/design_default_color_primary"
                 app:calendarBackgroundColor="@color/design_default_color_primary"
                 app:calendarTitleTextColor="@color/black"

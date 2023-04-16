@@ -44,52 +44,60 @@ class ShowCalendarFragment : Fragment() {
 
     }
 
-    fun getReservationOfCourts (Cid:String):List<Reservation>{
+    fun getReservationOfCourts(Cid: String): List<Reservation> {
         //does stuff
         return listOf();
     }
 
-    private fun setUpTimePicker(view: View){
+    private fun setUpTimePicker(view: View) {
         val recyclerView: RecyclerView =
             view.findViewById(R.id.recyclerView)
 
         //Initialize data to be displayed
-        val myData: List< Int > = listOf(0,1,2,3,4,5,6,7)
+        val myData: List<Int> = listOf(0, 1, 2, 3, 4, 5, 6, 7)
 
         //Show items as a simple linear list
         recyclerView.layoutManager =
-            GridLayoutManager(activity,2)
+            GridLayoutManager(activity, 3)
 
         //Populate recyclerView with data
         recyclerView.adapter = TimeSlotAdapter(myData)
 
     }
 
-    class TimeSlotAdapter(val data : List<Int>):
+    class TimeSlotAdapter(val data: List<Int>) :
         RecyclerView.Adapter<TimeSlotViewHolder>() {
         override fun getItemCount() = data.size
-        override fun onCreateViewHolder(parent: ViewGroup,
-                                        viewType: Int):TimeSlotViewHolder {
-            val v=LayoutInflater.from(parent.context)
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int
+        ): TimeSlotViewHolder {
+            val v = LayoutInflater.from(parent.context)
                 .inflate(R.layout.time_picker_item, parent, false)
             return TimeSlotViewHolder(v)
         }
-        override fun onBindViewHolder(holder:TimeSlotViewHolder,
-                                      position: Int) {
+
+        override fun onBindViewHolder(
+            holder: TimeSlotViewHolder,
+            position: Int
+        ) {
             val u = data[position] //access data item
             // let the holder use data as needed
             holder.bind(u);
         }
     }
-    class TimeSlotViewHolder(v:View):
+
+    class TimeSlotViewHolder(v: View) :
         RecyclerView.ViewHolder(v) {
         private val timeSlot: TextView = v.findViewById(R.id.tp_text)
         fun bind(u: Int) {
-            timeSlot.text = u.toString()
+            val startH = 10 + u
+            val endH = startH + 1
+            timeSlot.text = "$startH:00 - $endH:00"
         }
-        }
+    }
 
-        private fun setUpCalendar(view: View){
+    private fun setUpCalendar(view: View) {
         val calendarView = view.findViewById(R.id.calendar_view) as CustomCalendarView
 
 //Initialize calendar with date
