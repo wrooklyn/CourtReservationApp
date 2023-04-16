@@ -17,4 +17,7 @@
     <color name="fox_skin">#DFBCB2</color>
     <color name="item_color_active">#F15F79</color>
 
+    <color name="light_blue_background">#72C4DE</color>
+    <color name="red_button">#F16E64</color>
+
 </resources>

@@ -53,4 +53,6 @@
     <string name="phone_example">+39 331 12345678</string>
     <string name="logout">Log out</string>
     <string name="confirm">Confirm</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

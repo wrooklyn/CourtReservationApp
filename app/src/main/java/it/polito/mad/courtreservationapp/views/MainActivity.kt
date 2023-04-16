@@ -1,4 +1,5 @@
 package it.polito.mad.courtreservationapp.views
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -6,6 +7,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.databinding.ActivityMainBinding
+import it.polito.mad.courtreservationapp.views.reservationManager.CreateReservationActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,7 +23,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.home -> Log.i("DBG", "Home button pressed")
                 R.id.explore -> Log.i("DBG", "Explore button pressed")
                 R.id.calendar -> Log.i("DBG", "Calendar button pressed")
-                R.id.chat -> Log.i("DBG", "Calendar button pressed")
+                R.id.chat -> testLaunchGabry()
                 R.id.profile -> {
                     replaceFragment(ShowProfileFragment())
                 }
@@ -29,6 +31,11 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+    }
+
+    private fun testLaunchGabry(){
+        val createReservationIntent:Intent = Intent(this, CreateReservationActivity::class.java)
+        startActivity(createReservationIntent)
     }
 
     private fun replaceFragment(fragment: Fragment) {
