@@ -5,6 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "requests",
+    primaryKeys = ["requestId", "userId", "centerId", "courtId", "serviceId"],
     foreignKeys = [
         ForeignKey(entity = User::class,
             parentColumns = ["userId"],
@@ -12,18 +13,19 @@ import androidx.room.PrimaryKey
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE
         ),
-        ForeignKey(entity = Court::class,
-            parentColumns = ["serviceId"],
-            childColumns = ["serviceId"],
+        ForeignKey(entity = Service::class,
+            parentColumns = ["centerId", "courtId", "serviceId"],
+            childColumns = ["centerId", "courtId", "serviceId"],
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE
         )
     ]
 )
 data class Request(
-    @PrimaryKey(autoGenerate = true)
     val requestId: Int,
     val userId: Int,
+    val centerId: Int,
+    val courtId: Int,
     val serviceId: Int,
     val note: String
 )
