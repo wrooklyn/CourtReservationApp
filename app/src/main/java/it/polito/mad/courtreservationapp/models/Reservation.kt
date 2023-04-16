@@ -1,13 +1,49 @@
 package it.polito.mad.courtreservationapp.models
 
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
 import java.util.Date
 
+@Entity(tableName = "reservations",
+    foreignKeys = [
+        ForeignKey(entity = User::class,
+            parentColumns = ["userId"],
+            childColumns = ["userId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE
+        ),
+        ForeignKey(entity = Court::class,
+            parentColumns = ["centerId", "courtId"],
+            childColumns = ["centerId", "courtId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE
+        ),
+        ForeignKey(entity = Request::class,
+            parentColumns = ["requestId"],
+            childColumns = ["requestId"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE
+        )
+    ]
+)
 data class Reservation(
-    val Rid:String?,
-    val Uid:String,
-    var date: Date,
-    var timeSlot: Int,
-    var customRequest:String?)
+    @PrimaryKey(autoGenerate = true)
+    val reservationId: Int,
+
+    val userId: Int,
+
+    val centerId: Int,
+
+    val courtId: Int,
+
+    val reservationDate: Date,
+
+    val timeSlotId: Int,
+
+    val requestId: Int
+
+    )
 
 //there will be a mapping of time slots in the form:
 /*
