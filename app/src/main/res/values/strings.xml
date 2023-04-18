@@ -60,4 +60,11 @@
     <string name="soccer">Soccer</string>
     <string name="iceskate">Iceskate</string>
     <string name="basketball">Basketball</string>
+    <string name="hockey">Hockey</string>
+    <string name="tennis">Tennis</string>
+    <string name="volleyball">Volley</string>
+    <string name="rugby">Rugby</string>
+    <string name="available_heading">Available Now</string>
+    <string name="description1_subheading">Sports centers available now</string>
+    <string name="link_seeall">See All</string>
 </resources>
