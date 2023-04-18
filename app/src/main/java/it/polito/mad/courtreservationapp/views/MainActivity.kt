@@ -17,10 +17,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        replaceFragment(ShowProfileFragment())
+        replaceFragment(HomeFragment())
         binding.bottomNavigation.setOnItemSelectedListener {
             when(it.itemId) {
-                R.id.home -> Log.i("DBG", "Home button pressed")
+                R.id.home -> {
+                    replaceFragment(HomeFragment())
+                }
                 R.id.explore -> Log.i("DBG", "Explore button pressed")
                 R.id.calendar -> Log.i("DBG", "Calendar button pressed")
                 R.id.chat -> testLaunchGabry()
