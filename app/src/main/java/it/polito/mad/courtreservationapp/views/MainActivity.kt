@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.databinding.ActivityMainBinding
+import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
 import it.polito.mad.courtreservationapp.views.reservationManager.CreateReservationActivity
 
 class MainActivity : AppCompatActivity() {

@@ -67,4 +67,8 @@
     <string name="available_heading">Available Now</string>
     <string name="description1_subheading">Sports centers available now</string>
     <string name="link_seeall">See All</string>
+    <string name="sportsplex">Sportsplex</string>
+    <string name="popular_heading">Popular Centers</string>
+    <string name="description2_subheading">Discover popular sports centers in your area</string>
+    <string name="location_center">Oak Park</string>
 </resources>
