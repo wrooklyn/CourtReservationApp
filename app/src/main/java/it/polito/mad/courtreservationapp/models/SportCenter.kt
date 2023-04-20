@@ -9,10 +9,7 @@ data class SportCenter(
     @PrimaryKey(autoGenerate = true)
     val centerId: Int,
 
-    @ColumnInfo(name = "name")
     val name: String,
 
-    @ColumnInfo(name = "address")
     val address: String
-
-    )
+)
