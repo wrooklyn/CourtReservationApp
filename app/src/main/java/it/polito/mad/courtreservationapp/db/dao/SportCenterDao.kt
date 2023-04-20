@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.room.OnConflictStrategy.Companion.REPLACE
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourts
+import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndReservations
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
 import it.polito.mad.courtreservationapp.models.SportCenter
 
@@ -11,10 +12,10 @@ import it.polito.mad.courtreservationapp.models.SportCenter
 interface SportCenterDao {
 
     @Insert(onConflict = REPLACE)
-    suspend fun save(center: SportCenter)
+    suspend fun save(vararg centers: SportCenter)
 
     @Delete
-    fun delete(center: SportCenter)
+    fun delete(vararg centers: SportCenter)
 
     @Query("SELECT * FROM sportCenters")
     fun getAll(): LiveData<List<SportCenter>>
@@ -37,5 +38,13 @@ interface SportCenterDao {
     @Transaction
     @Query("SELECT * FROM sportCenters WHERE centerId = :centerId")
     fun getByIdWithCourtsAndServices(centerId: Int): LiveData<SportCenterWithCourtsAndServices>
+
+    @Transaction
+    @Query("SELECT * FROM sportCenters")
+    fun getAllWithCourtsAndReservations(): LiveData<List<SportCenterWithCourtsAndReservations>>
+
+    @Transaction
+    @Query("SELECT * FROM sportCenters WHERE centerId = :centerId")
+    fun getByIdWithCourtsAndReservations(centerId: Int): LiveData<SportCenterWithCourtsAndReservations>
 
 }

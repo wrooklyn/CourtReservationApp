@@ -3,6 +3,7 @@ package it.polito.mad.courtreservationapp.db.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.room.OnConflictStrategy.Companion.REPLACE
+import it.polito.mad.courtreservationapp.db.relationships.CourtWithReservations
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithServices
 import it.polito.mad.courtreservationapp.models.Court
 
@@ -10,10 +11,10 @@ import it.polito.mad.courtreservationapp.models.Court
 interface CourtDao {
 
     @Insert(onConflict = REPLACE)
-    suspend fun save(court: Court)
+    suspend fun save(vararg courts: Court)
 
     @Delete
-    suspend fun delete(court: Court)
+    suspend fun delete(vararg courts: Court)
 
     @Query("SELECT * FROM courts")
     fun getAll(): LiveData<List<Court>>
@@ -28,5 +29,13 @@ interface CourtDao {
     @Transaction
     @Query("SELECT * FROM courts WHERE courtId = :courtId ")
     fun getByIdWithServices(courtId: Int): LiveData<CourtWithServices>
+
+    @Transaction
+    @Query("SELECT * FROM courts")
+    fun getAllWithReservations(): LiveData<List<CourtWithReservations>>
+
+    @Transaction
+    @Query("SELECT * FROM courts WHERE courtId = :courtId ")
+    fun getByIdWithReservations(courtId: Int): LiveData<CourtWithReservations>
 
 }

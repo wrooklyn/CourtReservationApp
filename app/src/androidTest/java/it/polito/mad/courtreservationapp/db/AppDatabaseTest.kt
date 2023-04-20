@@ -7,16 +7,9 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import it.polito.mad.courtreservationapp.db.crossref.CourtServiceCrossRef
-import it.polito.mad.courtreservationapp.db.dao.CourtAndServiceDao
-import it.polito.mad.courtreservationapp.db.dao.CourtDao
-import it.polito.mad.courtreservationapp.db.dao.ServiceDao
-import it.polito.mad.courtreservationapp.db.dao.SportCenterDao
-import it.polito.mad.courtreservationapp.db.relationships.CourtWithServices
-import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourts
-import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
-import it.polito.mad.courtreservationapp.models.Court
-import it.polito.mad.courtreservationapp.models.Service
-import it.polito.mad.courtreservationapp.models.SportCenter
+import it.polito.mad.courtreservationapp.db.dao.*
+import it.polito.mad.courtreservationapp.db.relationships.*
+import it.polito.mad.courtreservationapp.models.*
 import it.polito.mad.utils.getOrAwaitValue
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
@@ -37,15 +30,29 @@ class AppDatabaseTest: TestCase(){
     private lateinit var courtDao: CourtDao
     private lateinit var serviceDao: ServiceDao
     private lateinit var courtAndServiceDao: CourtAndServiceDao
+    private lateinit var userDao: UserDao
+    private lateinit var reservationDao: ReservationDao
+
+    private lateinit var center: SportCenter
+    private lateinit var court: Court
+    private lateinit var service: Service
+    private lateinit var user1: User
+    private lateinit var user2: User
+    private lateinit var reservation1: Reservation
+    private lateinit var reservation2: Reservation
+
 
     @Before
     fun createDB() {
+        initObjects()
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).allowMainThreadQueries().build()
         sportCenterDao = db.sportCenterDao()
         courtDao = db.courtDao()
         serviceDao = db.serviceDao()
         courtAndServiceDao = db.courtAndServiceDao()
+        userDao = db.userDao()
+        reservationDao = db.reservationDao()
     }
 
     @After
@@ -53,12 +60,21 @@ class AppDatabaseTest: TestCase(){
         db.close()
     }
 
+    private fun initObjects(){
+        center = SportCenter(1,"SC1", "address")
+        court = Court(1,"SC1", 1, 1)
+        service = Service(1,"service 1", 10.5)
+        user1 = User(1, "u1", "first", "last", "mail", "uAddress", 1, 170, 70.0, "phone")
+        user2 = User(2, "u2", "first", "last", "mail", "uAddress", 1, 175, 70.0, "phone")
+        reservation1 = Reservation(1, "today", 1, 1, 1)
+        reservation2 = Reservation(2, "today", 1, 2, 1)
+    }
     @Test
-    fun insertAndDeleteSportCenter() = runBlocking{
+    fun sportCenterDeleteCenter() = runBlocking{
 
-        val center = SportCenter(1,"SC1", "address")
         Log.d("Test", "$center")
         sportCenterDao.save(center)
+
         var centers = sportCenterDao.getAll().getOrAwaitValue()
         Log.d("Test", "$centers")
         assertTrue(centers.contains(center))
@@ -71,16 +87,13 @@ class AppDatabaseTest: TestCase(){
     }
 
     @Test
-    fun insertAndDeleteSportCenterWithCourts() = runBlocking{
-        val center = SportCenter(1,"SC1", "address")
-        sportCenterDao.save(center)
+    fun sportCenterWithCourtsDeleteCenter() = runBlocking{
 
-        val court = Court(1,"SC1", 1, 1)
+        sportCenterDao.save(center)
         courtDao.save(court)
 
         var courts = courtDao.getAll().getOrAwaitValue()
         Log.d("Test", "$courts")
-
         assertTrue(courts.contains(court))
 
         val centerWithCourts = SportCenterWithCourts(center, listOf(court))
@@ -98,13 +111,60 @@ class AppDatabaseTest: TestCase(){
         courts = courtDao.getAll().getOrAwaitValue()
         Log.d("Test", "$courts")
         assertTrue(courts.isEmpty())
-//        courts.forEach(){Log.d("Test", "Hello")}
+
     }
 
     @Test
-    fun insertAndDeleteCourt() = runBlocking{
-        val center = SportCenter(1,"SC1", "address")
-        val court = Court(1,"SC1", 1, 1)
+    fun sportCenterWithCourtsAndServicesDeleteSportCenter() = runBlocking{
+        sportCenterDao.save(center)
+        courtDao.save(court)
+        serviceDao.save(service)
+        courtAndServiceDao.save(CourtServiceCrossRef(court.courtId, service.serviceId))
+
+        val cs = CourtWithServices(court, listOf(service))
+        val ccs = SportCenterWithCourtsAndServices(center, listOf(cs))
+
+        var many_ccs = sportCenterDao.getAllWithCourtsAndServices().getOrAwaitValue()
+        Log.d("test","SportCenters: $many_ccs")
+        assertTrue(many_ccs.contains(ccs))
+
+        sportCenterDao.delete(center)
+        many_ccs = sportCenterDao.getAllWithCourtsAndServices().getOrAwaitValue()
+        Log.d("test","SportCenters: $many_ccs")
+        assertTrue(many_ccs.isEmpty())
+
+        val many_cs = courtDao.getAllWithServices().getOrAwaitValue()
+        Log.d("test","CourtsWithServ: $many_cs")
+        assertTrue(many_cs.isEmpty())
+
+    }
+
+    @Test
+    fun sportCenterWithCourtsAndReservationsDeleteSportCenter() = runBlocking{
+        sportCenterDao.save(center)
+        courtDao.save(court)
+        userDao.save(user1, user2)
+        reservationDao.save(reservation1, reservation2)
+
+        val scr = SportCenterWithCourtsAndReservations(center, listOf(
+            CourtWithReservations(court,
+                listOf(reservation1, reservation2)
+            )
+        ))
+
+        var scrs = sportCenterDao.getAllWithCourtsAndReservations().getOrAwaitValue()
+        Log.d("test","SportCenters: $scrs")
+        assertTrue(scrs.contains(scr))
+
+        sportCenterDao.delete(center)
+        scrs = sportCenterDao.getAllWithCourtsAndReservations().getOrAwaitValue()
+        Log.d("test","SportCenters: $scrs")
+        assertTrue(scrs.isEmpty())
+
+    }
+
+    @Test
+    fun courtDeleteCourt() = runBlocking{
         sportCenterDao.save(center)
         courtDao.save(court)
 
@@ -117,11 +177,7 @@ class AppDatabaseTest: TestCase(){
     }
 
     @Test
-    fun insertAndDeleteCourtWithServices() = runBlocking{
-        val center = SportCenter(1,"SC1", "address")
-        val court = Court(1,"SC1", 1, 1)
-        val service = Service(1,"service 1", 10.5)
-
+    fun courtWithServicesDeleteCourt() = runBlocking{
         sportCenterDao.save(center)
         courtDao.save(court)
         serviceDao.save(service)
@@ -131,7 +187,7 @@ class AppDatabaseTest: TestCase(){
         Log.d("Test", "CourtWithServices: $courtWithServices")
 
         var courtsWithServices = courtDao.getAllWithServices().getOrAwaitValue()
-        Log.d("Test", "CourtsWithServs: $courtsWithServices")
+        Log.d("Test", "CourtsWithServices: $courtsWithServices")
         assertTrue(courtsWithServices.contains(courtWithServices))
 
         courtDao.delete(court)
@@ -141,32 +197,84 @@ class AppDatabaseTest: TestCase(){
 
     }
 
-    @Test
-    fun insertAndDeleteSportCenterWithCourtsAndServices() = runBlocking{
-        val center = SportCenter(1,"SC1", "address")
-        val court = Court(1,"SC1", 1, 1)
-        val service = Service(1, "serv 1", 10.0)
 
+
+    @Test
+    fun userDeleteUser() = runBlocking {
+        userDao.save(user1)
+
+        var users = userDao.getAll().getOrAwaitValue()
+        Log.d("test","Users: $users")
+        assertTrue(users.contains(user1))
+
+        userDao.delete(user1)
+        users = userDao.getAll().getOrAwaitValue()
+        Log.d("test","Users: $users")
+        assertTrue(users.isEmpty())
+
+    }
+
+    @Test
+    fun userWithReservationsDeleteUser() = runBlocking {
         sportCenterDao.save(center)
         courtDao.save(court)
-        serviceDao.save(service)
-        courtAndServiceDao.save(CourtServiceCrossRef(court.courtId, service.serviceId))
+        userDao.save(user1)
+        reservationDao.save(reservation1)
 
-        val cs = CourtWithServices(court, listOf(service))
-        val ccs = SportCenterWithCourtsAndServices(center, listOf(cs))
+        val userWithReservations = UserWithReservations(user1, listOf(reservation1))
 
-        var many_ccs = sportCenterDao.getAllWithCourtsAndServices().getOrAwaitValue()
-        Log.d("test","$many_ccs")
-        assertTrue(many_ccs.contains(ccs))
+        var users = userDao.getAllWithReservations().getOrAwaitValue()
+        Log.d("test","Users: $users")
+        assertTrue(users.contains(userWithReservations))
 
-        sportCenterDao.delete(center)
-        many_ccs = sportCenterDao.getAllWithCourtsAndServices().getOrAwaitValue()
-        Log.d("test","SportCourtsServ: $many_ccs")
-        assertTrue(many_ccs.isEmpty())
+        userDao.delete(user1)
+        users = userDao.getAllWithReservations().getOrAwaitValue()
+        Log.d("test","Users: $users")
+        assertTrue(users.isEmpty())
 
-        val many_cs = courtDao.getAllWithServices().getOrAwaitValue()
-        Log.d("test","CourtsWithServ: $many_cs")
-        assertTrue(many_cs.isEmpty())
+    }
+
+    @Test
+    fun courtWithReservationsDeleteReservation() = runBlocking {
+        sportCenterDao.save(center)
+        courtDao.save(court)
+        userDao.save(user1)
+        reservationDao.save(reservation1)
+
+        val courtWithReservations = CourtWithReservations(court, listOf(reservation1))
+
+        var courts = courtDao.getAllWithReservations().getOrAwaitValue()
+        Log.d("test","Courts: $courts.")
+        assertTrue(courts.contains(courtWithReservations))
+
+        reservationDao.delete(reservation1)
+        courts = courtDao.getAllWithReservations().getOrAwaitValue()
+        Log.d("test","Courts: $courts")
+        assertTrue(courts[0].reservations.isEmpty())
+
+    }
+
+    @Test
+    fun courtWithReservationsDeleteCourt() = runBlocking {
+        sportCenterDao.save(center)
+        courtDao.save(court)
+        userDao.save(user1)
+        reservationDao.save(reservation1)
+
+        val courtWithReservations = CourtWithReservations(court, listOf(reservation1))
+
+        var courts = courtDao.getAllWithReservations().getOrAwaitValue()
+        var reservations = reservationDao.getAll().getOrAwaitValue()
+        Log.d("test","Courts: $courts.")
+        Log.d("test","Reservations: $reservations")
+        assertTrue(courts.contains(courtWithReservations))
+
+        courtDao.delete(court)
+        courts = courtDao.getAllWithReservations().getOrAwaitValue()
+        reservations = reservationDao.getAll().getOrAwaitValue()
+        Log.d("test","Courts: $courts")
+        Log.d("test","Reservations: $reservations")
+        assertTrue(courts.isEmpty())
 
     }
 
