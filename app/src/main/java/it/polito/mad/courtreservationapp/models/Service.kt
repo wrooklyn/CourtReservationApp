@@ -2,22 +2,31 @@ package it.polito.mad.courtreservationapp.models
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.ForeignKey.Companion.CASCADE
+import androidx.room.PrimaryKey
 
 @Entity(tableName = "services",
-    primaryKeys = ["centerId", "courtId", "serviceId"],
     foreignKeys = [
         ForeignKey(entity = Court::class,
-            parentColumns = ["centerId", "courtId"],
-            childColumns = ["centerId", "courtId"],
-            onDelete = ForeignKey.CASCADE,
-            onUpdate = ForeignKey.CASCADE
+            parentColumns = ["courtId"],
+            childColumns = ["serviceCourtId"],
+            onDelete = CASCADE,
+            onUpdate = CASCADE
+        ),
+        ForeignKey(entity = SportCenter::class,
+            parentColumns = ["centerId"],
+            childColumns = ["serviceCenterId"],
+            onDelete = CASCADE,
+            onUpdate = CASCADE
         )
     ]
 )
 data class Service(
-    val centerId: Int,
-    val courtId: Int,
+    @PrimaryKey(autoGenerate = true)
     val serviceId: Int,
     val description: String,
-    val cost: Float
+    val cost: Double,
+
+    val serviceCourtId: Int,
+    val serviceCenterId: Int
 )
