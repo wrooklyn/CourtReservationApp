@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.room.OnConflictStrategy.Companion.REPLACE
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithReservations
+import it.polito.mad.courtreservationapp.db.relationships.CourtWithReservationsAndServices
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithServices
 import it.polito.mad.courtreservationapp.models.Court
 
@@ -37,5 +38,13 @@ interface CourtDao {
     @Transaction
     @Query("SELECT * FROM courts WHERE courtId = :courtId ")
     fun getByIdWithReservations(courtId: Int): LiveData<CourtWithReservations>
+
+    @Transaction
+    @Query("SELECT * FROM courts")
+    fun getAllWithReservationsAndServices(): LiveData<List<CourtWithReservationsAndServices>>
+
+    @Transaction
+    @Query("SELECT * FROM courts WHERE courtId = :courtId ")
+    fun getByIdWithReservationsAndServices(courtId: Int): LiveData<CourtWithReservationsAndServices>
 
 }

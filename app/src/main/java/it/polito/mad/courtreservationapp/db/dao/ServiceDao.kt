@@ -16,8 +16,8 @@ interface ServiceDao {
     fun getById(serviceId: Int): LiveData<Service>
 
     @Insert(onConflict = REPLACE)
-    suspend fun save(service: Service)
+    suspend fun save(vararg services: Service)
 
     @Delete
-    suspend fun delete(service: Service)
+    suspend fun delete(vararg services: Service)
 }

@@ -7,6 +7,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
 import it.polito.mad.courtreservationapp.db.relationships.UserWithReservations
+import it.polito.mad.courtreservationapp.db.relationships.UserWithReservationsAndServices
 //import it.polito.mad.courtreservationapp.db.relationships.UserWithReservations
 import it.polito.mad.courtreservationapp.models.User
 
@@ -30,4 +31,10 @@ interface UserDao {
 
     @Query("SELECT * FROM users WHERE userId = :userId")
     fun getByIdWithReservations(userId: Int): LiveData<UserWithReservations>
+
+    @Query("SELECT * FROM users")
+    fun getAllWithReservationsAndServices(): LiveData<List<UserWithReservationsAndServices>>
+
+    @Query("SELECT * FROM users WHERE userId = :userId")
+    fun getByIdWithReservationsAndServices(userId: Int): LiveData<UserWithReservationsAndServices>
 }
