@@ -27,6 +27,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
@@ -82,6 +83,9 @@ class HomeFragment : Fragment() {
         val recyclerView: RecyclerView? = view?.findViewById(R.id.available_recycler)
         recyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         recyclerView?.adapter = AvailableAdapter(imageId, locationName, centerName)
+        recyclerView?.isNestedScrollingEnabled = false
+
+
     }
     private fun popularInitialize(){
         imageId = arrayOf(
@@ -105,6 +109,7 @@ class HomeFragment : Fragment() {
         val recyclerView: RecyclerView? = view?.findViewById(R.id.popular_recycler)
         recyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         recyclerView?.adapter = PopularAdapter(imageId, locationName, centerName)
+        recyclerView?.isNestedScrollingEnabled = false
     }
 
     //Sports ScrollView
