@@ -14,8 +14,8 @@ interface OpeningDao {
     fun getAll(): LiveData<List<Opening>>
 
     @Insert(onConflict = REPLACE)
-    fun save(center: Opening)
+    suspend fun save(center: Opening)
 
     @Delete
-    fun delete(center: Opening)
+    suspend fun delete(center: Opening)
 }
