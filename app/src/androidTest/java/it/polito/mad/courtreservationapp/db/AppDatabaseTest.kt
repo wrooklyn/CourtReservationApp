@@ -6,6 +6,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import it.polito.mad.courtreservationapp.db.crossref.CourtServiceCrossRef
+import it.polito.mad.courtreservationapp.db.dao.CourtAndServiceDao
 import it.polito.mad.courtreservationapp.db.dao.CourtDao
 import it.polito.mad.courtreservationapp.db.dao.ServiceDao
 import it.polito.mad.courtreservationapp.db.dao.SportCenterDao
@@ -34,6 +36,7 @@ class AppDatabaseTest: TestCase(){
     private lateinit var sportCenterDao: SportCenterDao
     private lateinit var courtDao: CourtDao
     private lateinit var serviceDao: ServiceDao
+    private lateinit var courtAndServiceDao: CourtAndServiceDao
 
     @Before
     fun createDB() {
@@ -42,6 +45,7 @@ class AppDatabaseTest: TestCase(){
         sportCenterDao = db.sportCenterDao()
         courtDao = db.courtDao()
         serviceDao = db.serviceDao()
+        courtAndServiceDao = db.courtAndServiceDao()
     }
 
     @After
@@ -100,11 +104,11 @@ class AppDatabaseTest: TestCase(){
     @Test
     fun insertAndDeleteCourt() = runBlocking{
         val center = SportCenter(1,"SC1", "address")
-        sportCenterDao.save(center)
         val court = Court(1,"SC1", 1, 1)
+        sportCenterDao.save(center)
         courtDao.save(court)
-        var courts = courtDao.getAll().getOrAwaitValue()
 
+        var courts = courtDao.getAll().getOrAwaitValue()
         assertTrue(courts.contains(court))
 
         courtDao.delete(court)
@@ -115,18 +119,19 @@ class AppDatabaseTest: TestCase(){
     @Test
     fun insertAndDeleteCourtWithServices() = runBlocking{
         val center = SportCenter(1,"SC1", "address")
-        sportCenterDao.save(center)
         val court = Court(1,"SC1", 1, 1)
-        courtDao.save(court)
+        val service = Service(1,"service 1", 10.5)
 
-        val service = Service(1,"service 1", 10.5, 1, 1)
+        sportCenterDao.save(center)
+        courtDao.save(court)
         serviceDao.save(service)
+        courtAndServiceDao.save(CourtServiceCrossRef(court.courtId, service.serviceId))
 
         val courtWithServices = CourtWithServices(court, listOf(service))
-        Log.d("Test", "${courtWithServices.court}, ${courtWithServices.services}")
+        Log.d("Test", "CourtWithServices: $courtWithServices")
 
         var courtsWithServices = courtDao.getAllWithServices().getOrAwaitValue()
-        Log.d("Test", "$courtsWithServices")
+        Log.d("Test", "CourtsWithServs: $courtsWithServices")
         assertTrue(courtsWithServices.contains(courtWithServices))
 
         courtDao.delete(court)
@@ -140,11 +145,12 @@ class AppDatabaseTest: TestCase(){
     fun insertAndDeleteSportCenterWithCourtsAndServices() = runBlocking{
         val center = SportCenter(1,"SC1", "address")
         val court = Court(1,"SC1", 1, 1)
-        val service = Service(1, "serv 1", 10.0, 1,1)
+        val service = Service(1, "serv 1", 10.0)
 
         sportCenterDao.save(center)
         courtDao.save(court)
         serviceDao.save(service)
+        courtAndServiceDao.save(CourtServiceCrossRef(court.courtId, service.serviceId))
 
         val cs = CourtWithServices(court, listOf(service))
         val ccs = SportCenterWithCourtsAndServices(center, listOf(cs))
@@ -161,8 +167,6 @@ class AppDatabaseTest: TestCase(){
         val many_cs = courtDao.getAllWithServices().getOrAwaitValue()
         Log.d("test","CourtsWithServ: $many_cs")
         assertTrue(many_cs.isEmpty())
-
-
 
     }
 
