@@ -7,16 +7,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
+import it.polito.mad.courtreservationapp.models.SportCenter
+import it.polito.mad.courtreservationapp.views.ShowProfileFragment
 
 class HomeFragment : Fragment() {
 
     lateinit var imageId: Array<Int>
     lateinit var sportName: Array<String>
-    lateinit var locationName: Array<String>
-    lateinit var centerName: Array<String>
+    private lateinit var locationName: Array<String>
+    private lateinit var centerName: Array<String>
+    private lateinit var centersList: Array<SportCenter>
+    private lateinit var popularCentersList: Array<SportCenter>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +68,7 @@ class HomeFragment : Fragment() {
         recyclerView?.adapter = SportsAdapter(imageId, sportName)
     }
     private fun availableInitialize(){
+        centersList = emptyArray()
         imageId = arrayOf(
             R.drawable.basket_center,
             R.drawable.golf_center,
@@ -80,14 +87,30 @@ class HomeFragment : Fragment() {
             getString(R.string.sportsplex),
             getString(R.string.sportsplex)
         )
+        for (i in centerName.indices){
+            val sportCenter = SportCenter(i, centerName[i], locationName[i])
+            centersList=centersList.plus(sportCenter)
+        }
+        val adapter=AvailableAdapter(centersList, imageId)
         val recyclerView: RecyclerView? = view?.findViewById(R.id.available_recycler)
         recyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        recyclerView?.adapter = AvailableAdapter(imageId, locationName, centerName)
+        recyclerView?.adapter = adapter
         recyclerView?.isNestedScrollingEnabled = false
+        adapter.setOnItemClickListener(object : AvailableAdapter.onItemClickListener{
+            override fun onItemClick(position: Int) {
+                val fragmentB = ShowProfileFragment()
+                activity?.supportFragmentManager?.beginTransaction()
+                    ?.replace(R.id.fragmentContainer, fragmentB, "fragmentId")
+                    ?.commit();
+            }
+
+        })
 
 
     }
     private fun popularInitialize(){
+        popularCentersList = emptyArray()
+
         imageId = arrayOf(
             R.drawable.basket_center,
             R.drawable.golf_center,
@@ -106,10 +129,24 @@ class HomeFragment : Fragment() {
             getString(R.string.sportsplex),
             getString(R.string.sportsplex)
         )
+        for (i in centerName.indices){
+            val sportCenter = SportCenter(i, centerName[i], locationName[i])
+            popularCentersList=popularCentersList.plus(sportCenter)
+        }
+        val adapter=PopularAdapter(imageId, popularCentersList)
         val recyclerView: RecyclerView? = view?.findViewById(R.id.popular_recycler)
         recyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        recyclerView?.adapter = PopularAdapter(imageId, locationName, centerName)
+        recyclerView?.adapter = adapter
         recyclerView?.isNestedScrollingEnabled = false
+        adapter.setOnItemClickListener(object : PopularAdapter.onItemClickListener{
+            override fun onItemClick(position: Int) {
+                val fragmentB = ShowProfileFragment()
+                activity?.supportFragmentManager?.beginTransaction()
+                    ?.replace(R.id.fragmentContainer, fragmentB, "fragmentId")
+                    ?.commit();
+            }
+
+        })
     }
 
     //Sports ScrollView
@@ -135,22 +172,30 @@ class HomeFragment : Fragment() {
         }
     }
 
-    //Available Now
-    class AvailableAdapter(private val imagesList: Array<Int>, private val locationList: Array<String>, private val centerList: Array<String>): RecyclerView.Adapter<AvailableViewHolder>() {
+    class AvailableAdapter(private val centersList: Array<SportCenter>, private val imagesList: Array<Int>): RecyclerView.Adapter<AvailableViewHolder>() {
 
-        override fun getItemCount()=imagesList.size
+        private lateinit var availableListener: onItemClickListener
+        interface onItemClickListener{
+            fun onItemClick(position: Int)
+        }
+
+        fun setOnItemClickListener(listener: onItemClickListener){
+            availableListener=listener
+        }
+        override fun getItemCount()=centersList.size
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AvailableViewHolder {
             val itemView=LayoutInflater.from(parent.context).inflate(R.layout.sports_center_card_item, parent, false)
-            return AvailableViewHolder(itemView)
+            return AvailableViewHolder(itemView, availableListener)
         }
         override fun onBindViewHolder(holder: AvailableViewHolder, position: Int) {
             val currentImage = imagesList[position]
-            val currentLocation = locationList[position]
-            val currentCenter = centerList[position]
+            val currentLocation = centersList[position].address
+            val currentCenter = centersList[position].name
+
             holder.bind(currentImage, currentLocation, currentCenter)
         }
     }
-    class AvailableViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
+    class AvailableViewHolder(itemView: View, listener: AvailableAdapter.onItemClickListener):RecyclerView.ViewHolder(itemView){
         private val titleImage: ImageView = itemView.findViewById(R.id.sport_center1)
         private val locationName: TextView = itemView.findViewById(R.id.location_name)
         private val centerName: TextView = itemView.findViewById(R.id.center_name)
@@ -158,25 +203,37 @@ class HomeFragment : Fragment() {
             titleImage.setImageResource(imageSrc)
             locationName.text=lName
             centerName.text = cName
+        }
+        init{
+            itemView.setOnClickListener {
+                listener.onItemClick(bindingAdapterPosition)
+            }
         }
     }
 
     //Popular Centers
-    class PopularAdapter(private val imagesList: Array<Int>, private val locationList: Array<String>, private val centerList: Array<String>): RecyclerView.Adapter<PopularViewHolder>() {
+    class PopularAdapter(private val imagesList: Array<Int>, private val popularCentersList: Array<SportCenter>): RecyclerView.Adapter<PopularViewHolder>() {
 
+        private lateinit var popularListener: onItemClickListener
+        interface onItemClickListener{
+            fun onItemClick(position: Int)
+        }
+        fun setOnItemClickListener(listener: onItemClickListener){
+            popularListener=listener
+        }
         override fun getItemCount()=imagesList.size
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PopularViewHolder {
             val itemView=LayoutInflater.from(parent.context).inflate(R.layout.sports_center_card_item, parent, false)
-            return PopularViewHolder(itemView)
+            return PopularViewHolder(itemView, popularListener)
         }
         override fun onBindViewHolder(holder: PopularViewHolder, position: Int) {
             val currentImage = imagesList[position]
-            val currentLocation = locationList[position]
-            val currentCenter = centerList[position]
+            val currentLocation = popularCentersList[position].address
+            val currentCenter = popularCentersList[position].name
             holder.bind(currentImage, currentLocation, currentCenter)
         }
     }
-    class PopularViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
+    class PopularViewHolder(itemView: View, listener: PopularAdapter.onItemClickListener):RecyclerView.ViewHolder(itemView){
         private val titleImage: ImageView = itemView.findViewById(R.id.sport_center1)
         private val locationName: TextView = itemView.findViewById(R.id.location_name)
         private val centerName: TextView = itemView.findViewById(R.id.center_name)
@@ -184,6 +241,11 @@ class HomeFragment : Fragment() {
             titleImage.setImageResource(imageSrc)
             locationName.text=lName
             centerName.text = cName
+        }
+        init{
+            itemView.setOnClickListener {
+                listener.onItemClick(bindingAdapterPosition)
+            }
         }
     }
 }
