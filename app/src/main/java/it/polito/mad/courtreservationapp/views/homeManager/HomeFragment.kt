@@ -64,8 +64,16 @@ class HomeFragment : Fragment() {
             getString(R.string.rugby),
         )
         val recyclerView: RecyclerView? = view?.findViewById(R.id.sports_recycler)
+        val adapter = SportsAdapter(imageId, sportName)
         recyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        recyclerView?.adapter = SportsAdapter(imageId, sportName)
+        recyclerView?.adapter = adapter
+        adapter.setOnItemClickListener(object : SportsAdapter.onItemClickListener{
+            override fun onItemClick(position: Int) {
+               /* val name=sportName[position]
+                Toast.makeText(context, "You clicked on item no. $name", Toast.LENGTH_SHORT).show()*/
+            }
+
+        })
     }
     private fun availableInitialize(){
         centersList = emptyArray()
@@ -98,7 +106,7 @@ class HomeFragment : Fragment() {
         recyclerView?.isNestedScrollingEnabled = false
         adapter.setOnItemClickListener(object : AvailableAdapter.onItemClickListener{
             override fun onItemClick(position: Int) {
-                val fragmentB = ShowProfileFragment()
+                val fragmentB = CenterDetailFragment()
                 activity?.supportFragmentManager?.beginTransaction()
                     ?.replace(R.id.fragmentContainer, fragmentB, "fragmentId")
                     ?.commit();
@@ -152,10 +160,18 @@ class HomeFragment : Fragment() {
     //Sports ScrollView
     class SportsAdapter(private val imagesList: Array<Int>, private val namesList: Array<String>): RecyclerView.Adapter<SportsViewHolder>() {
 
+        private lateinit var sListener: onItemClickListener
+        interface onItemClickListener{
+            fun onItemClick(position: Int)
+        }
+
+        fun setOnItemClickListener(listener: onItemClickListener){
+            sListener=listener
+        }
         override fun getItemCount()=imagesList.size
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SportsViewHolder {
             val itemView=LayoutInflater.from(parent.context).inflate(R.layout.sports_list_item, parent, false)
-            return SportsViewHolder(itemView)
+            return SportsViewHolder(itemView, sListener)
         }
         override fun onBindViewHolder(holder: SportsViewHolder, position: Int) {
             val currentImage = imagesList[position]
@@ -163,12 +179,17 @@ class HomeFragment : Fragment() {
             holder.bind(currentImage, currentName)
         }
     }
-    class SportsViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
+    class SportsViewHolder(itemView: View, listener: SportsAdapter.onItemClickListener):RecyclerView.ViewHolder(itemView){
         private val titleImage: ImageView = itemView.findViewById(R.id.sport_image1)
         private val sportName: TextView = itemView.findViewById(R.id.sport_name)
         fun bind(imageSrc: Int, activityName: String){
             titleImage.setImageResource(imageSrc)
             sportName.text=activityName
+        }
+        init{
+            itemView.setOnClickListener {
+                listener.onItemClick(bindingAdapterPosition)
+            }
         }
     }
 

@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.homeManager.CenterDetailFragment">
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.25" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.21" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="357dp" />
+
+    <CheckBox
+        android:id="@+id/favorite_checkbox"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/circular_background"
+        android:button="@drawable/ic_favorite_button"
+        android:elevation="2dp"
+        app:buttonTint="#F16E64"
+        app:layout_constraintBottom_toBottomOf="@id/guideline4"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@+id/guideline7"
+        app:layout_constraintTop_toTopOf="@id/guideline3" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.29" />
+
+    <ImageView
+        android:id="@+id/imageView16"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="-140dp"
+        android:src="@drawable/run_center"
+        app:layout_constraintBottom_toTopOf="@id/guideline2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout15"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/custom_rectangle_dark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/guideline">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="158dp" />
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.65" />
+
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/inter_semibold"
+            android:text="The Athletic Club"
+            android:textColor="@color/white"
+            android:autoSizePresetSizes="@array/autosize_subtitle_sizes"
+            android:autoSizeTextType="uniform"
+            app:layout_constraintBottom_toTopOf="@+id/guideline5"
+            app:layout_constraintEnd_toStartOf="@+id/guideline12"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.12" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:autoSizePresetSizes="@array/autosize_center_location_sizes"
+            android:autoSizeTextType="uniform"
+            android:fontFamily="@font/inter"
+            android:text="2468 Elm Drive, Metropolis"
+            android:textColor="#FFFFFF"
+            app:layout_constraintBottom_toTopOf="@id/rating_container"
+            app:layout_constraintEnd_toStartOf="@+id/guideline12"
+            app:layout_constraintHorizontal_bias="0.373"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/guideline5" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/rating_container"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="40dp"
+            app:layout_constraintBottom_toTopOf="@id/available_container_live"
+            app:layout_constraintEnd_toStartOf="@+id/guideline12"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textView15">
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:isIndicator="true"
+                android:max="5"
+                android:numStars="5"
+                android:rating="1.5"
+                android:stepSize="0.1"
+                android:theme="@style/RatingBar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/textView17"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginStart="10dp"
+                android:autoSizePresetSizes="@array/autosize_card_location_sizes"
+                android:autoSizeTextType="uniform"
+                android:fontFamily="@font/inter"
+                android:gravity="center"
+                android:text="(124 reviews)"
+                android:textColor="#FFFFFF"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ratingBar"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/available_container_live"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintBottom_toTopOf="@+id/guideline11"
+            app:layout_constraintEnd_toStartOf="@+id/guideline12"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rating_container">
+
+            <ImageView
+                android:id="@+id/imageView17"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/available_icon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toStartOf="@+id/guideline13"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="5dp"
+                android:autoSizePresetSizes="@array/autosize_card_location_sizes"
+                android:autoSizeTextType="uniform"
+                android:fontFamily="@font/inter"
+                android:gravity="center|start"
+                android:text="Available Now"
+                android:textColor="#FFFFFF"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/guideline13"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.09" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout18"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="25dp"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/available_container_live" >
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.15" />
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottom_navigation"
+                app:itemTextAppearanceActive="@style/sport_navigation_label"
+                app:itemTextAppearanceInactive="@style/sport_navigation_label"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/white"
+                android:clipToPadding="false"
+                android:paddingBottom="10dp"
+                app:itemTextColor="@color/card_menu_theme"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/guideline6"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:menu="@menu/center_card_menu" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
