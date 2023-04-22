@@ -76,7 +76,7 @@ class CreateReservationActivity : AppCompatActivity() {
         if(pageNumber+1>3) return;
         pageNumber++
         when(pageNumber){
-            1 -> replaceFragment(ShowSelectServicesFragmentFragment())
+            1 -> replaceFragment(ShowSelectServicesFragment())
             2 -> replaceFragment(ShowSummaryFragment())
             3 -> commitReservation()
         }
@@ -87,7 +87,7 @@ class CreateReservationActivity : AppCompatActivity() {
         pageNumber--
         when(pageNumber){
             0 -> replaceFragment(ShowCalendarFragment())
-            1 -> replaceFragment(ShowSelectServicesFragmentFragment())
+            1 -> replaceFragment(ShowSelectServicesFragment())
             2 -> replaceFragment(ShowSummaryFragment())
             //3 -> commitReservation()
         }

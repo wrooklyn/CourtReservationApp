@@ -1,7 +1,6 @@
 package it.polito.mad.courtreservationapp.views.reservationManager
 
 import android.content.Context
-import android.media.Image
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,32 +8,28 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.stacktips.view.CalendarListener
-import com.stacktips.view.CustomCalendarView
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.models.Reservation
-import java.text.SimpleDateFormat
-import java.util.*
 
 
-class ShowSelectServicesFragmentFragment : Fragment() {
+class ShowSelectServicesFragment : Fragment() {
+    // TODO: Rename and change types of parameters
+    private var param1: String? = null
+    private var param2: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_select_services, container, false)
+        return inflater.inflate(R.layout.fragment_show_select_services, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,8 +49,6 @@ class ShowSelectServicesFragmentFragment : Fragment() {
         }
         //TODO dispose?
     }
-
-
     fun getReservationOfCourts(Cid: String): List<Reservation> {
         //does stuff
         return listOf();
@@ -76,7 +69,6 @@ class ShowSelectServicesFragmentFragment : Fragment() {
         recyclerView.adapter = ServicesAdapter(myData)
 
     }
-
     class ServicesAdapter(val data: List<Int>) :
         RecyclerView.Adapter<ServicesViewHolder>() {
         override fun getItemCount() = data.size
@@ -98,7 +90,6 @@ class ShowSelectServicesFragmentFragment : Fragment() {
             holder.bind(u);
         }
     }
-
     class ServicesViewHolder(v: View) :
         RecyclerView.ViewHolder(v) {
         private val icon: ImageView = v.findViewById(R.id.sv_icon)
@@ -106,4 +97,5 @@ class ShowSelectServicesFragmentFragment : Fragment() {
 
         }
     }
+
 }
