@@ -1,10 +1,7 @@
 package it.polito.mad.courtreservationapp.views.reservationManager
 
-import android.app.Activity
-import android.content.ContentProvider
-import android.content.Context
-import android.content.res.ColorStateList
 import android.graphics.Color
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,10 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -23,8 +17,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.stacktips.view.CalendarListener
 import com.stacktips.view.CustomCalendarView
+import com.stacktips.view.utils.CalendarUtils
 import it.polito.mad.courtreservationapp.R
-import it.polito.mad.courtreservationapp.R.color.red_button
 import it.polito.mad.courtreservationapp.models.Reservation
 import java.text.SimpleDateFormat
 import java.util.*
@@ -51,24 +45,25 @@ class ShowCalendarFragment : Fragment() {
         setUpTimePicker(view, activity)
 
         //todo set the right button
-        view.findViewById<Button>(R.id.f1_confirm_button).setOnClickListener{
+        view.findViewById<Button>(R.id.f1_confirm_button).setOnClickListener {
             navigateNext();
         }
-        view.findViewById<Button>(R.id.f1_back_button).setOnClickListener{
+        view.findViewById<Button>(R.id.f1_back_button).setOnClickListener {
             activity?.finish();
         }
-        view.findViewById<ImageView>(R.id.close_button).setOnClickListener{
+        view.findViewById<ImageView>(R.id.close_button).setOnClickListener {
             activity?.finish();
         }
 
     }
 
-    private fun navigateNext(){
-        if(true) { //check fields are set
-            (activity as CreateReservationActivity).ggNEXT();
-        }else{
-            Toast.makeText(activity, "Please pick a valid date/timeslot.", Toast.LENGTH_SHORT).show()
+    private fun navigateNext() {
+        if ((activity as CreateReservationActivity).reservationDate == null || (activity as CreateReservationActivity).reservationTimeSlot == null) {
+            Toast.makeText(activity, "Please pick a valid date/timeslot.", Toast.LENGTH_SHORT)
+                .show()
+            return
         }
+        (activity as CreateReservationActivity).ggNEXT();
     }
 
     fun getReservationOfCourts(Cid: String): List<Reservation> {
@@ -76,7 +71,7 @@ class ShowCalendarFragment : Fragment() {
         return listOf();
     }
 
-    private fun setUpTimePicker(view: View, activity : FragmentActivity?) {
+    private fun setUpTimePicker(view: View, activity: FragmentActivity?) {
         val recyclerView: RecyclerView =
             view.findViewById(R.id.recyclerView)
 
@@ -92,7 +87,7 @@ class ShowCalendarFragment : Fragment() {
 
     }
 
-    class TimeSlotAdapter(val data: List<Int>, val activity : FragmentActivity?) :
+    class TimeSlotAdapter(val data: List<Int>, val activity: FragmentActivity?) :
         RecyclerView.Adapter<TimeSlotViewHolder>() {
         override fun getItemCount() = data.size
 
@@ -115,44 +110,43 @@ class ShowCalendarFragment : Fragment() {
         }
     }
 
-    class TimeSlotViewHolder(v: View, val activity : FragmentActivity?) :
+    class TimeSlotViewHolder(v: View, val activity: FragmentActivity?) :
         RecyclerView.ViewHolder(v) {
         private val timeSlotButton: Button = v.findViewById(R.id.tp_text)
         fun bind(u: Int) {
             val startH = 10 + u
             val endH = startH + 1
-            timeSlotButton.text="$startH:00 - $endH:00"
+            timeSlotButton.text = "$startH:00 - $endH:00"
 
-
-            if((activity as CreateReservationActivity).reservationDate==null){
+            timeSlotButton.visibility = View.VISIBLE
+            if ((activity as CreateReservationActivity).reservationDate == null) {
+                timeSlotButton.visibility = View.INVISIBLE
                 timeSlotButton.setBackgroundColor(Color.BLACK)
                 return
             }
-            if(activity.reservationTimeSlot.contains(u)){
+            if (activity.reservationTimeSlot.contains(u)) {
                 timeSlotButton.setBackgroundColor(Color.RED)
-            }
-            else if (activity.reservationsByDateString[activity.reservationDate]!=null){
-                if(activity.reservationsByDateString[activity.reservationDate]!!.contains(u.toLong())){
-
-                    Log.v("gabri", activity.reservationsByDateString[activity.reservationDate].toString());
+            } else if (activity.reservationsByDateString[activity.reservationDate] != null) {
+                if (activity.reservationsByDateString[activity.reservationDate]!!.contains(u.toLong())) {
                     timeSlotButton.setBackgroundColor(Color.GRAY)
-                    timeSlotButton.isEnabled=false
+                    timeSlotButton.isEnabled = false
                     return
                 }
-                timeSlotButton.setBackgroundColor(Color.GREEN)
-            }else{
-                timeSlotButton.setBackgroundColor(Color.GREEN)
+                val color = ContextCompat.getColor(activity, R.color.green_200)
+                timeSlotButton.setBackgroundColor(color);
+            } else {
+                val color = ContextCompat.getColor(activity, R.color.green_200)
+                timeSlotButton.setBackgroundColor(color);
             }
-            timeSlotButton.setOnClickListener{
-                if(activity.reservationTimeSlot.contains(u)){
+            timeSlotButton.setOnClickListener {
+                if (activity.reservationTimeSlot.contains(u)) {
                     activity.reservationTimeSlot.remove(u);
-                    timeSlotButton.setBackgroundColor(Color.GREEN);
-                }else{
+                    val color = ContextCompat.getColor(activity, R.color.green_200)
+                    timeSlotButton.setBackgroundColor(color);
+                } else {
                     activity.reservationTimeSlot.add(u);
                     timeSlotButton.setBackgroundColor(Color.RED);
                 }
-                Toast.makeText(activity, "timeslot $u", Toast.LENGTH_SHORT).show()
-                Log.v("gabri",activity.reservationTimeSlot.toString())
             }
 
         }
@@ -176,11 +170,16 @@ class ShowCalendarFragment : Fragment() {
 //Handling custom calendar events
         calendarView.setCalendarListener(object : CalendarListener {
             override fun onDateSelected(date: Date?) {
-                val df = SimpleDateFormat("yyyy-MM-dd")
-                (activity as CreateReservationActivity).reservationDate = df.format(date);
-                Toast.makeText(activity, df.format(date), Toast.LENGTH_SHORT).show()
                 view.findViewById<RecyclerView>(R.id.recyclerView).adapter?.notifyDataSetChanged()
-                (activity as CreateReservationActivity).reservationTimeSlot.clear()
+                if (!CalendarUtils.isPastDay(date)) {
+                    val df = SimpleDateFormat("yyyy-MM-dd")
+                    (activity as CreateReservationActivity).reservationDate = df.format(date)
+                    (activity as CreateReservationActivity).reservationTimeSlot.clear()
+                } else {
+                    Toast.makeText(activity, "Cannot reserve a past date.", Toast.LENGTH_SHORT)
+                        .show()
+                    (activity as CreateReservationActivity).reservationDate = null
+                }
             }
 
             override fun onMonthChanged(date: Date?) {

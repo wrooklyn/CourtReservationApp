@@ -33,6 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Schedule"
+            android:textStyle="bold"
             android:textAppearance="@style/TextAppearance.AppCompat.Display2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -45,6 +46,7 @@
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
             android:background="@drawable/custom_rectangle_4rounded"
+            android:backgroundTint="#FFFFFF"
             android:padding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -58,11 +60,11 @@
                 android:background="#FFFFFF"
                 app:calendarBackgroundColor="#FFFFFF"
                 app:calendarTitleTextColor="@color/black"
-                app:currentDayOfMonthColor="@color/design_default_color_primary"
+                app:currentDayOfMonthColor="@color/red_highlight"
                 app:dayOfMonthTextColor="@color/black"
                 app:dayOfWeekTextColor="@color/black"
                 app:disabledDayBackgroundColor="#FEFEFE"
-                app:disabledDayTextColor="#FCFCFC"
+                app:disabledDayTextColor="#FFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -111,7 +113,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                tools:listitem="@layout/time_picker_item"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
