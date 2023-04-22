@@ -13,7 +13,9 @@ import it.polito.mad.courtreservationapp.models.SportCenter
 interface SportCenterDao {
 
     @Insert(onConflict = REPLACE)
-    suspend fun save(vararg centers: SportCenter)
+    suspend fun save(center: SportCenter): Long
+    @Insert(onConflict = REPLACE)
+    suspend fun save(vararg centers: SportCenter): Array<Long>
 
     @Delete
     fun delete(vararg centers: SportCenter)
@@ -22,7 +24,7 @@ interface SportCenterDao {
     fun getAll(): LiveData<List<SportCenter>>
 
     @Query("SELECT * FROM sportCenters WHERE centerId = :centerId")
-    fun getById(centerId: Int): LiveData<SportCenter>
+    fun getById(centerId: Long): LiveData<SportCenter>
 
     @Transaction
     @Query("SELECT * FROM sportCenters")
@@ -30,7 +32,7 @@ interface SportCenterDao {
 
     @Transaction
     @Query("SELECT * FROM sportCenters WHERE centerId = :centerId")
-    fun getByIdWithCourts(centerId: Int): LiveData<SportCenterWithCourts>
+    fun getByIdWithCourts(centerId: Long): LiveData<SportCenterWithCourts>
 
     @Transaction
     @Query("SELECT * FROM sportCenters")
@@ -38,7 +40,7 @@ interface SportCenterDao {
 
     @Transaction
     @Query("SELECT * FROM sportCenters WHERE centerId = :centerId")
-    fun getByIdWithCourtsAndServices(centerId: Int): LiveData<SportCenterWithCourtsAndServices>
+    fun getByIdWithCourtsAndServices(centerId: Long): LiveData<SportCenterWithCourtsAndServices>
 
     @Transaction
     @Query("SELECT * FROM sportCenters")
@@ -46,7 +48,7 @@ interface SportCenterDao {
 
     @Transaction
     @Query("SELECT * FROM sportCenters WHERE centerId = :centerId")
-    fun getByIdWithCourtsAndReservations(centerId: Int): LiveData<SportCenterWithCourtsAndReservations>
+    fun getByIdWithCourtsAndReservations(centerId: Long): LiveData<SportCenterWithCourtsAndReservations>
 
     @Transaction
     @Query("SELECT * FROM sportCenters")
@@ -54,6 +56,6 @@ interface SportCenterDao {
 
     @Transaction
     @Query("SELECT * FROM sportCenters WHERE centerId = :centerId")
-    fun getByIdWithCourtsAndReservationsAndServices(centerId: Int): LiveData<SportCenterWithCourtsAndReservationsAndServices>
+    fun getByIdWithCourtsAndReservationsAndServices(centerId: Long): LiveData<SportCenterWithCourtsAndReservationsAndServices>
 
 }

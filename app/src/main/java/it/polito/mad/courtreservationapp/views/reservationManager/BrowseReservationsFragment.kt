@@ -7,11 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.dao.ReservationDao
 import it.polito.mad.courtreservationapp.models.Reservation
+import it.polito.mad.courtreservationapp.views.ShowProfileFragment
 import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
 
 class BrowseReservationsFragment : Fragment() {
@@ -58,12 +60,30 @@ class BrowseReservationsFragment : Fragment() {
         val adapter = ReservationAdapter(reservationLocations, reservationDatetimes)
         recyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         recyclerView?.adapter = adapter
+        adapter.setOnItemClickListener(object : ReservationAdapter.onItemClickListener{
+            override fun onItemClick(position: Int) {
+                    val fragmentDetails = ReservationDetailsFragment.newInstance(reservationLocations[position], reservationDatetimes[position])
+                    activity?.supportFragmentManager?.beginTransaction()
+                        ?.replace(R.id.fragmentContainer, fragmentDetails, "fragmentDetails")
+                        ?.commit()
+            }
+        })
     }
 
     class ReservationAdapter(private val reservationLocations: Array<String>, private val reservationDatetimes: Array<String>): RecyclerView.Adapter<ReservationViewHolder>() {
+
+        private lateinit var sListener: onItemClickListener
+        interface onItemClickListener{
+            fun onItemClick(position: Int)
+        }
+
+        fun setOnItemClickListener(listener: onItemClickListener){
+            sListener=listener
+        }
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReservationViewHolder {
             val itemView=LayoutInflater.from(parent.context).inflate(R.layout.reservation_card_item, parent, false)
-            return ReservationViewHolder(itemView)
+            return ReservationViewHolder(itemView, sListener)
         }
 
         override fun getItemCount() = reservationDatetimes.size
@@ -75,7 +95,7 @@ class BrowseReservationsFragment : Fragment() {
     }
 
     // TODO: add onClickListener
-    class ReservationViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    class ReservationViewHolder(view: View, listener: ReservationAdapter.onItemClickListener): RecyclerView.ViewHolder(view) {
         private var reservLocationTV: TextView = view.findViewById(R.id.reservation_locationTV)
         private var reservDatetimeTV: TextView = view.findViewById(R.id.reservation_datetimeTV)
 
@@ -84,6 +104,10 @@ class BrowseReservationsFragment : Fragment() {
             reservDatetimeTV.text = reservDatetime
         }
 
-        // TODO: add init with setOnClickListener
+        init{
+            itemView.setOnClickListener {
+                listener.onItemClick(bindingAdapterPosition)
+            }
+        }
     }
 }

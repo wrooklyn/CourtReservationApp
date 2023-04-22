@@ -15,7 +15,10 @@ import it.polito.mad.courtreservationapp.models.User
 interface UserDao {
 
     @Insert(onConflict = REPLACE)
-    suspend fun save(vararg users: User)
+    suspend fun save(user: User): Long
+
+    @Insert(onConflict = REPLACE)
+    suspend fun save(vararg users: User): Array<Long>
 
     @Delete
     suspend fun delete(vararg users: User)
@@ -24,17 +27,17 @@ interface UserDao {
     fun getAll(): LiveData<List<User>>
 
     @Query("SELECT * FROM users WHERE userId = :userId")
-    fun getById(userId: Int): LiveData<User>
+    fun getById(userId: Long): LiveData<User>
 
     @Query("SELECT * FROM users")
     fun getAllWithReservations(): LiveData<List<UserWithReservations>>
 
     @Query("SELECT * FROM users WHERE userId = :userId")
-    fun getByIdWithReservations(userId: Int): LiveData<UserWithReservations>
+    fun getByIdWithReservations(userId: Long): LiveData<UserWithReservations>
 
     @Query("SELECT * FROM users")
     fun getAllWithReservationsAndServices(): LiveData<List<UserWithReservationsAndServices>>
 
     @Query("SELECT * FROM users WHERE userId = :userId")
-    fun getByIdWithReservationsAndServices(userId: Int): LiveData<UserWithReservationsAndServices>
+    fun getByIdWithReservationsAndServices(userId: Long): LiveData<UserWithReservationsAndServices>
 }

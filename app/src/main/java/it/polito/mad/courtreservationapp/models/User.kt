@@ -5,8 +5,6 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "users")
 data class User(
-    @PrimaryKey(autoGenerate = true)
-    val userId: Int,
 
     val username: String,
 
@@ -22,7 +20,10 @@ data class User(
 
     val height: Int,
 
-    val weight: Double,
+    val weight: Int,
 
-    val phone: String
+    val phone: String,
+
+    @PrimaryKey(autoGenerate = true)
+    var userId: Long = 0
 )

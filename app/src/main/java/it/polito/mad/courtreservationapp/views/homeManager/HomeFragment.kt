@@ -96,7 +96,7 @@ class HomeFragment : Fragment() {
             getString(R.string.sportsplex)
         )
         for (i in centerName.indices){
-            val sportCenter = SportCenter(i, centerName[i], locationName[i])
+            val sportCenter = SportCenter(centerName[i], locationName[i])
             centersList=centersList.plus(sportCenter)
         }
         val adapter=AvailableAdapter(centersList, imageId)
@@ -138,7 +138,7 @@ class HomeFragment : Fragment() {
             getString(R.string.sportsplex)
         )
         for (i in centerName.indices){
-            val sportCenter = SportCenter(i, centerName[i], locationName[i])
+            val sportCenter = SportCenter(centerName[i], locationName[i])
             popularCentersList=popularCentersList.plus(sportCenter)
         }
         val adapter=PopularAdapter(imageId, popularCentersList)

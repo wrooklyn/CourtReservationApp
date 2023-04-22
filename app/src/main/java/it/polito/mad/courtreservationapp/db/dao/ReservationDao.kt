@@ -12,7 +12,9 @@ import it.polito.mad.courtreservationapp.models.User
 interface ReservationDao {
 
     @Insert(onConflict = REPLACE)
-    suspend fun save(vararg reservations: Reservation)
+    suspend fun save(reservation: Reservation): Long
+    @Insert(onConflict = REPLACE)
+    suspend fun save(vararg reservations: Reservation): Array<Long>
 
     @Delete
     suspend fun delete(vararg reservations: Reservation)
@@ -21,5 +23,5 @@ interface ReservationDao {
     fun getAll(): LiveData<List<Reservation>>
 
     @Query("SELECT * FROM reservations WHERE reservationId = :reservationId")
-    fun getById(reservationId: Int): LiveData<Reservation>
+    fun getById(reservationId: Long): LiveData<Reservation>
 }

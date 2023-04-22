@@ -6,10 +6,11 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "sportCenters")
 data class SportCenter(
-    @PrimaryKey(autoGenerate = true)
-    val centerId: Int,
 
     val name: String,
 
-    val address: String
+    val address: String,
+
+    @PrimaryKey(autoGenerate = true)
+    var centerId: Long = 0
 )
