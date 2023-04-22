@@ -71,4 +71,10 @@
     <string name="popular_heading">Popular Centers</string>
     <string name="description2_subheading">Discover popular sports centers </string>
     <string name="location_center">Oak Park</string>
+    <string name="my_reservations_heading">Reservations</string>
+    <string name="my_reservations_subheading">Browse your reservations</string>
+    <string name="location_town">Oak Park - New York, NY</string>
+    <string name="where">Where:</string>
+    <string name="when">When:</string>
+    <string name="sample_date_time">19/09/2023 – 15:30</string>
 </resources>

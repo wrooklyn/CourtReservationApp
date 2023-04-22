@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.databinding.ActivityMainBinding
 import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
+import it.polito.mad.courtreservationapp.views.reservationManager.BrowseReservationsFragment
 import it.polito.mad.courtreservationapp.views.reservationManager.CreateReservationActivity
 
 class MainActivity : AppCompatActivity() {
@@ -24,7 +25,7 @@ class MainActivity : AppCompatActivity() {
                     replaceFragment(HomeFragment())
                 }
                 R.id.explore -> Log.i("DBG", "Explore button pressed")
-                R.id.calendar -> Log.i("DBG", "Calendar button pressed")
+                R.id.calendar -> replaceFragment(BrowseReservationsFragment())
                 R.id.chat -> testLaunchGabry()
                 R.id.profile -> {
                     replaceFragment(ShowProfileFragment())
