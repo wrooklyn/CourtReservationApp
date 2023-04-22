@@ -1,6 +1,7 @@
 package it.polito.mad.courtreservationapp.views.homeManager
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,8 +16,8 @@ import it.polito.mad.courtreservationapp.views.homeManager.tabFragments.Descript
 
 class CenterDetailFragment : Fragment() {
 
-    private var myTab = view?.findViewById<TabLayout>(R.id.tab_layout)
-    private var myViewPager = view?.findViewById<ViewPager2>(R.id.view_pager)
+    lateinit var myTab :TabLayout
+    lateinit var myViewPager : ViewPager2
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -30,26 +31,28 @@ class CenterDetailFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        myTab=view.findViewById<TabLayout>(R.id.tab_layout)
+        myViewPager=view.findViewById<ViewPager2>(R.id.view_pager)
         val adapter = ViewPagerAdapter(childFragmentManager, lifecycle)
 
         myViewPager?.adapter = adapter
 
-        myTab?.let {
-            myViewPager?.let { it1 ->
+        myTab.let {
+            myViewPager.let { it1 ->
                 TabLayoutMediator(
                     it, it1
                 ) { tab, position ->
                     tab.text =
-                        (myViewPager!!.adapter as ViewPagerAdapter).mFragmentNames[position] //Sets tabs names as mentioned in ViewPagerAdapter fragmentNames array, this can be implemented in many different ways.
-                    (myViewPager!!.adapter as ViewPagerAdapter).createFragment(position)
+                        (myViewPager.adapter as ViewPagerAdapter).mFragmentNames[position] //Sets tabs names as mentioned in ViewPagerAdapter fragmentNames array, this can be implemented in many different ways.
+                    (myViewPager.adapter as ViewPagerAdapter).createFragment(position)
                 }.attach()
             }
         }
 
-        myTab?.addOnTabSelectedListener(object : OnTabSelectedListener {
+        myTab.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                myViewPager?.currentItem = tab.position
-
+                myViewPager.currentItem = tab.position
+                Log.v("gabri", tab.position.toString())
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab) {}
