@@ -1,4 +1,4 @@
-package it.polito.mad.courtreservationapp.models.dao
+package it.polito.mad.courtreservationapp.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao

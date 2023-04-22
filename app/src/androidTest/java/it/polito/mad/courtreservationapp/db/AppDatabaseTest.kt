@@ -49,7 +49,8 @@ class AppDatabaseTest: TestCase(){
     fun createDB() {
         initObjects()
         val context = ApplicationProvider.getApplicationContext<Context>()
-        db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).allowMainThreadQueries().build()
+//        db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).allowMainThreadQueries().build()
+        db = Room.databaseBuilder(context, AppDatabase::class.java, "Test5").createFromAsset("database/app.db").allowMainThreadQueries().build()
         sportCenterDao = db.sportCenterDao()
         courtDao = db.courtDao()
         serviceDao = db.serviceDao()
@@ -65,14 +66,13 @@ class AppDatabaseTest: TestCase(){
     }
 
     private fun initObjects(){
-        center = SportCenter(1,"SC1", "address")
-        court = Court(1,"SC1", 1, 1)
-        service1 = Service(1,"service 1", 10.5)
-        service2 = Service(2,"service 2", 15.5)
-        user1 = User(1, "u1", "first", "last", "mail", "uAddress", 1, 170, 70.0, "phone")
-        user2 = User(2, "u2", "first", "last", "mail", "uAddress", 1, 175, 70.0, "phone")
-        reservation1 = Reservation(1, "today", 1, 1, 1)
-        reservation2 = Reservation(2, "today", 1, 2, 1)
+        center = SportCenter("SC1", "address")
+        service1 = Service("service 1")
+        service2 = Service("service 2")
+        user1 = User( "u1", "first", "last", "mail", "uAddress", 1, 170, 70, "phone")
+        user2 = User( "u2", "first", "last", "mail", "uAddress", 1, 175, 70, "phone")
+//        reservation1 = Reservation( "today", 1, 1, 1)
+//        reservation2 = Reservation( "today", 1, 2, 1)
     }
     @Test
     fun sportCenterDeleteCenter() = runBlocking{
@@ -94,8 +94,13 @@ class AppDatabaseTest: TestCase(){
     @Test
     fun sportCenterWithCourtsDeleteCenter() = runBlocking{
 
-        sportCenterDao.save(center)
-        courtDao.save(court)
+        val centerId = sportCenterDao.save(center)
+        center.centerId = centerId
+
+        val court = Court(centerId, "Test", 1)
+        val courtId = courtDao.save(court)
+
+        court.courtId = courtId
 
         var courts = courtDao.getAll().getOrAwaitValue()
         Log.d("Test", "$courts")
@@ -115,7 +120,7 @@ class AppDatabaseTest: TestCase(){
 
         courts = courtDao.getAll().getOrAwaitValue()
         Log.d("Test", "$courts")
-        assertTrue(courts.isEmpty())
+        assertTrue(!courts.contains(court))
 
     }
 
@@ -124,7 +129,7 @@ class AppDatabaseTest: TestCase(){
         sportCenterDao.save(center)
         courtDao.save(court)
         serviceDao.save(service1)
-        courtAndServiceDao.save(CourtServiceCrossRef(court.courtId, service1.serviceId))
+        courtAndServiceDao.save(CourtServiceCrossRef(court.courtId, service1.serviceId, 10))
 
         val cs = CourtWithServices(court, listOf(service1))
         val ccs = SportCenterWithCourtsAndServices(center, listOf(cs))
@@ -148,7 +153,8 @@ class AppDatabaseTest: TestCase(){
     fun sportCenterWithCourtsAndReservationsDeleteSportCenter() = runBlocking{
         sportCenterDao.save(center)
         courtDao.save(court)
-        userDao.save(user1, user2)
+        userDao.save(user1)
+        userDao.save(user2)
         reservationDao.save(reservation1, reservation2)
 
         val scr = SportCenterWithCourtsAndReservations(center, listOf(
@@ -186,7 +192,7 @@ class AppDatabaseTest: TestCase(){
         sportCenterDao.save(center)
         courtDao.save(court)
         serviceDao.save(service1)
-        courtAndServiceDao.save(CourtServiceCrossRef(court.courtId, service1.serviceId))
+        courtAndServiceDao.save(CourtServiceCrossRef(court.courtId, service1.serviceId, 11))
 
         val courtWithServices = CourtWithServices(court, listOf(service1))
         Log.d("Test", "CourtWithServices: $courtWithServices")
@@ -229,8 +235,8 @@ class AppDatabaseTest: TestCase(){
 
     @Test
     fun userDeleteUser() = runBlocking {
-        userDao.save(user1)
-
+        val savedUserId = userDao.save(user1)
+        user1.userId = savedUserId
         var users = userDao.getAll().getOrAwaitValue()
         Log.d("test","Users: $users")
         assertTrue(users.contains(user1))
@@ -238,7 +244,7 @@ class AppDatabaseTest: TestCase(){
         userDao.delete(user1)
         users = userDao.getAll().getOrAwaitValue()
         Log.d("test","Users: $users")
-        assertTrue(users.isEmpty())
+        assertTrue(!users.contains(user1))
 
     }
 

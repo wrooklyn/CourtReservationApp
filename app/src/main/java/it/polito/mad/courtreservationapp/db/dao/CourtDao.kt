@@ -12,7 +12,9 @@ import it.polito.mad.courtreservationapp.models.Court
 interface CourtDao {
 
     @Insert(onConflict = REPLACE)
-    suspend fun save(vararg courts: Court)
+    suspend fun save(court: Court): Long
+    @Insert(onConflict = REPLACE)
+    suspend fun save(vararg courts: Court): Array<Long>
 
     @Delete
     suspend fun delete(vararg courts: Court)
@@ -21,7 +23,7 @@ interface CourtDao {
     fun getAll(): LiveData<List<Court>>
 
     @Query("SELECT * FROM courts WHERE courtId = :courtId ")
-    fun getById(courtId: Int): LiveData<Court>
+    fun getById(courtId: Long): LiveData<Court>
 
     @Transaction
     @Query("SELECT * FROM courts")
@@ -29,7 +31,7 @@ interface CourtDao {
 
     @Transaction
     @Query("SELECT * FROM courts WHERE courtId = :courtId ")
-    fun getByIdWithServices(courtId: Int): LiveData<CourtWithServices>
+    fun getByIdWithServices(courtId: Long): LiveData<CourtWithServices>
 
     @Transaction
     @Query("SELECT * FROM courts")
@@ -37,7 +39,7 @@ interface CourtDao {
 
     @Transaction
     @Query("SELECT * FROM courts WHERE courtId = :courtId ")
-    fun getByIdWithReservations(courtId: Int): LiveData<CourtWithReservations>
+    fun getByIdWithReservations(courtId: Long): LiveData<CourtWithReservations>
 
     @Transaction
     @Query("SELECT * FROM courts")
@@ -45,6 +47,6 @@ interface CourtDao {
 
     @Transaction
     @Query("SELECT * FROM courts WHERE courtId = :courtId ")
-    fun getByIdWithReservationsAndServices(courtId: Int): LiveData<CourtWithReservationsAndServices>
+    fun getByIdWithReservationsAndServices(courtId: Long): LiveData<CourtWithReservationsAndServices>
 
 }

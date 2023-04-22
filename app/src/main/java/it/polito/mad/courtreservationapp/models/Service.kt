@@ -8,8 +8,8 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "services",
 )
 data class Service(
-    @PrimaryKey(autoGenerate = true)
-    val serviceId: Int,
     val description: String,
-    val cost: Double
+
+    @PrimaryKey(autoGenerate = true)
+    var serviceId: Long = 0
 )

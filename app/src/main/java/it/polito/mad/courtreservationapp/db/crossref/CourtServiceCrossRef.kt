@@ -25,6 +25,7 @@ import it.polito.mad.courtreservationapp.models.Service
     ]
 )
 data class CourtServiceCrossRef(
-    val courtId: Int,
-    val serviceId: Int
+    val courtId: Long,
+    val serviceId: Long,
+    val cost: Int
 )

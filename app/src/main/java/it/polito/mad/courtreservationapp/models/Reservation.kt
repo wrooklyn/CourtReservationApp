@@ -24,13 +24,14 @@ import androidx.room.PrimaryKey
     ]
 )
 data class Reservation(
-    @PrimaryKey(autoGenerate = true)
-    val reservationId: Int,
     val reservationDate: String,
-    val timeSlotId: Int,
+    val timeSlotId: Long,
 
-    val reservationUserId: Int,
-    val reservationCourtId: Int
+    val reservationUserId: Long,
+    val reservationCourtId: Long,
+
+    @PrimaryKey(autoGenerate = true)
+    var reservationId: Long = 0,
 )
 
 //there will be a mapping of time slots in the form:

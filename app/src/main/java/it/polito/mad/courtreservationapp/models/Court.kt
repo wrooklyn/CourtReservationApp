@@ -16,12 +16,12 @@ import androidx.room.PrimaryKey
     ]
 )
 data class Court(
-    @PrimaryKey(autoGenerate = true)
-    val courtId: Int,
+    val courtCenterId: Long,
     val sportName: String,
     val fieldStatus: Int,
 
-    val courtCenterId: Int
+    @PrimaryKey(autoGenerate = true)
+    var courtId: Long = 0,
 //    val pictures: List<Int>,
 )
     //pictures are int because we will use resources (e.g. R.drawable.x which is an integer).

@@ -9,15 +9,18 @@ import it.polito.mad.courtreservationapp.models.Service
 
 @Dao
 interface ServiceDao {
+    @Insert(onConflict = REPLACE)
+    suspend fun save(service: Service): Long
+    @Insert(onConflict = REPLACE)
+    suspend fun save(vararg services: Service): Array<Long>
+
+    @Delete
+    suspend fun delete(vararg services: Service)
     @Query("SELECT * FROM services")
     fun getAll(): LiveData<List<Service>>
 
     @Query("SELECT * FROM services WHERE serviceId = :serviceId ")
-    fun getById(serviceId: Int): LiveData<Service>
+    fun getById(serviceId: Long): LiveData<Service>
 
-    @Insert(onConflict = REPLACE)
-    suspend fun save(vararg services: Service)
 
-    @Delete
-    suspend fun delete(vararg services: Service)
 }
