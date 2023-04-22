@@ -14,11 +14,6 @@
             app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
-        <fragment
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:name="it.polito.mad.courtreservationapp.views.ShowProfileFragment"
-        />
     </androidx.fragment.app.FragmentContainerView>
     <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
