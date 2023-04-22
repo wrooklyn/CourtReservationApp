@@ -8,25 +8,29 @@
     android:background="@drawable/custom_rectangle_4rounded">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout19"
-        android:layout_width="411dp"
-        android:layout_height="0dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_rectangle_4rounded"
+        android:backgroundTint="#EFEFEF"
+        android:paddingLeft="35dp"
+        android:paddingTop="35dp"
+        android:paddingRight="35dp"
+        android:paddingBottom="35dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/tp_text"
+        <ImageView
+            android:id="@+id/sv_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:text="Button"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/home" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

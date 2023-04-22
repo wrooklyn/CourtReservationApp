@@ -18,7 +18,7 @@ class SportCenterRepository(private val sportCenterDao: SportCenterDao) {
         return sportCenterDao.getAll()
     }
 
-    suspend fun getById(id: Int): LiveData<SportCenter>{
+    suspend fun getById(id: Long): LiveData<SportCenter>{
         return sportCenterDao.getById(id)
     }
 
@@ -26,7 +26,7 @@ class SportCenterRepository(private val sportCenterDao: SportCenterDao) {
         return sportCenterDao.getAllWithCourts()
     }
 
-    suspend fun getCenterWithCourts(id: Int): LiveData<SportCenterWithCourts>{
+    suspend fun getCenterWithCourts(id: Long): LiveData<SportCenterWithCourts>{
         return sportCenterDao.getByIdWithCourts(id)
     }
 

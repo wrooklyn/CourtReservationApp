@@ -11,7 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout13"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="match_parent"
         android:padding="25dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,50 +20,54 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed">
 
+        <ImageView
+            android:id="@+id/close_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/textView10"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:text="Schedule"
             android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-            app:layout_constraintBottom_toTopOf="@+id/constraintLayout14"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintVertical_weight="1" />
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout14"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="300dp"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
             android:background="@drawable/custom_rectangle_4rounded"
             android:padding="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView10"
-            app:layout_constraintVertical_weight="4">
+            app:layout_constraintTop_toBottomOf="@+id/textView10">
 
             <com.stacktips.view.CustomCalendarView
                 android:id="@+id/calendar_view"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="@color/design_default_color_primary"
-                app:calendarBackgroundColor="@color/design_default_color_primary"
+                android:background="#FFFFFF"
+                app:calendarBackgroundColor="#FFFFFF"
                 app:calendarTitleTextColor="@color/black"
-                app:currentDayOfMonthColor="@color/cardview_dark_background"
+                app:currentDayOfMonthColor="@color/design_default_color_primary"
                 app:dayOfMonthTextColor="@color/black"
                 app:dayOfWeekTextColor="@color/black"
-                app:disabledDayBackgroundColor="@color/design_default_color_primary"
-                app:disabledDayTextColor="@color/day_disabled_text_color"
+                app:disabledDayBackgroundColor="#FEFEFE"
+                app:disabledDayTextColor="#FCFCFC"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:selectedDayBackgroundColor="@color/cardview_dark_background"
+                app:selectedDayBackgroundColor="@color/red_highlight"
                 app:titleLayoutBackgroundColor="@color/white"
                 app:weekLayoutBackgroundColor="@color/white"></com.stacktips.view.CustomCalendarView>
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -115,24 +119,23 @@
             android:layout_height="0dp"
             android:layout_marginBottom="25dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout16">
+            app:layout_constraintStart_toStartOf="parent">
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/f1_back_button"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Back"
                 android:textColor="@color/red_button"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/button2"
+                app:layout_constraintEnd_toStartOf="@+id/f1_confirm_button"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:strokeColor="@color/red_button" />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/f1_confirm_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/red_button"
@@ -140,7 +143,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/button" />
+                app:layout_constraintStart_toEndOf="@+id/f1_back_button" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -149,6 +152,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.5" />
+        app:layout_constraintGuide_percent="0.56" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

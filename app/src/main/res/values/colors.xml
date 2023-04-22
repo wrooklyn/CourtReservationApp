@@ -19,5 +19,6 @@
 
     <color name="light_blue_background">#72C4DE</color>
     <color name="red_button">#F16E64</color>
+    <color name="red_highlight">#F04D23</color>
 
 </resources>
