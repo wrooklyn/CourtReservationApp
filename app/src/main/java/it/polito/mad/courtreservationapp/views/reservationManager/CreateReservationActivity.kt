@@ -23,7 +23,7 @@ import java.util.*
 
 class CreateReservationActivity : AppCompatActivity() {
     //private var myReservation: Reservation = Reservation();
-    var reservationDate : String = "2023-04-22" ;
+    var reservationDate : String? = null ;
     var reservationTimeSlot : MutableList<Int> = mutableListOf() ;
     var reservationServices : List<Int>? = null ;
     var reservationRequests : String? = null ;
@@ -63,6 +63,7 @@ class CreateReservationActivity : AppCompatActivity() {
     fun commitReservation(){
         //take myReservation and call the dao
         //close activity
+        finish()
     }
 
     fun setSchedule(){
@@ -73,6 +74,7 @@ class CreateReservationActivity : AppCompatActivity() {
     }
     fun ggNEXT(){
         //take current index and
+        if(pageNumber==0)pageNumber++
         if(pageNumber+1>3) return;
         pageNumber++
         when(pageNumber){
@@ -83,6 +85,7 @@ class CreateReservationActivity : AppCompatActivity() {
     }
     fun ggBack(){
         //take current index and
+        if(pageNumber==2)pageNumber--
         if(pageNumber-1<0) return;
         pageNumber--
         when(pageNumber){
