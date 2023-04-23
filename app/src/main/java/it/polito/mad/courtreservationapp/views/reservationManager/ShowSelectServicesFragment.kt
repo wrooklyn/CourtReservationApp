@@ -122,7 +122,7 @@ class ShowSelectServicesFragment : Fragment() {
             }
 
 
-            if (a.reservationServices.contains(u.serviceId.toInt())){
+            if (a.reservationServices.contains(u.serviceId)){
                 layout.backgroundTintList = ColorStateList.valueOf(blue)
                 icon.setBackgroundColor(blue)
                 drawable?.setColorFilter(ContextCompat.getColor(a, R.color.white), PorterDuff.Mode.SRC_IN)
@@ -138,14 +138,14 @@ class ShowSelectServicesFragment : Fragment() {
 
 
             layout.setOnClickListener {
-                if (a.reservationServices.contains(u.serviceId.toInt())) {
-                    a.reservationServices.remove(u.serviceId.toInt());
+                if (a.reservationServices.contains(u.serviceId)) {
+                    a.reservationServices.remove(u.serviceId);
                     layout.backgroundTintList = ColorStateList.valueOf(grey)
                     icon.setBackgroundColor(grey)
                     drawable?.setColorFilter(ContextCompat.getColor(a, R.color.black), PorterDuff.Mode.SRC_IN)
                     icon.setImageDrawable(drawable)
                 } else {
-                    a.reservationServices.add(u.serviceId.toInt());
+                    a.reservationServices.add(u.serviceId);
                     layout.backgroundTintList = ColorStateList.valueOf(blue)
                     icon.setBackgroundColor(blue)
                     drawable?.setColorFilter(ContextCompat.getColor(a, R.color.white), PorterDuff.Mode.SRC_IN)

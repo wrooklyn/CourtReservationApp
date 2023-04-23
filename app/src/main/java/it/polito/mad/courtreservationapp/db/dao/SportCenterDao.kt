@@ -18,7 +18,7 @@ interface SportCenterDao {
     suspend fun save(vararg centers: SportCenter): Array<Long>
 
     @Delete
-    fun delete(vararg centers: SportCenter)
+    suspend fun delete(vararg centers: SportCenter)
 
     @Query("SELECT * FROM sportCenters")
     fun getAll(): LiveData<List<SportCenter>>

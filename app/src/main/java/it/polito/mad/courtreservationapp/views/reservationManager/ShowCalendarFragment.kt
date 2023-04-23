@@ -111,14 +111,14 @@ class ShowCalendarFragment : Fragment() {
         ) {
             val u = data[position] //access data item
             // let the holder use data as needed
-            holder.bind(u)
+            holder.bind(u.toLong())
         }
     }
 
     class TimeSlotViewHolder(v: View, val activity: FragmentActivity?) :
         RecyclerView.ViewHolder(v) {
         private val timeSlotButton: Button = v.findViewById(R.id.tp_text)
-        fun bind(u: Int) {
+        fun bind(u: Long) {
             val a = activity as CreateReservationActivity
             val startH = 10 + u
             val endH = startH + 1

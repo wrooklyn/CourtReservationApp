@@ -21,6 +21,7 @@ class SportCenterRepository(private val application: Application) {
     private lateinit var sportCentersWithCourtsAndServices: LiveData<List<SportCenterWithCourtsAndServices>>
     private lateinit var sportCenterWithCourtsAndReservationsAndServices: LiveData<List<SportCenterWithCourtsAndReservationsAndServices>>
 
+    val allSportCenters = sportCenterDao.getAll()
     suspend fun insertCenter(sportCenter: SportCenter){
         sportCenterDao.save(sportCenter)
     }
@@ -29,29 +30,29 @@ class SportCenterRepository(private val application: Application) {
         sportCenterDao.delete(sportCenter)
     }
 
-    suspend fun getAll(): LiveData<List<SportCenter>>{
+    fun getAll(): LiveData<List<SportCenter>>{
         return sportCenterDao.getAll()
     }
 
-    suspend fun getById(id: Long): LiveData<SportCenter>{
+    fun getById(id: Long): LiveData<SportCenter>{
         return sportCenterDao.getById(id)
     }
 
-    suspend fun getAllWithCourts(): LiveData<List<SportCenterWithCourts>>{
+    fun getAllWithCourts(): LiveData<List<SportCenterWithCourts>>{
         sportCentersWithCourts = sportCenterDao.getAllWithCourts()
         return sportCentersWithCourts
     }
 
-    suspend fun getCenterWithCourts(id: Long): LiveData<SportCenterWithCourts>{
+    fun getCenterWithCourts(id: Long): LiveData<SportCenterWithCourts>{
 
         return sportCenterDao.getByIdWithCourts(id)
     }
 
-    suspend fun getAllWithCourtsAndReservations(): LiveData<List<SportCenterWithCourtsAndReservations>>{
+    fun getAllWithCourtsAndReservations(): LiveData<List<SportCenterWithCourtsAndReservations>>{
         return sportCenterDao.getAllWithCourtsAndReservations()
     }
 
-    suspend fun getCenterWithCourtsAndReservations(id: Long): LiveData<SportCenterWithCourtsAndReservations>{
+    fun getCenterWithCourtsAndReservations(id: Long): LiveData<SportCenterWithCourtsAndReservations>{
         return sportCenterDao.getByIdWithCourtsAndReservations(id)
     }
 

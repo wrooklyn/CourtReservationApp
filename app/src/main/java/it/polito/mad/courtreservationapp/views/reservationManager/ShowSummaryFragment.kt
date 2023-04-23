@@ -50,9 +50,37 @@ class ShowSummaryFragment : Fragment(R.layout.summary_layout) {
         val servicesTitle: TextView = view.findViewById(R.id.servicesTitle)
         val services: TextView = view.findViewById(R.id.servicesTV)
 
-        sportCenterName.text = "The Athetic Club";
-        addressSubtitle.text = "Via delle ciliegie";
-        address.text = "Via delle ciliegie";
+        a.viewModel.sportCenter.observe(a){
+            sportCenterName.text = it.name
+            addressSubtitle.text = it.address
+            address.text = it.address
+        }
+        a.viewModel.courtServices.observe(a){
+            courtname.text = "${it.court.sportName} court - ${it.court.courtId}";
+            var servStr: String = a.reservationServices.fold("") { acc, i ->
+                if (acc.isNotEmpty()) {
+                    "$acc, ${it.services[i.toInt()].description}"
+                } else {
+                    "${it.services[i.toInt()].description}"
+                }
+            }
+            if (servStr.isNotEmpty()) {
+                servStr = "I'd like to request $servStr.\n"
+            }
+            if (a.reservationRequests.isNotEmpty()) {
+                servStr = "${servStr}Other requests: ${a.reservationRequests}"
+            }
+            services.text = servStr
+
+            if (servStr.isEmpty()) {
+                servicesTitle.visibility = View.INVISIBLE
+                services.visibility = View.INVISIBLE
+            }
+        }
+
+//        sportCenterName.text = a.sportCenter.name//"The Athetic Club";
+//        addressSubtitle.text = a.sportCenter.address//"Via delle ciliegie";
+//        address.text = a.sportCenter.address//"Via delle ciliegie";
         username.text = "MARIO";
         date.text = a.reservationDate
         a.reservationTimeSlot.sort()
@@ -63,26 +91,26 @@ class ShowSummaryFragment : Fragment(R.layout.summary_layout) {
         }
 
         timeslot.text = slotStr;
-        courtname.text = "${a.courtServ.court.sportName} court - ${a.courtServ.court.courtId}";
-        var servStr: String = a.reservationServices.fold("") { acc, i ->
-            if (acc.isNotEmpty()) {
-                "$acc, ${a.courtServ.services[i].description}"
-            } else {
-                "${a.courtServ.services[i].description}"
-            }
-        }
-        if (servStr.isNotEmpty()) {
-            servStr = "I'd like to request $servStr.\n"
-        }
-        if (a.reservationRequests.isNotEmpty()) {
-            servStr = "${servStr}Other requests: ${a.reservationRequests}"
-        }
-        services.text = servStr
-
-        if (servStr.isEmpty()) {
-            servicesTitle.visibility = View.INVISIBLE
-            services.visibility = View.INVISIBLE
-        }
+//        courtname.text = "${a.courtServ.court.sportName} court - ${a.courtServ.court.courtId}";
+//        var servStr: String = a.reservationServices.fold("") { acc, i ->
+//            if (acc.isNotEmpty()) {
+//                "$acc, ${a.courtServ.services[i.toInt()].description}"
+//            } else {
+//                "${a.courtServ.services[i.toInt()].description}"
+//            }
+//        }
+//        if (servStr.isNotEmpty()) {
+//            servStr = "I'd like to request $servStr.\n"
+//        }
+//        if (a.reservationRequests.isNotEmpty()) {
+//            servStr = "${servStr}Other requests: ${a.reservationRequests}"
+//        }
+//        services.text = servStr
+//
+//        if (servStr.isEmpty()) {
+//            servicesTitle.visibility = View.INVISIBLE
+//            services.visibility = View.INVISIBLE
+//        }
 
         view.findViewById<Button>(R.id.f1_confirm_button).setOnClickListener {
             a.commitReservation();

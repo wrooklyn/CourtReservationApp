@@ -45,11 +45,12 @@ abstract class AppDatabase : RoomDatabase() {
         @OptIn(InternalCoroutinesApi::class)
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    AppDatabase::class.java,
-                    "app_database"
-                ).build()
+//                val instance = Room.databaseBuilder(
+//                    context.applicationContext,
+//                    AppDatabase::class.java,
+//                    "app_database"
+//                ).build()
+                val instance = Room.databaseBuilder(context, AppDatabase::class.java, "Testing").createFromAsset("database/app.db").build()
                 INSTANCE = instance
 
                 instance

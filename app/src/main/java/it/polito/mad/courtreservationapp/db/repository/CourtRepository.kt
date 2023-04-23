@@ -21,27 +21,27 @@ class CourtRepository(private val application: Application) {
         courtDao.delete(court)
     }
 
-    suspend fun getAll(): LiveData<List<Court>> {
+    fun getAll(): LiveData<List<Court>> {
         return courtDao.getAll()
     }
 
-    suspend fun getById(id: Long): LiveData<Court>{
+    fun getById(id: Long): LiveData<Court>{
         return courtDao.getById(id)
     }
 
-    suspend fun getAllWithServices(): LiveData<List<CourtWithServices>>{
+    fun getAllWithServices(): LiveData<List<CourtWithServices>>{
         return courtDao.getAllWithServices()
     }
 
-    suspend fun getByIdWithServices(id: Long): LiveData<CourtWithServices>{
+    fun getByIdWithServices(id: Long): LiveData<CourtWithServices>{
         return courtDao.getByIdWithServices(id)
     }
 
-    suspend fun getAllWithReservations(): LiveData<List<CourtWithReservations>>{
+    fun getAllWithReservations(): LiveData<List<CourtWithReservations>>{
         return courtDao.getAllWithReservations()
     }
 
-    suspend fun getByIdWithReservations(id: Long): LiveData<CourtWithReservations>{
+    fun getByIdWithReservations(id: Long): LiveData<CourtWithReservations>{
         return courtDao.getByIdWithReservations(id)
     }
 
