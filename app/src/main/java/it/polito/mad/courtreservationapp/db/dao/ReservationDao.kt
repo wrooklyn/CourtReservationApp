@@ -17,7 +17,7 @@ interface ReservationDao {
     suspend fun save(vararg reservations: Reservation): Array<Long>
 
     @Delete
-    suspend fun delete(vararg reservations: Reservation)
+    suspend fun delete(reservation: Reservation)
 
     @Query("SELECT * FROM reservations")
     fun getAll(): LiveData<List<Reservation>>
