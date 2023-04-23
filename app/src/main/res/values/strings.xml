@@ -77,4 +77,6 @@
     <string name="where">Where:</string>
     <string name="when">When:</string>
     <string name="sample_date_time">19/09/2023 – 15:30</string>
+    <string name="services_heading">Services</string>
+    <string name="service_description_subheading">Select any service you\'ll need!</string>
 </resources>

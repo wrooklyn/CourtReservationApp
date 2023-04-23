@@ -1,17 +1,23 @@
 package it.polito.mad.courtreservationapp.views.reservationManager
 
-import android.content.Context
+import android.graphics.Color
+import android.opengl.Visibility
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.stacktips.view.CalendarListener
 import com.stacktips.view.CustomCalendarView
+import com.stacktips.view.utils.CalendarUtils
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.models.Reservation
 import java.text.SimpleDateFormat
@@ -19,7 +25,7 @@ import java.util.*
 
 
 class ShowCalendarFragment : Fragment() {
-
+    var selectedSlot: Int? = null;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -36,12 +42,28 @@ class ShowCalendarFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpCalendar(view)
-        setUpTimePicker(view)
-        //todo set the right button
-        //view.findViewById<TextView>(R.id.editButtonTV).setOnClickListener{
-        //    (activity as CreateReservationActivity)!!.ggNEXT()
-        //}
+        setUpTimePicker(view, activity)
 
+        //todo set the right button
+        view.findViewById<Button>(R.id.f1_confirm_button).setOnClickListener {
+            navigateNext();
+        }
+        view.findViewById<Button>(R.id.f1_back_button).setOnClickListener {
+            activity?.finish();
+        }
+        view.findViewById<ImageView>(R.id.close_button).setOnClickListener {
+            activity?.finish();
+        }
+
+    }
+
+    private fun navigateNext() {
+        if ((activity as CreateReservationActivity).reservationDate == null || (activity as CreateReservationActivity).reservationTimeSlot == null) {
+            Toast.makeText(activity, "Please pick a valid date/timeslot.", Toast.LENGTH_SHORT)
+                .show()
+            return
+        }
+        (activity as CreateReservationActivity).ggNEXT();
     }
 
     fun getReservationOfCourts(Cid: String): List<Reservation> {
@@ -49,7 +71,7 @@ class ShowCalendarFragment : Fragment() {
         return listOf();
     }
 
-    private fun setUpTimePicker(view: View) {
+    private fun setUpTimePicker(view: View, activity: FragmentActivity?) {
         val recyclerView: RecyclerView =
             view.findViewById(R.id.recyclerView)
 
@@ -61,20 +83,21 @@ class ShowCalendarFragment : Fragment() {
             GridLayoutManager(activity, 3)
 
         //Populate recyclerView with data
-        recyclerView.adapter = TimeSlotAdapter(myData)
+        recyclerView.adapter = TimeSlotAdapter(myData, activity)
 
     }
 
-    class TimeSlotAdapter(val data: List<Int>) :
+    class TimeSlotAdapter(val data: List<Int>, val activity: FragmentActivity?) :
         RecyclerView.Adapter<TimeSlotViewHolder>() {
         override fun getItemCount() = data.size
+
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
         ): TimeSlotViewHolder {
             val v = LayoutInflater.from(parent.context)
                 .inflate(R.layout.time_picker_item, parent, false)
-            return TimeSlotViewHolder(v)
+            return TimeSlotViewHolder(v, activity)
         }
 
         override fun onBindViewHolder(
@@ -83,17 +106,49 @@ class ShowCalendarFragment : Fragment() {
         ) {
             val u = data[position] //access data item
             // let the holder use data as needed
-            holder.bind(u);
+            holder.bind(u)
         }
     }
 
-    class TimeSlotViewHolder(v: View) :
+    class TimeSlotViewHolder(v: View, val activity: FragmentActivity?) :
         RecyclerView.ViewHolder(v) {
-        private val timeSlot: TextView = v.findViewById(R.id.tp_text)
+        private val timeSlotButton: Button = v.findViewById(R.id.tp_text)
         fun bind(u: Int) {
             val startH = 10 + u
             val endH = startH + 1
-            timeSlot.text = "$startH:00 - $endH:00"
+            timeSlotButton.text = "$startH:00 - $endH:00"
+
+            timeSlotButton.visibility = View.VISIBLE
+            if ((activity as CreateReservationActivity).reservationDate == null) {
+                timeSlotButton.visibility = View.INVISIBLE
+                timeSlotButton.setBackgroundColor(Color.BLACK)
+                return
+            }
+            if (activity.reservationTimeSlot.contains(u)) {
+                timeSlotButton.setBackgroundColor(Color.RED)
+            } else if (activity.reservationsByDateString[activity.reservationDate] != null) {
+                if (activity.reservationsByDateString[activity.reservationDate]!!.contains(u.toLong())) {
+                    timeSlotButton.setBackgroundColor(Color.GRAY)
+                    timeSlotButton.isEnabled = false
+                    return
+                }
+                val color = ContextCompat.getColor(activity, R.color.green_200)
+                timeSlotButton.setBackgroundColor(color);
+            } else {
+                val color = ContextCompat.getColor(activity, R.color.green_200)
+                timeSlotButton.setBackgroundColor(color);
+            }
+            timeSlotButton.setOnClickListener {
+                if (activity.reservationTimeSlot.contains(u)) {
+                    activity.reservationTimeSlot.remove(u);
+                    val color = ContextCompat.getColor(activity, R.color.green_200)
+                    timeSlotButton.setBackgroundColor(color);
+                } else {
+                    activity.reservationTimeSlot.add(u);
+                    timeSlotButton.setBackgroundColor(Color.RED);
+                }
+            }
+
         }
     }
 
@@ -106,18 +161,25 @@ class ShowCalendarFragment : Fragment() {
         calendarView.firstDayOfWeek = Calendar.MONDAY
 
 //Show/hide overflow days of a month
-        calendarView.setShowOverflowDate(false)
+        calendarView.setShowOverflowDate(true)
 
 //call refreshCalendar to update calendar the view
         calendarView.refreshCalendar(currentCalendar)
 
-//Handling custom calendar events
 
 //Handling custom calendar events
         calendarView.setCalendarListener(object : CalendarListener {
             override fun onDateSelected(date: Date?) {
-                val df = SimpleDateFormat("dd-MM-yyyy")
-                Toast.makeText(activity, df.format(date), Toast.LENGTH_SHORT).show()
+                view.findViewById<RecyclerView>(R.id.recyclerView).adapter?.notifyDataSetChanged()
+                if (!CalendarUtils.isPastDay(date)) {
+                    val df = SimpleDateFormat("yyyy-MM-dd")
+                    (activity as CreateReservationActivity).reservationDate = df.format(date)
+                    (activity as CreateReservationActivity).reservationTimeSlot.clear()
+                } else {
+                    Toast.makeText(activity, "Cannot reserve a past date.", Toast.LENGTH_SHORT)
+                        .show()
+                    (activity as CreateReservationActivity).reservationDate = null
+                }
             }
 
             override fun onMonthChanged(date: Date?) {

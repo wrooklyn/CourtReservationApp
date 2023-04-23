@@ -30,8 +30,7 @@ class SportCenterRepository(private val application: Application) {
     }
 
     suspend fun getAll(): LiveData<List<SportCenter>>{
-        sportCenters = sportCenterDao.getAll()
-        return sportCenters
+        return sportCenterDao.getAll()
     }
 
     suspend fun getById(id: Long): LiveData<SportCenter>{

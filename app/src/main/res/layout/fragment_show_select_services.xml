@@ -6,12 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_blue_background"
-    tools:context=".views.reservationManager.ShowCalendarFragment">
+    tools:context=".views.reservationManager.ShowSelectServicesFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout13"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:padding="25dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
@@ -22,57 +22,46 @@
 
         <ImageView
             android:id="@+id/close_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/cross"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView10"
-            android:layout_width="wrap_content"
+            android:id="@+id/textView12"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Schedule"
-            android:textStyle="bold"
+            android:layout_marginTop="20dp"
+            android:autoSizePresetSizes="@array/autosize_title_sizes"
+            android:autoSizeTextType="uniform"
+            android:fontFamily="@font/red_hat_display_black"
+            android:text="@string/services_heading"
             android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+            android:textColor="#192E34"
+            app:layout_constraintBottom_toTopOf="@+id/textView18"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout14"
-            android:layout_width="0dp"
-            android:layout_height="300dp"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
-            android:background="@drawable/custom_rectangle_4rounded"
-            android:backgroundTint="#FFFFFF"
-            android:padding="10dp"
+        <TextView
+            android:id="@+id/textView18"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoSizePresetSizes="@array/autosize_center_location_sizes"
+            android:autoSizeTextType="uniform"
+            android:fontFamily="@font/red_hat_display_medium"
+            android:text="@string/service_description_subheading"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textColor="#192E34"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView10">
-
-            <com.stacktips.view.CustomCalendarView
-                android:id="@+id/calendar_view"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:background="#FFFFFF"
-                app:calendarBackgroundColor="#FFFFFF"
-                app:calendarTitleTextColor="@color/black"
-                app:currentDayOfMonthColor="@color/red_highlight"
-                app:dayOfMonthTextColor="@color/black"
-                app:dayOfWeekTextColor="@color/black"
-                app:disabledDayBackgroundColor="#FEFEFE"
-                app:disabledDayTextColor="#FFFFFF"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:selectedDayBackgroundColor="@color/red_highlight"
-                app:titleLayoutBackgroundColor="@color/white"
-                app:weekLayoutBackgroundColor="@color/white"></com.stacktips.view.CustomCalendarView>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -87,37 +76,68 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline">
 
-        <TextView
-            android:id="@+id/textView11"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="Available Hours"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout16"
             android:layout_width="0dp"
             android:layout_height="200dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="30dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView11">
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
+                android:id="@+id/services_recycler"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                tools:listitem="@layout/time_picker_item"/>
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <TextView
+            android:id="@+id/textView19"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="20dp"
+            android:autoSizeTextType="uniform"
+            android:fontFamily="@font/red_hat_display_black"
+            android:text="Special Requests"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="#192E34"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/constraintLayout16" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="30dp"
+            android:background="#B5B2B2"
+            app:cardBackgroundColor="#EFEFEF"
+            app:cardCornerRadius="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView19">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:gravity="top|start"
+                android:hint="Write here any special requests..."
+                android:inputType="textMultiLine"
+                android:lines="8"
+                android:maxLines="10"
+                android:minLines="6"
+                android:padding="10dp"
+                android:scrollbars="none" />
+        </androidx.cardview.widget.CardView>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -156,6 +176,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.56" />
+        app:layout_constraintGuide_percent="0.23" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
