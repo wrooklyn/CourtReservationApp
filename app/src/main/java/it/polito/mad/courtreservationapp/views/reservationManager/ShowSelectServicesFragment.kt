@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -57,7 +58,7 @@ class ShowSelectServicesFragment : Fragment() {
         view.findViewById<ImageView>(R.id.close_button).setOnClickListener{
             activity?.finish();
         }
-
+        //view.findViewById<RecyclerView>(R.id.services_recycler).adapter?.notifyDataSetChanged()
         //TODO dispose?
     }
     fun getReservationOfCourts(Cid: String): List<Reservation> {
@@ -112,13 +113,22 @@ class ShowSelectServicesFragment : Fragment() {
 
             val blue = ContextCompat.getColor(a, R.color.deep_blue)
             val grey = Color.parseColor("#EFEFEF")
-            val drawable = ContextCompat.getDrawable(a, R.drawable.home)
+            var drawable : Drawable? = null
+            when (u.serviceId.toInt()){
+                0->drawable= ContextCompat.getDrawable(a, R.drawable.shower_sv)
+                1->drawable= ContextCompat.getDrawable(a, R.drawable.equipment_sv)
+                2->drawable= ContextCompat.getDrawable(a, R.drawable.personal_trainer_sv)
+                3->drawable= ContextCompat.getDrawable(a, R.drawable.food_sv)
+            }
+
 
             if (a.reservationServices.contains(u.serviceId.toInt())){
                 layout.backgroundTintList = ColorStateList.valueOf(blue)
                 icon.setBackgroundColor(blue)
                 drawable?.setColorFilter(ContextCompat.getColor(a, R.color.white), PorterDuff.Mode.SRC_IN)
                 icon.setImageDrawable(drawable)
+                Log.v("gabri", a.reservationServices.toString())
+                Log.v("gabri", u.serviceId.toString())
             }else{
                 layout.backgroundTintList = ColorStateList.valueOf(grey)
                 icon.setBackgroundColor(grey)
