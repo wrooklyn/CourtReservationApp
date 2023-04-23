@@ -126,6 +126,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView19">
 
             <EditText
+                android:id="@+id/sv_text_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#00000000"

@@ -25,8 +25,8 @@ class CreateReservationActivity : AppCompatActivity() {
     //private var myReservation: Reservation = Reservation();
     var reservationDate : String? = null ;
     var reservationTimeSlot : MutableList<Int> = mutableListOf() ;
-    var reservationServices : List<Int>? = null ;
-    var reservationRequests : String? = null ;
+    var reservationServices : MutableList<Int> = mutableListOf() ;
+    var reservationRequests : String = "";
     private var pageNumber : Int = 0
 
     //private val db = Room.databaseBuilder(this, AppDatabase::class.java, "Test5").createFromAsset("database/app.db").allowMainThreadQueries().build()
@@ -73,8 +73,7 @@ class CreateReservationActivity : AppCompatActivity() {
         //updates myReservation with the second fragment data
     }
     fun ggNEXT(){
-        //take current index and
-        if(pageNumber==0)pageNumber++
+        //take current index and handle navigation
         if(pageNumber+1>3) return;
         pageNumber++
         when(pageNumber){
@@ -84,8 +83,7 @@ class CreateReservationActivity : AppCompatActivity() {
         }
     }
     fun ggBack(){
-        //take current index and
-        if(pageNumber==2)pageNumber--
+        //take current index and and handle navigation
         if(pageNumber-1<0) return;
         pageNumber--
         when(pageNumber){
