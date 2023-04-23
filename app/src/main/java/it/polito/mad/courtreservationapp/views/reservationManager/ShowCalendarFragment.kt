@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -54,11 +55,15 @@ class ShowCalendarFragment : Fragment() {
         view.findViewById<ImageView>(R.id.close_button).setOnClickListener {
             activity?.finish();
         }
-
+        if((activity as CreateReservationActivity).reservationDate==null)
+            view.findViewById<TextView>(R.id.timeslot_heading).text = "Please pick a date"
+        else
+            view.findViewById<TextView>(R.id.timeslot_heading).text = "Available Hours"
     }
 
     private fun navigateNext() {
-        if ((activity as CreateReservationActivity).reservationDate == null || (activity as CreateReservationActivity).reservationTimeSlot == null) {
+        val a = (activity as CreateReservationActivity)
+        if (a.reservationDate == null || a.reservationTimeSlot == null || a.reservationTimeSlot.isEmpty()) {
             Toast.makeText(activity, "Please pick a valid date/timeslot.", Toast.LENGTH_SHORT)
                 .show()
             return
@@ -114,38 +119,42 @@ class ShowCalendarFragment : Fragment() {
         RecyclerView.ViewHolder(v) {
         private val timeSlotButton: Button = v.findViewById(R.id.tp_text)
         fun bind(u: Int) {
+            val a = activity as CreateReservationActivity
             val startH = 10 + u
             val endH = startH + 1
             timeSlotButton.text = "$startH:00 - $endH:00"
-
+            val orange = ContextCompat.getColor(activity, R.color.orange_highlight)
+            val grey = ContextCompat.getColor(activity, R.color.grey_unselected)
             timeSlotButton.visibility = View.VISIBLE
-            if ((activity as CreateReservationActivity).reservationDate == null) {
+            if (a.reservationDate == null) {
                 timeSlotButton.visibility = View.INVISIBLE
-                timeSlotButton.setBackgroundColor(Color.BLACK)
                 return
             }
-            if (activity.reservationTimeSlot.contains(u)) {
-                timeSlotButton.setBackgroundColor(Color.RED)
-            } else if (activity.reservationsByDateString[activity.reservationDate] != null) {
-                if (activity.reservationsByDateString[activity.reservationDate]!!.contains(u.toLong())) {
-                    timeSlotButton.setBackgroundColor(Color.GRAY)
+            if (a.reservationTimeSlot.contains(u)) {
+                timeSlotButton.setBackgroundColor(orange)
+                timeSlotButton.setTextColor(Color.WHITE);
+            } else if (a.reservationsByDateString[a.reservationDate] != null) {
+                if (a.reservationsByDateString[a.reservationDate]!!.contains(u.toLong())) {
+                    timeSlotButton.setBackgroundColor(Color.TRANSPARENT)
+                    timeSlotButton.setTextColor(Color.GRAY);
                     timeSlotButton.isEnabled = false
                     return
                 }
-                val color = ContextCompat.getColor(activity, R.color.green_200)
-                timeSlotButton.setBackgroundColor(color);
+                timeSlotButton.setBackgroundColor(grey);
+                timeSlotButton.setTextColor(Color.parseColor("#4F4F4F"));
             } else {
-                val color = ContextCompat.getColor(activity, R.color.green_200)
-                timeSlotButton.setBackgroundColor(color);
+                timeSlotButton.setBackgroundColor(grey);
+                timeSlotButton.setTextColor(Color.parseColor("#4F4F4F"));
             }
             timeSlotButton.setOnClickListener {
-                if (activity.reservationTimeSlot.contains(u)) {
-                    activity.reservationTimeSlot.remove(u);
-                    val color = ContextCompat.getColor(activity, R.color.green_200)
-                    timeSlotButton.setBackgroundColor(color);
+                if (a.reservationTimeSlot.contains(u)) {
+                    a.reservationTimeSlot.remove(u);
+                    timeSlotButton.setBackgroundColor(grey);
+                    timeSlotButton.setTextColor(Color.parseColor("#4F4F4F"));
                 } else {
-                    activity.reservationTimeSlot.add(u);
-                    timeSlotButton.setBackgroundColor(Color.RED);
+                    a.reservationTimeSlot.add(u);
+                    timeSlotButton.setBackgroundColor(orange);
+                    timeSlotButton.setTextColor(Color.WHITE);
                 }
             }
 
@@ -175,11 +184,14 @@ class ShowCalendarFragment : Fragment() {
                     val df = SimpleDateFormat("yyyy-MM-dd")
                     (activity as CreateReservationActivity).reservationDate = df.format(date)
                     (activity as CreateReservationActivity).reservationTimeSlot.clear()
+                    view.findViewById<TextView>(R.id.timeslot_heading).text = "Available Hours"
                 } else {
                     Toast.makeText(activity, "Cannot reserve a past date.", Toast.LENGTH_SHORT)
                         .show()
                     (activity as CreateReservationActivity).reservationDate = null
+                    view.findViewById<TextView>(R.id.timeslot_heading).text = "Please pick a date"
                 }
+
             }
 
             override fun onMonthChanged(date: Date?) {

@@ -21,5 +21,7 @@
     <color name="red_button">#F16E64</color>
     <color name="red_highlight">#F04D23</color>
     <color name="deep_blue">#192E34</color>
+    <color name="orange_highlight">#D9541C</color>
+    <color name="grey_unselected">#EFEFEF</color>
 
 </resources>

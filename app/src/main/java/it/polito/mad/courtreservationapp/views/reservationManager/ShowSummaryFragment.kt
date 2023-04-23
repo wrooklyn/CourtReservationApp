@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.models.Gender
@@ -101,9 +102,22 @@ class ShowSummaryFragment : Fragment(R.layout.summary_layout) {
 
     @SuppressLint("SetTextI18n")
     private fun updateUI() {
-
-
     }
+
+    /*fun showConfirmationPopup(){
+        val inflater = getSystemService(AppCompatActivity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val popupView = inflater.inflate(R.layout.popup_warning, null)
+        popupWindow.showAtLocation(findViewById(R.id.mainLL), Gravity.CENTER, 0, 0)
+        mainLL.foreground.alpha = 160
+
+        popupWindow.setOnDismissListener {
+            mainLL.foreground.alpha = 0
+        }
+
+        dismissButton.setOnClickListener {
+            popupWindow.dismiss()
+        }
+    }*/
 
 
 }
