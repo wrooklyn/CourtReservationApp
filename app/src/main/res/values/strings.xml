@@ -79,4 +79,5 @@
     <string name="sample_date_time">19/09/2023 – 15:30</string>
     <string name="services_heading">Services</string>
     <string name="service_description_subheading">Select any service you\'ll need!</string>
+    <string name="info_heading">Info</string>
 </resources>
