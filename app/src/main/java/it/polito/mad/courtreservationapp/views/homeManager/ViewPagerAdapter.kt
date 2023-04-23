@@ -13,7 +13,7 @@ class ViewPagerAdapter(fragmentActivity: FragmentManager, lifecycle:Lifecycle) :
 
     val mFragmentNames = arrayOf( //Tabs names array
         "Description",
-        "Court",
+        "Courts",
         "Reviews"
     )
 
