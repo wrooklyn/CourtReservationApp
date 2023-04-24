@@ -1,10 +1,8 @@
 package it.polito.mad.courtreservationapp.db.dao
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
+import androidx.room.*
 import androidx.room.OnConflictStrategy.Companion.REPLACE
-import androidx.room.Query
+import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
 import it.polito.mad.courtreservationapp.models.Reservation
 import it.polito.mad.courtreservationapp.models.User
 
@@ -24,4 +22,11 @@ interface ReservationDao {
 
     @Query("SELECT * FROM reservations WHERE reservationId = :reservationId")
     fun getById(reservationId: Long): LiveData<Reservation>
+
+    @Query("SELECT * FROM reservations WHERE reservationUserId = :userId")
+    fun getByUser(userId: Long): LiveData<List<Reservation>>
+
+    @Transaction
+    @Query("SELECT * FROM reservations WHERE reservationUserId = :userId")
+    fun getLocationsByUserId(userId: Long): LiveData<List<ReservationWithSportCenter>>
 }

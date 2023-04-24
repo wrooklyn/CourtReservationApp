@@ -4,8 +4,8 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import it.polito.mad.courtreservationapp.db.AppDatabase
 import it.polito.mad.courtreservationapp.db.crossref.ReservationServiceCrossRef
-import it.polito.mad.courtreservationapp.db.relationships.CourtWithReservations
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
+import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
 import it.polito.mad.courtreservationapp.models.Reservation
 
 class ReservationRepository(private val application: Application) {
@@ -29,5 +29,13 @@ class ReservationRepository(private val application: Application) {
         for(reservation in reservations){
             reservationDao.delete(reservation)
         }
+    }
+
+    fun getReservationsByUser(userId: Long): LiveData<List<Reservation>> {
+        return reservationDao.getByUser(userId)
+    }
+
+    fun getReservationLocationsByUserId(userId: Long): LiveData<List<ReservationWithSportCenter>> {
+        return reservationDao.getLocationsByUserId(userId)
     }
 }
