@@ -61,14 +61,16 @@ class CreateReservationActivity : AppCompatActivity() {
 //        viewModel.initCourt(1, 1) //TODO: courtId and centerId from other Activity
 //        viewModel.initUser(1) //TODO: retrieve userId from other sources
 
-        viewModel.user.observe(this){
-            user = it
-        }
-
         viewModel.sportCenter.observe(this){
             Log.i("VM", "${it.centerId}")
             sportCenter = it
         }
+
+        viewModel.user.observe(this){
+            user = it
+        }
+
+
         viewModel.courtReservations.observe(this){ court ->
             courtWithReservations = court
 
@@ -97,14 +99,19 @@ class CreateReservationActivity : AppCompatActivity() {
     fun commitReservation(){
         //take myReservation and call the dao
         //close activity
-        val reservations: MutableList<ReservationWithServices> = mutableListOf()
-        for(timeSlot in reservationTimeSlot){
-            val res = Reservation(reservationDate?: Calendar.getInstance().toString(), timeSlot, 1, 1)
-            reservations.add(ReservationWithServices(res, reservationServices as List<Service>))
-        }
-        val list: List<ReservationWithServices> = reservations
+//        val reservations: MutableList<ReservationWithServices> = mutableListOf()
+//        for(timeSlot in reservationTimeSlot){
+//            val res = Reservation(reservationDate?: Calendar.getInstance().toString(), timeSlot, user.userId, courtReserv.court.courtId)
+////            reservations.add(ReservationWithServices(res, reservationServices as List<Service>))
+//            val services = reservationServices.map { id ->
+//                courtWithServices.services.first { it.serviceId == id }
+//            }
+//            val resWithServices = ReservationWithServices(res, services)
+//            reservations.add(resWithServices)
+//        }
+//        val list: List<ReservationWithServices> = reservations
 
-        viewModel.saveReservation(list)
+        viewModel.saveReservation(reservationDate, reservationTimeSlot, reservationServices)
         finish()
     }
 
