@@ -49,7 +49,7 @@ class DescriptionFragment : Fragment() {
             "Shower",
             "Cafeteria"
         )
-        Log.i("serviceInitialize", serviceName[0])
+//        Log.i("serviceInitialize", serviceName[0])
         val recyclerView: RecyclerView? = view?.findViewById(R.id.service_description_recycler)
         val adapter = ServiceDescriptionAdapter(imageId, serviceName)
         recyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
@@ -62,13 +62,13 @@ class DescriptionFragment : Fragment() {
         override fun getItemCount()=imagesList.size
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ServiceDescriptionViewHolder {
             val itemView=LayoutInflater.from(parent.context).inflate(R.layout.service_description_item, parent, false)
-            Log.i("serviceAdapter", namesList[0])
+//            Log.i("serviceAdapter", namesList[0])
             return ServiceDescriptionViewHolder(itemView)
         }
         override fun onBindViewHolder(holder: ServiceDescriptionViewHolder, position: Int) {
             val currentImage = imagesList[position]
             val currentName = namesList[position]
-            Log.i("onBindViewHolder", position.toString())
+//            Log.i("onBindViewHolder", position.toString())
             holder.bind(currentImage, currentName)
         }
     }
@@ -76,7 +76,7 @@ class DescriptionFragment : Fragment() {
         private val titleImage: ImageView = itemView.findViewById(R.id.service_description_image)
         private val serviceName: TextView = itemView.findViewById(R.id.service_description_name)
         fun bind(imageSrc: Int, activityName: String){
-            Log.i("bindViewHolder", activityName)
+//            Log.i("bindViewHolder", activityName)
             titleImage.setImageResource(imageSrc)
             serviceName.text=activityName
         }
