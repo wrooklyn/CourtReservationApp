@@ -1,26 +1,29 @@
 package it.polito.mad.courtreservationapp.db.repository
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import it.polito.mad.courtreservationapp.db.AppDatabase
 import it.polito.mad.courtreservationapp.db.crossref.ReservationServiceCrossRef
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithReservations
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
+import it.polito.mad.courtreservationapp.db.relationships.UserWithReservations
 import it.polito.mad.courtreservationapp.models.Reservation
 
-class ReservationRepository(private val application: Application) {
+class ReservationRepository(val application: Application) {
     private val db: AppDatabase = AppDatabase.getDatabase(application)
     private val reservationDao = db.reservationDao()
-    private val courtDao = db.courtDao()
-    private val serviceDao = db.serviceDao()
     private val reservationAndServiceDao = db.reservationAndServiceDao()
 
-    val allReservations = reservationDao.getAll()
-
     suspend fun insertReservationWithServices(reservationWithServices: ReservationWithServices){
-        reservationDao.save(reservationWithServices.reservation)
-        val reservationId = reservationWithServices.reservation.reservationId
+        Log.i("ReservationRepo", "$reservationWithServices")
+        //save reservation
+        val reservationId = reservationDao.save(reservationWithServices.reservation)
+        reservationWithServices.reservation.reservationId = reservationId
+        Log.i("ReservationRepo", "Saved ${reservationWithServices.reservation}")
+        //save service requested
         for(service in reservationWithServices.services){
+            Log.i("ReservationRepo", "Saving $reservationId - ${service.serviceId}")
             reservationAndServiceDao.save(ReservationServiceCrossRef(reservationId, service.serviceId))
         }
     }
@@ -30,4 +33,20 @@ class ReservationRepository(private val application: Application) {
             reservationDao.delete(reservation)
         }
     }
+
+    fun getAll(): LiveData<List<Reservation>>{
+        return reservationDao.getAll()
+    }
+
+    fun getById(reservationId: Long): LiveData<Reservation>{
+        return reservationDao.getById(reservationId)
+    }
+
+    fun getAllWithServices(): LiveData<List<ReservationWithServices>>{
+        return reservationDao.getAllWithServices()
+    }
+    fun getByIdWithServices(reservationId: Long): LiveData<ReservationWithServices>{
+        return reservationDao.getByIdWithServices(reservationId)
+    }
+
 }

@@ -10,18 +10,11 @@ import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsA
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
 import it.polito.mad.courtreservationapp.models.SportCenter
 
-class SportCenterRepository(private val application: Application) {
+class SportCenterRepository(val application: Application) {
 
     private val db: AppDatabase = AppDatabase.getDatabase(application)
-    private val sportCenterDao = db.sportCenterDao()
+    private val sportCenterDao: SportCenterDao = db.sportCenterDao()
 
-    private lateinit var sportCenters: LiveData<List<SportCenter>>
-    private lateinit var sportCentersWithCourts: LiveData<List<SportCenterWithCourts>>
-    private lateinit var sportCentersWithCourtsAndReservations: LiveData<List<SportCenterWithCourtsAndReservations>>
-    private lateinit var sportCentersWithCourtsAndServices: LiveData<List<SportCenterWithCourtsAndServices>>
-    private lateinit var sportCenterWithCourtsAndReservationsAndServices: LiveData<List<SportCenterWithCourtsAndReservationsAndServices>>
-
-    val allSportCenters = sportCenterDao.getAll()
     suspend fun insertCenter(sportCenter: SportCenter){
         sportCenterDao.save(sportCenter)
     }
@@ -39,12 +32,10 @@ class SportCenterRepository(private val application: Application) {
     }
 
     fun getAllWithCourts(): LiveData<List<SportCenterWithCourts>>{
-        sportCentersWithCourts = sportCenterDao.getAllWithCourts()
-        return sportCentersWithCourts
+        return sportCenterDao.getAllWithCourts()
     }
 
     fun getCenterWithCourts(id: Long): LiveData<SportCenterWithCourts>{
-
         return sportCenterDao.getByIdWithCourts(id)
     }
 
@@ -56,19 +47,19 @@ class SportCenterRepository(private val application: Application) {
         return sportCenterDao.getByIdWithCourtsAndReservations(id)
     }
 
-    suspend fun getAllWithCourtsAndServices(): LiveData<List<SportCenterWithCourtsAndServices>>{
+    fun getAllWithCourtsAndServices(): LiveData<List<SportCenterWithCourtsAndServices>>{
         return sportCenterDao.getAllWithCourtsAndServices()
     }
 
-    suspend fun getCenterWithCourtsAndServices(id: Long): LiveData<SportCenterWithCourtsAndServices>{
+    fun getCenterWithCourtsAndServices(id: Long): LiveData<SportCenterWithCourtsAndServices>{
         return sportCenterDao.getByIdWithCourtsAndServices(id)
     }
 
-    suspend fun getAllWithCourtsAndReservationsAndServices(): LiveData<List<SportCenterWithCourtsAndReservationsAndServices>>{
+    fun getAllWithCourtsAndReservationsAndServices(): LiveData<List<SportCenterWithCourtsAndReservationsAndServices>>{
         return sportCenterDao.getAllWithCourtsAndReservationsAndServices()
     }
 
-    suspend fun getCenterWithCourtsAndReservationsAndServices(id: Long): LiveData<SportCenterWithCourtsAndReservationsAndServices>{
+    fun getCenterWithCourtsAndReservationsAndServices(id: Long): LiveData<SportCenterWithCourtsAndReservationsAndServices>{
         return sportCenterDao.getByIdWithCourtsAndReservationsAndServices(id)
     }
 

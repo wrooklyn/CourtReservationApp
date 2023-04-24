@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import it.polito.mad.courtreservationapp.db.AppDatabase
 import it.polito.mad.courtreservationapp.models.User
 import it.polito.mad.courtreservationapp.db.dao.UserDao
+import it.polito.mad.courtreservationapp.db.relationships.UserWithReservations
+
 //import it.polito.mad.courtreservationapp.db.relationships.UserWithReservations
 
 class UserRepository(private val application: Application) {
@@ -27,11 +29,7 @@ class UserRepository(private val application: Application) {
         return userDao.getById(userId)
     }
 
-//    suspend fun getAllWithReservations(): LiveData<List<UserWithReservations>>{
-//        return userDao.getAllWithReservations()
-//    }
-//
-//    suspend fun getByIdWithReservations(user: User): LiveData<UserWithReservations>{
-//        return userDao.getByIdWithReservations(user.userId)
-//    }
+    fun getUserReservations(userId: Long): LiveData<UserWithReservations>{
+        return userDao.getByIdWithReservations(userId)
+    }
 }
