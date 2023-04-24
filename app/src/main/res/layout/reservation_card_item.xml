@@ -33,7 +33,7 @@
                 app:layout_constraintGuide_percent="0.63" />
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/reservCardImage"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:contentDescription="@string/sportsplex"

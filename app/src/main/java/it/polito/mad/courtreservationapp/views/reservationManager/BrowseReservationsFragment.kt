@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -124,17 +125,6 @@ class MockDB {
 
 class BrowseReservationsFragment : Fragment() {
 
-    private val timeslotMap: Map<Long, String> = mapOf(
-        Pair(0, "10:00 - 11:00"),
-        Pair(1, "11:00 - 12:00"),
-        Pair(2, "12:00 - 13:00"),
-        Pair(3, "13:00 - 14:00"),
-        Pair(4, "14:00 - 15:00"),
-        Pair(5, "15:00 - 16:00"),
-        Pair(6, "16:00 - 17:00"),
-        Pair(7, "17:00 - 18:00"),
-    )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -164,23 +154,23 @@ class BrowseReservationsFragment : Fragment() {
         })
     }
 
-    private fun initReservations() {
-        // TODO: add DB integration
-        val mockDB = MockDB()
-        val userReservations: List<Reservation> = mockDB.userReservations.reservations
-
-        val reservCourtIDs: List<Long> = userReservations.map{ it.reservationCourtId }
-        val reservCourt: List<Court> = reservCourtIDs.map{
-            mockDB.courts.find{ court -> court.courtId == it }!!
-        }
-        val sportCenters: List<SportCenter> = reservCourt.map{ c ->
-            mockDB.sportCentersWithCourts.find{it.courts.contains(c)}!!.sportCenter
-        }
-        val locations: List<String> = sportCenters.map{ it.address }
-
-        val datetimes: List<String> = userReservations.map{ it.reservationDate + " - " + timeslotMap[it.timeSlotId]!!}
-
-    }
+//    private fun initReservations() {
+//        // TODO: add DB integration
+//        val mockDB = MockDB()
+//        val userReservations: List<Reservation> = mockDB.userReservations.reservations
+//
+//        val reservCourtIDs: List<Long> = userReservations.map{ it.reservationCourtId }
+//        val reservCourt: List<Court> = reservCourtIDs.map{
+//            mockDB.courts.find{ court -> court.courtId == it }!!
+//        }
+//        val sportCenters: List<SportCenter> = reservCourt.map{ c ->
+//            mockDB.sportCentersWithCourts.find{it.courts.contains(c)}!!.sportCenter
+//        }
+//        val locations: List<String> = sportCenters.map{ it.address }
+//
+//        val datetimes: List<String> = userReservations.map{ it.reservationDate + " - " + timeslotMap[it.timeSlotId]!!}
+//
+//    }
 
     class ReservationAdapter(private val reservationsLocations: List<ReservationWithSportCenter>): RecyclerView.Adapter<ReservationViewHolder>() {
 
@@ -208,12 +198,33 @@ class BrowseReservationsFragment : Fragment() {
 
     class ReservationViewHolder(view: View, listener: ReservationAdapter.OnItemClickListener): RecyclerView.ViewHolder(view) {
 
+        private val timeslotMap: Map<Long, String> = mapOf(
+            Pair(0, "10:00 - 11:00"),
+            Pair(1, "11:00 - 12:00"),
+            Pair(2, "12:00 - 13:00"),
+            Pair(3, "13:00 - 14:00"),
+            Pair(4, "14:00 - 15:00"),
+            Pair(5, "15:00 - 16:00"),
+            Pair(6, "16:00 - 17:00"),
+            Pair(7, "17:00 - 18:00"),
+        )
+
         private var reservLocationTV: TextView = view.findViewById(R.id.reservation_locationTV)
         private var reservDatetimeTV: TextView = view.findViewById(R.id.reservation_datetimeTV)
+        private var reservImageIV: ImageView = view.findViewById(R.id.reservCardImage)
 
         fun bind(reservationWithSportCenter: ReservationWithSportCenter) {
             reservLocationTV.text = reservationWithSportCenter.courtWithSportCenter.sportCenter.address + " - Court " + reservationWithSportCenter.courtWithSportCenter.court.courtId
-            reservDatetimeTV.text = reservationWithSportCenter.reservation.reservationDate + " - " + reservationWithSportCenter.reservation.timeSlotId
+            reservDatetimeTV.text = reservationWithSportCenter.reservation.reservationDate + " - " + timeslotMap[reservationWithSportCenter.reservation.timeSlotId]
+            when(reservationWithSportCenter.courtWithSportCenter.court.sportName) {
+                "Calcio" -> reservImageIV.setImageResource(R.drawable.football_court)
+                "Iceskate" -> reservImageIV.setImageResource(R.drawable.iceskating_rink)
+                "Basket" -> reservImageIV.setImageResource(R.drawable.basket_center)
+                "Hockey" -> reservImageIV.setImageResource(R.drawable.hockey)
+                "Tennis" -> reservImageIV.setImageResource(R.drawable.tennis_court)
+                "Pallavolo" -> reservImageIV.setImageResource(R.drawable.volley_court)
+                "Nuoto" -> reservImageIV.setImageResource(R.drawable.swimming_pool)
+            }
         }
 
         init{
