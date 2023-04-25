@@ -1,25 +1,18 @@
 package it.polito.mad.courtreservationapp.views.reservationManager
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.*
 import it.polito.mad.courtreservationapp.models.*
-import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
-import it.polito.mad.courtreservationapp.views.homeManager.CenterDetailFragment
-import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
 
 class MockDB {
     /* MOCK DATA */
@@ -220,7 +213,7 @@ class BrowseReservationsFragment : Fragment() {
                 "Calcio" -> reservImageIV.setImageResource(R.drawable.football_court)
                 "Iceskate" -> reservImageIV.setImageResource(R.drawable.iceskating_rink)
                 "Basket" -> reservImageIV.setImageResource(R.drawable.basket_center)
-                "Hockey" -> reservImageIV.setImageResource(R.drawable.hockey)
+                "Hockey" -> reservImageIV.setImageResource(R.drawable.hockey_png)
                 "Tennis" -> reservImageIV.setImageResource(R.drawable.tennis_court)
                 "Pallavolo" -> reservImageIV.setImageResource(R.drawable.volley_court)
                 "Nuoto" -> reservImageIV.setImageResource(R.drawable.swimming_pool)
