@@ -12,9 +12,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.models.Court
 import it.polito.mad.courtreservationapp.models.User
+import it.polito.mad.courtreservationapp.view_model.ReservationFragmentViewModel
 
 class ReservationDetailsFragment : Fragment() {
 

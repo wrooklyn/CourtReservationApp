@@ -27,9 +27,6 @@ import it.polito.mad.courtreservationapp.models.Service
 
 
 class ShowSelectServicesFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,14 +43,14 @@ class ShowSelectServicesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setUpServicesPicker(view, (activity as CreateReservationActivity))
         val editText = view.findViewById<EditText>(R.id.sv_text_field)
-        editText.setText((activity as CreateReservationActivity).reservationRequests)
+        editText.setText((activity as CreateReservationActivity).viewModel.reservationRequests)
         //todo set the right button
         view.findViewById<Button>(R.id.f1_confirm_button).setOnClickListener {
-            (activity as CreateReservationActivity).reservationRequests = editText.text.toString()
+            (activity as CreateReservationActivity).viewModel.reservationRequests = editText.text.toString()
             (activity as CreateReservationActivity).ggNEXT();
         }
         view.findViewById<Button>(R.id.f1_back_button).setOnClickListener {
-            (activity as CreateReservationActivity).reservationRequests = editText.text.toString()
+            (activity as CreateReservationActivity).viewModel.reservationRequests = editText.text.toString()
             (activity as CreateReservationActivity).ggBack();
         }
         view.findViewById<ImageView>(R.id.close_button).setOnClickListener {

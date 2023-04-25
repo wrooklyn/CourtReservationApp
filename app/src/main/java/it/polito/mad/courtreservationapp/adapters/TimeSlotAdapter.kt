@@ -45,15 +45,15 @@ class TimeSlotViewHolder(v: View, val activity: FragmentActivity?) :
         val orange = ContextCompat.getColor(activity, R.color.orange_highlight)
         val grey = ContextCompat.getColor(activity, R.color.grey_unselected)
         timeSlotButton.visibility = View.VISIBLE
-        if (a.reservationDate == null) {
+        if (a.viewModel.reservationDate == null) {
             timeSlotButton.visibility = View.INVISIBLE
             return
         }
-        if (a.reservationTimeSlot.contains(u)) {
+        if (a.viewModel.reservationTimeSlots.contains(u)) {
             timeSlotButton.setBackgroundColor(orange)
             timeSlotButton.setTextColor(Color.WHITE)
-        } else if (a.viewModel.reservationsByDateMap[a.reservationDate] != null) {
-            if (a.viewModel.reservationsByDateMap[a.reservationDate]!!.contains(u)) {
+        } else if (a.viewModel.reservationsByDateMap[a.viewModel.reservationDate] != null) {
+            if (a.viewModel.reservationsByDateMap[a.viewModel.reservationDate]!!.contains(u)) {
                 timeSlotButton.setBackgroundColor(Color.TRANSPARENT)
                 timeSlotButton.setTextColor(Color.GRAY)
                 timeSlotButton.isEnabled = false
@@ -68,12 +68,12 @@ class TimeSlotViewHolder(v: View, val activity: FragmentActivity?) :
             timeSlotButton.setTextColor(Color.parseColor("#4F4F4F"))
         }
         timeSlotButton.setOnClickListener {
-            if (a.reservationTimeSlot.contains(u)) {
-                a.reservationTimeSlot.remove(u)
+            if (a.viewModel.reservationTimeSlots.contains(u)) {
+                a.viewModel.reservationTimeSlots.remove(u)
                 timeSlotButton.setBackgroundColor(grey)
                 timeSlotButton.setTextColor(Color.parseColor("#4F4F4F"))
             } else {
-                a.reservationTimeSlot.add(u)
+                a.viewModel.reservationTimeSlots.add(u)
                 timeSlotButton.setBackgroundColor(orange)
                 timeSlotButton.setTextColor(Color.WHITE)
             }

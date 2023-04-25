@@ -30,6 +30,8 @@ data class Reservation(
     val reservationUserId: Long,
     val reservationCourtId: Long,
 
+    val request: String?,
+
     @PrimaryKey(autoGenerate = true)
     var reservationId: Long = 0,
 )

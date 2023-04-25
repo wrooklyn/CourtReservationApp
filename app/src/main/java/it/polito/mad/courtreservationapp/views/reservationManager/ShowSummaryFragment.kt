@@ -85,9 +85,9 @@ class ShowSummaryFragment : Fragment(R.layout.summary_layout) {
         addressSubtitle.text = a.viewModel.sportCenter.address//"Via delle ciliegie";
         address.text = a.viewModel.sportCenter.address//"Via delle ciliegie";
         username.text = a.viewModel.user.username
-        date.text = a.reservationDate
-        a.reservationTimeSlot.sort()
-        val slotStr: String = a.reservationTimeSlot.fold("") { acc, i ->
+        date.text = a.viewModel.reservationDate
+        a.viewModel.reservationTimeSlots.sort()
+        val slotStr: String = a.viewModel.reservationTimeSlots.fold("") { acc, i ->
             val startH = 10 + i
             val endH = startH + 1
             "$acc$startH:00 - $endH:00\n"
@@ -95,7 +95,7 @@ class ShowSummaryFragment : Fragment(R.layout.summary_layout) {
 
         timeslot.text = slotStr;
         courtname.text = "${a.viewModel.courtWithServices.court.sportName} court - ${a.viewModel.courtWithServices.court.courtId}"
-        var servStr: String = a.reservationServices.fold("") { acc, i ->
+        var servStr: String = a.viewModel.reservationServices.fold("") { acc, i ->
             if (acc.isNotEmpty()) {
                 "$acc, ${a.viewModel.courtWithServices.services[i.toInt()].description}"
             } else {
@@ -105,8 +105,8 @@ class ShowSummaryFragment : Fragment(R.layout.summary_layout) {
         if (servStr.isNotEmpty()) {
             servStr = "I'd like to request $servStr.\n"
         }
-        if (a.reservationRequests.isNotEmpty()) {
-            servStr = "${servStr}Other requests: ${a.reservationRequests}"
+        if (a.viewModel.reservationRequests.isNotEmpty()) {
+            servStr = "${servStr}Other requests: ${a.viewModel.reservationRequests}"
         }
         services.text = servStr
 

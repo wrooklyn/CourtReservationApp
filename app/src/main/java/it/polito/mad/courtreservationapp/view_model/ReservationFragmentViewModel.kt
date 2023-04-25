@@ -1,6 +1,7 @@
 package it.polito.mad.courtreservationapp.view_model
 
 import android.app.Application
+import android.app.Service
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -41,10 +42,11 @@ class ReservationFragmentViewModel(application: Application): AndroidViewModel(a
     val reservationsByDateMap: Map<String, List<Long>>
         get() = _reservationsByDateMap
 
-//    var reservationDate : String? = null ;
-//    var reservationTimeSlots : MutableList<Long> = mutableListOf() ;
-//    var reservationServices : MutableList<Long> = mutableListOf() ;
-//    var reservationRequests : String = "";
+    //new reservation data
+    var reservationDate : String? = null
+    var reservationTimeSlots : MutableList<Long> = mutableListOf()
+    var reservationServices : MutableList<Long> = mutableListOf()
+    var reservationRequests : String = ""
 
 
 
@@ -67,11 +69,12 @@ class ReservationFragmentViewModel(application: Application): AndroidViewModel(a
         userLiveData = userRepo.getById(userId)
     }
 
-    fun saveReservation(reservationDate: String?, reservationTimeSlots: List<Long>, reservationServices: List<Long>){
+
+    fun saveReservation(){
         viewModelScope.launch {
             val reservations: MutableList<ReservationWithServices> = mutableListOf()
             for(timeSlot in reservationTimeSlots){
-                val res = Reservation(reservationDate?: Calendar.getInstance().toString(), timeSlot, user.userId, courtWithReservations.court.courtId)
+                val res = Reservation(reservationDate?: Calendar.getInstance().toString(), timeSlot, user.userId, courtWithReservations.court.courtId, reservationRequests)
 //            reservations.add(ReservationWithServices(res, reservationServices as List<Service>))
                 val services = reservationServices.map { id ->
                     courtWithServices.services.first { it.serviceId == id }
@@ -87,9 +90,28 @@ class ReservationFragmentViewModel(application: Application): AndroidViewModel(a
         }
     }
 
-    fun initReservationByDateString(reservations: CourtWithReservations) {
+    private fun initReservationByDateString(reservations: CourtWithReservations) {
         val group = reservations.reservations.groupBy { it.reservationDate }
         _reservationsByDateMap = group.mapValues { entry -> entry.value.map { it.timeSlotId } }
     }
+
+    fun liveDataToData(data: CourtWithReservations){
+        court = data.court
+        courtWithReservations = data
+        initReservationByDateString(data)
+    }
+
+    fun liveDataToData(data: User){
+        user = data
+    }
+
+    fun liveDataToData(data: SportCenter){
+        sportCenter = data
+    }
+
+    fun liveDataToData(data: CourtWithServices){
+        courtWithServices = data
+    }
+
 
 }
