@@ -1,6 +1,7 @@
 package it.polito.mad.courtreservationapp.adapters
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,15 +54,17 @@ class TimeSlotViewHolder(v: View, val activity: FragmentActivity?) :
             timeSlotButton.setBackgroundColor(orange)
             timeSlotButton.setTextColor(Color.WHITE);
         } else if (a.reservationsByDateString[a.reservationDate] != null) {
-            if (a.reservationsByDateString[a.reservationDate]!!.contains(u.toLong())) {
+            if (a.reservationsByDateString[a.reservationDate]!!.contains(u)) {
                 timeSlotButton.setBackgroundColor(Color.TRANSPARENT)
                 timeSlotButton.setTextColor(Color.GRAY);
                 timeSlotButton.isEnabled = false
                 return
             }
+            timeSlotButton.isEnabled = true
             timeSlotButton.setBackgroundColor(grey);
             timeSlotButton.setTextColor(Color.parseColor("#4F4F4F"));
         } else {
+            timeSlotButton.isEnabled = true
             timeSlotButton.setBackgroundColor(grey);
             timeSlotButton.setTextColor(Color.parseColor("#4F4F4F"));
         }

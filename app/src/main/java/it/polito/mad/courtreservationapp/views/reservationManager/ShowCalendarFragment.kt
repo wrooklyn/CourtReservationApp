@@ -112,8 +112,9 @@ class ShowCalendarFragment : Fragment() {
         //Handling custom calendar events
         calendarView.setCalendarListener(object : CalendarListener {
             override fun onDateSelected(date: Date?) {
-                view.findViewById<RecyclerView>(R.id.recyclerView).adapter?.notifyDataSetChanged()
+
                 if (!CalendarUtils.isPastDay(date)) {
+
                     val df = SimpleDateFormat("yyyy-MM-dd")
                     (activity as CreateReservationActivity).reservationDate = df.format(date)
                     (activity as CreateReservationActivity).reservationTimeSlot.clear()
@@ -124,7 +125,7 @@ class ShowCalendarFragment : Fragment() {
                     (activity as CreateReservationActivity).reservationDate = null
                     view.findViewById<TextView>(R.id.timeslot_heading).text = "Please pick a date"
                 }
-
+                view.findViewById<RecyclerView>(R.id.recyclerView).adapter?.notifyDataSetChanged()
             }
 
             override fun onMonthChanged(date: Date?) {
