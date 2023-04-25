@@ -33,6 +33,7 @@ class ReservationDetailsFragment : Fragment() {
     private lateinit var date: String
     private var timeslotId: Long = 0
     private lateinit var sportName: String
+    private var sportCenterId: Long = 0
 
     private lateinit var mainContainerCL: ConstraintLayout
 
@@ -60,6 +61,7 @@ class ReservationDetailsFragment : Fragment() {
             args.putString("date", reservWithSportCenter.reservation.reservationDate)
             args.putLong("timeslotId", reservWithSportCenter.reservation.timeSlotId)
             args.putString("sportName", reservWithSportCenter.courtWithSportCenter.court.sportName)
+            args.putLong("sportNameId", reservWithSportCenter.courtWithSportCenter.sportCenter.centerId)
             fragment.arguments = args
             return fragment
         }
@@ -75,6 +77,7 @@ class ReservationDetailsFragment : Fragment() {
         sportName = requireArguments().getString("sportName")!!
         courtId = requireArguments().getLong("courtId")
         reservationId = requireArguments().getLong("reservationId")
+        sportCenterId = requireArguments().getLong("sportCenterId")
     }
 
     override fun onCreateView(
@@ -117,6 +120,7 @@ class ReservationDetailsFragment : Fragment() {
             val intent = Intent(context, CreateReservationActivity::class.java)
             intent.putExtra("courtId", courtId)
             intent.putExtra("reservationId", reservationId)
+            intent.putExtra("sportCenterId", sportCenterId)
             startActivity(intent)
         }
 
