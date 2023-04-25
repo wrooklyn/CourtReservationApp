@@ -3,19 +3,23 @@ package it.polito.mad.courtreservationapp.views.reservationManager
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import it.polito.mad.courtreservationapp.R
+import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
 import it.polito.mad.courtreservationapp.models.Court
 import it.polito.mad.courtreservationapp.models.User
+import it.polito.mad.courtreservationapp.views.MainActivity
 import it.polito.mad.courtreservationapp.view_model.ReservationFragmentViewModel
 
 class ReservationDetailsFragment : Fragment() {
@@ -23,6 +27,8 @@ class ReservationDetailsFragment : Fragment() {
     private lateinit var username: String
     private lateinit var sportCenterAddress: String
     private lateinit var courtName: String
+    private var courtId: Long = 0
+    private var reservationId: Long = 0
     private lateinit var date: String
     private var timeslotId: Long = 0
     private lateinit var sportName: String
@@ -39,15 +45,18 @@ class ReservationDetailsFragment : Fragment() {
     )
 
     companion object {
-        fun newInstance(username: String, sportCenterAddress: String, court: Court, date:String, timeslotId: Long): ReservationDetailsFragment {
+        fun newInstance(username: String, reservWithSportCenter: ReservationWithSportCenter): ReservationDetailsFragment {
             val fragment = ReservationDetailsFragment()
             val args = Bundle()
+            Log.i("DBG", reservWithSportCenter.toString())
             args.putString("username", username)
-            args.putString("sportCenterAddress", sportCenterAddress)
-            args.putString("courtName", "${court.sportName} court - #C${court.courtId}")
-            args.putString("date", date)
-            args.putLong("timeslotId", timeslotId)
-            args.putString("sportName", court.sportName)
+            args.putString("sportCenterAddress", reservWithSportCenter.courtWithSportCenter.sportCenter.address)
+            args.putString("courtName", "${reservWithSportCenter.courtWithSportCenter.court.sportName} court - #C${reservWithSportCenter.courtWithSportCenter.court.courtId}")
+            args.putLong("courtId", reservWithSportCenter.courtWithSportCenter.court.courtId)
+            args.putLong("reservationId", reservWithSportCenter.reservation.reservationId)
+            args.putString("date", reservWithSportCenter.reservation.reservationDate)
+            args.putLong("timeslotId", reservWithSportCenter.reservation.timeSlotId)
+            args.putString("sportName", reservWithSportCenter.courtWithSportCenter.court.sportName)
             fragment.arguments = args
             return fragment
         }
@@ -61,6 +70,8 @@ class ReservationDetailsFragment : Fragment() {
         date = requireArguments().getString("date")!!
         timeslotId = requireArguments().getLong("timeslotId")
         sportName = requireArguments().getString("sportName")!!
+        courtId = requireArguments().getLong("courtId")
+        reservationId = requireArguments().getLong("reservationId")
     }
 
     override fun onCreateView(
@@ -98,7 +109,28 @@ class ReservationDetailsFragment : Fragment() {
         val editReservationButton = view.findViewById<Button>(R.id.edit_reservation_button)
         editReservationButton.setOnClickListener{
             val intent = Intent(context, CreateReservationActivity::class.java)
+            intent.putExtra("courtId", courtId)
+            intent.putExtra("reservationId", reservationId)
             startActivity(intent)
         }
+
+//        val cancelReservationButton = view.findViewById<Button>(R.id.cancel_reserv_button)
+//        cancelReservationButton.setOnClickListener{
+//            val inflater = (activity as MainActivity).getSystemService(AppCompatActivity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+//            val popupView = inflater.inflate(R.layout.popup_window, null)
+//            val width = LinearLayout.LayoutParams.WRAP_CONTENT
+//            val height = LinearLayout.LayoutParams.WRAP_CONTENT
+//            val focusable = true // lets taps outside the popup also dismiss it
+//            val popupWindow = PopupWindow(popupView, width, height, focusable)
+//            val yesButton = popupView.findViewById<Button>(R.id.yesButton)
+//            val noButton = popupView.findViewById<Button>(R.id.noButton)
+//
+//            popupWindow.showAtLocation(view.findViewById(R.id.mainContainerCL), Gravity.CENTER, 0, 0)
+//            mainContainerCL.foreground.alpha = 160
+//
+//            popupWindow.setOnDismissListener {
+//                mainContainerCL.foreground.alpha = 0
+//            }
+//        }
     }
 }

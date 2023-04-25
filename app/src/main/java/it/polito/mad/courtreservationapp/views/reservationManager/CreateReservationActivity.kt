@@ -26,6 +26,10 @@ class CreateReservationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCreateReservationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        Log.i("DBG", "CourtId: ${intent.getLongExtra("courtId", -1)}")
+        Log.i("DBG", "ReservationId: ${intent.getLongExtra("reservationId", -1)}")
+
         //TODO: get data from main activity
         val courtId = savedInstanceState?.getLong("courtId") ?: 1
         val centerId = savedInstanceState?.getLong("centerId") ?: 1
