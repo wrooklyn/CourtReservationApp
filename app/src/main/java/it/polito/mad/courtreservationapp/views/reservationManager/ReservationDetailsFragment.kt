@@ -15,11 +15,13 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
 import it.polito.mad.courtreservationapp.models.Court
 import it.polito.mad.courtreservationapp.models.User
 import it.polito.mad.courtreservationapp.views.MainActivity
+import it.polito.mad.courtreservationapp.view_model.ReservationFragmentViewModel
 
 class ReservationDetailsFragment : Fragment() {
 

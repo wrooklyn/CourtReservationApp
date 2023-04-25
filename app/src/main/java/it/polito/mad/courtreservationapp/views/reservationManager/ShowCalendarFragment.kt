@@ -27,7 +27,7 @@ import java.util.*
 
 
 class ShowCalendarFragment : Fragment() {
-    var selectedSlot: Int? = null;
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -56,7 +56,7 @@ class ShowCalendarFragment : Fragment() {
         view.findViewById<ImageView>(R.id.close_button).setOnClickListener {
             activity?.finish();
         }
-        if ((activity as CreateReservationActivity).reservationDate == null)
+        if ((activity as CreateReservationActivity).viewModel.reservationDate == null)
             view.findViewById<TextView>(R.id.timeslot_heading).text = "Please pick a date"
         else
             view.findViewById<TextView>(R.id.timeslot_heading).text = "Available Hours"
@@ -64,7 +64,7 @@ class ShowCalendarFragment : Fragment() {
 
     private fun navigateNext() {
         val a = (activity as CreateReservationActivity)
-        if (a.reservationDate == null || a.reservationTimeSlot == null || a.reservationTimeSlot.isEmpty()) {
+        if (a.viewModel.reservationDate.isNullOrEmpty() || a.viewModel.reservationTimeSlots.isNullOrEmpty()) {
             Toast.makeText(activity, "Please pick a valid date/timeslot.", Toast.LENGTH_SHORT)
                 .show()
             return
@@ -112,19 +112,18 @@ class ShowCalendarFragment : Fragment() {
         //Handling custom calendar events
         calendarView.setCalendarListener(object : CalendarListener {
             override fun onDateSelected(date: Date?) {
-                view.findViewById<RecyclerView>(R.id.recyclerView).adapter?.notifyDataSetChanged()
+
                 if (!CalendarUtils.isPastDay(date)) {
                     val df = SimpleDateFormat("yyyy-MM-dd")
-                    (activity as CreateReservationActivity).reservationDate = df.format(date)
-                    (activity as CreateReservationActivity).reservationTimeSlot.clear()
+                    (activity as CreateReservationActivity).viewModel.reservationDate = df.format(date)
+                    (activity as CreateReservationActivity).viewModel.reservationTimeSlots.clear()
                     view.findViewById<TextView>(R.id.timeslot_heading).text = "Available Hours"
                 } else {
-                    Toast.makeText(activity, "Cannot reserve a past date.", Toast.LENGTH_SHORT)
-                        .show()
-                    (activity as CreateReservationActivity).reservationDate = null
+                    Toast.makeText(activity, "Cannot reserve a past date.", Toast.LENGTH_SHORT).show()
+                    (activity as CreateReservationActivity).viewModel.reservationDate = null
                     view.findViewById<TextView>(R.id.timeslot_heading).text = "Please pick a date"
                 }
-
+                view.findViewById<RecyclerView>(R.id.recyclerView).adapter?.notifyDataSetChanged()
             }
 
             override fun onMonthChanged(date: Date?) {
