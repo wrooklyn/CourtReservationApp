@@ -61,7 +61,7 @@ class ReservationDetailsFragment : Fragment() {
             args.putString("date", reservWithSportCenter.reservation.reservationDate)
             args.putLong("timeslotId", reservWithSportCenter.reservation.timeSlotId)
             args.putString("sportName", reservWithSportCenter.courtWithSportCenter.court.sportName)
-            args.putLong("sportNameId", reservWithSportCenter.courtWithSportCenter.sportCenter.centerId)
+            args.putLong("sportCenterId", reservWithSportCenter.courtWithSportCenter.sportCenter.centerId)
             fragment.arguments = args
             return fragment
         }
@@ -78,6 +78,10 @@ class ReservationDetailsFragment : Fragment() {
         courtId = requireArguments().getLong("courtId")
         reservationId = requireArguments().getLong("reservationId")
         sportCenterId = requireArguments().getLong("sportCenterId")
+
+        Log.i("ASD", "Details, centerId:$sportCenterId")
+        Log.i("ASD", "Details, courtId:$courtId")
+        Log.i("ASD", "Details, reservationId:$reservationId")
     }
 
     override fun onCreateView(

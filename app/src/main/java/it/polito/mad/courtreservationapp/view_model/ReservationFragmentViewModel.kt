@@ -48,10 +48,15 @@ class ReservationFragmentViewModel(application: Application): AndroidViewModel(a
     var reservationServices : MutableList<Long> = mutableListOf()
     var reservationRequests : String = ""
 
+    var courtId: Long = 0
+    var sportCenterId: Long = 0
+    var reservationId: Long = 0
+    var userId: Long = 0
 
 
-    fun initAll(courtId: Long, centerId: Long, userId: Long){
-        initCourt(courtId, centerId)
+
+    fun initAll(){
+        initCourt(courtId, sportCenterId)
         initUser(userId)
     }
     private fun initCourt(courtId: Long, centerId: Long){
@@ -74,7 +79,7 @@ class ReservationFragmentViewModel(application: Application): AndroidViewModel(a
         viewModelScope.launch {
             val reservations: MutableList<ReservationWithServices> = mutableListOf()
             for(timeSlot in reservationTimeSlots){
-                val res = Reservation(reservationDate?: Calendar.getInstance().toString(), timeSlot, user.userId, courtWithReservations.court.courtId, reservationRequests)
+                val res = Reservation(reservationDate?: Calendar.getInstance().toString(), timeSlot, user.userId, courtWithReservations.court.courtId, reservationRequests, reservationId)
 //            reservations.add(ReservationWithServices(res, reservationServices as List<Service>))
                 val services = reservationServices.map { id ->
                     courtWithServices.services.first { it.serviceId == id }

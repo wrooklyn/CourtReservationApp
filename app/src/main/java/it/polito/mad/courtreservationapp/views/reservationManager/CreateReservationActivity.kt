@@ -1,5 +1,6 @@
 package it.polito.mad.courtreservationapp.views.reservationManager
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -16,8 +17,7 @@ import it.polito.mad.courtreservationapp.view_model.ReservationFragmentViewModel
 class CreateReservationActivity : AppCompatActivity() {
 
     private var pageNumber: Int = 0
-    var courtId : Long = -1;
-    var reservationId : Long = 0;
+
     //ViewModel
     val viewModel: ReservationFragmentViewModel by viewModels()
 
@@ -32,14 +32,24 @@ class CreateReservationActivity : AppCompatActivity() {
         Log.i("DBG", "ReservationId: ${intent.getLongExtra("reservationId", -1)}")
 
         //TODO: get data from main activity
-        courtId = intent.getLongExtra("courtId", -1)
-        reservationId = intent.getLongExtra("reservationId", 0)
-        if(courtId.equals(-1)) throw Exception("Invalid parameters")
+        viewModel.courtId = intent.getLongExtra("courtId", 0)
+        viewModel.reservationId = intent.getLongExtra("reservationId", 0)
+        viewModel.sportCenterId = intent.getLongExtra("sportCenterId", 0)
 
-        val courtId = savedInstanceState?.getLong("courtId") ?: courtId
-        val userId = savedInstanceState?.getLong("userId") ?: 1
+        Log.i("Intent", "CourtId: ${viewModel.courtId}")
+        Log.i("Intent", "sportCenterId: ${viewModel.sportCenterId}")
+        Log.i("Intent", "reservationId: ${viewModel.reservationId}")
 
-        viewModel.initAll(courtId, 1, userId)
+        if(viewModel.courtId == 0L) throw Exception("Invalid parameters")
+
+        //hardcoded user
+//        val sharedPreferences = this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
+//        val editor = sharedPreferences.edit()
+//        editor.putLong("UserId", 1).apply()
+
+        viewModel.userId = this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE).getLong("UserId", 0)
+
+        viewModel.initAll()
 
         setObservers()
 
