@@ -6,13 +6,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.models.Gender
@@ -39,7 +39,10 @@ class ShowSummaryFragment : Fragment(R.layout.summary_layout) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
         val a = (activity as CreateReservationActivity)
+        view.findViewById<ConstraintLayout>(R.id.mainLL).foreground.alpha=0
         val sportCenterName: TextView = view.findViewById(R.id.centerName)
         val addressSubtitle: TextView = view.findViewById(R.id.addressSubtitle)
         val address: TextView = view.findViewById(R.id.addressTV)
@@ -113,7 +116,7 @@ class ShowSummaryFragment : Fragment(R.layout.summary_layout) {
 //        }
 
         view.findViewById<Button>(R.id.f1_confirm_button).setOnClickListener {
-            a.commitReservation();
+            showConfirmationPopup(activity as CreateReservationActivity)
         }
         view.findViewById<Button>(R.id.f1_back_button).setOnClickListener {
             a.ggBack();
@@ -132,20 +135,30 @@ class ShowSummaryFragment : Fragment(R.layout.summary_layout) {
     private fun updateUI() {
     }
 
-    /*fun showConfirmationPopup(){
-        val inflater = getSystemService(AppCompatActivity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val popupView = inflater.inflate(R.layout.popup_warning, null)
-        popupWindow.showAtLocation(findViewById(R.id.mainLL), Gravity.CENTER, 0, 0)
-        mainLL.foreground.alpha = 160
+    fun showConfirmationPopup(a: CreateReservationActivity){
+        val inflater = a.getSystemService(AppCompatActivity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val popupView = inflater.inflate(R.layout.popup_window, null)
+        val width = LinearLayout.LayoutParams.WRAP_CONTENT
+        val height = LinearLayout.LayoutParams.WRAP_CONTENT
+        val popupWindow = PopupWindow(popupView, width, height, true)
+        val layout = a.findViewById<ConstraintLayout>(R.id.mainLL)
+        val message = popupView.findViewById<TextView>(R.id.text)
+        message.text = "Are you sure you want to reserve those time slots?"
+        popupWindow.showAtLocation(layout, Gravity.CENTER, 0, 0)
+        layout.foreground.alpha = 160
 
         popupWindow.setOnDismissListener {
-            mainLL.foreground.alpha = 0
+            layout.foreground.alpha = 0
         }
-
-        dismissButton.setOnClickListener {
+        popupView.findViewById<Button>(R.id.noButton).setOnClickListener {
             popupWindow.dismiss()
         }
-    }*/
+        popupView.findViewById<Button>(R.id.yesButton).setOnClickListener {
+            a.commitReservation()
+            Toast.makeText(activity, "Court successfully reserved", Toast.LENGTH_SHORT).show()
+            popupWindow.dismiss()
+        }
+    }
 
 
 }
