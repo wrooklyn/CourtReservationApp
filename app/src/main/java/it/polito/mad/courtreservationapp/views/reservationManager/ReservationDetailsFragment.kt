@@ -25,6 +25,7 @@ import it.polito.mad.courtreservationapp.view_model.ReservationFragmentViewModel
 
 class ReservationDetailsFragment : Fragment() {
 
+    private lateinit var centerName: String
     private lateinit var username: String
     private lateinit var sportCenterAddress: String
     private lateinit var courtName: String
@@ -54,6 +55,7 @@ class ReservationDetailsFragment : Fragment() {
             val args = Bundle()
             Log.i("DBG", reservWithSportCenter.toString())
             args.putString("username", username)
+            args.putString("centerName", reservWithSportCenter.courtWithSportCenter.sportCenter.name)
             args.putString("sportCenterAddress", reservWithSportCenter.courtWithSportCenter.sportCenter.address)
             args.putString("courtName", "${reservWithSportCenter.courtWithSportCenter.court.sportName} court - #C${reservWithSportCenter.courtWithSportCenter.court.courtId}")
             args.putLong("courtId", reservWithSportCenter.courtWithSportCenter.court.courtId)
@@ -61,7 +63,7 @@ class ReservationDetailsFragment : Fragment() {
             args.putString("date", reservWithSportCenter.reservation.reservationDate)
             args.putLong("timeslotId", reservWithSportCenter.reservation.timeSlotId)
             args.putString("sportName", reservWithSportCenter.courtWithSportCenter.court.sportName)
-            args.putLong("sportNameId", reservWithSportCenter.courtWithSportCenter.sportCenter.centerId)
+            args.putLong("sportCenterId", reservWithSportCenter.courtWithSportCenter.sportCenter.centerId)
             fragment.arguments = args
             return fragment
         }
@@ -69,6 +71,7 @@ class ReservationDetailsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        centerName = requireArguments().getString("centerName")!!
         username = requireArguments().getString("username")!!
         sportCenterAddress = requireArguments().getString("sportCenterAddress")!!
         courtName = requireArguments().getString("courtName")!!
@@ -90,6 +93,8 @@ class ReservationDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val centerNameTV: TextView = view.findViewById(R.id.centerName)
+        val centerAddressTV: TextView = view.findViewById(R.id.addressSubtitle)
         val usernameTV: TextView = view.findViewById(R.id.usernameTV)
         val addressTV: TextView = view.findViewById(R.id.addressTV)
         val dateTV: TextView = view.findViewById(R.id.dateTV)
@@ -100,6 +105,8 @@ class ReservationDetailsFragment : Fragment() {
         mainContainerCL = view.findViewById(R.id.mainContainerCL)
         mainContainerCL.foreground.alpha = 0
 
+        centerNameTV.text = centerName
+        centerAddressTV.text = sportCenterAddress
         usernameTV.text = username
         addressTV.text = sportCenterAddress
         dateTV.text = date
