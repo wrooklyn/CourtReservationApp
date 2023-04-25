@@ -16,7 +16,8 @@ import it.polito.mad.courtreservationapp.view_model.ReservationFragmentViewModel
 class CreateReservationActivity : AppCompatActivity() {
 
     private var pageNumber: Int = 0
-
+    var courtId : Long = -1;
+    var reservationId : Long = 0;
     //ViewModel
     val viewModel: ReservationFragmentViewModel by viewModels()
 
@@ -31,11 +32,14 @@ class CreateReservationActivity : AppCompatActivity() {
         Log.i("DBG", "ReservationId: ${intent.getLongExtra("reservationId", -1)}")
 
         //TODO: get data from main activity
-        val courtId = savedInstanceState?.getLong("courtId") ?: 1
-        val centerId = savedInstanceState?.getLong("centerId") ?: 1
+        courtId = intent.getLongExtra("courtId", -1)
+        reservationId = intent.getLongExtra("reservationId", 0)
+        if(courtId.equals(-1)) throw Exception("Invalid parameters")
+
+        val courtId = savedInstanceState?.getLong("courtId") ?: courtId
         val userId = savedInstanceState?.getLong("userId") ?: 1
 
-        viewModel.initAll(courtId, centerId, userId)
+        viewModel.initAll(courtId, 1, userId)
 
         setObservers()
 
