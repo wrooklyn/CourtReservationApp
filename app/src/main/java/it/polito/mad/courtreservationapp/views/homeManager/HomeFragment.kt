@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
@@ -49,7 +48,7 @@ class HomeFragment : Fragment() {
             R.drawable.soccer_ball,
             R.drawable.ice_skate,
             R.drawable.basketball_icon,
-            R.drawable.hockey,
+            R.drawable.hockey_png,
             R.drawable.tennis,
             R.drawable.volleyball,
             R.drawable.rudgby

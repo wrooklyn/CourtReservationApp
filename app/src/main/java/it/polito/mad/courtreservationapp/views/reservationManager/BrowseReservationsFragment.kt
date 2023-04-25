@@ -226,7 +226,7 @@ class BrowseReservationsFragment : Fragment() {
                 "Calcio" -> reservImageIV.setImageResource(R.drawable.football_court)
                 "Iceskate" -> reservImageIV.setImageResource(R.drawable.iceskating_rink)
                 "Basket" -> reservImageIV.setImageResource(R.drawable.basket_center)
-                "Hockey" -> reservImageIV.setImageResource(R.drawable.hockey_court)
+                "Hockey" -> reservImageIV.setImageResource(R.drawable.hockey_png)
                 "Tennis" -> reservImageIV.setImageResource(R.drawable.tennis_court)
                 "Pallavolo" -> reservImageIV.setImageResource(R.drawable.volley_court)
                 "Nuoto" -> reservImageIV.setImageResource(R.drawable.swimming_pool)
