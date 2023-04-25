@@ -16,7 +16,6 @@ class ReservationBrowserViewModel(application: Application): AndroidViewModel(ap
     private val reservationRepo: ReservationRepository = ReservationRepository(application)
 
     lateinit var sportCenter: LiveData<SportCenter>
-    lateinit var user: LiveData<User>
 
     lateinit var userReservations: LiveData<List<Reservation>>
     lateinit var userReservationsLocations: LiveData<List<ReservationWithSportCenter>>

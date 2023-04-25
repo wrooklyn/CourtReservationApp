@@ -9,7 +9,9 @@ import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.databinding.ActivityMainBinding
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
 import it.polito.mad.courtreservationapp.models.Reservation
+import it.polito.mad.courtreservationapp.models.User
 import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
+import it.polito.mad.courtreservationapp.view_model.UserViewModel
 import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
 import it.polito.mad.courtreservationapp.views.reservationManager.BrowseReservationsFragment
 import it.polito.mad.courtreservationapp.views.reservationManager.CreateReservationActivity
@@ -17,27 +19,44 @@ import it.polito.mad.courtreservationapp.views.reservationManager.ReservationBro
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var viewModel: ReservationBrowserViewModel
+    lateinit var userViewModel: UserViewModel
+    lateinit var reservationBrowserViewModel: ReservationBrowserViewModel
+    lateinit var user: User
     lateinit var userReservations: List<Reservation>
     lateinit var userReservationsLocations: List<ReservationWithSportCenter>
     lateinit var binding: ActivityMainBinding
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        viewModel = ViewModelProvider(this)[ReservationBrowserViewModel::class.java]
-        viewModel.initUserReservations(1) // TODO: use actual user ID
 
-        viewModel.userReservations.observe(this){
+        /* Setting the logged user */
+        /* TODO: login function? */
+        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
+        userViewModel.setCurrentUser(1)
+        userViewModel.user.observe(this) {
+            user = it
+            Log.i("DBG", "Logged user")
+            Log.i("DBG", user.toString())
+        }
+        /* ------------------- */
+
+        /* Getting current user's reservations */
+        reservationBrowserViewModel = ViewModelProvider(this)[ReservationBrowserViewModel::class.java]
+        reservationBrowserViewModel.initUserReservations(1) // TODO: use actual user ID
+
+        reservationBrowserViewModel.userReservations.observe(this){
             userReservations = it
         }
 
-        viewModel.userReservationsLocations.observe(this){
+        reservationBrowserViewModel.userReservationsLocations.observe(this){
             userReservationsLocations = it
-            Log.i("DBG", "Locations")
-            Log.i("DBG", userReservationsLocations.toString())
         }
+        /* -------------------- */
+
         replaceFragment(HomeFragment())
         binding.bottomNavigation.setOnItemSelectedListener {
             when(it.itemId) {

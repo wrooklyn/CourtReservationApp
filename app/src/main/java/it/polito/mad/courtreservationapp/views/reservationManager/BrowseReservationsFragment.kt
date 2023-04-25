@@ -1,18 +1,25 @@
 package it.polito.mad.courtreservationapp.views.reservationManager
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.*
 import it.polito.mad.courtreservationapp.models.*
+import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
+import it.polito.mad.courtreservationapp.views.homeManager.CenterDetailFragment
+import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
 
 class MockDB {
     /* MOCK DATA */
@@ -132,13 +139,19 @@ class BrowseReservationsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val user = (activity as MainActivity).user
+        val userReservLocations = (activity as MainActivity).userReservationsLocations
         val recyclerView: RecyclerView = view.findViewById(R.id.reservations_recycler)
-        val adapter = ReservationAdapter((activity as MainActivity).userReservationsLocations)
+        val adapter = ReservationAdapter(userReservLocations)
         recyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         recyclerView.adapter = adapter
         adapter.setOnItemClickListener(object : ReservationAdapter.OnItemClickListener{
             override fun onItemClick(position: Int) {
-                val fragment = ReservationDetailsFragment.newInstance("Test location", "Test datetime")
+                val sportCenterAddress: String = userReservLocations[position].courtWithSportCenter.sportCenter.address
+                val court: Court = userReservLocations[position].courtWithSportCenter.court
+                val date: String = userReservLocations[position].reservation.reservationDate
+                val timeslot: Long = userReservLocations[position].reservation.timeSlotId
+                val fragment = ReservationDetailsFragment.newInstance(user.username, sportCenterAddress, court, date, timeslot)
                 activity?.supportFragmentManager?.beginTransaction()
                     ?.replace(R.id.fragmentContainer, fragment, "fragmentId")
                     ?.commit();
