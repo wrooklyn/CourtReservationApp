@@ -18,6 +18,9 @@ interface ReservationDao {
     @Delete
     suspend fun delete(reservation: Reservation)
 
+    @Query("DELETE FROM reservations WHERE reservationId = :reservationId")
+    suspend fun deleteById(reservationId: Long)
+
     @Query("SELECT * FROM reservations")
     fun getAll(): LiveData<List<Reservation>>
 

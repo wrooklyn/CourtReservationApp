@@ -80,5 +80,9 @@
     <string name="services_heading">Services</string>
     <string name="service_description_subheading">Select any service you\'ll need!</string>
     <string name="info_heading">Info</string>
-    <string name="cancel">Cancel reservation</string>
+    <string name="cancel_reservation">Cancel reservation</string>
+    <string name="confirm_cancel_reserv">Are you sure you want to cancel your reservation?</string>
+    <string name="cancel">Cancel</string>
+    <string name="back">Back</string>
+    <string name="reserv_cancel_ok">Your reservation was successfully canceled</string>
 </resources>

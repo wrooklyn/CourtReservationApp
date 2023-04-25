@@ -34,6 +34,10 @@ class ReservationRepository(val application: Application) {
         }
     }
 
+    suspend fun deleteReservationById(reservationId: Long) {
+        reservationDao.deleteById(reservationId)
+    }
+
     fun getAll(): LiveData<List<Reservation>>{
         return reservationDao.getAll()
     }

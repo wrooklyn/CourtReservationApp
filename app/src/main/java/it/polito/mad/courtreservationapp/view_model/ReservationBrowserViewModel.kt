@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
 import it.polito.mad.courtreservationapp.db.relationships.*
 import it.polito.mad.courtreservationapp.db.repository.CourtRepository
 import it.polito.mad.courtreservationapp.db.repository.ReservationRepository
@@ -11,6 +12,7 @@ import it.polito.mad.courtreservationapp.db.repository.SportCenterRepository
 import it.polito.mad.courtreservationapp.models.Reservation
 import it.polito.mad.courtreservationapp.models.SportCenter
 import it.polito.mad.courtreservationapp.models.User
+import kotlinx.coroutines.launch
 
 class ReservationBrowserViewModel(application: Application): AndroidViewModel(application) {
     private val reservationRepo: ReservationRepository = ReservationRepository(application)
@@ -23,5 +25,11 @@ class ReservationBrowserViewModel(application: Application): AndroidViewModel(ap
     fun initUserReservations(userId: Long) {
         userReservations = reservationRepo.getReservationsByUser(userId)
         userReservationsLocations = reservationRepo.getReservationLocationsByUserId(userId)
+    }
+
+    fun deleteReservation(reservationId: Long) {
+        viewModelScope.launch {
+            reservationRepo.deleteReservationById(reservationId)
+        }
     }
 }

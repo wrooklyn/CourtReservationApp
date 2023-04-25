@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -30,6 +31,8 @@ class ReservationDetailsFragment : Fragment() {
     private lateinit var date: String
     private var timeslotId: Long = 0
     private lateinit var sportName: String
+
+    private lateinit var mainContainerCL: ConstraintLayout
 
     private val timeslotMap: Map<Long, String> = mapOf(
         Pair(0, "10:00 - 11:00"),
@@ -89,6 +92,9 @@ class ReservationDetailsFragment : Fragment() {
         val courtNameTV: TextView = view.findViewById(R.id.courtnameTV)
         val courtImageIV: ImageView = view.findViewById(R.id.courtImageIV)
 
+        mainContainerCL = view.findViewById(R.id.mainContainerCL)
+        mainContainerCL.foreground.alpha = 0
+
         usernameTV.text = username
         addressTV.text = sportCenterAddress
         dateTV.text = date
@@ -112,23 +118,47 @@ class ReservationDetailsFragment : Fragment() {
             startActivity(intent)
         }
 
-//        val cancelReservationButton = view.findViewById<Button>(R.id.cancel_reserv_button)
-//        cancelReservationButton.setOnClickListener{
-//            val inflater = (activity as MainActivity).getSystemService(AppCompatActivity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-//            val popupView = inflater.inflate(R.layout.popup_window, null)
-//            val width = LinearLayout.LayoutParams.WRAP_CONTENT
-//            val height = LinearLayout.LayoutParams.WRAP_CONTENT
-//            val focusable = true // lets taps outside the popup also dismiss it
-//            val popupWindow = PopupWindow(popupView, width, height, focusable)
-//            val yesButton = popupView.findViewById<Button>(R.id.yesButton)
-//            val noButton = popupView.findViewById<Button>(R.id.noButton)
-//
-//            popupWindow.showAtLocation(view.findViewById(R.id.mainContainerCL), Gravity.CENTER, 0, 0)
-//            mainContainerCL.foreground.alpha = 160
-//
-//            popupWindow.setOnDismissListener {
-//                mainContainerCL.foreground.alpha = 0
-//            }
-//        }
+        val cancelReservationButton = view.findViewById<Button>(R.id.cancel_reserv_button)
+        cancelReservationButton.setOnClickListener{
+            val inflater = (activity as MainActivity).getSystemService(AppCompatActivity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            var popupView = inflater.inflate(R.layout.popup_confirm_delete_reserv, null)
+            val width = LinearLayout.LayoutParams.WRAP_CONTENT
+            val height = LinearLayout.LayoutParams.WRAP_CONTENT
+            val focusable = true // lets taps outside the popup also dismiss it
+            var popupWindow = PopupWindow(popupView, width, height, focusable)
+            val yesButton = popupView.findViewById<Button>(R.id.yesButton)
+            val noButton = popupView.findViewById<Button>(R.id.noButton)
+
+            popupWindow.showAtLocation(mainContainerCL, Gravity.CENTER, 0, 0)
+            mainContainerCL.foreground.alpha = 160
+
+            popupWindow.setOnDismissListener {
+                mainContainerCL.foreground.alpha = 0
+            }
+
+            yesButton.setOnClickListener{
+                (activity as MainActivity).reservationBrowserViewModel.deleteReservation(reservationId)
+                popupWindow.dismiss()
+                popupView = inflater.inflate(R.layout.reserv_cancel_confirmation, null)
+                val dismissButton = popupView.findViewById<Button>(R.id.dismissButton)
+                popupWindow = PopupWindow(popupView, width, height, focusable)
+                popupWindow.showAtLocation(mainContainerCL, Gravity.CENTER, 0, 0)
+                mainContainerCL.foreground.alpha = 160
+
+                popupWindow.setOnDismissListener {
+                    mainContainerCL.foreground.alpha = 0
+                }
+
+                dismissButton.setOnClickListener{
+                    popupWindow.dismiss()
+                    (activity as MainActivity).replaceFragment(BrowseReservationsFragment())
+                }
+
+            }
+
+            noButton.setOnClickListener {
+                popupWindow.dismiss()
+            }
+        }
     }
 }
