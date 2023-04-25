@@ -2,17 +2,14 @@ package it.polito.mad.courtreservationapp.views.reservationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModelProvider
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.databinding.ActivityCreateReservationBinding
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithReservations
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithServices
-import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
 import it.polito.mad.courtreservationapp.models.*
 import it.polito.mad.courtreservationapp.view_model.ReservationFragmentViewModel
-import java.util.Calendar
 
 class CreateReservationActivity : AppCompatActivity() {
     //private var myReservation: Reservation = Reservation();
@@ -24,11 +21,11 @@ class CreateReservationActivity : AppCompatActivity() {
     private var pageNumber : Int = 0
 
     //ViewModel
-    lateinit var viewModel: ReservationFragmentViewModel
-    lateinit var sportCenter: SportCenter
-    lateinit var user: User
-    lateinit var courtWithReservations: CourtWithReservations
-    lateinit var courtWithServices: CourtWithServices
+    val viewModel: ReservationFragmentViewModel by viewModels()
+//    lateinit var sportCenter: SportCenter
+//    lateinit var user: User
+//    lateinit var courtWithReservations: CourtWithReservations
+//    lateinit var courtWithServices: CourtWithServices
 
 
     //private val db = Room.databaseBuilder(this, AppDatabase::class.java, "Test5").createFromAsset("database/app.db").allowMainThreadQueries().build()
@@ -36,19 +33,19 @@ class CreateReservationActivity : AppCompatActivity() {
     //val court = dao.getByIdWithReservationsAndServices(1).getOrAwaitValue()
 
 //    //Testing without db
-    val c : Court=Court(1,"Calcio", 0, 1)
-    private val r1 : Reservation = Reservation("2023-04-23",1, 2,1,0)
-    private val r2 : Reservation = Reservation("2023-04-23",2, 2,1,1)
-    private val r3 : Reservation = Reservation("2023-04-25",3, 2,1,2)
-    private val r4 : Reservation = Reservation("2023-04-27",0, 2,1,3)
-    private val s1 : Service = Service("showers",0)
-    private val s2 : Service = Service("equipment",1)
-    private var courtReserv : CourtWithReservations = CourtWithReservations(c, listOf(r1,r2,r3,r4))
-    private var group = courtReserv.reservations.groupBy { it.reservationDate }
-    var reservationsByDateString = group.mapValues { entry ->
-        entry.value.map { it.timeSlotId }
-    }
-    var courtServ : CourtWithServices = CourtWithServices(c, listOf(s1,s2))
+//    val c : Court=Court(1,"Calcio", 0, 1)
+//    private val r1 : Reservation = Reservation("2023-04-23",1, 2,1,0)
+//    private val r2 : Reservation = Reservation("2023-04-23",2, 2,1,1)
+//    private val r3 : Reservation = Reservation("2023-04-25",3, 2,1,2)
+//    private val r4 : Reservation = Reservation("2023-04-27",0, 2,1,3)
+//    private val s1 : Service = Service("showers",0)
+//    private val s2 : Service = Service("equipment",1)
+//    private var courtReserv : CourtWithReservations = CourtWithReservations(c, listOf(r1,r2,r3,r4))
+//    private var group = courtReserv.reservations.groupBy { it.reservationDate }
+//    var reservationsByDateString = group.mapValues { entry ->
+//        entry.value.map { it.timeSlotId }
+//    }
+//    var courtServ : CourtWithServices = CourtWithServices(c, listOf(s1,s2))
 
     lateinit var binding: ActivityCreateReservationBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,35 +53,31 @@ class CreateReservationActivity : AppCompatActivity() {
         binding= ActivityCreateReservationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this)[ReservationFragmentViewModel::class.java]
+//        viewModel = ViewModelProvider(this)[ReservationFragmentViewModel::class.java]
         viewModel.initAll(1,1,1)
 //        viewModel.initCourt(1, 1) //TODO: courtId and centerId from other Activity
 //        viewModel.initUser(1) //TODO: retrieve userId from other sources
 
-        viewModel.sportCenter.observe(this){
+        viewModel.sportCenterLiveData.observe(this){
             Log.i("VM", "${it.centerId}")
-            sportCenter = it
+            viewModel.sportCenter = it
         }
 
-        viewModel.user.observe(this){
-            user = it
+        viewModel.userLiveData.observe(this){
+            viewModel.user = it
         }
 
 
-        viewModel.courtReservations.observe(this){ court ->
-            courtWithReservations = court
-
-            //mapping
-            group = court.reservations.groupBy { it.reservationDate }
-            reservationsByDateString = group.mapValues { entry ->
-                entry.value.map { it.timeSlotId }
-            }
+        viewModel.courtReservationsLiveData.observe(this){
+            viewModel.courtWithReservations = it
+            viewModel.court = it.court
+            viewModel.initReservationByDateString(it)
         }
-        viewModel.courtServices.observe(this){
-            courtWithServices = it
+        viewModel.courtServicesLiveData.observe(this){
+            viewModel.courtWithServices = it
 
-            courtServ = it
-            Log.i("Reserv", "Services: $it")
+//            courtServ = it
+            Log.i("Reserv", "Services: ${it.services}")
         }
 
         replaceFragment(ShowCalendarFragment())

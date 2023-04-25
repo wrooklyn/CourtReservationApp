@@ -1,7 +1,6 @@
 package it.polito.mad.courtreservationapp.adapters
 
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,31 +51,31 @@ class TimeSlotViewHolder(v: View, val activity: FragmentActivity?) :
         }
         if (a.reservationTimeSlot.contains(u)) {
             timeSlotButton.setBackgroundColor(orange)
-            timeSlotButton.setTextColor(Color.WHITE);
-        } else if (a.reservationsByDateString[a.reservationDate] != null) {
-            if (a.reservationsByDateString[a.reservationDate]!!.contains(u)) {
+            timeSlotButton.setTextColor(Color.WHITE)
+        } else if (a.viewModel.reservationsByDateMap[a.reservationDate] != null) {
+            if (a.viewModel.reservationsByDateMap[a.reservationDate]!!.contains(u)) {
                 timeSlotButton.setBackgroundColor(Color.TRANSPARENT)
-                timeSlotButton.setTextColor(Color.GRAY);
+                timeSlotButton.setTextColor(Color.GRAY)
                 timeSlotButton.isEnabled = false
                 return
             }
             timeSlotButton.isEnabled = true
-            timeSlotButton.setBackgroundColor(grey);
-            timeSlotButton.setTextColor(Color.parseColor("#4F4F4F"));
+            timeSlotButton.setBackgroundColor(grey)
+            timeSlotButton.setTextColor(Color.parseColor("#4F4F4F"))
         } else {
             timeSlotButton.isEnabled = true
-            timeSlotButton.setBackgroundColor(grey);
-            timeSlotButton.setTextColor(Color.parseColor("#4F4F4F"));
+            timeSlotButton.setBackgroundColor(grey)
+            timeSlotButton.setTextColor(Color.parseColor("#4F4F4F"))
         }
         timeSlotButton.setOnClickListener {
             if (a.reservationTimeSlot.contains(u)) {
-                a.reservationTimeSlot.remove(u);
-                timeSlotButton.setBackgroundColor(grey);
-                timeSlotButton.setTextColor(Color.parseColor("#4F4F4F"));
+                a.reservationTimeSlot.remove(u)
+                timeSlotButton.setBackgroundColor(grey)
+                timeSlotButton.setTextColor(Color.parseColor("#4F4F4F"))
             } else {
-                a.reservationTimeSlot.add(u);
-                timeSlotButton.setBackgroundColor(orange);
-                timeSlotButton.setTextColor(Color.WHITE);
+                a.reservationTimeSlot.add(u)
+                timeSlotButton.setBackgroundColor(orange)
+                timeSlotButton.setTextColor(Color.WHITE)
             }
         }
 
