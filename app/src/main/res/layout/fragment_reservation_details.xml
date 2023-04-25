@@ -33,10 +33,10 @@
                 app:srcCompat="@drawable/cross" />
 
             <ImageView
-                android:id="@+id/imageView4"
+                android:id="@+id/courtImageIV"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:scaleType="fitXY"
+                android:scaleType="centerCrop"
                 android:src="@drawable/basket_court"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

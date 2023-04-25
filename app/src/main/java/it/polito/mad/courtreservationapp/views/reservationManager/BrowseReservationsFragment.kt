@@ -139,13 +139,19 @@ class BrowseReservationsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val user = (activity as MainActivity).user
+        val userReservLocations = (activity as MainActivity).userReservationsLocations
         val recyclerView: RecyclerView = view.findViewById(R.id.reservations_recycler)
-        val adapter = ReservationAdapter((activity as MainActivity).userReservationsLocations)
+        val adapter = ReservationAdapter(userReservLocations)
         recyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         recyclerView.adapter = adapter
         adapter.setOnItemClickListener(object : ReservationAdapter.OnItemClickListener{
             override fun onItemClick(position: Int) {
-                val fragment = ReservationDetailsFragment.newInstance("Test location", "Test datetime")
+                val sportCenterAddress: String = userReservLocations[position].courtWithSportCenter.sportCenter.address
+                val court: Court = userReservLocations[position].courtWithSportCenter.court
+                val date: String = userReservLocations[position].reservation.reservationDate
+                val timeslot: Long = userReservLocations[position].reservation.timeSlotId
+                val fragment = ReservationDetailsFragment.newInstance(user.username, sportCenterAddress, court, date, timeslot)
                 activity?.supportFragmentManager?.beginTransaction()
                     ?.replace(R.id.fragmentContainer, fragment, "fragmentId")
                     ?.commit();
@@ -220,7 +226,7 @@ class BrowseReservationsFragment : Fragment() {
                 "Calcio" -> reservImageIV.setImageResource(R.drawable.football_court)
                 "Iceskate" -> reservImageIV.setImageResource(R.drawable.iceskating_rink)
                 "Basket" -> reservImageIV.setImageResource(R.drawable.basket_center)
-                "Hockey" -> reservImageIV.setImageResource(R.drawable.hockey)
+                "Hockey" -> reservImageIV.setImageResource(R.drawable.hockey_court)
                 "Tennis" -> reservImageIV.setImageResource(R.drawable.tennis_court)
                 "Pallavolo" -> reservImageIV.setImageResource(R.drawable.volley_court)
                 "Nuoto" -> reservImageIV.setImageResource(R.drawable.swimming_pool)
