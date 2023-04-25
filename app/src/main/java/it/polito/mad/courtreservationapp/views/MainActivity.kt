@@ -1,4 +1,5 @@
 package it.polito.mad.courtreservationapp.views
+
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding= ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         /* Setting the logged user */
@@ -45,25 +46,29 @@ class MainActivity : AppCompatActivity() {
         /* ------------------- */
 
         /* Getting current user's reservations */
-        reservationBrowserViewModel = ViewModelProvider(this)[ReservationBrowserViewModel::class.java]
+        reservationBrowserViewModel =
+            ViewModelProvider(this)[ReservationBrowserViewModel::class.java]
         reservationBrowserViewModel.initUserReservations(1) // TODO: use actual user ID
 
-        reservationBrowserViewModel.userReservations.observe(this){
+        reservationBrowserViewModel.userReservations.observe(this) {
             userReservations = it
         }
 
-        reservationBrowserViewModel.userReservationsLocations.observe(this){
+        reservationBrowserViewModel.userReservationsLocations.observe(this) {
             userReservationsLocations = it
         }
         /* -------------------- */
 
         replaceFragment(HomeFragment())
         binding.bottomNavigation.setOnItemSelectedListener {
-            when(it.itemId) {
+            when (it.itemId) {
                 R.id.home -> {
                     replaceFragment(HomeFragment())
                 }
-                R.id.explore -> Log.i("DBG", "Explore button pressed")
+                R.id.explore -> {
+                    Log.i("DBG", "Explore button pressed")
+                    replaceFragment(ShowUnimplementedFragment())
+                }
 //                R.id.calendar -> {
 //                    val reservationBrowserIntent = Intent(this, ReservationBrowserActivity::class.java)
 //                    startActivity(reservationBrowserIntent)
@@ -71,25 +76,31 @@ class MainActivity : AppCompatActivity() {
                 R.id.calendar -> {
                     replaceFragment(BrowseReservationsFragment())
                 }
-                R.id.chat -> testLaunchGabry()
+                R.id.chat -> {
+                    replaceFragment(ShowUnimplementedFragment())
+                    testLaunchGabry()
+                }
                 R.id.profile -> {
                     replaceFragment(ShowProfileFragment())
                 }
-                else -> Log.i("DBG", "Invalid")
+                else -> {
+                    Log.i("DBG", "Invalid")
+                    replaceFragment(ShowUnimplementedFragment())
+                }
             }
             true
         }
     }
 
-    private fun testLaunchGabry(){
-        val createReservationIntent:Intent = Intent(this, CreateReservationActivity::class.java)
+    private fun testLaunchGabry() {
+        val createReservationIntent: Intent = Intent(this, CreateReservationActivity::class.java)
         startActivity(createReservationIntent)
     }
 
     private fun replaceFragment(fragment: Fragment) {
-        val fragmentManager=supportFragmentManager
-        val fragmentTransaction=fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.fragmentContainer,fragment)
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.fragmentContainer, fragment)
         fragmentTransaction.commit()
     }
 
