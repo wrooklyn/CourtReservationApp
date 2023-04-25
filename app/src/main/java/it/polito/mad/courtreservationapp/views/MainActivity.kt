@@ -3,6 +3,7 @@ package it.polito.mad.courtreservationapp.views
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -20,12 +21,13 @@ import it.polito.mad.courtreservationapp.views.reservationManager.ReservationBro
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var userViewModel: UserViewModel
-    lateinit var reservationBrowserViewModel: ReservationBrowserViewModel
+    val userViewModel: UserViewModel by viewModels()
+    val reservationBrowserViewModel: ReservationBrowserViewModel by viewModels()
     lateinit var user: User
     lateinit var userReservations: List<Reservation>
     lateinit var userReservationsLocations: List<ReservationWithSportCenter>
     lateinit var binding: ActivityMainBinding
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +38,6 @@ class MainActivity : AppCompatActivity() {
 
         /* Setting the logged user */
         /* TODO: login function? */
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         userViewModel.setCurrentUser(1)
         userViewModel.user.observe(this) {
             user = it
@@ -46,8 +47,6 @@ class MainActivity : AppCompatActivity() {
         /* ------------------- */
 
         /* Getting current user's reservations */
-        reservationBrowserViewModel =
-            ViewModelProvider(this)[ReservationBrowserViewModel::class.java]
         reservationBrowserViewModel.initUserReservations(1) // TODO: use actual user ID
 
         reservationBrowserViewModel.userReservations.observe(this) {
