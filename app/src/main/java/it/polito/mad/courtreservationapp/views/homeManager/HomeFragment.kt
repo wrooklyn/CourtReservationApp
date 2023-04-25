@@ -48,7 +48,7 @@ class HomeFragment : Fragment() {
             R.drawable.soccer_ball,
             R.drawable.ice_skate,
             R.drawable.basketball_icon,
-            R.drawable.hockey_png,
+            R.drawable.hockey,
             R.drawable.tennis,
             R.drawable.volleyball,
             R.drawable.rudgby

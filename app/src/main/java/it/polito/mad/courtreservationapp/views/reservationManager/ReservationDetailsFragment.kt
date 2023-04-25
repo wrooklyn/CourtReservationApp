@@ -87,7 +87,7 @@ class ReservationDetailsFragment : Fragment() {
             "Calcio" -> courtImageIV.setImageResource(R.drawable.football_court)
             "Iceskate" -> courtImageIV.setImageResource(R.drawable.iceskating_rink)
             "Basket" -> courtImageIV.setImageResource(R.drawable.basket_center)
-            "Hockey" -> courtImageIV.setImageResource(R.drawable.hockey_court)
+            "Hockey" -> courtImageIV.setImageResource(R.drawable.hockey_png)
             "Tennis" -> courtImageIV.setImageResource(R.drawable.tennis_court)
             "Pallavolo" -> courtImageIV.setImageResource(R.drawable.volley_court)
             "Nuoto" -> courtImageIV.setImageResource(R.drawable.swimming_pool)
