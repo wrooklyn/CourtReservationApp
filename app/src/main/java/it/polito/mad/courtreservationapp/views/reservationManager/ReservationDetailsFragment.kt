@@ -81,6 +81,10 @@ class ReservationDetailsFragment : Fragment() {
         courtId = requireArguments().getLong("courtId")
         reservationId = requireArguments().getLong("reservationId")
         sportCenterId = requireArguments().getLong("sportCenterId")
+
+        Log.i("ASD", "Details, centerId:$sportCenterId")
+        Log.i("ASD", "Details, courtId:$courtId")
+        Log.i("ASD", "Details, reservationId:$reservationId")
     }
 
     override fun onCreateView(

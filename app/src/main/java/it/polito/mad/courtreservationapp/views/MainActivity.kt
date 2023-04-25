@@ -94,6 +94,7 @@ class MainActivity : AppCompatActivity() {
     private fun testLaunchGabry() {
         val createReservationIntent: Intent = Intent(this, CreateReservationActivity::class.java)
         createReservationIntent.putExtra("courtId",1L)
+        createReservationIntent.putExtra("sportCenterId",1L)
         startActivity(createReservationIntent)
     }
 
