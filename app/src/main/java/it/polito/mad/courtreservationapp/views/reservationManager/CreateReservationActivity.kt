@@ -56,6 +56,9 @@ class CreateReservationActivity : AppCompatActivity() {
         binding= ActivityCreateReservationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        Log.i("DBG", "CourtId: ${intent.getLongExtra("courtId", -1)}")
+        Log.i("DBG", "ReservationId: ${intent.getLongExtra("reservationId", -1)}")
+
         viewModel = ViewModelProvider(this)[ReservationFragmentViewModel::class.java]
         viewModel.initAll(1,1,1)
 //        viewModel.initCourt(1, 1) //TODO: courtId and centerId from other Activity
