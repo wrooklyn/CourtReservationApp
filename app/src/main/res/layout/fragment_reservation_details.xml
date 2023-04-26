@@ -130,7 +130,7 @@
 
         android:id="@+id/scrollView3"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -155,20 +155,60 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/courtnameCL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/timeslotCL">
+
+                    <ImageView
+                        android:id="@+id/courtnameIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:maxWidth="30dp"
+                        android:maxHeight="30dp"
+                        android:src="@drawable/basketball_field_sv"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/courtnameTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:autoSizePresetSizes="@array/autosize_text_sizes"
+                        android:autoSizeTextType="uniform"
+                        android:fontFamily="@font/roboto"
+                        android:text="Tennis court - #C13"
+                        android:textColor="#000000"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintStart_toEndOf="@+id/courtnameIcon"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.545" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <TextView
-                    android:id="@+id/servicesTitle"
+                    android:id="@+id/specialRequestsTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
                     android:fontFamily="@font/inter_semibold"
-                    android:text="@string/services_heading"
+                    android:text="@string/special_requests_heading"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:textColor="@color/deep_blue"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/courtnameCL" />
+                    app:layout_constraintTop_toBottomOf="@+id/servicesCL" />
 
                 <TextView
-                    android:id="@+id/servicesTV"
+                    android:id="@+id/specialRequestsTV"
                     style="@style/Widget.AppCompat.TextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -182,7 +222,7 @@
                     android:textColor="#000000"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/servicesTitle" />
+                    app:layout_constraintTop_toBottomOf="@+id/specialRequestsTitle" />
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -346,43 +386,41 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/courtnameCL"
+                    android:id="@+id/servicesCL"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintBottom_toTopOf="@+id/specialRequestsTitle"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/timeslotCL">
+                    app:layout_constraintTop_toBottomOf="@+id/courtnameCL">
 
-                    <ImageView
-                        android:id="@+id/courtnameIcon"
+
+                    <TextView
+                        android:id="@+id/servicesTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        android:maxWidth="30dp"
-                        android:maxHeight="30dp"
-                        android:src="@drawable/basketball_field_sv"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_marginBottom="10dp"
+                        android:fontFamily="@font/inter_semibold"
+                        android:text="@string/req_services_heading"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textColor="@color/deep_blue"
+                        app:layout_constraintBottom_toTopOf="@+id/servicesRecycler"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:id="@+id/courtnameTV"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:autoSizePresetSizes="@array/autosize_text_sizes"
-                        android:autoSizeTextType="uniform"
-                        android:fontFamily="@font/roboto"
-                        android:text="Tennis court - #C13"
-                        android:textColor="#000000"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/servicesRecycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0"
-                        app:layout_constraintStart_toEndOf="@+id/courtnameIcon"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.545" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/servicesTitle"
+                        tools:listitem="@layout/services_item" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 

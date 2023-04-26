@@ -2,6 +2,10 @@ package it.polito.mad.courtreservationapp.views.reservationManager
 
 import android.app.Dialog
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -12,13 +16,18 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Recycler
 import it.polito.mad.courtreservationapp.R
+import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
 import it.polito.mad.courtreservationapp.models.Court
+import it.polito.mad.courtreservationapp.models.Service
 import it.polito.mad.courtreservationapp.models.User
 import it.polito.mad.courtreservationapp.views.MainActivity
 import it.polito.mad.courtreservationapp.view_model.ReservationFragmentViewModel
@@ -35,6 +44,9 @@ class ReservationDetailsFragment : Fragment() {
     private var timeslotId: Long = 0
     private lateinit var sportName: String
     private var sportCenterId: Long = 0
+    private var specialRequests: String? = null
+    private lateinit var serviceIds: LongArray
+    private lateinit var serviceDescriptions: Array<String>
 
     private lateinit var mainContainerCL: ConstraintLayout
 
@@ -50,7 +62,7 @@ class ReservationDetailsFragment : Fragment() {
     )
 
     companion object {
-        fun newInstance(username: String, reservWithSportCenter: ReservationWithSportCenter): ReservationDetailsFragment {
+        fun newInstance(username: String, reservWithSportCenter: ReservationWithSportCenter, reservWithServices: ReservationWithServices): ReservationDetailsFragment {
             val fragment = ReservationDetailsFragment()
             val args = Bundle()
             Log.i("DBG", reservWithSportCenter.toString())
@@ -63,7 +75,10 @@ class ReservationDetailsFragment : Fragment() {
             args.putString("date", reservWithSportCenter.reservation.reservationDate)
             args.putLong("timeslotId", reservWithSportCenter.reservation.timeSlotId)
             args.putString("sportName", reservWithSportCenter.courtWithSportCenter.court.sportName)
+            args.putString("specialRequests", reservWithSportCenter.reservation.request)
             args.putLong("sportCenterId", reservWithSportCenter.courtWithSportCenter.sportCenter.centerId)
+            args.putLongArray("serviceIds", reservWithServices.services.map{ it.serviceId }.toTypedArray().toLongArray())
+            args.putStringArray("serviceDescriptions", reservWithServices.services.map{ it.description }.toTypedArray())
             fragment.arguments = args
             return fragment
         }
@@ -81,6 +96,9 @@ class ReservationDetailsFragment : Fragment() {
         courtId = requireArguments().getLong("courtId")
         reservationId = requireArguments().getLong("reservationId")
         sportCenterId = requireArguments().getLong("sportCenterId")
+        specialRequests = requireArguments().getString("specialRequests")
+        serviceIds = requireArguments().getLongArray("serviceIds")!!
+        serviceDescriptions = requireArguments().getStringArray("serviceDescriptions")!!
 
         Log.i("ASD", "Details, centerId:$sportCenterId")
         Log.i("ASD", "Details, courtId:$courtId")
@@ -92,7 +110,10 @@ class ReservationDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_reservation_details, container, false)
+        val view = inflater.inflate(R.layout.fragment_reservation_details, container, false)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.servicesRecycler)
+        recyclerView.adapter = RequestedServiceAdapter(serviceIds, serviceDescriptions, activity as MainActivity)
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -105,6 +126,7 @@ class ReservationDetailsFragment : Fragment() {
         val timeslotTV: TextView = view.findViewById(R.id.timeslotTV)
         val courtNameTV: TextView = view.findViewById(R.id.courtnameTV)
         val courtImageIV: ImageView = view.findViewById(R.id.courtImageIV)
+        val specialRequestsTV: TextView = view.findViewById(R.id.specialRequestsTV)
 
         mainContainerCL = view.findViewById(R.id.mainContainerCL)
         mainContainerCL.foreground.alpha = 0
@@ -116,6 +138,7 @@ class ReservationDetailsFragment : Fragment() {
         dateTV.text = date
         timeslotTV.text = timeslotMap[timeslotId]
         courtNameTV.text = courtName
+        specialRequestsTV.text = specialRequests ?: "You did not have any special request"
         when(sportName) {
             "Calcio" -> courtImageIV.setImageResource(R.drawable.football_court)
             "Iceskate" -> courtImageIV.setImageResource(R.drawable.iceskating_rink)
@@ -176,6 +199,47 @@ class ReservationDetailsFragment : Fragment() {
             noButton.setOnClickListener {
                 popupWindow.dismiss()
             }
+        }
+    }
+
+    class RequestedServiceAdapter(private val serviceIds: LongArray, private val serviceDescriptions: Array<String>, val activity: MainActivity): RecyclerView.Adapter<RequestedServiceAdapter.RequestedServiceViewHolder>() {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RequestedServiceViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.services_item, parent, false)
+            return RequestedServiceViewHolder(view, activity)
+        }
+
+        override fun onBindViewHolder(holder: RequestedServiceViewHolder, position: Int) {
+            val serviceId = serviceIds[position]
+            val serviceDescription = serviceDescriptions[position]
+            holder.bind(serviceId, serviceDescription)
+        }
+
+        override fun getItemCount() = serviceIds.size
+
+        class RequestedServiceViewHolder(itemView: View, activity: MainActivity) : RecyclerView.ViewHolder(itemView) {
+            private val icon: ImageView = itemView.findViewById(R.id.sv_icon)
+            private val layout: ConstraintLayout = itemView.findViewById(R.id.sv_layout)
+            private val text: TextView = itemView.findViewById(R.id.sv_text)
+            private val a = activity
+            fun bind(serviceId: Long, serviceDescription: String) {
+                text.text = serviceDescription
+                val blue = ContextCompat.getColor(a, R.color.deep_blue)
+                var drawable: Drawable? = null
+                when (serviceId.toInt()) {
+                    0 -> drawable = ContextCompat.getDrawable(a, R.drawable.shower_sv)
+                    1 -> drawable = ContextCompat.getDrawable(a, R.drawable.equipment_sv)
+                    2 -> drawable = ContextCompat.getDrawable(a, R.drawable.personal_trainer_sv)
+                    3 -> drawable = ContextCompat.getDrawable(a, R.drawable.food_sv)
+                }
+                layout.backgroundTintList = ColorStateList.valueOf(blue)
+                icon.setBackgroundColor(blue)
+                drawable?.setColorFilter(
+                    ContextCompat.getColor(a, R.color.white),
+                    PorterDuff.Mode.SRC_IN
+                )
+                icon.setImageDrawable(drawable)
+            }
+
         }
     }
 }

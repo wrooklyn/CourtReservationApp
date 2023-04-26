@@ -61,4 +61,8 @@ class ReservationRepository(val application: Application) {
     fun getReservationLocationsByUserId(userId: Long): LiveData<List<ReservationWithSportCenter>> {
         return reservationDao.getLocationsByUserId(userId)
     }
+
+    fun getReservationServicesByUserId(userId: Long): LiveData<List<ReservationWithServices>> {
+        return reservationDao.getServicesByUserId(userId)
+    }
 }

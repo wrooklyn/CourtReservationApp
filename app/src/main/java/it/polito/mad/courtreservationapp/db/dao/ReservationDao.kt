@@ -40,4 +40,8 @@ interface ReservationDao {
     @Transaction
     @Query("SELECT * FROM reservations WHERE reservationUserId = :userId")
     fun getLocationsByUserId(userId: Long): LiveData<List<ReservationWithSportCenter>>
+
+    @Transaction
+    @Query("SELECT * FROM reservations WHERE reservationUserId = :userId")
+    fun getServicesByUserId(userId: Long): LiveData<List<ReservationWithServices>>
 }

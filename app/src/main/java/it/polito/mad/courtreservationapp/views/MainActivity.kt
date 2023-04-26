@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.databinding.ActivityMainBinding
+import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
 import it.polito.mad.courtreservationapp.models.Reservation
 import it.polito.mad.courtreservationapp.models.User
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var user: User
     lateinit var userReservations: List<Reservation>
     lateinit var userReservationsLocations: List<ReservationWithSportCenter>
+    lateinit var userReservationsServices: List<ReservationWithServices>
     lateinit var binding: ActivityMainBinding
 
 
@@ -55,6 +57,10 @@ class MainActivity : AppCompatActivity() {
 
         reservationBrowserViewModel.userReservationsLocations.observe(this) {
             userReservationsLocations = it
+        }
+
+        reservationBrowserViewModel.userReservationsServices.observe(this) {
+            userReservationsServices = it
         }
         /* -------------------- */
 

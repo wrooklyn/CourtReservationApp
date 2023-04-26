@@ -78,6 +78,7 @@
     <string name="when">When:</string>
     <string name="sample_date_time">19/09/2023 – 15:30</string>
     <string name="services_heading">Services</string>
+    <string name="req_services_heading">Requested services</string>
     <string name="service_description_subheading">Select any service you\'ll need!</string>
     <string name="info_heading">Info</string>
     <string name="cancel_reservation">Cancel reservation</string>
@@ -85,4 +86,5 @@
     <string name="cancel">Cancel</string>
     <string name="back">Back</string>
     <string name="reserv_cancel_ok">Your reservation was successfully canceled</string>
+    <string name="special_requests_heading">Special requests</string>
 </resources>
