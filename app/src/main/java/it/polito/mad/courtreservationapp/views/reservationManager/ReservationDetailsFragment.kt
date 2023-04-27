@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
+import it.polito.mad.courtreservationapp.models.TimeslotMap
 import it.polito.mad.courtreservationapp.views.MainActivity
 
 class ReservationDetailsFragment : Fragment() {
@@ -38,17 +39,6 @@ class ReservationDetailsFragment : Fragment() {
     private lateinit var serviceDescriptions: Array<String>
 
     private lateinit var mainContainerCL: ConstraintLayout
-
-    private val timeslotMap: Map<Long, String> = mapOf(
-        Pair(0, "10:00 - 11:00"),
-        Pair(1, "11:00 - 12:00"),
-        Pair(2, "12:00 - 13:00"),
-        Pair(3, "13:00 - 14:00"),
-        Pair(4, "14:00 - 15:00"),
-        Pair(5, "15:00 - 16:00"),
-        Pair(6, "16:00 - 17:00"),
-        Pair(7, "17:00 - 18:00"),
-    )
 
     companion object {
         fun newInstance(username: String, reservWithSportCenter: ReservationWithSportCenter, reservWithServices: ReservationWithServices): ReservationDetailsFragment {
@@ -125,7 +115,7 @@ class ReservationDetailsFragment : Fragment() {
         usernameTV.text = username
         addressTV.text = sportCenterAddress
         dateTV.text = date
-        timeslotTV.text = timeslotMap[timeslotId]
+        timeslotTV.text = TimeslotMap.getTimeslotString(timeslotId)
         courtNameTV.text = courtName
         specialRequestsTV.text = specialRequests ?: "You did not have any special request"
         when(sportName) {
