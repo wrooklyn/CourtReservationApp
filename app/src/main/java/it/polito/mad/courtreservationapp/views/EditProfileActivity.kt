@@ -94,8 +94,10 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     private fun loadDataFromSharedPreferences() {
-        val sharedPref = getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
+        Log.i("EditProfile", "load from sharedprefs")
+        val sharedPref = getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
         val profileString = sharedPref.getString("profile", null)
+        Log.i("EditProfile", "profile: $profileString")
 
         if (profileString != null) {
             val profileData = JSONObject(profileString)
@@ -112,11 +114,13 @@ class EditProfileActivity : AppCompatActivity() {
                 "OTHER" -> Gender.OTHER
                 else -> null
             }
-            height = profileData.optInt("height",-1)
-            weight = profileData.optDouble("weight",-1.0)
+            height = profileData.optInt("height",Int.MIN_VALUE)
+            weight = profileData.optDouble("weight", Double.MIN_VALUE)
 
             val path = profileData.optString("photoPath", "")
+            Log.i("EditProfile", "path: $path")
             photoFile = DiskUtil.getFileFromPath(path) ?: DiskUtil.getDefaultImage(this)
+            Log.i("EditProfile", "file: $photoFile")
         }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
