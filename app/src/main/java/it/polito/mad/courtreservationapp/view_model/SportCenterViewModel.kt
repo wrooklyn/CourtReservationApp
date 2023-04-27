@@ -30,9 +30,9 @@ class SportCenterViewModel(application: Application) : AndroidViewModel(applicat
     )
     val servicesIcons: Map<Long, Int> = mapOf(
         Pair(0, R.drawable.safety_shower),
-        Pair(1, R.drawable.equipment_sv),
-        Pair(2, R.drawable.personal_trainer_sv),
-        Pair(3, R.drawable.gesu)//refreshment
+        Pair(1, R.drawable.equipment),
+        Pair(2, R.drawable.coach),
+        Pair(3, R.drawable.refreshment)
     )
 
     val courtImages: Map<String, Int> = mapOf(
