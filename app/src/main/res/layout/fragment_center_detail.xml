@@ -92,7 +92,7 @@
             app:layout_constraintGuide_percent="0.65" />
 
         <TextView
-            android:id="@+id/textView14"
+            android:id="@+id/centerTitle"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="40dp"

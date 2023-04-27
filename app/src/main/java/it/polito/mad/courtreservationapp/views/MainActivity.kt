@@ -7,11 +7,11 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.databinding.ActivityMainBinding
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
+import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
 import it.polito.mad.courtreservationapp.models.Reservation
 import it.polito.mad.courtreservationapp.models.User
 import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
@@ -20,7 +20,6 @@ import it.polito.mad.courtreservationapp.view_model.UserViewModel
 import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
 import it.polito.mad.courtreservationapp.views.reservationManager.BrowseReservationsFragment
 import it.polito.mad.courtreservationapp.views.reservationManager.CreateReservationActivity
-import it.polito.mad.courtreservationapp.views.reservationManager.ReservationBrowserActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var userReservationsServices: List<ReservationWithServices>
     lateinit var binding: ActivityMainBinding
 
+    lateinit var sportCenters : List<SportCenterWithCourtsAndServices>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +40,12 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        sportCenterViewModel.initialize()
+        sportCenterViewModel.sportCentersLiveData.observe(this){
+            Log.i("SportVM", "LiveData: $it")
+            sportCenters = it
+        }
 
         /* Setting the logged user */
         //hardcoded user
@@ -70,6 +76,8 @@ class MainActivity : AppCompatActivity() {
             userReservationsServices = it
         }
         /* -------------------- */
+
+
 
         replaceFragment(HomeFragment())
         binding.bottomNavigation.setOnItemSelectedListener {

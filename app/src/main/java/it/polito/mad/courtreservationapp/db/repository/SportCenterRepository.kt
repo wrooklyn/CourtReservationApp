@@ -1,6 +1,7 @@
 package it.polito.mad.courtreservationapp.db.repository
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import it.polito.mad.courtreservationapp.db.AppDatabase
 import it.polito.mad.courtreservationapp.db.dao.SportCenterDao
@@ -48,6 +49,7 @@ class SportCenterRepository(val application: Application) {
     }
 
     fun getAllWithCourtsAndServices(): LiveData<List<SportCenterWithCourtsAndServices>>{
+        Log.i("SportVM", "Repo")
         return sportCenterDao.getAllWithCourtsAndServices()
     }
 

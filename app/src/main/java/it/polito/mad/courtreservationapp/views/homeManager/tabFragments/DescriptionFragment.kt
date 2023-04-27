@@ -12,15 +12,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import it.polito.mad.courtreservationapp.R
+import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
+import it.polito.mad.courtreservationapp.views.homeManager.CenterDetailFragment
 import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
 
 class DescriptionFragment : Fragment() {
 
     lateinit var imageId: Array<Int>
     lateinit var serviceName: Array<String>
+    lateinit var description: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        description = requireArguments().getString("description", "")
     }
 
     override fun onCreateView(
@@ -32,6 +36,7 @@ class DescriptionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.findViewById<TextView>(R.id.descriptionView).text = description
         serviceInitialize()
     }
 
@@ -79,6 +84,16 @@ class DescriptionFragment : Fragment() {
 //            Log.i("bindViewHolder", activityName)
             titleImage.setImageResource(imageSrc)
             serviceName.text=activityName
+        }
+    }
+
+    companion object{
+        fun newInstance(description: String): DescriptionFragment {
+            val fragment = DescriptionFragment()
+            val args = Bundle()
+            args.putString("description", description)
+            fragment.arguments = args
+            return fragment
         }
     }
 }
