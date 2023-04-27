@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,10 +26,10 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
     private var email: String = ""
     private var address: String = ""
     private var gender: Gender = Gender.MALE
-    private var height: Int = Int.MAX_VALUE
-    private var weight: Double = Double.MAX_VALUE
-    private var phone: String = ""
-    private var photoPath: String = ""
+    private var height: Int = Int.MIN_VALUE
+    private var weight: Double = Double.MIN_VALUE
+    private var phone: String? = null
+    private lateinit var photoPath: String
 
     private fun loadDefaultPrefs() {
         val sharedPrefs = activity?.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
@@ -44,7 +45,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
             put("height", height)
             put("weight", weight)
             put("phone", phone)
-            put("photoPath", photoPath)
+            put("photoPath", "")
         }
 
         editor?.putString("profile", profileData.toString())
@@ -69,7 +70,9 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
         }
 
         val sharedPrefs = activity?.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
+        Log.i("ShowProfile", "$sharedPrefs")
         val isFirstLaunch = sharedPrefs?.getBoolean("isFirstLaunch", true)
+        Log.i("ShowProfile", "$isFirstLaunch")
         if(isFirstLaunch!!) {
             loadDefaultPrefs()
             val editor = sharedPrefs.edit()
@@ -101,7 +104,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
 
     @SuppressLint("SetTextI18n")
     private fun updateUI() {
-        val sharedPref = activity?.getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
+        val sharedPref = activity?.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
         val profileString = sharedPref?.getString("profile", null)
         var newGender = gender.toString()
 

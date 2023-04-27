@@ -6,20 +6,16 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.databinding.ActivityCreateReservationBinding
-import it.polito.mad.courtreservationapp.db.relationships.CourtWithReservations
-import it.polito.mad.courtreservationapp.db.relationships.CourtWithServices
-import it.polito.mad.courtreservationapp.models.*
-import it.polito.mad.courtreservationapp.view_model.ReservationFragmentViewModel
+import it.polito.mad.courtreservationapp.view_model.CreateReservationViewModel
 
 class CreateReservationActivity : AppCompatActivity() {
 
     private var pageNumber: Int = 0
 
     //ViewModel
-    val viewModel: ReservationFragmentViewModel by viewModels()
+    val viewModel: CreateReservationViewModel by viewModels()
 
 
     lateinit var binding: ActivityCreateReservationBinding

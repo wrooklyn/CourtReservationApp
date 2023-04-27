@@ -1,5 +1,6 @@
 package it.polito.mad.courtreservationapp.views
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -41,6 +42,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         /* Setting the logged user */
+        //hardcoded user
+        val sharedPreferences = this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putLong("UserId", 1).apply()
         /* TODO: login function? */
         userViewModel.setCurrentUser(1)
         userViewModel.user.observe(this) {

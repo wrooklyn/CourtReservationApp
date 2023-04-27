@@ -1,7 +1,6 @@
 package it.polito.mad.courtreservationapp.view_model
 
 import android.app.Application
-import android.app.Service
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -20,7 +19,7 @@ import it.polito.mad.courtreservationapp.models.User
 import kotlinx.coroutines.launch
 import java.util.*
 
-class ReservationFragmentViewModel(application: Application): AndroidViewModel(application) {
+class CreateReservationViewModel(application: Application): AndroidViewModel(application) {
     private val tag: String = "ReservationFragmentViewModel"
     private val reservationRepo: ReservationRepository = ReservationRepository(application)
     private val courtRepo: CourtRepository = CourtRepository(application)
