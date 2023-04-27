@@ -11,6 +11,8 @@ data class SportCenter(
 
     val address: String,
 
+    val description: String = "",
+
     @PrimaryKey(autoGenerate = true)
     var centerId: Long = 0
 )
