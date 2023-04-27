@@ -100,13 +100,13 @@ class BrowseReservationsFragment : Fragment() {
             reservLocationTV.text = reservationWithSportCenter.courtWithSportCenter.sportCenter.address + " - Court " + reservationWithSportCenter.courtWithSportCenter.court.courtId
             reservDatetimeTV.text = reservationWithSportCenter.reservation.reservationDate + " - " + timeslotMap[reservationWithSportCenter.reservation.timeSlotId]
             when(reservationWithSportCenter.courtWithSportCenter.court.sportName) {
-                "Calcio" -> reservImageIV.setImageResource(R.drawable.football_court)
+                "Soccer" -> reservImageIV.setImageResource(R.drawable.football_court)
                 "Iceskate" -> reservImageIV.setImageResource(R.drawable.iceskating_rink)
-                "Basket" -> reservImageIV.setImageResource(R.drawable.basket_center)
+                "Basketball" -> reservImageIV.setImageResource(R.drawable.basket_court)
                 "Hockey" -> reservImageIV.setImageResource(R.drawable.hockey_png)
                 "Tennis" -> reservImageIV.setImageResource(R.drawable.tennis_court)
-                "Pallavolo" -> reservImageIV.setImageResource(R.drawable.volley_court)
-                "Nuoto" -> reservImageIV.setImageResource(R.drawable.swimming_pool)
+                "Volley" -> reservImageIV.setImageResource(R.drawable.volley_court)
+                "Swimming" -> reservImageIV.setImageResource(R.drawable.swimming_pool)
             }
         }
 

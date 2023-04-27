@@ -1,25 +1,42 @@
 package it.polito.mad.courtreservationapp.views.homeManager.tabFragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
+import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
+import it.polito.mad.courtreservationapp.models.Court
+import it.polito.mad.courtreservationapp.view_model.SportCenterViewModel
+import it.polito.mad.courtreservationapp.views.MainActivity
+import it.polito.mad.courtreservationapp.views.reservationManager.CreateReservationActivity
 
 
 class CourtFragment : Fragment() {
 
-    private lateinit var imageId: Array<Int>
-    private lateinit var courtType: Array<String>
-    private lateinit var reviewCourt: Array<String>
+    var position: Int = -1
+    lateinit var viewModel: SportCenterViewModel
+    lateinit var sportCenterWithCourtsAndServices: SportCenterWithCourtsAndServices
+    private var courts: MutableList<Court> = mutableListOf()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = (activity as MainActivity).sportCenterViewModel
+        position = requireArguments().getInt("position", -1)
+        sportCenterWithCourtsAndServices = viewModel.sportCentersWithCourtsAndServices[position]
+        sportCenterWithCourtsAndServices.courtsWithServices.forEach(){courtWithServices ->
+            if(!courts.contains(courtWithServices.court)){
+                courts.add(courtWithServices.court)
+            }
+        }
     }
 
     override fun onCreateView(
@@ -36,28 +53,9 @@ class CourtFragment : Fragment() {
     }
 
     private fun serviceInitialize(){
-        imageId = arrayOf(
-            R.drawable.tennis_court,
-            R.drawable.basket_court,
-            R.drawable.football_court,
-            R.drawable.volley_court
-
-        )
-        courtType= arrayOf(
-            "Tennis Court",
-            "Basketball Court",
-            "Football Field",
-            "Volleyball Court"
-            )
-        reviewCourt=arrayOf(
-            "5.0 (124 review)",
-            "5.0 (124 review)",
-            "5.0 (124 review)",
-            "5.0 (124 review)",
-            )
 
         val recyclerView: RecyclerView? = view?.findViewById(R.id.service_court_recycler)
-        val adapter = CourtDescriptionAdapter(imageId, courtType, reviewCourt)
+        val adapter = CourtDescriptionAdapter(viewModel.courtImages, courts)
 
         val llm : LinearLayoutManager = LinearLayoutManager(activity)
         recyclerView?.layoutManager = llm
@@ -65,18 +63,24 @@ class CourtFragment : Fragment() {
         recyclerView?.adapter = adapter
     }
 
-    class CourtDescriptionAdapter(private val imagesList: Array<Int>, private val courtsName: Array<String>, private val cReview: Array<String> ): RecyclerView.Adapter<CourtDescriptionViewHolder>() {
+    class CourtDescriptionAdapter(private val imageMap: Map<String, Int>, private val courts: MutableList<Court>): RecyclerView.Adapter<CourtDescriptionViewHolder>() {
 
-        override fun getItemCount()=imagesList.size
+        override fun getItemCount()=courts.size
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CourtDescriptionViewHolder {
             val itemView=LayoutInflater.from(parent.context).inflate(R.layout.reserve_card_item, parent, false)
             return CourtDescriptionViewHolder(itemView)
         }
         override fun onBindViewHolder(holder: CourtDescriptionViewHolder, position: Int) {
-            val currentImage = imagesList[position]
-            val currentType = courtsName[position]
-            val currentReview = cReview[position]
-            holder.bind(currentImage, currentType, currentReview)
+            val currentCourt = courts[position]
+            val currentImage = imageMap[currentCourt.sportName] ?: R.drawable.gesu
+            val currentReview = "5.0 (124 reviews)"
+            holder.bind(currentImage, "${currentCourt.sportName} Court", currentReview)
+            holder.itemView.findViewById<Button>(R.id.reserveButton).setOnClickListener{
+                val createReservationIntent: Intent = Intent(holder.itemView.context, CreateReservationActivity::class.java)
+                createReservationIntent.putExtra("sportCenterId",currentCourt.courtCenterId)
+                createReservationIntent.putExtra("courtId",currentCourt.courtId)
+                holder.itemView.context.startActivity(createReservationIntent)
+            }
         }
     }
     class CourtDescriptionViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
@@ -87,6 +91,16 @@ class CourtFragment : Fragment() {
             titleImage.setImageResource(imageSrc)
             courtType.text=cType
             reviewCourt.text=rCourt
+        }
+    }
+    companion object{
+        fun newInstance(position: Int): CourtFragment {
+            val fragment = CourtFragment()
+            val args = Bundle()
+            args.putInt("position", position)
+
+            fragment.arguments = args
+            return fragment
         }
     }
 }

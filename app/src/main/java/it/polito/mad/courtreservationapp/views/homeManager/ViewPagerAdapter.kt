@@ -9,8 +9,8 @@ import it.polito.mad.courtreservationapp.views.homeManager.tabFragments.Descript
 import it.polito.mad.courtreservationapp.views.homeManager.tabFragments.ReviewsFragment
 
 
-class ViewPagerAdapter(fragmentActivity: FragmentManager, lifecycle:Lifecycle, description: String) : FragmentStateAdapter(fragmentActivity, lifecycle) {
-    val description = description
+class ViewPagerAdapter(fragmentActivity: FragmentManager, lifecycle:Lifecycle, val sportCenterPosition: Int) : FragmentStateAdapter(fragmentActivity, lifecycle) {
+
     val mFragmentNames = arrayOf( //Tabs names array
         "Description",
         "Courts",
@@ -27,8 +27,8 @@ class ViewPagerAdapter(fragmentActivity: FragmentManager, lifecycle:Lifecycle, d
 
     override fun createFragment(position: Int): Fragment {
         return when(position){
-            0 -> DescriptionFragment.newInstance(description)
-            1 -> CourtFragment()
+            0 -> DescriptionFragment.newInstance(sportCenterPosition)
+            1 -> CourtFragment.newInstance(sportCenterPosition)
             2 -> ReviewsFragment()
             else -> throw AssertionError()
         }

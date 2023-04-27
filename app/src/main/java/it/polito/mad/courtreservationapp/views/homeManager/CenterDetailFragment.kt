@@ -14,27 +14,38 @@ import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
+import it.polito.mad.courtreservationapp.models.Service
+import it.polito.mad.courtreservationapp.view_model.SportCenterViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
 
 
 class CenterDetailFragment : Fragment() {
+    private var sportCenterPosition: Int = -1
     lateinit var centerName: String
     lateinit var location: String
-    var imageId: Int = 0
-    lateinit var description: String
+
 
     lateinit var myTab :TabLayout
     lateinit var myViewPager : ViewPager2
 
+    private lateinit var viewModel: SportCenterViewModel
+    private lateinit var sportCenterWithCourtsAndServices: SportCenterWithCourtsAndServices
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val position = requireArguments().getInt("position", 0)
-        imageId = requireArguments().getInt("imageId", 0)
-        val sportCenterWithCourtsAndServices = (activity as MainActivity).sportCenters[position]
+        init()
+    }
+
+    private fun init(){
+        sportCenterPosition = requireArguments().getInt("position", -1)
+        viewModel = (activity as MainActivity).sportCenterViewModel
+        sportCenterWithCourtsAndServices = viewModel.sportCentersWithCourtsAndServices[sportCenterPosition]
 
         centerName = sportCenterWithCourtsAndServices.sportCenter.name
         location = sportCenterWithCourtsAndServices.sportCenter.address
-        description = sportCenterWithCourtsAndServices.sportCenter.description
+
+
     }
 
     override fun onCreateView(
@@ -51,9 +62,10 @@ class CenterDetailFragment : Fragment() {
 
         view.findViewById<TextView>(R.id.centerTitle).text = centerName
         view.findViewById<TextView>(R.id.textView15).text = location
-        view.findViewById<ImageView>(R.id.imageView16).setImageResource(imageId)
+        val imageRes: Int = viewModel.sportCenterImages[sportCenterWithCourtsAndServices.sportCenter.centerId] ?: R.drawable.gesu
+        view.findViewById<ImageView>(R.id.imageView16).setImageResource(imageRes)
 
-        val adapter = ViewPagerAdapter(childFragmentManager, lifecycle, description)
+        val adapter = ViewPagerAdapter(childFragmentManager, lifecycle, sportCenterPosition)
 
         myViewPager?.adapter = adapter
 
@@ -84,13 +96,10 @@ class CenterDetailFragment : Fragment() {
 
     companion object {
         fun newInstance(
-            centerWithCourtsAndServices: SportCenterWithCourtsAndServices,
-            id: Int,
             position: Int
         ): CenterDetailFragment {
             val fragment = CenterDetailFragment()
             val args = Bundle()
-            args.putInt("imageId", id)
             args.putInt("position", position)
             fragment.arguments = args
             return fragment

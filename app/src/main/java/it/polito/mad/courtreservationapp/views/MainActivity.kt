@@ -41,11 +41,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        sportCenterViewModel.initialize()
-        sportCenterViewModel.sportCentersLiveData.observe(this){
-            Log.i("SportVM", "LiveData: $it")
-            sportCenters = it
-        }
+//        sportCenterViewModel.initialize()
+//        sportCenterViewModel.sportCentersLiveData.observe(this){
+//            Log.i("SportVM", "LiveData: $it")
+//            sportCenters = it
+//        }
 
         /* Setting the logged user */
         //hardcoded user
@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.chat -> {
                     replaceFragment(ShowUnimplementedFragment())
-                    testLaunchGabry()
+//                    testLaunchGabry()
                 }
                 R.id.profile -> {
                     replaceFragment(ShowProfileFragment())

@@ -10,21 +10,32 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
-import it.polito.mad.courtreservationapp.views.homeManager.CenterDetailFragment
-import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
+import it.polito.mad.courtreservationapp.models.Service
+import it.polito.mad.courtreservationapp.view_model.SportCenterViewModel
+import it.polito.mad.courtreservationapp.views.MainActivity
 
 class DescriptionFragment : Fragment() {
 
-    lateinit var imageId: Array<Int>
-    lateinit var serviceName: Array<String>
-    lateinit var description: String
-
+//    lateinit var imageId: Array<Int>
+//    lateinit var serviceName: Array<String>
+    private var services: MutableList<Service> = mutableListOf()
+    var position: Int = -1
+    lateinit var viewModel: SportCenterViewModel
+    lateinit var sportCenterWithCourtsAndServices: SportCenterWithCourtsAndServices
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        description = requireArguments().getString("description", "")
+        viewModel = (activity as MainActivity).sportCenterViewModel
+        position = requireArguments().getInt("position", -1)
+        sportCenterWithCourtsAndServices = viewModel.sportCentersWithCourtsAndServices[position]
+        sportCenterWithCourtsAndServices.courtsWithServices.forEach(){courtWithServices ->
+            courtWithServices.services.forEach(){service ->
+                if(!services.contains(service)){
+                    services.add(service)
+                }
+            }
+        }
     }
 
     override fun onCreateView(
@@ -36,45 +47,49 @@ class DescriptionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.findViewById<TextView>(R.id.descriptionView).text = description
+        view.findViewById<TextView>(R.id.descriptionView).text = sportCenterWithCourtsAndServices.sportCenter.description
         serviceInitialize()
+        view.findViewById<TextView>(R.id.location_info).text = sportCenterWithCourtsAndServices.sportCenter.address
+        view.findViewById<TextView>(R.id.phone_info).text = "123123${sportCenterWithCourtsAndServices.sportCenter.centerId}"
+        view.findViewById<TextView>(R.id.time_info).text = "9-18"
     }
 
     private fun serviceInitialize(){
-        imageId = arrayOf(
-            R.drawable.swimming,
-            R.drawable.wifi,
-            R.drawable.safety_shower,
-            R.drawable.cafe
-
-        )
-        serviceName= arrayOf(
-            "Pool",
-            "Wifi",
-            "Shower",
-            "Cafeteria"
-        )
+//        imageId = arrayOf(
+//            R.drawable.swimming,
+//            R.drawable.wifi,
+//            R.drawable.safety_shower,
+//            R.drawable.cafe
+//
+//        )
+//        serviceName= arrayOf(
+//            "Pool",
+//            "Wifi",
+//            "Shower",
+//            "Cafeteria"
+//        )
 //        Log.i("serviceInitialize", serviceName[0])
         val recyclerView: RecyclerView? = view?.findViewById(R.id.service_description_recycler)
-        val adapter = ServiceDescriptionAdapter(imageId, serviceName)
+        val adapter = ServiceDescriptionAdapter(viewModel.servicesIcons, services)
         recyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         recyclerView?.isNestedScrollingEnabled=false
         recyclerView?.adapter = adapter
     }
 
-    class ServiceDescriptionAdapter(private val imagesList: Array<Int>, private val namesList: Array<String>): RecyclerView.Adapter<ServiceDescriptionViewHolder>() {
+    class ServiceDescriptionAdapter(private val imagesMap: Map<Long, Int>, private val services: List<Service>): RecyclerView.Adapter<ServiceDescriptionViewHolder>() {
 
-        override fun getItemCount()=imagesList.size
+        override fun getItemCount()=services.size
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ServiceDescriptionViewHolder {
             val itemView=LayoutInflater.from(parent.context).inflate(R.layout.service_description_item, parent, false)
 //            Log.i("serviceAdapter", namesList[0])
             return ServiceDescriptionViewHolder(itemView)
         }
         override fun onBindViewHolder(holder: ServiceDescriptionViewHolder, position: Int) {
-            val currentImage = imagesList[position]
-            val currentName = namesList[position]
-//            Log.i("onBindViewHolder", position.toString())
-            holder.bind(currentImage, currentName)
+            Log.i("ServiceDescAdapter", "$services")
+            Log.i("ServiceDescAdapter", "position $position")
+            val service = services[position]
+            val currentImage = imagesMap[service.serviceId] ?: R.drawable.gesu
+            holder.bind(currentImage, service.description)
         }
     }
     class ServiceDescriptionViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
@@ -88,10 +103,11 @@ class DescriptionFragment : Fragment() {
     }
 
     companion object{
-        fun newInstance(description: String): DescriptionFragment {
+        fun newInstance(position: Int): DescriptionFragment {
             val fragment = DescriptionFragment()
             val args = Bundle()
-            args.putString("description", description)
+            args.putInt("position", position)
+
             fragment.arguments = args
             return fragment
         }
