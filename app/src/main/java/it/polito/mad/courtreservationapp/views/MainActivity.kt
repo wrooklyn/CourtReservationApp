@@ -14,6 +14,7 @@ import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCe
 import it.polito.mad.courtreservationapp.models.Reservation
 import it.polito.mad.courtreservationapp.models.User
 import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
+import it.polito.mad.courtreservationapp.view_model.SportCenterViewModel
 import it.polito.mad.courtreservationapp.view_model.UserViewModel
 import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
 import it.polito.mad.courtreservationapp.views.reservationManager.BrowseReservationsFragment
@@ -22,8 +23,9 @@ import it.polito.mad.courtreservationapp.views.reservationManager.ReservationBro
 
 class MainActivity : AppCompatActivity() {
 
-    val userViewModel: UserViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
     val reservationBrowserViewModel: ReservationBrowserViewModel by viewModels()
+    val sportCenterViewModel: SportCenterViewModel by viewModels()
     lateinit var user: User
     lateinit var userReservations: List<Reservation>
     lateinit var userReservationsLocations: List<ReservationWithSportCenter>

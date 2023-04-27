@@ -11,13 +11,17 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import it.polito.mad.courtreservationapp.R
+import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
+import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
 import it.polito.mad.courtreservationapp.views.homeManager.tabFragments.DescriptionFragment
+import it.polito.mad.courtreservationapp.views.reservationManager.ReservationDetailsFragment
 
 
 class CenterDetailFragment : Fragment() {
 
     lateinit var myTab :TabLayout
     lateinit var myViewPager : ViewPager2
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -60,6 +64,16 @@ class CenterDetailFragment : Fragment() {
         })
         super.onViewCreated(view, savedInstanceState)
 
+    }
+
+    companion object {
+        fun newInstance(centerName:String): CenterDetailFragment {
+            val fragment = CenterDetailFragment()
+            val args = Bundle()
+            args.putString("centerName", centerName)
+            fragment.arguments = args
+            return fragment
+        }
     }
 
 }
