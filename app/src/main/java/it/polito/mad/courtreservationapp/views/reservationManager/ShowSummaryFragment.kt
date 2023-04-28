@@ -52,6 +52,8 @@ class ShowSummaryFragment : Fragment(R.layout.summary_layout) {
         val courtname: TextView = view.findViewById(R.id.courtnameTV)
         val servicesTitle: TextView = view.findViewById(R.id.servicesTitle)
         val services: TextView = view.findViewById(R.id.servicesTV)
+        val params: ViewGroup.LayoutParams = view.findViewById<ConstraintLayout>(R.id.serviceCL).layoutParams
+
 
 //        a.viewModel.sportCenter.observe(a){
 //            sportCenterName.text = it.name
@@ -113,7 +115,10 @@ class ShowSummaryFragment : Fragment(R.layout.summary_layout) {
         if (servStr.isEmpty()) {
             servicesTitle.visibility = View.INVISIBLE
             services.visibility = View.INVISIBLE
+            params?.height = 0
+            view?.findViewById<ConstraintLayout>(R.id.serviceCL)?.layoutParams=params
         }
+
 
         view.findViewById<Button>(R.id.f1_confirm_button).setOnClickListener {
             showConfirmationPopup(activity as CreateReservationActivity)
