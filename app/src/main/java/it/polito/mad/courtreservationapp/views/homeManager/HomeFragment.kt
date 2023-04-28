@@ -50,20 +50,20 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val childFragment: Fragment = UnfilteredHomeFragment()
         val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
-        transaction.replace(it.polito.mad.courtreservationapp.R.id.child_fragment_container, childFragment).commit()
+        transaction.replace(R.id.child_fragment_container, childFragment).commit()
     }
 
     private fun sportInitialize(){
 
-        val recyclerView: RecyclerView? = view?.findViewById(it.polito.mad.courtreservationapp.R.id.sports_recycler)
-        val adapter = SportsAdapter(viewModel.sportIconsId, viewModel.allSports, activity as MainActivity)
+        val recyclerView: RecyclerView? = view?.findViewById(R.id.sports_recycler)
+        val adapter = SportsAdapter(viewModel.sportIconsId, viewModel.allSports, activity as MainActivity, this)
         recyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         recyclerView?.adapter = adapter
-        adapter.setOnItemClickListener(object : SportsAdapter.onItemClickListener{
+        adapter.setOnItemClickListener(object : SportsAdapter.OnItemClickListener{
             override fun onItemClick(position: Int) {
-                val childFragment: Fragment = FilteredHomeFragment.newInstance(position)
-                val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
-                transaction.replace(it.polito.mad.courtreservationapp.R.id.child_fragment_container, childFragment).commit()
+//                val childFragment: Fragment = FilteredHomeFragment()
+//                val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
+//                transaction.replace(R.id.child_fragment_container, childFragment).commit()
             }
 
         })
@@ -115,37 +115,37 @@ class HomeFragment : Fragment() {
     }*/
 
     //Sports ScrollView
-    class SportsAdapter(private val imagesList: Map<String, Int>, private val namesList: List<String>, val activity: MainActivity): RecyclerView.Adapter<SportsViewHolder>() {
+    class SportsAdapter(private val imagesList: Map<String, Int>, private val namesList: List<String>, val activity: MainActivity, val fragment: HomeFragment): RecyclerView.Adapter<SportsViewHolder>() {
 
-        private lateinit var sListener: onItemClickListener
-        interface onItemClickListener{
+        private lateinit var sListener: OnItemClickListener
+        interface OnItemClickListener{
             fun onItemClick(position: Int)
         }
 
-        fun setOnItemClickListener(listener: onItemClickListener){
+        fun setOnItemClickListener(listener: OnItemClickListener){
             sListener=listener
         }
         override fun getItemCount()=namesList.size
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SportsViewHolder {
-            val itemView=LayoutInflater.from(parent.context).inflate(it.polito.mad.courtreservationapp.R.layout.sports_list_item, parent, false)
-            return SportsViewHolder(itemView, sListener, activity)
+            val itemView=LayoutInflater.from(parent.context).inflate(R.layout.sports_list_item, parent, false)
+            return SportsViewHolder(itemView, sListener, activity, fragment)
         }
         override fun onBindViewHolder(holder: SportsViewHolder, position: Int) {
             val currentName = namesList[position]
-            val currentImage = imagesList[currentName] ?: it.polito.mad.courtreservationapp.R.drawable.gesu
+            val currentImage = imagesList[currentName] ?: R.drawable.gesu
             holder.bind(currentImage, currentName)
         }
     }
-    class SportsViewHolder(itemView: View, listener: SportsAdapter.onItemClickListener, val activity: MainActivity):RecyclerView.ViewHolder(itemView){
-        private val titleImage: ImageView = itemView.findViewById(it.polito.mad.courtreservationapp.R.id.sport_image1)
-        private val sportName: TextView = itemView.findViewById(it.polito.mad.courtreservationapp.R.id.sport_name)
+    class SportsViewHolder(itemView: View, listener: SportsAdapter.OnItemClickListener, val activity: MainActivity, val fragment: HomeFragment):RecyclerView.ViewHolder(itemView){
+        private val titleImage: ImageView = itemView.findViewById(R.id.sport_image1)
+        private val sportName: TextView = itemView.findViewById(R.id.sport_name)
         private val a = activity
         private var view = itemView.findViewById<CardView>(R.id.sport_card_container)
         fun bind(imageSrc: Int, sportName: String){
             titleImage.setImageResource(imageSrc)
             this.sportName.text=sportName
 
-            val blue = ContextCompat.getColor(a, it.polito.mad.courtreservationapp.R.color.deep_blue)
+            val blue = ContextCompat.getColor(a, R.color.deep_blue)
             val white = Color.parseColor("#FFFFFF")
             val black = Color.parseColor("#000000")
 
@@ -167,7 +167,20 @@ class HomeFragment : Fragment() {
                     view.setCardBackgroundColor(ColorStateList.valueOf(blue))
                     this.sportName.setTextColor(white)
                 }
+                if(a.sportCenterViewModel.sportFilters.size>0){
+                    val childFragment: Fragment = FilteredHomeFragment()
+                    val transaction: FragmentTransaction = fragment.childFragmentManager.beginTransaction()
+                    transaction.replace(R.id.child_fragment_container, childFragment).commit()
+                } else {
+                    val childFragment: Fragment = UnfilteredHomeFragment()
+                    val transaction: FragmentTransaction = fragment.childFragmentManager.beginTransaction()
+                    transaction.replace(R.id.child_fragment_container, childFragment).commit()
+                }
+
+
             }
+
+
 
         }
         init{

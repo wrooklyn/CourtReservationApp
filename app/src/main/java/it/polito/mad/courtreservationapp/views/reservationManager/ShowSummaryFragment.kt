@@ -97,22 +97,23 @@ class ShowSummaryFragment : Fragment(R.layout.summary_layout) {
 
         timeslot.text = slotStr;
         courtname.text = "${a.viewModel.courtWithServices.court.sportName} court - ${a.viewModel.courtWithServices.court.courtId}"
-        var servStr: String = a.viewModel.reservationServices.fold("") { acc, i ->
-            if (acc.isNotEmpty()) {
-                "$acc, ${a.viewModel.courtWithServices.services[i.toInt()].description}"
-            } else {
-                a.viewModel.courtWithServices.services[i.toInt()].description
-            }
-        }
-        if (servStr.isNotEmpty()) {
-            servStr = "I'd like to request $servStr.\n"
-        }
-        if (a.viewModel.reservationRequests.isNotEmpty()) {
-            servStr = "${servStr}Other requests: ${a.viewModel.reservationRequests}"
-        }
-        services.text = servStr
+//        var servStr: String = a.viewModel.reservationServices.fold("") { acc, i ->
+//            if (acc.isNotEmpty()) {
+//                "$acc, ${a.viewModel.courtWithServices.services[i.toInt()].description}"
+//            } else {
+//                a.viewModel.courtWithServices.services[i.toInt()].description
+//            }
+//        }
+//        if (servStr.isNotEmpty()) {
+//            servStr = "I'd like to request $servStr.\n"
+//        }
+//        if (a.viewModel.reservationRequests.isNotEmpty()) {
+//            servStr = "${servStr}Other requests: ${a.viewModel.reservationRequests}"
+//        }
+//        services.text = servStr
+        services.text = a.viewModel.getServicesInfo()
 
-        if (servStr.isEmpty()) {
+        if (a.viewModel.reservationServices.isNullOrEmpty()) {
             servicesTitle.visibility = View.INVISIBLE
             services.visibility = View.INVISIBLE
             params?.height = 0

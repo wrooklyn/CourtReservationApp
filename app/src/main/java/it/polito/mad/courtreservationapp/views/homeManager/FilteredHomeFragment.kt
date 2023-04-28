@@ -21,20 +21,22 @@ import it.polito.mad.courtreservationapp.views.reservationManager.CreateReservat
 
 class FilteredHomeFragment : Fragment() {
 
-    var position: Int = -1
+//    var position: Int = -1
     lateinit var viewModel: SportCenterViewModel
-    lateinit var sportCenterWithCourtsAndServices: SportCenterWithCourtsAndServices
+    lateinit var sportCentersWithCourtsAndServices: List<SportCenterWithCourtsAndServices>
     private var courts: MutableList<Court> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         viewModel = (activity as MainActivity).sportCenterViewModel
-        position = requireArguments().getInt("position", -1)
-        sportCenterWithCourtsAndServices = viewModel.sportCentersWithCourtsAndServices[position]
-        sportCenterWithCourtsAndServices.courtsWithServices.forEach(){courtWithServices ->
-            if(!courts.contains(courtWithServices.court)){
-                courts.add(courtWithServices.court)
+//        position = requireArguments().getInt("position", -1)
+        sportCentersWithCourtsAndServices = viewModel.sportCentersWithCourtsAndServices
+        sportCentersWithCourtsAndServices.forEach{ sportCenter ->
+            sportCenter.courtsWithServices.forEach { court ->
+                if(viewModel.sportFilters.contains(court.court.sportName)){
+                    courts.add(court.court)
+                }
             }
         }
     }
@@ -93,10 +95,9 @@ class FilteredHomeFragment : Fragment() {
         }
     }
     companion object{
-        fun newInstance(position: Int): CourtFragment {
-            val fragment = CourtFragment()
+        fun newInstance(): FilteredHomeFragment {
+            val fragment = FilteredHomeFragment()
             val args = Bundle()
-            args.putInt("position", position)
 
             fragment.arguments = args
             return fragment

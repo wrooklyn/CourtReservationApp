@@ -47,6 +47,8 @@ class ShowSelectServicesFragment : Fragment() {
         //todo set the right button
         view.findViewById<Button>(R.id.f1_confirm_button).setOnClickListener {
             (activity as CreateReservationActivity).viewModel.reservationRequests = editText.text.toString()
+            Log.i("Passing", "${(activity as CreateReservationActivity).viewModel.courtWithServices}")
+            Log.i("Passing", "${(activity as CreateReservationActivity).viewModel.reservationServices}")
             (activity as CreateReservationActivity).ggNEXT();
         }
         view.findViewById<Button>(R.id.f1_back_button).setOnClickListener {

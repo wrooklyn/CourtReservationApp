@@ -117,5 +117,22 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
         courtWithServices = data
     }
 
+    fun getServicesInfo(): String{
+        var servStr: String = reservationServices.fold("") { acc, i ->
+            if (acc.isNotEmpty()) {
+                "$acc, ${courtWithServices.services.first { service -> service.serviceId == i }.description}"
+            } else {
+                courtWithServices.services.first { service -> service.serviceId == i }.description
+            }
+        }
+        if (servStr.isNotEmpty()) {
+            servStr = "I'd like to request $servStr.\n"
+        }
+        if (reservationRequests.isNotEmpty()) {
+            servStr = "${servStr}Other requests: $reservationRequests"
+        }
+        return servStr
+    }
+
 
 }
