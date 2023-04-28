@@ -72,7 +72,7 @@ class ShowSelectServicesFragment : Fragment() {
 
         //Show items as a simple linear list
         recyclerView.layoutManager =
-            GridLayoutManager(activity, 2)
+            GridLayoutManager(activity, 3)
 
         //Populate recyclerView with data
         recyclerView.adapter = ServicesAdapter(activity.viewModel.courtWithServices.services, activity)

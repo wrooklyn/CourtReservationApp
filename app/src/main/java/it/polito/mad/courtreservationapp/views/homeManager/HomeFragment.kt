@@ -99,7 +99,7 @@ class HomeFragment : Fragment() {
         recyclerView?.isNestedScrollingEnabled = false
         adapter.setOnItemClickListener(object : PopularAdapter.onItemClickListener{
             override fun onItemClick(position: Int) {
-                val fragmentB = ShowProfileFragment()
+                val fragmentB = CenterDetailFragment.newInstance(position)
                 activity?.supportFragmentManager?.beginTransaction()
                     ?.replace(R.id.fragmentContainer, fragmentB, "fragmentId")
                     ?.commit();

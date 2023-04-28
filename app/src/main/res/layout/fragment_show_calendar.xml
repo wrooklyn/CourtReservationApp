@@ -62,7 +62,7 @@
                     android:background="#FFFFFF"
                     app:calendarBackgroundColor="#FFFFFF"
                     app:calendarTitleTextColor="@color/black"
-                    app:currentDayOfMonthColor="@color/red_highlight"
+                    app:currentDayOfMonthColor="#DA0000"
                     app:dayOfMonthTextColor="@color/black"
                     app:dayOfWeekTextColor="@color/black"
                     app:disabledDayBackgroundColor="#FEFEFE"
@@ -71,7 +71,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:selectedDayBackgroundColor="@color/red_highlight"
+                    app:selectedDayBackgroundColor="@color/light_blue_background"
                     app:titleLayoutBackgroundColor="@color/white"
                     app:weekLayoutBackgroundColor="@color/white"></com.stacktips.view.CustomCalendarView>
             </androidx.constraintlayout.widget.ConstraintLayout>
