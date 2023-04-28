@@ -150,7 +150,7 @@ class EditProfileActivity : AppCompatActivity() {
             val photoURI = Uri.fromFile(photoFile)
             pfpElement.setImageURI(photoURI)
         } else {
-            pfpElement.setImageResource(R.drawable.default_pfp)
+            pfpElement.setImageResource(R.drawable.profile_picture)
         }
 
 
@@ -210,7 +210,7 @@ class EditProfileActivity : AppCompatActivity() {
             Log.i("DEBUG", "$photoURI")
             pfpElement.setImageURI(photoURI)
         } else {
-            pfpElement.setImageResource(R.drawable.default_pfp)
+            pfpElement.setImageResource(R.drawable.profile_picture)
         }
     }
 //    //setting appbar
