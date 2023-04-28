@@ -13,7 +13,11 @@ class SportCenterViewModel(application: Application) : AndroidViewModel(applicat
     private val sportCenterRepository: SportCenterRepository = SportCenterRepository(application)
     val sportCentersLiveData: LiveData<List<SportCenterWithCourtsAndServices>> = sportCenterRepository.getAllWithCourtsAndServices()
     lateinit var sportCentersWithCourtsAndServices: List<SportCenterWithCourtsAndServices>
+
+    var sportFilters : MutableList<String> = mutableListOf()
     var allSports: MutableList<String> = mutableListOf()
+
+
     val sportIconsId : Map<String, Int> = mapOf(
         Pair("Soccer",R.drawable.soccer_ball),
         Pair("Iceskate",R.drawable.ice_skate),

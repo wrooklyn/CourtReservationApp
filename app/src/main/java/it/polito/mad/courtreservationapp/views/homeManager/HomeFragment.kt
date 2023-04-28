@@ -1,18 +1,20 @@
 package it.polito.mad.courtreservationapp.views.homeManager
 
-import android.R
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import it.polito.mad.courtreservationapp.models.SportCenter
+import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.view_model.SportCenterViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
 
@@ -54,7 +56,7 @@ class HomeFragment : Fragment() {
     private fun sportInitialize(){
 
         val recyclerView: RecyclerView? = view?.findViewById(it.polito.mad.courtreservationapp.R.id.sports_recycler)
-        val adapter = SportsAdapter(viewModel.sportIconsId, viewModel.allSports)
+        val adapter = SportsAdapter(viewModel.sportIconsId, viewModel.allSports, activity as MainActivity)
         recyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         recyclerView?.adapter = adapter
         adapter.setOnItemClickListener(object : SportsAdapter.onItemClickListener{
@@ -113,7 +115,7 @@ class HomeFragment : Fragment() {
     }*/
 
     //Sports ScrollView
-    class SportsAdapter(private val imagesList: Map<String, Int>, private val namesList: List<String>): RecyclerView.Adapter<SportsViewHolder>() {
+    class SportsAdapter(private val imagesList: Map<String, Int>, private val namesList: List<String>, val activity: MainActivity): RecyclerView.Adapter<SportsViewHolder>() {
 
         private lateinit var sListener: onItemClickListener
         interface onItemClickListener{
@@ -126,7 +128,7 @@ class HomeFragment : Fragment() {
         override fun getItemCount()=namesList.size
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SportsViewHolder {
             val itemView=LayoutInflater.from(parent.context).inflate(it.polito.mad.courtreservationapp.R.layout.sports_list_item, parent, false)
-            return SportsViewHolder(itemView, sListener)
+            return SportsViewHolder(itemView, sListener, activity)
         }
         override fun onBindViewHolder(holder: SportsViewHolder, position: Int) {
             val currentName = namesList[position]
@@ -134,12 +136,39 @@ class HomeFragment : Fragment() {
             holder.bind(currentImage, currentName)
         }
     }
-    class SportsViewHolder(itemView: View, listener: SportsAdapter.onItemClickListener):RecyclerView.ViewHolder(itemView){
+    class SportsViewHolder(itemView: View, listener: SportsAdapter.onItemClickListener, val activity: MainActivity):RecyclerView.ViewHolder(itemView){
         private val titleImage: ImageView = itemView.findViewById(it.polito.mad.courtreservationapp.R.id.sport_image1)
         private val sportName: TextView = itemView.findViewById(it.polito.mad.courtreservationapp.R.id.sport_name)
-        fun bind(imageSrc: Int, activityName: String){
+        private val a = activity
+        private var view = itemView.findViewById<CardView>(R.id.sport_card_container)
+        fun bind(imageSrc: Int, sportName: String){
             titleImage.setImageResource(imageSrc)
-            sportName.text=activityName
+            this.sportName.text=sportName
+
+            val blue = ContextCompat.getColor(a, it.polito.mad.courtreservationapp.R.color.deep_blue)
+            val white = Color.parseColor("#FFFFFF")
+            val black = Color.parseColor("#000000")
+
+            if(a.sportCenterViewModel.sportFilters.contains(sportName)){
+                view.setCardBackgroundColor(ColorStateList.valueOf(blue))
+                this.sportName.setTextColor(white)
+            } else {
+                view.setCardBackgroundColor(ColorStateList.valueOf(white))
+                this.sportName.setTextColor(black)
+            }
+
+            view.setOnClickListener {
+                if(a.sportCenterViewModel.sportFilters.contains(sportName)){
+                    a.sportCenterViewModel.sportFilters.remove(sportName)
+                    view.setCardBackgroundColor(ColorStateList.valueOf(white))
+                    this.sportName.setTextColor(black)
+                } else {
+                    a.sportCenterViewModel.sportFilters.add(sportName)
+                    view.setCardBackgroundColor(ColorStateList.valueOf(blue))
+                    this.sportName.setTextColor(white)
+                }
+            }
+
         }
         init{
             itemView.setOnClickListener {
