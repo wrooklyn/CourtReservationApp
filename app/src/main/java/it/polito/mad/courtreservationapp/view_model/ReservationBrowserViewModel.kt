@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
+import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.*
 import it.polito.mad.courtreservationapp.db.repository.CourtRepository
 import it.polito.mad.courtreservationapp.db.repository.ReservationRepository
@@ -24,6 +25,12 @@ class ReservationBrowserViewModel(application: Application): AndroidViewModel(ap
     lateinit var userReservationsLocations: LiveData<List<ReservationWithSportCenter>>
     lateinit var userReservationsServices: LiveData<List<ReservationWithServices>>
 
+    val servicesIcons: Map<Long, Int> = mapOf(
+        Pair(0, R.drawable.safety_shower),
+        Pair(1, R.drawable.equipment),
+        Pair(2, R.drawable.coach),
+        Pair(3, R.drawable.refreshment)
+    )
     fun initUserReservations(userId: Long) {
         userReservations = reservationRepo.getReservationsByUser(userId)
         userReservationsLocations = reservationRepo.getReservationLocationsByUserId(userId)

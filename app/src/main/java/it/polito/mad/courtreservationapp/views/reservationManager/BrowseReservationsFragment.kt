@@ -73,9 +73,11 @@ class BrowseReservationsFragment : Fragment() {
         private var reservLocationTV: TextView = view.findViewById(R.id.reservation_locationTV)
         private var reservDatetimeTV: TextView = view.findViewById(R.id.reservation_datetimeTV)
         private var reservImageIV: ImageView = view.findViewById(R.id.reservCardImage)
+        private var reservCourtTitle: TextView = view.findViewById(R.id.reservedCourtId)
 
         fun bind(reservationWithSportCenter: ReservationWithSportCenter) {
-            reservLocationTV.text = reservationWithSportCenter.courtWithSportCenter.sportCenter.address + " - Court " + reservationWithSportCenter.courtWithSportCenter.court.courtId
+            reservCourtTitle.text = reservationWithSportCenter.courtWithSportCenter.court.sportName + " - Court " + reservationWithSportCenter.courtWithSportCenter.court.courtId
+            reservLocationTV.text = reservationWithSportCenter.courtWithSportCenter.sportCenter.address
             reservDatetimeTV.text = reservationWithSportCenter.reservation.reservationDate + " - " + TimeslotMap.getTimeslotString(reservationWithSportCenter.reservation.timeSlotId)
             when(reservationWithSportCenter.courtWithSportCenter.court.sportName) {
                 "Soccer" -> reservImageIV.setImageResource(R.drawable.football_court)

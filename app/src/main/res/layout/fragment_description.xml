@@ -29,20 +29,30 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/servicesHeadingView"/>
+                app:layout_constraintBottom_toTopOf="@id/recycler_services_container_description"/>
 
-            <TextView
-                android:id="@+id/servicesHeadingView"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/recycler_services_container_description"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/inter_semibold"
-                android:text="@string/services_heading"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="#192E34"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/descriptionView" />
+                app:layout_constraintTop_toBottomOf="@+id/descriptionView"
+                app:layout_constraintBottom_toTopOf="@+id/guideline"
+                >
+
+                <TextView
+                    android:id="@+id/servicesHeadingView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/inter_semibold"
+                    android:text="@string/services_heading"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textColor="#192E34"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/service_description_recycler"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/service_description_recycler"
@@ -51,15 +61,16 @@
                     android:layout_marginLeft="30dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="30dp"
-                    app:layout_constraintBottom_toTopOf="@+id/guideline"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/servicesHeadingView"
                     android:orientation="horizontal"
                     android:paddingLeft="0dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:reverseLayout="true"
                     tools:listitem="@layout/service_description_item" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline"

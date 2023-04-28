@@ -199,7 +199,7 @@
                     android:id="@+id/specialRequestsTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="20dp"
                     android:fontFamily="@font/inter_semibold"
                     android:text="@string/special_requests_heading"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -396,11 +396,11 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/courtnameCL">
 
-
                     <TextView
                         android:id="@+id/servicesTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
                         android:fontFamily="@font/inter_semibold"
                         android:text="@string/req_services_heading"
@@ -413,14 +413,14 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/servicesRecycler"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="100dp"
                         android:orientation="horizontal"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/servicesTitle"
-                        tools:listitem="@layout/services_item" />
+                        tools:listitem="@layout/service_description_item" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 

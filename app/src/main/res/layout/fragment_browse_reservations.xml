@@ -39,6 +39,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="20dp"
+        android:layout_marginBottom="30dp"
         android:autoSizePresetSizes="@array/autosize_subtitle_sizes"
         android:autoSizeTextType="uniform"
         android:fontFamily="@font/red_hat_display_medium"
@@ -54,18 +55,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.16" />
+        app:layout_constraintGuide_percent="0.2" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/recyclerViewContainerCL"
+        android:id="@+id/constraintLayout15"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/white"
+        android:background="@drawable/custom_rectangle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline2">
-
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/reservations_recycler"

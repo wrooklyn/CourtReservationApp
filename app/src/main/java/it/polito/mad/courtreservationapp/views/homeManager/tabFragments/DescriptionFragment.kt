@@ -1,13 +1,14 @@
 package it.polito.mad.courtreservationapp.views.homeManager.tabFragments
 
 import android.os.Bundle
-import android.util.Log
+ import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
@@ -50,8 +51,8 @@ class DescriptionFragment : Fragment() {
         view.findViewById<TextView>(R.id.descriptionView).text = sportCenterWithCourtsAndServices.sportCenter.description
         serviceInitialize()
         view.findViewById<TextView>(R.id.location_info).text = sportCenterWithCourtsAndServices.sportCenter.address
-        view.findViewById<TextView>(R.id.phone_info).text = "123123${sportCenterWithCourtsAndServices.sportCenter.centerId}"
-        view.findViewById<TextView>(R.id.time_info).text = "9-18"
+        view.findViewById<TextView>(R.id.phone_info).text = "+(555) 123-123${sportCenterWithCourtsAndServices.sportCenter.centerId}"
+        view.findViewById<TextView>(R.id.time_info).text = "10:00AM - 9.00PM"
     }
 
     private fun serviceInitialize(){
@@ -70,10 +71,19 @@ class DescriptionFragment : Fragment() {
 //        )
 //        Log.i("serviceInitialize", serviceName[0])
         val recyclerView: RecyclerView? = view?.findViewById(R.id.service_description_recycler)
-        val adapter = ServiceDescriptionAdapter(viewModel.servicesIcons, services)
-        recyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        recyclerView?.isNestedScrollingEnabled=false
-        recyclerView?.adapter = adapter
+        val constraintContainer = view?.findViewById<ConstraintLayout>(R.id.recycler_services_container_description)
+        val params: ViewGroup.LayoutParams? = constraintContainer?.layoutParams
+
+        if (services.isEmpty()) {
+                params?.height = 0
+                view?.findViewById<ConstraintLayout>(R.id.recycler_services_container_description)?.layoutParams=params
+        } else {
+            val adapter = ServiceDescriptionAdapter(viewModel.servicesIcons, services)
+            recyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+            recyclerView?.isNestedScrollingEnabled=false
+            recyclerView?.adapter = adapter
+        }
+
     }
 
     class ServiceDescriptionAdapter(private val imagesMap: Map<Long, Int>, private val services: List<Service>): RecyclerView.Adapter<ServiceDescriptionViewHolder>() {

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="-5dp">
+    android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
@@ -14,122 +14,135 @@
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="20dp"
         app:cardCornerRadius="15dp"
-        app:cardElevation="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="5:4"
+        app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.9"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.9">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.constraintlayout.widget.Guideline
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.63" />
-
             <ImageView
                 android:id="@+id/reservCardImage"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:contentDescription="@string/sportsplex"
+                android:layout_marginTop="-5dp"
                 android:scaleType="fitXY"
-                app:layout_constraintBottom_toTopOf="@+id/guidelineBottomImage"
+                android:src="@drawable/basket_center"
+                app:layout_constraintBottom_toTopOf="@id/guideline4"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/golf_center" />
+                app:srcCompat="@drawable/tennis_court" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guidelineBottomImage"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/reservedCourtId"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.75" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/location_containerCL"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/inter_semibold"
+                android:text="Tennis Court"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="#D9541C"
+                app:layout_constraintBottom_toTopOf="@id/time_container_info"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/guidelineBottomImage">
-
-                <TextView
-                    android:id="@+id/textView9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/roboto_bold"
-                    android:gravity="center"
-                    android:text="@string/where"
-                    android:textColor="#D9541C"
-                    android:textSize="20sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/reservation_locationTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:fontFamily="@font/roboto"
-                    android:gravity="center"
-                    android:text="@string/location_town"
-                    android:textColor="#000000"
-                    android:textSize="15sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView9"
-                    app:layout_constraintVertical_bias="0.22000003" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                app:layout_constraintTop_toBottomOf="@id/guideline4"
+                app:layout_constraintVertical_bias="0.5" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/datetime_containerCL"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginEnd="10dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/guidelineBottomImage">
-
-                <TextView
-                    android:id="@+id/textView10"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/roboto_bold"
-                    android:gravity="center"
-                    android:text="@string/when"
-                    android:textColor="#D9541C"
-                    android:textSize="20sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                android:id="@+id/time_container_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                app:layout_constraintBottom_toTopOf="@id/location_container"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/reservedCourtId">
 
                 <TextView
                     android:id="@+id/reservation_datetimeTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:layout_marginStart="10dp"
-                    android:fontFamily="@font/roboto"
-                    android:gravity="center"
+                    android:autoSizePresetSizes="@array/autosize_card_location_sizes"
+                    android:autoSizeTextType="uniform"
+                    android:fontFamily="@font/inter"
                     android:text="@string/sample_date_time"
-                    android:textColor="#000000"
-                    android:textSize="15sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#4F4F4F"
+                    android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/time_icon"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/time_icon"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toStartOf="@id/reservation_datetimeTV"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView10"
-                    app:layout_constraintVertical_bias="0.22000003" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.08"
+                    app:srcCompat="@drawable/clock_description" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/location_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="5dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/time_container_info">
+
+                <TextView
+                    android:id="@+id/reservation_locationTV"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="10dp"
+                    android:autoSizePresetSizes="@array/autosize_card_location_sizes"
+                    android:autoSizeTextType="uniform"
+                    android:fontFamily="@font/inter"
+                    android:text="@string/location_town"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#4F4F4F"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/location_center_icon"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/location_center_icon"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toStartOf="@id/reservation_locationTV"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.08"
+                    app:srcCompat="@drawable/icons8_location_100__1_" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.61" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

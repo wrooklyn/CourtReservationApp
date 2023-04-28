@@ -1,9 +1,6 @@
 package it.polito.mad.courtreservationapp.views.reservationManager
 
 import android.content.Intent
-import android.content.res.ColorStateList
-import android.graphics.PorterDuff
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -13,14 +10,15 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
 import it.polito.mad.courtreservationapp.models.TimeslotMap
+import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
+
 
 class ReservationDetailsFragment : Fragment() {
 
@@ -37,6 +35,8 @@ class ReservationDetailsFragment : Fragment() {
     private var specialRequests: String? = null
     private lateinit var serviceIds: LongArray
     private lateinit var serviceDescriptions: Array<String>
+
+    lateinit var viewModel: ReservationBrowserViewModel
 
     private lateinit var mainContainerCL: ConstraintLayout
 
@@ -65,6 +65,7 @@ class ReservationDetailsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = (activity as MainActivity).reservationBrowserViewModel
         centerName = requireArguments().getString("centerName")!!
         username = requireArguments().getString("username")!!
         sportCenterAddress = requireArguments().getString("sportCenterAddress")!!
@@ -91,7 +92,17 @@ class ReservationDetailsFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_reservation_details, container, false)
         val recyclerView = view.findViewById<RecyclerView>(R.id.servicesRecycler)
-        recyclerView.adapter = RequestedServiceAdapter(serviceIds, serviceDescriptions, activity as MainActivity)
+        val serviceTV = view.findViewById<TextView>(R.id.servicesTitle)
+        val params: ViewGroup.LayoutParams = view.findViewById<ConstraintLayout>(R.id.servicesCL).layoutParams
+        if (serviceIds.isEmpty()) {
+            serviceTV.visibility = View.INVISIBLE
+            params.height = 0
+            view.findViewById<ConstraintLayout>(R.id.servicesCL).layoutParams = params
+        } else {
+            serviceTV.visibility = View.VISIBLE
+            recyclerView.adapter = RequestedServiceAdapter(serviceIds, serviceDescriptions, viewModel.servicesIcons, activity as MainActivity)
+
+        }
         return view
     }
 
@@ -181,42 +192,46 @@ class ReservationDetailsFragment : Fragment() {
         }
     }
 
-    class RequestedServiceAdapter(private val serviceIds: LongArray, private val serviceDescriptions: Array<String>, val activity: MainActivity): RecyclerView.Adapter<RequestedServiceAdapter.RequestedServiceViewHolder>() {
+    class RequestedServiceAdapter(private val serviceIds: LongArray, private val serviceDescriptions: Array<String>, private val imagesMap: Map<Long, Int>, val activity: MainActivity): RecyclerView.Adapter<RequestedServiceAdapter.RequestedServiceViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RequestedServiceViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.services_item, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.service_description_item, parent, false)
             return RequestedServiceViewHolder(view, activity)
         }
 
         override fun onBindViewHolder(holder: RequestedServiceViewHolder, position: Int) {
             val serviceId = serviceIds[position]
             val serviceDescription = serviceDescriptions[position]
-            holder.bind(serviceId, serviceDescription)
+            val imageId = imagesMap[serviceId] ?: R.drawable.gesu
+            holder.bind(serviceDescription, imageId)
         }
 
         override fun getItemCount() = serviceIds.size
 
         class RequestedServiceViewHolder(itemView: View, activity: MainActivity) : RecyclerView.ViewHolder(itemView) {
-            private val icon: ImageView = itemView.findViewById(R.id.sv_icon)
-            private val layout: ConstraintLayout = itemView.findViewById(R.id.sv_layout)
-            private val text: TextView = itemView.findViewById(R.id.sv_text)
+            private val icon: ImageView = itemView.findViewById(R.id.service_description_image)
+            //private val layout: ConstraintLayout = itemView.findViewById(R.id.sv_layout)
+            private val serviceName: TextView = itemView.findViewById(R.id.service_description_name)
             private val a = activity
-            fun bind(serviceId: Long, serviceDescription: String) {
-                text.text = serviceDescription
-                val blue = ContextCompat.getColor(a, R.color.deep_blue)
-                var drawable: Drawable? = null
+            fun bind(serviceDescription: String, imageSrc: Int) {
+                //text.text = serviceDescription
+                //Log.i("binder image", serviceDescription)
+                icon.setImageResource(imageSrc)
+                serviceName.text=serviceDescription
+                //val blue = ContextCompat.getColor(a, R.color.deep_blue)
+                /*var drawable: Drawable? = null
                 when (serviceId.toInt()) {
                     0 -> drawable = ContextCompat.getDrawable(a, R.drawable.shower_sv)
-                    1 -> drawable = ContextCompat.getDrawable(a, R.drawable.equipment_sv)
-                    2 -> drawable = ContextCompat.getDrawable(a, R.drawable.personal_trainer_sv)
-                    3 -> drawable = ContextCompat.getDrawable(a, R.drawable.food_sv)
+                    1 -> drawable = ContextCompat.getDrawable(a, R.drawable.equipment)
+                    2 -> drawable = ContextCompat.getDrawable(a, R.drawable.coach)
+                    3 -> drawable = ContextCompat.getDrawable(a, R.drawable.refreshment)
                 }
-                layout.backgroundTintList = ColorStateList.valueOf(blue)
-                icon.setBackgroundColor(blue)
-                drawable?.setColorFilter(
+                //layout.backgroundTintList = ColorStateList.valueOf(blue)
+                //icon.setBackgroundColor(blue)
+            *//*    drawable?.setColorFilter(
                     ContextCompat.getColor(a, R.color.white),
                     PorterDuff.Mode.SRC_IN
-                )
-                icon.setImageDrawable(drawable)
+                )*//*
+                icon.setImageDrawable(drawable)*/
             }
 
         }
