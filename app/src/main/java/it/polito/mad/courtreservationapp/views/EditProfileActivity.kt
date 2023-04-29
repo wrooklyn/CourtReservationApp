@@ -18,11 +18,14 @@ import android.view.*
 import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.doAfterTextChanged
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.models.Gender
+import it.polito.mad.courtreservationapp.models.User
+import it.polito.mad.courtreservationapp.view_model.UserViewModel
 import it.polito.mad.utils.BitmapUtil
 import it.polito.mad.utils.DiskUtil
 import org.json.JSONObject
@@ -50,6 +53,8 @@ class EditProfileActivity : AppCompatActivity() {
 
     private var newPhotoUri : Uri? = null
     private var newPhotoPath: String? = null
+
+    private val userViewModel: UserViewModel by viewModels()
 
     private val galleryActivityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -94,30 +99,24 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     private fun loadDataFromSharedPreferences() {
-        Log.i("EditProfile", "load from sharedprefs")
-        val sharedPref = getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
-        val profileString = sharedPref.getString("profile", null)
-        Log.i("EditProfile", "profile: $profileString")
+        val userInfo = getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
 
-        if (profileString != null) {
-            val profileData = JSONObject(profileString)
-            username = profileData.optString("username", "")
-            firstName = profileData.optString("firstname", "")
-            lastName = profileData.optString("lastname", "")
-            email = profileData.optString("email", "")
-            address = profileData.optString("address", "")
-            phone = profileData.optString("phone", "")
-            val genderString = profileData.optString("gender", "")
-            gender = when (genderString) {
-                "FEMALE" -> Gender.FEMALE
-                "MALE" -> Gender.MALE
-                "OTHER" -> Gender.OTHER
-                else -> null
+        if (userInfo != null) {
+            username = userInfo.getString("username", "")!!
+            firstName = userInfo.getString("firstname", "")!!
+            lastName = userInfo.getString("lastname", "")!!
+            email = userInfo.getString("email", "")!!
+            address = userInfo.getString("address", "")!!
+            phone = userInfo.getString("phone", "")!!
+            when(userInfo.getInt("gender", -10)) {
+                0 -> gender = Gender.MALE
+                1 -> gender = Gender.FEMALE
+                2 -> gender = Gender.OTHER
             }
-            height = profileData.optInt("height",Int.MIN_VALUE)
-            weight = profileData.optDouble("weight", Double.MIN_VALUE)
+            height = userInfo.getInt("height", Int.MIN_VALUE)
+            weight = userInfo.getInt("weight", Int.MIN_VALUE).toDouble()
 
-            val path = profileData.optString("photoPath", "")
+            val path = userInfo.getString("photoPath", "")!!
             Log.i("EditProfile", "path: $path")
             photoFile = DiskUtil.getFileFromPath(path) ?: DiskUtil.getDefaultImage(this)
             Log.i("EditProfile", "file: $photoFile")
@@ -213,44 +212,46 @@ class EditProfileActivity : AppCompatActivity() {
             pfpElement.setImageResource(R.drawable.default_pfp)
         }
     }
-//    //setting appbar
-//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-//        val inflater: MenuInflater = menuInflater
-//        inflater.inflate(R.menu.menu_save, menu)
-//        return true
-//    }
-//
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        // Handle item selection
-//        return when (item.itemId) {
-//            R.id.save_changes -> {
-//                saveChanges()
-//                true
-//            }
-//            else -> super.onOptionsItemSelected(item)
-//        }
-//    }
 
     @SuppressLint("InflateParams")
     private fun saveChanges() {
         if(validateData()){
-            val sharedPref = getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
+            username = findViewById<TextView>(R.id.editUsername).text.toString()
+            firstName = findViewById<TextView>(R.id.editFirstName).text.toString()
+            lastName = findViewById<TextView>(R.id.editLastName).text.toString()
+            email = findViewById<TextView>(R.id.editEmail).text.toString()
+            address = findViewById<TextView>(R.id.editAddress).text.toString()
+            gender = findViewById<Spinner>(R.id.editGender).selectedItem as Gender
+            height = findViewById<TextView>(R.id.editHeight).text.toString().toIntOrNull() ?: Int.MIN_VALUE
+            weight = findViewById<TextView>(R.id.editWeight).text.toString().toDoubleOrNull() ?: Double.MIN_VALUE
+            phone = findViewById<TextView>(R.id.editPhone).text.toString()
+            val sharedPref = getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
             val editor = sharedPref.edit()
 
-            val profileData = JSONObject()
-            profileData.put("username", findViewById<TextView>(R.id.editUsername).text.toString())
-            profileData.put("firstname", findViewById<TextView>(R.id.editFirstName).text.toString())
-            profileData.put("lastname", findViewById<TextView>(R.id.editLastName).text.toString())
-            profileData.put("email", findViewById<TextView>(R.id.editEmail).text.toString())
-            profileData.put("address", findViewById<TextView>(R.id.editAddress).text.toString())
-            profileData.put("gender", (findViewById<Spinner>(R.id.editGender).selectedItem as Gender).toString())
-            profileData.put("height", findViewById<TextView>(R.id.editHeight).text.toString().toIntOrNull() ?: Int.MIN_VALUE)
-            profileData.put("weight", findViewById<TextView>(R.id.editWeight).text.toString().toDoubleOrNull() ?: Double.MIN_VALUE)
-            profileData.put("phone", findViewById<TextView>(R.id.editPhone).text.toString())
-            profileData.put("photoPath", photoFile)
+            JSONObject()
+            editor.putString("username", username)
+            editor.putString("firstname", firstName)
+            editor.putString("lastname", lastName)
+            editor.putString("email", email)
+            editor.putString("address", address)
+            editor.putInt("gender", gender!!.ordinal)
+            editor.putInt("height", height)
+            editor.putInt("weight", weight.toInt())
+            editor.putString("phone", phone)
+            editor.putString("photoPath", photoFile.absolutePath)
 
-            editor.putString("profile", profileData.toString())
             editor.apply()
+            userViewModel.updateUser(User(
+                username!!,
+                firstName!!,
+                lastName!!,
+                email!!,
+                address!!,
+                gender!!.ordinal,
+                height,
+                weight.toInt(),
+                phone!!,
+                sharedPref.getLong("UserId", -1)))
             finish()
         } else {
             val inflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -276,13 +277,11 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     private fun revertChanges(){
-        val sharedPref = getSharedPreferences("ProfileData", Context.MODE_PRIVATE)
-        val profileString = sharedPref.getString("profile", null)
+        val sharedPref = getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
         var path = ""
 
-        if (profileString != null) {
-            val profileData = JSONObject(profileString)
-            path = profileData.optString("photoPath", "")
+        if (sharedPref != null) {
+            path = sharedPref.getString("photoPath", null) ?: ""
         }
         if(!newPhotoPath.isNullOrEmpty()){
             DiskUtil.deleteFile(newPhotoPath!!)
@@ -290,7 +289,6 @@ class EditProfileActivity : AppCompatActivity() {
         if (path != photoFile.absolutePath){
             photoFile.delete()
         }
-
     }
 
     private fun modifyPicture(view: View){

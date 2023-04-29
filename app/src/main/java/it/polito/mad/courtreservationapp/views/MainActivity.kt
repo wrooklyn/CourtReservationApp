@@ -49,17 +49,19 @@ class MainActivity : AppCompatActivity() {
 
         /* Setting the logged user */
         //hardcoded user
-        val sharedPreferences = this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putLong("UserId", 1).apply()
-        /* TODO: login function? */
+        /* Load user's info in both the User object and the shared preferences */
         userViewModel.setCurrentUser(1)
         userViewModel.user.observe(this) {
             user = it
-            Log.i("DBG", "Logged user")
-            Log.i("DBG", user.toString())
+            loadUserInfo(user.userId)
+            Log.i("SHARED PREFERENCES",
+                this.getSharedPreferences("UserInfo", MODE_PRIVATE).all.toString()
+            )
         }
-        /* ------------------- */
+
+        val sharedPreferences = this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putLong("UserId", 1).apply()
 
         /* Getting current user's reservations */
         reservationBrowserViewModel.initUserReservations(1) // TODO: use actual user ID
@@ -127,4 +129,19 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    private fun loadUserInfo(userId: Long) {
+        val sharedPreferences = this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putLong("UserId", userId)
+        editor.putString("username", user.username)
+        editor.putString("firstname", user.firstName)
+        editor.putString("lastname", user.lastName)
+        editor.putString("email", user.email)
+        editor.putString("address", user.address)
+        editor.putInt("gender", user.gender)
+        editor.putInt("height", user.height)
+        editor.putInt("weight", user.weight)
+        editor.putString("phone", user.phone)
+        editor.apply()
+    }
 }

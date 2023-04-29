@@ -1,11 +1,8 @@
 package it.polito.mad.courtreservationapp.db.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
+import androidx.room.*
 import androidx.room.OnConflictStrategy.Companion.REPLACE
-import androidx.room.Query
 import it.polito.mad.courtreservationapp.db.relationships.UserWithReservations
 import it.polito.mad.courtreservationapp.db.relationships.UserWithReservationsAndServices
 //import it.polito.mad.courtreservationapp.db.relationships.UserWithReservations
@@ -22,6 +19,9 @@ interface UserDao {
 
     @Delete
     suspend fun delete(vararg users: User)
+
+    @Update
+    suspend fun updateUser(user: User)
 
     @Query("SELECT * FROM users")
     fun getAll(): LiveData<List<User>>

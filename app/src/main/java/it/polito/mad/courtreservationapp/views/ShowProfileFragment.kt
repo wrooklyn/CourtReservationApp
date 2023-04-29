@@ -74,7 +74,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
         val isFirstLaunch = sharedPrefs?.getBoolean("isFirstLaunch", true)
         Log.i("ShowProfile", "$isFirstLaunch")
         if(isFirstLaunch!!) {
-            loadDefaultPrefs()
+            // loadDefaultPrefs()
             val editor = sharedPrefs.edit()
             editor.putBoolean("isFirstLaunch", false)
             editor.apply()
@@ -104,27 +104,32 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
 
     @SuppressLint("SetTextI18n")
     private fun updateUI() {
-        val sharedPref = activity?.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
-        val profileString = sharedPref?.getString("profile", null)
+        val userInfo = activity?.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
+        //val profileString = sharedPref?.getString("profile", null)
         var newGender = gender.toString()
 
-        if (profileString != null) {
-            val profileData = JSONObject(profileString)
-            username = profileData.optString("username", "")
-            firstName = profileData.optString("firstname", "")
-            lastName = profileData.optString("lastname", "")
-            email = profileData.optString("email", "")
-            address = profileData.optString("address", "")
-            phone = profileData.optString("phone", "")
-            newGender = profileData.optString("gender", "")
-            height = profileData.optInt("height", Int.MIN_VALUE)
-            weight = profileData.optDouble("weight", Double.MIN_VALUE)
+        if (userInfo != null) {
+            //val profileData = JSONObject(profileString)
+            username = userInfo.getString("username", "")!!
+            firstName = userInfo.getString("firstname", "")!!
+            lastName = userInfo.getString("lastname", "")!!
+            email = userInfo.getString("email", "")!!
+            address = userInfo.getString("address", "")!!
+            phone = userInfo.getString("phone", "")!!
+            when(userInfo.getInt("gender", -10)) {
+                0 -> newGender = "Male"
+                1 -> newGender = "Female"
+                2 -> newGender = "Other"
+            }
+            height = userInfo.getInt("height", Int.MIN_VALUE)
+            weight = userInfo.getInt("weight", Int.MIN_VALUE).toDouble()
 
-            photoPath = profileData.optString("photoPath", "")
+            photoPath = userInfo.getString("photoPath", "")!!
         }
 
         activity?.findViewById<TextView>(R.id.usernameTV)?.text  = "@$username"
-        activity?.findViewById<TextView>(R.id.fullname)?.text = if(firstName.isEmpty() && lastName.isEmpty()) "" else "$firstName $lastName"
+        activity?.findViewById<TextView>(R.id.firstnameTV)?.text = firstName
+        activity?.findViewById<TextView>(R.id.lastnameTV)?.text = lastName
         activity?.findViewById<TextView>(R.id.emailTV)?.text = email
         activity?.findViewById<TextView>(R.id.addressTV)?.text = address
         activity?.findViewById<TextView>(R.id.genderTV)?.text = newGender
