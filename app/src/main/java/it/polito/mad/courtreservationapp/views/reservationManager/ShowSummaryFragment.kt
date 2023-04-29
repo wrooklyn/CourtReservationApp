@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -52,6 +53,8 @@ class ShowSummaryFragment : Fragment(R.layout.summary_layout) {
         val courtname: TextView = view.findViewById(R.id.courtnameTV)
         val servicesTitle: TextView = view.findViewById(R.id.servicesTitle)
         val services: TextView = view.findViewById(R.id.servicesTV)
+        val params: ViewGroup.LayoutParams = view.findViewById<ConstraintLayout>(R.id.serviceCL).layoutParams
+
 
 //        a.viewModel.sportCenter.observe(a){
 //            sportCenterName.text = it.name
@@ -95,25 +98,29 @@ class ShowSummaryFragment : Fragment(R.layout.summary_layout) {
 
         timeslot.text = slotStr;
         courtname.text = "${a.viewModel.courtWithServices.court.sportName} court - ${a.viewModel.courtWithServices.court.courtId}"
-        var servStr: String = a.viewModel.reservationServices.fold("") { acc, i ->
-            if (acc.isNotEmpty()) {
-                "$acc, ${a.viewModel.courtWithServices.services[i.toInt()].description}"
-            } else {
-                a.viewModel.courtWithServices.services[i.toInt()].description
-            }
-        }
-        if (servStr.isNotEmpty()) {
-            servStr = "I'd like to request $servStr.\n"
-        }
-        if (a.viewModel.reservationRequests.isNotEmpty()) {
-            servStr = "${servStr}Other requests: ${a.viewModel.reservationRequests}"
-        }
-        services.text = servStr
+//        var servStr: String = a.viewModel.reservationServices.fold("") { acc, i ->
+//            if (acc.isNotEmpty()) {
+//                "$acc, ${a.viewModel.courtWithServices.services[i.toInt()].description}"
+//            } else {
+//                a.viewModel.courtWithServices.services[i.toInt()].description
+//            }
+//        }
+//        if (servStr.isNotEmpty()) {
+//            servStr = "I'd like to request $servStr.\n"
+//        }
+//        if (a.viewModel.reservationRequests.isNotEmpty()) {
+//            servStr = "${servStr}Other requests: ${a.viewModel.reservationRequests}"
+//        }
+//        services.text = servStr
+        services.text = a.viewModel.getServicesInfo()
 
-        if (servStr.isEmpty()) {
+        if (a.viewModel.reservationServices.isNullOrEmpty() && a.viewModel.reservationRequests.isNullOrEmpty()) {
             servicesTitle.visibility = View.INVISIBLE
             services.visibility = View.INVISIBLE
+            params?.height = 0
+            view?.findViewById<ConstraintLayout>(R.id.serviceCL)?.layoutParams=params
         }
+
 
         view.findViewById<Button>(R.id.f1_confirm_button).setOnClickListener {
             showConfirmationPopup(activity as CreateReservationActivity)
