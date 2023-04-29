@@ -169,9 +169,9 @@ class ReservationDetailsFragment : Fragment() {
             yesButton.setOnClickListener{
                 (activity as MainActivity).reservationBrowserViewModel.deleteReservation(reservationId)
                 popupWindow.dismiss()
-                popupView = inflater.inflate(R.layout.reserv_cancel_confirmation, null)
-                val dismissButton = popupView.findViewById<Button>(R.id.dismissButton)
-                popupWindow = PopupWindow(popupView, width, height, focusable)
+                val popupView2 = inflater.inflate(R.layout.reserv_cancel_confirmation, null)
+                val dismissButton = popupView2.findViewById<Button>(R.id.dismissButton)
+                popupWindow = PopupWindow(popupView2, width, height, focusable)
                 popupWindow.showAtLocation(mainContainerCL, Gravity.CENTER, 0, 0)
                 mainContainerCL.foreground.alpha = 160
 
