@@ -94,6 +94,7 @@ class FilteredHomeFragment : Fragment() {
             reviewCourt.text=rCourt
         }
     }
+
     companion object{
         fun newInstance(): FilteredHomeFragment {
             val fragment = FilteredHomeFragment()
