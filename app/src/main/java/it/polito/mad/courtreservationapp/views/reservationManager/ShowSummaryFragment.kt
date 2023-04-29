@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -113,7 +114,7 @@ class ShowSummaryFragment : Fragment(R.layout.summary_layout) {
 //        services.text = servStr
         services.text = a.viewModel.getServicesInfo()
 
-        if (a.viewModel.reservationServices.isNullOrEmpty()) {
+        if (a.viewModel.reservationServices.isNullOrEmpty() && a.viewModel.reservationRequests.isNullOrEmpty()) {
             servicesTitle.visibility = View.INVISIBLE
             services.visibility = View.INVISIBLE
             params?.height = 0
