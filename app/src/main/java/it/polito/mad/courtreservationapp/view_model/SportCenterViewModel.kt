@@ -46,7 +46,8 @@ class SportCenterViewModel(application: Application) : AndroidViewModel(applicat
         Pair("Volley",R.drawable.volley_court),
         Pair("Iceskate", R.drawable.iceskating_rink),
         Pair("Swimming", R.drawable.swimming_pool),
-        Pair("Hockey", R.drawable.hockey)
+        Pair("Hockey", R.drawable.hockey),
+        Pair("Rugby", R.drawable.rugby_court)
     )
 
     fun loadSportCenters(centersWithCourtsAndServices: List<SportCenterWithCourtsAndServices>) {
