@@ -27,10 +27,10 @@ class BrowseReservationsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val user = (activity as MainActivity).user
-        val userReservLocations = (activity as MainActivity).userReservationsLocations
-        val userReservServices = (activity as MainActivity).userReservationsServices
+        val userReservLocations = (activity as MainActivity).userReservationsLocations.sortedByDescending { res -> res.reservation.reservationDate }
+        val userReservServices = (activity as MainActivity).userReservationsServices.sortedByDescending { res -> res.reservation.reservationDate }
         val recyclerView: RecyclerView = view.findViewById(R.id.reservations_recycler)
-        val adapter = ReservationAdapter(userReservLocations.sortedByDescending { res -> res.reservation.reservationDate })
+        val adapter = ReservationAdapter(userReservLocations)
         recyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         recyclerView.adapter = adapter
         adapter.setOnItemClickListener(object : ReservationAdapter.OnItemClickListener{

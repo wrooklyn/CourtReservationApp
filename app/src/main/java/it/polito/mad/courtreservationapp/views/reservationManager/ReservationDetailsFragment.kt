@@ -18,6 +18,9 @@ import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCe
 import it.polito.mad.courtreservationapp.models.TimeslotMap
 import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 
 class ReservationDetailsFragment : Fragment() {
@@ -189,6 +192,18 @@ class ReservationDetailsFragment : Fragment() {
             noButton.setOnClickListener {
                 popupWindow.dismiss()
             }
+        }
+
+        val reservationDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        val today = LocalDate.now()
+        if(reservationDate > today) {
+            Log.i("DATE", "VISIBLE - Today: $today, Reservation: $reservationDate")
+            editReservationButton.visibility = View.VISIBLE
+            cancelReservationButton.visibility = View.VISIBLE
+        } else {
+            Log.i("DATE", "GONE - Today: $today, Reservation: $reservationDate")
+            editReservationButton.visibility = View.GONE
+            cancelReservationButton.visibility = View.GONE
         }
     }
 

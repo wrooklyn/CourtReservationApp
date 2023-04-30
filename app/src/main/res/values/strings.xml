@@ -87,4 +87,6 @@
     <string name="back">Back</string>
     <string name="reserv_cancel_ok">Your reservation was successfully canceled</string>
     <string name="special_requests_heading">Special requests</string>
+    <string name="upcoming_title">Upcoming reservations</string>
+    <string name="past_title">Past reservations</string>
 </resources>
