@@ -1,6 +1,7 @@
 package it.polito.mad.courtreservationapp.adapters
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.views.reservationManager.CreateReservationActivity
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class TimeSlotAdapter(val data: List<Int>, val activity: FragmentActivity?) :
     RecyclerView.Adapter<TimeSlotViewHolder>() {
@@ -37,10 +40,12 @@ class TimeSlotAdapter(val data: List<Int>, val activity: FragmentActivity?) :
 class TimeSlotViewHolder(v: View, val activity: FragmentActivity?) :
     RecyclerView.ViewHolder(v) {
     private val timeSlotButton: Button = v.findViewById(R.id.tp_text)
+    private val today = LocalDateTime.now()
     fun bind(u: Long) {
         val a = activity as CreateReservationActivity
         val startH = 10 + u
         val endH = startH + 1
+
         timeSlotButton.text = "$startH:00 - $endH:00"
         val orange = ContextCompat.getColor(activity, R.color.orange_highlight)
         val grey = ContextCompat.getColor(activity, R.color.grey_unselected)
@@ -49,6 +54,10 @@ class TimeSlotViewHolder(v: View, val activity: FragmentActivity?) :
             timeSlotButton.visibility = View.INVISIBLE
             return
         }
+
+        //checking timeslot if today is selected
+       if (checkIsTodayForTimeSlots(a.viewModel.reservationDate, startH)) return
+
         if (a.viewModel.reservationTimeSlots.contains(u)) {
             timeSlotButton.setBackgroundColor(orange)
             timeSlotButton.setTextColor(Color.WHITE)
@@ -79,5 +88,26 @@ class TimeSlotViewHolder(v: View, val activity: FragmentActivity?) :
             }
         }
 
+    }
+
+    private fun checkIsTodayForTimeSlots(reservationDate: String?, startH: Long) : Boolean {
+        val df = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+        val dateStr = today.format(df)
+        if(reservationDate == dateStr){
+            Log.v("xpxpxp", dateStr)
+            val df = DateTimeFormatter.ofPattern("hh")
+            val timeStr = today.format(df)
+            Log.v("xpxpxp", "Hours: $timeStr")
+            if(startH <= timeStr.toLong()){
+                Log.v("xpxpxp", "true")
+                this.timeSlotButton.setBackgroundColor(Color.TRANSPARENT)
+                this.timeSlotButton.setTextColor(Color.GRAY)
+                this.timeSlotButton.isEnabled = false
+                return true
+            }
+
+        }
+        return false
     }
 }
