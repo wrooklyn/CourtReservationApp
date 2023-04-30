@@ -30,7 +30,7 @@ class BrowseReservationsFragment : Fragment() {
         val userReservLocations = (activity as MainActivity).userReservationsLocations
         val userReservServices = (activity as MainActivity).userReservationsServices
         val recyclerView: RecyclerView = view.findViewById(R.id.reservations_recycler)
-        val adapter = ReservationAdapter(userReservLocations)
+        val adapter = ReservationAdapter(userReservLocations.sortedByDescending { res -> res.reservation.reservationDate })
         recyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         recyclerView.adapter = adapter
         adapter.setOnItemClickListener(object : ReservationAdapter.OnItemClickListener{
