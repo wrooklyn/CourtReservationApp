@@ -134,10 +134,10 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
         activity?.findViewById<TextView>(R.id.addressTV)?.text = address
         activity?.findViewById<TextView>(R.id.genderTV)?.text = newGender
         activity?.findViewById<TextView>(R.id.heightTV)?.text = if(height == Int.MIN_VALUE) null else "$height cm"
-        activity?.findViewById<TextView>(R.id.weightTV)?.text = if(weight == Double.MIN_VALUE)null else "$weight kg"
+        activity?.findViewById<TextView>(R.id.weightTV)?.text = if(weight == Double.MIN_VALUE) null else "$weight kg"
         activity?.findViewById<TextView>(R.id.phoneTV)?.text = phone
 
-        val pfpElement = activity?.findViewById<ImageView>(R.id.imageView3)
+        val pfpElement = activity?.findViewById<ImageView>(R.id.imageView2)
         val photoUri = DiskUtil.getUriFromPath(photoPath)
         if(photoUri != null){
             pfpElement?.setImageURI(photoUri)
