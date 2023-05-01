@@ -55,7 +55,6 @@ class SportCenterViewModel(application: Application) : AndroidViewModel(applicat
         sportCentersWithCourtsAndServices.map { sportCenterWithCourtsAndServices ->
             sportCenterWithCourtsAndServices.courtsWithServices.forEach() { courtWithServices ->
                 if (!allSports.contains(courtWithServices.court.sportName)) {
-                    Log.i("Home", "Adding: ${courtWithServices.court.sportName}")
                     allSports.add(courtWithServices.court.sportName)
                 }
             }

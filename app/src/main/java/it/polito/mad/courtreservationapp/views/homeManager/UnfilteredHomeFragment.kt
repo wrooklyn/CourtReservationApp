@@ -139,8 +139,6 @@ class UnfilteredHomeFragment : Fragment() {
             return PopularViewHolder(itemView, popularListener)
         }
         override fun onBindViewHolder(holder: PopularViewHolder, position: Int) {
-            Log.i("PopularAdapter", "position $position")
-            Log.i("PopularAdapter", "populars $popularCentersList")
             val currentCenter = popularCentersList[position]
             val currentImage = imagesList[currentCenter.centerId] ?: R.drawable.gesu
             val currentLocation = popularCentersList[position].address

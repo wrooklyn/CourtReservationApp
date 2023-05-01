@@ -29,10 +29,7 @@ class HomeFragment : Fragment() {
         viewModel = (activity as MainActivity).sportCenterViewModel
         viewModel.sportCentersLiveData.observe(this){
             viewModel.loadSportCenters(it)
-//            Log.i("Home", "SportNames: $sportNames")
             sportInitialize()
-/*            availableInitialize()
-            popularInitialize()*/
         }
 
     }

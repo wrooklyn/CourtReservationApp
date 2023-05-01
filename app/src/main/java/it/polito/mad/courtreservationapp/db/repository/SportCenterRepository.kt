@@ -49,7 +49,6 @@ class SportCenterRepository(val application: Application) {
     }
 
     fun getAllWithCourtsAndServices(): LiveData<List<SportCenterWithCourtsAndServices>>{
-        Log.i("SportVM", "Repo")
         return sportCenterDao.getAllWithCourtsAndServices()
     }
 

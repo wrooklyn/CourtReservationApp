@@ -24,17 +24,12 @@ class CreateReservationActivity : AppCompatActivity() {
         binding = ActivityCreateReservationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        Log.i("DBG", "CourtId: ${intent.getLongExtra("courtId", -1)}")
-        Log.i("DBG", "ReservationId: ${intent.getLongExtra("reservationId", -1)}")
 
         //TODO: get data from main activity
         viewModel.courtId = intent.getLongExtra("courtId", 0)
         viewModel.reservationId = intent.getLongExtra("reservationId", 0)
         viewModel.sportCenterId = intent.getLongExtra("sportCenterId", 0)
 
-        Log.i("Intent", "CourtId: ${viewModel.courtId}")
-        Log.i("Intent", "sportCenterId: ${viewModel.sportCenterId}")
-        Log.i("Intent", "reservationId: ${viewModel.reservationId}")
 
         if(viewModel.courtId == 0L) throw Exception("Invalid parameters")
 

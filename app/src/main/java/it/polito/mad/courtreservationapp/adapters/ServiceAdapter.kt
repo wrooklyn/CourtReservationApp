@@ -68,8 +68,6 @@ class ServicesViewHolder(v: View, activity: CreateReservationActivity) :
                 PorterDuff.Mode.SRC_IN
             )
             icon.setImageDrawable(drawable)
-            Log.v("gabri", a.viewModel.reservationServices.toString())
-            Log.v("gabri", u.serviceId.toString())
         } else {
             layout.backgroundTintList = ColorStateList.valueOf(grey)
             icon.setBackgroundColor(grey)
