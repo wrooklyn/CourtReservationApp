@@ -70,9 +70,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
         }
 
         val sharedPrefs = activity?.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
-        Log.i("ShowProfile", "$sharedPrefs")
         val isFirstLaunch = sharedPrefs?.getBoolean("isFirstLaunch", true)
-        Log.i("ShowProfile", "$isFirstLaunch")
         if(isFirstLaunch!!) {
             // loadDefaultPrefs()
             val editor = sharedPrefs.edit()

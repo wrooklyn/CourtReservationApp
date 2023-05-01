@@ -95,12 +95,9 @@ class TimeSlotViewHolder(v: View, val activity: FragmentActivity?) :
 
         val dateStr = today.format(df)
         if(reservationDate == dateStr){
-            Log.v("xpxpxp", dateStr)
             val df = DateTimeFormatter.ofPattern("hh")
             val timeStr = today.format(df)
-            Log.v("xpxpxp", "Hours: $timeStr")
             if(startH <= timeStr.toLong()){
-                Log.v("xpxpxp", "true")
                 this.timeSlotButton.setBackgroundColor(Color.TRANSPARENT)
                 this.timeSlotButton.setTextColor(Color.GRAY)
                 this.timeSlotButton.isEnabled = false

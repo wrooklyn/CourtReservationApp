@@ -95,8 +95,6 @@ class DescriptionFragment : Fragment() {
             return ServiceDescriptionViewHolder(itemView)
         }
         override fun onBindViewHolder(holder: ServiceDescriptionViewHolder, position: Int) {
-            Log.i("ServiceDescAdapter", "$services")
-            Log.i("ServiceDescAdapter", "position $position")
             val service = services[position]
             val currentImage = imagesMap[service.serviceId] ?: R.drawable.gesu
             holder.bind(currentImage, service.description)

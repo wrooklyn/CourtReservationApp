@@ -84,7 +84,6 @@ class CenterDetailFragment : Fragment() {
         myTab.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 myViewPager.currentItem = tab.position
-                Log.v("gabri", tab.position.toString())
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab) {}

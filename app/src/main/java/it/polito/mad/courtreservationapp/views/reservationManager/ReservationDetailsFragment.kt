@@ -47,7 +47,6 @@ class ReservationDetailsFragment : Fragment() {
         fun newInstance(username: String, reservWithSportCenter: ReservationWithSportCenter, reservWithServices: ReservationWithServices): ReservationDetailsFragment {
             val fragment = ReservationDetailsFragment()
             val args = Bundle()
-            Log.i("DBG", reservWithSportCenter.toString())
             args.putString("username", username)
             args.putString("centerName", reservWithSportCenter.courtWithSportCenter.sportCenter.name)
             args.putString("sportCenterAddress", reservWithSportCenter.courtWithSportCenter.sportCenter.address)
@@ -83,9 +82,7 @@ class ReservationDetailsFragment : Fragment() {
         serviceIds = requireArguments().getLongArray("serviceIds")!!
         serviceDescriptions = requireArguments().getStringArray("serviceDescriptions")!!
 
-        Log.i("ASD", "Details, centerId:$sportCenterId")
-        Log.i("ASD", "Details, courtId:$courtId")
-        Log.i("ASD", "Details, reservationId:$reservationId")
+
     }
 
     override fun onCreateView(
@@ -197,11 +194,9 @@ class ReservationDetailsFragment : Fragment() {
         val reservationDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         val today = LocalDate.now()
         if(reservationDate > today) {
-            Log.i("DATE", "VISIBLE - Today: $today, Reservation: $reservationDate")
             editReservationButton.visibility = View.VISIBLE
             cancelReservationButton.visibility = View.VISIBLE
         } else {
-            Log.i("DATE", "GONE - Today: $today, Reservation: $reservationDate")
             editReservationButton.visibility = View.GONE
             cancelReservationButton.visibility = View.GONE
         }

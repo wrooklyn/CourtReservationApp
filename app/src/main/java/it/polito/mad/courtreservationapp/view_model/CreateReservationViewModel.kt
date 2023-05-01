@@ -59,17 +59,12 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
         initUser(userId)
     }
     private fun initCourt(courtId: Long, centerId: Long){
-        Log.i(tag, "InitCourt")
         sportCenterLiveData = sportCenterRepo.getById(centerId)
         courtReservationsLiveData = courtRepo.getByIdWithReservations(courtId)
         courtServicesLiveData = courtRepo.getByIdWithServices(courtId)
 
-        Log.i(tag, "SportCenter: $sportCenterLiveData")
-        Log.i(tag, "Reservations: $courtReservationsLiveData")
-        Log.i(tag, "Services: $courtServicesLiveData")
     }
     private fun initUser(userId: Long){
-        Log.i(tag, "InitUser")
         userLiveData = userRepo.getById(userId)
     }
 
@@ -88,7 +83,6 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
             }
 
             for(reservation in reservations){
-                Log.i(tag, "Inserting: $reservation")
                 reservationRepo.insertReservationWithServices(reservation)
             }
         }

@@ -16,14 +16,11 @@ class ReservationRepository(val application: Application) {
     private val reservationAndServiceDao = db.reservationAndServiceDao()
 
     suspend fun insertReservationWithServices(reservationWithServices: ReservationWithServices){
-        Log.i("ReservationRepo", "$reservationWithServices")
         //save reservation
         val reservationId = reservationDao.save(reservationWithServices.reservation)
         reservationWithServices.reservation.reservationId = reservationId
-        Log.i("ReservationRepo", "Saved ${reservationWithServices.reservation}")
         //save service requested
         for(service in reservationWithServices.services){
-            Log.i("ReservationRepo", "Saving $reservationId - ${service.serviceId}")
             reservationAndServiceDao.save(ReservationServiceCrossRef(reservationId, service.serviceId))
         }
     }

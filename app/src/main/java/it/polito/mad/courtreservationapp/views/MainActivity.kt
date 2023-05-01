@@ -3,7 +3,6 @@ package it.polito.mad.courtreservationapp.views
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -54,9 +53,6 @@ class MainActivity : AppCompatActivity() {
         userViewModel.user.observe(this) {
             user = it
             loadUserInfo(user.userId)
-            Log.i("SHARED PREFERENCES",
-                this.getSharedPreferences("UserInfo", MODE_PRIVATE).all.toString()
-            )
         }
 
         val sharedPreferences = this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
@@ -88,7 +84,6 @@ class MainActivity : AppCompatActivity() {
                     replaceFragment(HomeFragment())
                 }
                 R.id.explore -> {
-                    Log.i("DBG", "Explore button pressed")
                     replaceFragment(ShowUnimplementedFragment())
                 }
 //                R.id.calendar -> {
@@ -106,7 +101,6 @@ class MainActivity : AppCompatActivity() {
                     replaceFragment(ShowProfileFragment())
                 }
                 else -> {
-                    Log.i("DBG", "Invalid")
                     replaceFragment(ShowUnimplementedFragment())
                 }
             }
