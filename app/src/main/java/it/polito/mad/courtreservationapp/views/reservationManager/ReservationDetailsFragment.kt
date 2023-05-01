@@ -132,14 +132,15 @@ class ReservationDetailsFragment : Fragment() {
         timeslotTV.text = TimeslotMap.getTimeslotString(timeslotId)
         courtNameTV.text = courtName
         specialRequestsTV.text = specialRequests ?: "You did not have any special request"
+        Log.i("asdasd", "$sportName")
         when(sportName) {
-            "Calcio" -> courtImageIV.setImageResource(R.drawable.football_court)
+            "Soccer" -> courtImageIV.setImageResource(R.drawable.football_court)
             "Iceskate" -> courtImageIV.setImageResource(R.drawable.iceskating_rink)
             "Basket" -> courtImageIV.setImageResource(R.drawable.basket_center)
             "Hockey" -> courtImageIV.setImageResource(R.drawable.hockey_png)
             "Tennis" -> courtImageIV.setImageResource(R.drawable.tennis_court)
-            "Pallavolo" -> courtImageIV.setImageResource(R.drawable.volley_court)
-            "Nuoto" -> courtImageIV.setImageResource(R.drawable.swimming_pool)
+            "Volley" -> courtImageIV.setImageResource(R.drawable.volley_court)
+            "Swimming" -> courtImageIV.setImageResource(R.drawable.swimming_pool)
         }
 
         val editReservationButton = view.findViewById<Button>(R.id.edit_reservation_button)
@@ -224,29 +225,13 @@ class ReservationDetailsFragment : Fragment() {
 
         class RequestedServiceViewHolder(itemView: View, activity: MainActivity) : RecyclerView.ViewHolder(itemView) {
             private val icon: ImageView = itemView.findViewById(R.id.service_description_image)
-            //private val layout: ConstraintLayout = itemView.findViewById(R.id.sv_layout)
             private val serviceName: TextView = itemView.findViewById(R.id.service_description_name)
             private val a = activity
             fun bind(serviceDescription: String, imageSrc: Int) {
-                //text.text = serviceDescription
-                //Log.i("binder image", serviceDescription)
+
                 icon.setImageResource(imageSrc)
                 serviceName.text=serviceDescription
-                //val blue = ContextCompat.getColor(a, R.color.deep_blue)
-                /*var drawable: Drawable? = null
-                when (serviceId.toInt()) {
-                    0 -> drawable = ContextCompat.getDrawable(a, R.drawable.shower_sv)
-                    1 -> drawable = ContextCompat.getDrawable(a, R.drawable.equipment)
-                    2 -> drawable = ContextCompat.getDrawable(a, R.drawable.coach)
-                    3 -> drawable = ContextCompat.getDrawable(a, R.drawable.refreshment)
-                }
-                //layout.backgroundTintList = ColorStateList.valueOf(blue)
-                //icon.setBackgroundColor(blue)
-            *//*    drawable?.setColorFilter(
-                    ContextCompat.getColor(a, R.color.white),
-                    PorterDuff.Mode.SRC_IN
-                )*//*
-                icon.setImageDrawable(drawable)*/
+
             }
 
         }

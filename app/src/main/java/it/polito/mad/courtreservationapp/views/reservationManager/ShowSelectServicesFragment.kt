@@ -58,8 +58,6 @@ class ShowSelectServicesFragment : Fragment() {
         view.findViewById<ImageView>(R.id.close_button).setOnClickListener {
             activity?.finish();
         }
-        //view.findViewById<RecyclerView>(R.id.services_recycler).adapter?.notifyDataSetChanged()
-        //TODO dispose?
     }
 
     fun getReservationOfCourts(Cid: String): List<Reservation> {

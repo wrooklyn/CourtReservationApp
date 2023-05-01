@@ -30,7 +30,6 @@ class FilteredHomeFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         viewModel = (activity as MainActivity).sportCenterViewModel
-//        position = requireArguments().getInt("position", -1)
         sportCentersWithCourtsAndServices = viewModel.sportCentersWithCourtsAndServices
         sportCentersWithCourtsAndServices.forEach{ sportCenter ->
             sportCenter.courtsWithServices.forEach { court ->

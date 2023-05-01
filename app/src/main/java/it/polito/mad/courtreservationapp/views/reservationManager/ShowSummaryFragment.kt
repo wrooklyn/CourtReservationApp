@@ -56,34 +56,6 @@ class ShowSummaryFragment : Fragment(R.layout.summary_layout) {
         val params: ViewGroup.LayoutParams = view.findViewById<ConstraintLayout>(R.id.serviceCL).layoutParams
 
 
-//        a.viewModel.sportCenter.observe(a){
-//            sportCenterName.text = it.name
-//            addressSubtitle.text = it.address
-//            address.text = it.address
-//        }
-//        a.viewModel.courtServices.observe(a){
-//            courtname.text = "${it.court.sportName} court - ${it.court.courtId}";
-//            var servStr: String = a.reservationServices.fold("") { acc, i ->
-//                if (acc.isNotEmpty()) {
-//                    "$acc, ${it.services[i.toInt()].description}"
-//                } else {
-//                    "${it.services[i.toInt()].description}"
-//                }
-//            }
-//            if (servStr.isNotEmpty()) {
-//                servStr = "I'd like to request $servStr.\n"
-//            }
-//            if (a.reservationRequests.isNotEmpty()) {
-//                servStr = "${servStr}Other requests: ${a.reservationRequests}"
-//            }
-//            services.text = servStr
-//
-//            if (servStr.isEmpty()) {
-//                servicesTitle.visibility = View.INVISIBLE
-//                services.visibility = View.INVISIBLE
-//            }
-//        }
-
         sportCenterName.text = a.viewModel.sportCenter.name//"The Athetic Club";
         addressSubtitle.text = a.viewModel.sportCenter.address//"Via delle ciliegie";
         address.text = a.viewModel.sportCenter.address//"Via delle ciliegie";
@@ -98,20 +70,7 @@ class ShowSummaryFragment : Fragment(R.layout.summary_layout) {
 
         timeslot.text = slotStr;
         courtname.text = "${a.viewModel.courtWithServices.court.sportName} court - ${a.viewModel.courtWithServices.court.courtId}"
-//        var servStr: String = a.viewModel.reservationServices.fold("") { acc, i ->
-//            if (acc.isNotEmpty()) {
-//                "$acc, ${a.viewModel.courtWithServices.services[i.toInt()].description}"
-//            } else {
-//                a.viewModel.courtWithServices.services[i.toInt()].description
-//            }
-//        }
-//        if (servStr.isNotEmpty()) {
-//            servStr = "I'd like to request $servStr.\n"
-//        }
-//        if (a.viewModel.reservationRequests.isNotEmpty()) {
-//            servStr = "${servStr}Other requests: ${a.viewModel.reservationRequests}"
-//        }
-//        services.text = servStr
+
         services.text = a.viewModel.getServicesInfo()
 
         if (a.viewModel.reservationServices.isNullOrEmpty() && a.viewModel.reservationRequests.isNullOrEmpty()) {

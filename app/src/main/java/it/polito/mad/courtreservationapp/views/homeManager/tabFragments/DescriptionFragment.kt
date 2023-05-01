@@ -19,8 +19,7 @@ import it.polito.mad.courtreservationapp.views.MainActivity
 
 class DescriptionFragment : Fragment() {
 
-//    lateinit var imageId: Array<Int>
-//    lateinit var serviceName: Array<String>
+
     private var services: MutableList<Service> = mutableListOf()
     var position: Int = -1
     lateinit var viewModel: SportCenterViewModel
@@ -56,20 +55,7 @@ class DescriptionFragment : Fragment() {
     }
 
     private fun serviceInitialize(){
-//        imageId = arrayOf(
-//            R.drawable.swimming,
-//            R.drawable.wifi,
-//            R.drawable.safety_shower,
-//            R.drawable.cafe
-//
-//        )
-//        serviceName= arrayOf(
-//            "Pool",
-//            "Wifi",
-//            "Shower",
-//            "Cafeteria"
-//        )
-//        Log.i("serviceInitialize", serviceName[0])
+
         val recyclerView: RecyclerView? = view?.findViewById(R.id.service_description_recycler)
         val constraintContainer = view?.findViewById<ConstraintLayout>(R.id.recycler_services_container_description)
         val params: ViewGroup.LayoutParams? = constraintContainer?.layoutParams
@@ -91,7 +77,6 @@ class DescriptionFragment : Fragment() {
         override fun getItemCount()=services.size
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ServiceDescriptionViewHolder {
             val itemView=LayoutInflater.from(parent.context).inflate(R.layout.service_description_item, parent, false)
-//            Log.i("serviceAdapter", namesList[0])
             return ServiceDescriptionViewHolder(itemView)
         }
         override fun onBindViewHolder(holder: ServiceDescriptionViewHolder, position: Int) {
@@ -106,7 +91,6 @@ class DescriptionFragment : Fragment() {
         private val titleImage: ImageView = itemView.findViewById(R.id.service_description_image)
         private val serviceName: TextView = itemView.findViewById(R.id.service_description_name)
         fun bind(imageSrc: Int, activityName: String){
-//            Log.i("bindViewHolder", activityName)
             titleImage.setImageResource(imageSrc)
             serviceName.text=activityName
         }

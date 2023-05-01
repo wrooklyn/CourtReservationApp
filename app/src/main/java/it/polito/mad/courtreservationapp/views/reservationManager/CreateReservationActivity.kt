@@ -39,9 +39,6 @@ class CreateReservationActivity : AppCompatActivity() {
         if(viewModel.courtId == 0L) throw Exception("Invalid parameters")
 
         //hardcoded user
-//        val sharedPreferences = this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
-//        val editor = sharedPreferences.edit()
-//        editor.putLong("UserId", 1).apply()
 
         viewModel.userId = this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE).getLong("UserId", 0)
 

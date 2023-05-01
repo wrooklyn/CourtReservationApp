@@ -22,7 +22,6 @@ data class Court(
 
     @PrimaryKey(autoGenerate = true)
     var courtId: Long = 0,
-//    val pictures: List<Int>,
 )
     //pictures are int because we will use resources (e.g. R.drawable.x which is an integer).
 

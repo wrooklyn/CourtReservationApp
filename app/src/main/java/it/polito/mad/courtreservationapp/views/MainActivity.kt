@@ -41,11 +41,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        sportCenterViewModel.initialize()
-//        sportCenterViewModel.sportCentersLiveData.observe(this){
-//            Log.i("SportVM", "LiveData: $it")
-//            sportCenters = it
-//        }
+
 
         /* Setting the logged user */
         //hardcoded user
@@ -91,16 +87,12 @@ class MainActivity : AppCompatActivity() {
                     Log.i("DBG", "Explore button pressed")
                     replaceFragment(ShowUnimplementedFragment())
                 }
-//                R.id.calendar -> {
-//                    val reservationBrowserIntent = Intent(this, ReservationBrowserActivity::class.java)
-//                    startActivity(reservationBrowserIntent)
-//                }
+
                 R.id.calendar -> {
                     replaceFragment(BrowseReservationsFragment())
                 }
                 R.id.chat -> {
                     replaceFragment(ShowUnimplementedFragment())
-//                    testLaunchGabry()
                 }
                 R.id.profile -> {
                     replaceFragment(ShowProfileFragment())
@@ -112,13 +104,6 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
-    }
-
-    private fun testLaunchGabry() {
-        val createReservationIntent: Intent = Intent(this, CreateReservationActivity::class.java)
-        createReservationIntent.putExtra("courtId",1L)
-        createReservationIntent.putExtra("sportCenterId",1L)
-        startActivity(createReservationIntent)
     }
 
     fun replaceFragment(fragment: Fragment) {
