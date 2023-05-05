@@ -94,9 +94,7 @@ class CenterDetailFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(
-            position: Int
-        ): CenterDetailFragment {
+        fun newInstance(position: Int): CenterDetailFragment {
             val fragment = CenterDetailFragment()
             val args = Bundle()
             args.putInt("position", position)

@@ -151,7 +151,7 @@
                 android:isIndicator="true"
                 android:max="5"
                 android:numStars="5"
-                android:rating="1.5"
+                android:rating="4.5"
                 android:stepSize="0.1"
                 android:theme="@style/RatingBar"
                 app:layout_constraintBottom_toBottomOf="parent"

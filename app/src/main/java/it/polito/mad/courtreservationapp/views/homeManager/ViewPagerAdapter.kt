@@ -29,7 +29,7 @@ class ViewPagerAdapter(fragmentActivity: FragmentManager, lifecycle:Lifecycle, v
         return when(position){
             0 -> DescriptionFragment.newInstance(sportCenterPosition)
             1 -> CourtFragment.newInstance(sportCenterPosition)
-            2 -> ReviewsFragment()
+            2 -> ReviewsFragment.newInstance(sportCenterPosition)
             else -> throw AssertionError()
         }
     }
