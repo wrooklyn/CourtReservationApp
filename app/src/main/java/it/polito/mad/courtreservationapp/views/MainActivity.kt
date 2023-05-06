@@ -17,6 +17,7 @@ import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
 import it.polito.mad.courtreservationapp.view_model.SportCenterViewModel
 import it.polito.mad.courtreservationapp.view_model.UserViewModel
 import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
+import it.polito.mad.courtreservationapp.views.ratings.LeaveRatingActivity
 import it.polito.mad.courtreservationapp.views.reservationManager.BrowseReservationsFragment
 import it.polito.mad.courtreservationapp.views.reservationManager.CreateReservationActivity
 
@@ -87,6 +88,12 @@ class MainActivity : AppCompatActivity() {
                     replaceFragment(BrowseReservationsFragment())
                 }
                 R.id.chat -> {
+                    //TODO remove this in production
+                    val intent = Intent(this, LeaveRatingActivity::class.java)
+                    intent.putExtra("courtId", 1)
+                    intent.putExtra("reservationId", 1)
+                    intent.putExtra("sportCenterId", 1)
+                    startActivity(intent)
                     replaceFragment(ShowUnimplementedFragment())
                 }
                 R.id.profile -> {
