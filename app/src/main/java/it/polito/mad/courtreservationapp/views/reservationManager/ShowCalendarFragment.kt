@@ -43,7 +43,7 @@ class ShowCalendarFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setUpCalendar(view)
+        setUpCalendar(view, (activity as CreateReservationActivity))
         setUpTimePicker(view, activity)
 
         //todo set the right button
@@ -94,7 +94,7 @@ class ShowCalendarFragment : Fragment() {
     }
 
 
-    private fun setUpCalendar(view: View) {
+    private fun setUpCalendar(view: View, activity: CreateReservationActivity) {
         val calendarView = view.findViewById(R.id.calendar_view) as CustomCalendarView
 
         //Initialize calendar with date
@@ -107,6 +107,18 @@ class ShowCalendarFragment : Fragment() {
 
         //call refreshCalendar to update calendar the view
         calendarView.refreshCalendar(currentCalendar)
+
+        //mark date
+        if(activity.viewModel.reservationId != 0L) {
+            activity.viewModel.reservationRepo.getByIdWithServices(activity.viewModel.reservationId).observe(activity) {
+                val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                val date = format.parse(activity.viewModel.reservationDate)
+                calendarView.markDayAsSelectedDay(date)
+                view.findViewById<RecyclerView>(R.id.recyclerView).adapter?.notifyDataSetChanged()
+            }
+        }else{
+            calendarView.markDayAsSelectedDay(Date())
+        }
 
 
         //Handling custom calendar events

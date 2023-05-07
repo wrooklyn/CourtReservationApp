@@ -37,7 +37,7 @@ class CreateReservationActivity : AppCompatActivity() {
 
         viewModel.userId = this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE).getLong("UserId", 0)
 
-        viewModel.initAll()
+        viewModel.initAll(this)
 
         setObservers()
 

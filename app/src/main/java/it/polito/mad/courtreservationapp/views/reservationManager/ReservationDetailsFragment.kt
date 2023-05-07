@@ -2,6 +2,7 @@ package it.polito.mad.courtreservationapp.views.reservationManager
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -44,22 +45,44 @@ class ReservationDetailsFragment : Fragment() {
     private lateinit var mainContainerCL: ConstraintLayout
 
     companion object {
-        fun newInstance(username: String, reservWithSportCenter: ReservationWithSportCenter, reservWithServices: ReservationWithServices): ReservationDetailsFragment {
+        fun newInstance(
+            username: String,
+            reservWithSportCenter: ReservationWithSportCenter,
+            reservWithServices: ReservationWithServices
+        ): ReservationDetailsFragment {
             val fragment = ReservationDetailsFragment()
             val args = Bundle()
             args.putString("username", username)
-            args.putString("centerName", reservWithSportCenter.courtWithSportCenter.sportCenter.name)
-            args.putString("sportCenterAddress", reservWithSportCenter.courtWithSportCenter.sportCenter.address)
-            args.putString("courtName", "${reservWithSportCenter.courtWithSportCenter.court.sportName} court - #C${reservWithSportCenter.courtWithSportCenter.court.courtId}")
+            args.putString(
+                "centerName",
+                reservWithSportCenter.courtWithSportCenter.sportCenter.name
+            )
+            args.putString(
+                "sportCenterAddress",
+                reservWithSportCenter.courtWithSportCenter.sportCenter.address
+            )
+            args.putString(
+                "courtName",
+                "${reservWithSportCenter.courtWithSportCenter.court.sportName} court - #C${reservWithSportCenter.courtWithSportCenter.court.courtId}"
+            )
             args.putLong("courtId", reservWithSportCenter.courtWithSportCenter.court.courtId)
             args.putLong("reservationId", reservWithSportCenter.reservation.reservationId)
             args.putString("date", reservWithSportCenter.reservation.reservationDate)
             args.putLong("timeslotId", reservWithSportCenter.reservation.timeSlotId)
             args.putString("sportName", reservWithSportCenter.courtWithSportCenter.court.sportName)
             args.putString("specialRequests", reservWithSportCenter.reservation.request)
-            args.putLong("sportCenterId", reservWithSportCenter.courtWithSportCenter.sportCenter.centerId)
-            args.putLongArray("serviceIds", reservWithServices.services.map{ it.serviceId }.toTypedArray().toLongArray())
-            args.putStringArray("serviceDescriptions", reservWithServices.services.map{ it.description }.toTypedArray())
+            args.putLong(
+                "sportCenterId",
+                reservWithSportCenter.courtWithSportCenter.sportCenter.centerId
+            )
+            args.putLongArray(
+                "serviceIds",
+                reservWithServices.services.map { it.serviceId }.toTypedArray().toLongArray()
+            )
+            args.putStringArray(
+                "serviceDescriptions",
+                reservWithServices.services.map { it.description }.toTypedArray()
+            )
             fragment.arguments = args
             return fragment
         }
@@ -93,14 +116,20 @@ class ReservationDetailsFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_reservation_details, container, false)
         val recyclerView = view.findViewById<RecyclerView>(R.id.servicesRecycler)
         val serviceTV = view.findViewById<TextView>(R.id.servicesTitle)
-        val params: ViewGroup.LayoutParams = view.findViewById<ConstraintLayout>(R.id.servicesCL).layoutParams
+        val params: ViewGroup.LayoutParams =
+            view.findViewById<ConstraintLayout>(R.id.servicesCL).layoutParams
         if (serviceIds.isEmpty()) {
             serviceTV.visibility = View.INVISIBLE
             params.height = 0
             view.findViewById<ConstraintLayout>(R.id.servicesCL).layoutParams = params
         } else {
             serviceTV.visibility = View.VISIBLE
-            recyclerView.adapter = RequestedServiceAdapter(serviceIds, serviceDescriptions, viewModel.servicesIcons, activity as MainActivity)
+            recyclerView.adapter = RequestedServiceAdapter(
+                serviceIds,
+                serviceDescriptions,
+                viewModel.servicesIcons,
+                activity as MainActivity
+            )
 
         }
         return view
@@ -130,7 +159,7 @@ class ReservationDetailsFragment : Fragment() {
         courtNameTV.text = courtName
         specialRequestsTV.text = specialRequests ?: "You did not have any special request"
         Log.i("asdasd", "$sportName")
-        when(sportName) {
+        when (sportName) {
             "Soccer" -> courtImageIV.setImageResource(R.drawable.football_court)
             "Iceskate" -> courtImageIV.setImageResource(R.drawable.iceskating_rink)
             "Basket" -> courtImageIV.setImageResource(R.drawable.basket_center)
@@ -141,17 +170,21 @@ class ReservationDetailsFragment : Fragment() {
         }
 
         val editReservationButton = view.findViewById<Button>(R.id.edit_reservation_button)
-        editReservationButton.setOnClickListener{
+        editReservationButton.setOnClickListener {
             val intent = Intent(context, CreateReservationActivity::class.java)
             intent.putExtra("courtId", courtId)
             intent.putExtra("reservationId", reservationId)
             intent.putExtra("sportCenterId", sportCenterId)
             startActivity(intent)
+            Handler().postDelayed({
+                (activity as MainActivity).replaceFragment(BrowseReservationsFragment())
+            }, 1000)
         }
 
         val cancelReservationButton = view.findViewById<Button>(R.id.cancel_reserv_button)
-        cancelReservationButton.setOnClickListener{
-            val inflater = (activity as MainActivity).getSystemService(AppCompatActivity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        cancelReservationButton.setOnClickListener {
+            val inflater =
+                (activity as MainActivity).getSystemService(AppCompatActivity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             var popupView = inflater.inflate(R.layout.popup_confirm_delete_reserv, null)
             val width = LinearLayout.LayoutParams.WRAP_CONTENT
             val height = LinearLayout.LayoutParams.WRAP_CONTENT
@@ -167,8 +200,10 @@ class ReservationDetailsFragment : Fragment() {
                 mainContainerCL.foreground.alpha = 0
             }
 
-            yesButton.setOnClickListener{
-                (activity as MainActivity).reservationBrowserViewModel.deleteReservation(reservationId)
+            yesButton.setOnClickListener {
+                (activity as MainActivity).reservationBrowserViewModel.deleteReservation(
+                    reservationId
+                )
                 popupWindow.dismiss()
                 val popupView2 = inflater.inflate(R.layout.reserv_cancel_confirmation, null)
                 val dismissButton = popupView2.findViewById<Button>(R.id.dismissButton)
@@ -180,7 +215,7 @@ class ReservationDetailsFragment : Fragment() {
                     mainContainerCL.foreground.alpha = 0
                 }
 
-                dismissButton.setOnClickListener{
+                dismissButton.setOnClickListener {
                     popupWindow.dismiss()
                     (activity as MainActivity).replaceFragment(BrowseReservationsFragment())
                 }
@@ -194,7 +229,7 @@ class ReservationDetailsFragment : Fragment() {
 
         val reservationDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         val today = LocalDate.now()
-        if(reservationDate > today) {
+        if (reservationDate > today) {
             editReservationButton.visibility = View.VISIBLE
             cancelReservationButton.visibility = View.VISIBLE
         } else {
@@ -203,9 +238,18 @@ class ReservationDetailsFragment : Fragment() {
         }
     }
 
-    class RequestedServiceAdapter(private val serviceIds: LongArray, private val serviceDescriptions: Array<String>, private val imagesMap: Map<Long, Int>, val activity: MainActivity): RecyclerView.Adapter<RequestedServiceAdapter.RequestedServiceViewHolder>() {
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RequestedServiceViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.service_description_item, parent, false)
+    class RequestedServiceAdapter(
+        private val serviceIds: LongArray,
+        private val serviceDescriptions: Array<String>,
+        private val imagesMap: Map<Long, Int>,
+        val activity: MainActivity
+    ) : RecyclerView.Adapter<RequestedServiceAdapter.RequestedServiceViewHolder>() {
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int
+        ): RequestedServiceViewHolder {
+            val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.service_description_item, parent, false)
             return RequestedServiceViewHolder(view, activity)
         }
 
@@ -218,14 +262,15 @@ class ReservationDetailsFragment : Fragment() {
 
         override fun getItemCount() = serviceIds.size
 
-        class RequestedServiceViewHolder(itemView: View, activity: MainActivity) : RecyclerView.ViewHolder(itemView) {
+        class RequestedServiceViewHolder(itemView: View, activity: MainActivity) :
+            RecyclerView.ViewHolder(itemView) {
             private val icon: ImageView = itemView.findViewById(R.id.service_description_image)
             private val serviceName: TextView = itemView.findViewById(R.id.service_description_name)
             private val a = activity
             fun bind(serviceDescription: String, imageSrc: Int) {
 
                 icon.setImageResource(imageSrc)
-                serviceName.text=serviceDescription
+                serviceName.text = serviceDescription
 
             }
 
