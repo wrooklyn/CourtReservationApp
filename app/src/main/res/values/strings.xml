@@ -89,5 +89,9 @@
     <string name="special_requests_heading">Special requests</string>
     <string name="upcoming_title">Upcoming reservations</string>
     <string name="past_title">Past reservations</string>
+    <string name="available_now">Available Now</string>
+    <string name="description">Description</string>
+    <string name="courts">Courts</string>
+    <string name="reviews">Reviews</string>
     <string name="title_activity_leave_rating">LeaveRatingActivity</string>
 </resources>

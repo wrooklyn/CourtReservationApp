@@ -56,7 +56,7 @@
         app:layout_constraintGuide_percent="0.26" />
 
     <ImageView
-        android:id="@+id/imageView16"
+        android:id="@+id/bannerImage"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="-140dp"
@@ -115,7 +115,7 @@
             app:layout_constraintGuide_percent="0.12" />
 
         <TextView
-            android:id="@+id/textView15"
+            android:id="@+id/centerAddress"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="40dp"
@@ -124,7 +124,6 @@
             android:autoSizePresetSizes="@array/autosize_center_location_sizes"
             android:autoSizeTextType="uniform"
             android:fontFamily="@font/inter"
-            android:text="2468 Elm Drive, Metropolis"
             android:textColor="#FFFFFF"
             app:layout_constraintBottom_toTopOf="@id/rating_container"
             app:layout_constraintEnd_toStartOf="@+id/guideline12"
@@ -140,7 +139,7 @@
             app:layout_constraintBottom_toTopOf="@id/available_container_live"
             app:layout_constraintEnd_toStartOf="@+id/guideline12"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textView15">
+            app:layout_constraintTop_toBottomOf="@id/centerAddress">
 
             <RatingBar
                 android:id="@+id/ratingBar"
@@ -151,16 +150,15 @@
                 android:isIndicator="true"
                 android:max="5"
                 android:numStars="5"
-                android:rating="4.5"
                 android:stepSize="0.1"
                 android:theme="@style/RatingBar"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/textView17"
+                app:layout_constraintEnd_toStartOf="@+id/numRating"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView17"
+                android:id="@+id/numRating"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_marginStart="10dp"
@@ -168,7 +166,6 @@
                 android:autoSizeTextType="uniform"
                 android:fontFamily="@font/inter"
                 android:gravity="center"
-                android:text="(124 reviews)"
                 android:textColor="#FFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/ratingBar"
@@ -187,7 +184,7 @@
             app:layout_constraintTop_toBottomOf="@+id/rating_container">
 
             <ImageView
-                android:id="@+id/imageView17"
+                android:id="@+id/availableIcon"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:src="@drawable/available_icon"
@@ -198,7 +195,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView16"
+                android:id="@+id/availableText"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="5dp"
@@ -206,7 +203,7 @@
                 android:autoSizeTextType="uniform"
                 android:fontFamily="@font/inter"
                 android:gravity="center|start"
-                android:text="Available Now"
+                android:text="@string/available_now"
                 android:textColor="#FFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -246,19 +243,19 @@
                     android:id="@+id/description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Description" />
+                    android:text="@string/description" />
 
                 <com.google.android.material.tabs.TabItem
                     android:id="@+id/courts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Courts" />
+                    android:text="@string/courts" />
 
                 <com.google.android.material.tabs.TabItem
                     android:id="@+id/reviews"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Reviews" />
+                    android:text="@string/reviews" />
             </com.google.android.material.tabs.TabLayout>
 
             <androidx.viewpager2.widget.ViewPager2
