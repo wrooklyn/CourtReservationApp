@@ -1,10 +1,10 @@
 package it.polito.mad.courtreservationapp.view_model
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import it.polito.mad.courtreservationapp.R
+import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndReviews
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
 import it.polito.mad.courtreservationapp.db.repository.SportCenterRepository
 
@@ -12,7 +12,9 @@ class SportCenterViewModel(application: Application) : AndroidViewModel(applicat
 
     private val sportCenterRepository: SportCenterRepository = SportCenterRepository(application)
     val sportCentersLiveData: LiveData<List<SportCenterWithCourtsAndServices>> = sportCenterRepository.getAllWithCourtsAndServices()
+    val sportCentersWithReviewsLiveData: LiveData<List<SportCenterWithCourtsAndReviews>> = sportCenterRepository.getAllWithCourtsAndReviews()
     lateinit var sportCentersWithCourtsAndServices: List<SportCenterWithCourtsAndServices>
+    lateinit var sportCentersWithCourtsAndReviews: List<SportCenterWithCourtsAndReviews>
 
     var sportFilters : MutableList<String> = mutableListOf()
     var allSports: MutableList<String> = mutableListOf()
@@ -59,5 +61,9 @@ class SportCenterViewModel(application: Application) : AndroidViewModel(applicat
                 }
             }
         }
+    }
+
+    fun loadReviews(centersWithCourtsAndReviews: List<SportCenterWithCourtsAndReviews>){
+        sportCentersWithCourtsAndReviews = centersWithCourtsAndReviews
     }
 }

@@ -1,11 +1,11 @@
 package it.polito.mad.courtreservationapp.views.homeManager
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RatingBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
@@ -13,8 +13,9 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import it.polito.mad.courtreservationapp.R
+import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndReviews
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
-import it.polito.mad.courtreservationapp.models.Service
+import it.polito.mad.courtreservationapp.models.Review
 import it.polito.mad.courtreservationapp.view_model.SportCenterViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
 
@@ -25,11 +26,13 @@ class CenterDetailFragment : Fragment() {
     lateinit var location: String
 
 
-    lateinit var myTab :TabLayout
-    lateinit var myViewPager : ViewPager2
+    lateinit var myTab: TabLayout
+    lateinit var myViewPager: ViewPager2
 
     private lateinit var viewModel: SportCenterViewModel
     private lateinit var sportCenterWithCourtsAndServices: SportCenterWithCourtsAndServices
+    private lateinit var sportCenterWithCourtsAndReviews: SportCenterWithCourtsAndReviews
+    private var reviews: MutableList<Review> = mutableListOf()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,15 +40,21 @@ class CenterDetailFragment : Fragment() {
         init()
     }
 
-    private fun init(){
+    private fun init() {
         sportCenterPosition = requireArguments().getInt("position", -1)
         viewModel = (activity as MainActivity).sportCenterViewModel
-        sportCenterWithCourtsAndServices = viewModel.sportCentersWithCourtsAndServices[sportCenterPosition]
-
+        sportCenterWithCourtsAndServices =
+            viewModel.sportCentersWithCourtsAndServices[sportCenterPosition]
+        sportCenterWithCourtsAndReviews =
+            viewModel.sportCentersWithCourtsAndReviews[sportCenterPosition]
         centerName = sportCenterWithCourtsAndServices.sportCenter.name
         location = sportCenterWithCourtsAndServices.sportCenter.address
 
-
+        sportCenterWithCourtsAndReviews.courtsWithReviews.forEach() { court ->
+            court.reviews.forEach {
+                reviews.add(it)
+            }
+        }
     }
 
     override fun onCreateView(
@@ -57,13 +66,19 @@ class CenterDetailFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        myTab=view.findViewById<TabLayout>(R.id.tab_layout)
-        myViewPager=view.findViewById<ViewPager2>(R.id.view_pager)
+        myTab = view.findViewById(R.id.tab_layout)
+        myViewPager = view.findViewById(R.id.view_pager)
 
         view.findViewById<TextView>(R.id.centerTitle).text = centerName
-        view.findViewById<TextView>(R.id.textView15).text = location
-        val imageRes: Int = viewModel.sportCenterImages[sportCenterWithCourtsAndServices.sportCenter.centerId] ?: R.drawable.gesu
-        view.findViewById<ImageView>(R.id.imageView16).setImageResource(imageRes)
+        view.findViewById<TextView>(R.id.centerAddress).text = location
+        view.findViewById<RatingBar>(R.id.ratingBar).rating =
+            reviews.map { it.rating }.average().run { if (isNaN()) 0.0F else this.toFloat() }
+        val reviewTxt = if (reviews.size == 1) "review" else "reviews"
+        view.findViewById<TextView>(R.id.numRating).text = "(${reviews.size} $reviewTxt)"
+        val imageRes: Int =
+            viewModel.sportCenterImages[sportCenterWithCourtsAndServices.sportCenter.centerId]
+                ?: R.drawable.gesu
+        view.findViewById<ImageView>(R.id.bannerImage).setImageResource(imageRes)
 
         val adapter = ViewPagerAdapter(childFragmentManager, lifecycle, sportCenterPosition)
 

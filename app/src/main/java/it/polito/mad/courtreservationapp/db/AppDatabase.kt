@@ -19,7 +19,8 @@ import kotlinx.coroutines.internal.synchronized
         Service::class,
         Reservation::class,
         CourtServiceCrossRef::class,
-        ReservationServiceCrossRef::class],
+        ReservationServiceCrossRef::class,
+        Review::class],
     version = 1
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -37,6 +38,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun reservationDao(): ReservationDao
 
     abstract fun reservationAndServiceDao(): ReservationAndServiceDao
+
+    abstract fun reviewDao(): ReviewDao
 
     companion object {
         @Volatile

@@ -5,10 +5,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import it.polito.mad.courtreservationapp.db.AppDatabase
 import it.polito.mad.courtreservationapp.db.dao.SportCenterDao
-import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourts
-import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndReservations
-import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndReservationsAndServices
-import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
+import it.polito.mad.courtreservationapp.db.relationships.*
 import it.polito.mad.courtreservationapp.models.SportCenter
 
 class SportCenterRepository(val application: Application) {
@@ -62,6 +59,14 @@ class SportCenterRepository(val application: Application) {
 
     fun getCenterWithCourtsAndReservationsAndServices(id: Long): LiveData<SportCenterWithCourtsAndReservationsAndServices>{
         return sportCenterDao.getByIdWithCourtsAndReservationsAndServices(id)
+    }
+
+    fun getAllWithCourtsAndReviews(): LiveData<List<SportCenterWithCourtsAndReviews>>{
+        return sportCenterDao.getAllWithCourtsAndReviews()
+    }
+
+    fun getCenterWithCourtsAndReviews(id: Long): LiveData<SportCenterWithCourtsAndReviews>{
+        return sportCenterDao.getByIdWithCourtsAndReviews(id)
     }
 
 }
