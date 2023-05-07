@@ -90,9 +90,9 @@ class MainActivity : AppCompatActivity() {
                 R.id.chat -> {
                     //TODO remove this in production
                     val intent = Intent(this, LeaveRatingActivity::class.java)
-                    intent.putExtra("courtId", 1)
-                    intent.putExtra("reservationId", 1)
-                    intent.putExtra("sportCenterId", 1)
+                    intent.putExtra("courtId", 1L)
+                    intent.putExtra("reservationId", 1L)
+                    intent.putExtra("sportCenterId", 1L)
                     startActivity(intent)
                     replaceFragment(ShowUnimplementedFragment())
                 }
