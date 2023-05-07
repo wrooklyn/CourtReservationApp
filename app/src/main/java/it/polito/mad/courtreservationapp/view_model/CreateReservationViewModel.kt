@@ -16,12 +16,13 @@ import it.polito.mad.courtreservationapp.models.Court
 import it.polito.mad.courtreservationapp.models.Reservation
 import it.polito.mad.courtreservationapp.models.SportCenter
 import it.polito.mad.courtreservationapp.models.User
+import it.polito.mad.courtreservationapp.views.reservationManager.CreateReservationActivity
 import kotlinx.coroutines.launch
 import java.util.*
 
 class CreateReservationViewModel(application: Application): AndroidViewModel(application) {
     private val tag: String = "ReservationFragmentViewModel"
-    private val reservationRepo: ReservationRepository = ReservationRepository(application)
+    val reservationRepo: ReservationRepository = ReservationRepository(application)
     private val courtRepo: CourtRepository = CourtRepository(application)
     private val sportCenterRepo: SportCenterRepository = SportCenterRepository(application)
     private val userRepo: UserRepository = UserRepository(application)
@@ -54,9 +55,18 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
 
 
 
-    fun initAll(){
+    fun initAll(ctx : CreateReservationActivity){
         initCourt(courtId, sportCenterId)
         initUser(userId)
+
+        if(reservationId!=0L){
+            reservationRepo.getByIdWithServices(reservationId).observe(ctx){
+                reservationDate=it.reservation.reservationDate
+                reservationTimeSlots.add(it.reservation.timeSlotId)
+                reservationServices=it.services.map { service -> service.serviceId }.toMutableList()
+                reservationRequests=it.reservation.request?:""
+            }
+        }
     }
     private fun initCourt(courtId: Long, centerId: Long){
         sportCenterLiveData = sportCenterRepo.getById(centerId)

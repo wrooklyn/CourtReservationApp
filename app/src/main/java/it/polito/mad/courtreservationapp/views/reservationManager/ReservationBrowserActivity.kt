@@ -29,4 +29,5 @@ class ReservationBrowserActivity : AppCompatActivity() {
         fragmentTransaction.replace(R.id.reservBrowserFragmentContainer,fragment)
         fragmentTransaction.commit()
     }
+
 }
