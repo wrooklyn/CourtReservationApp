@@ -1,5 +1,6 @@
 package it.polito.mad.courtreservationapp.views.ratings
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -51,7 +52,7 @@ class LeaveRatingActivity : ComponentActivity() {
         viewModel.courtId = intent.getLongExtra("courtId", 0)
         viewModel.reservationId = intent.getLongExtra("reservationId", 0)
         viewModel.sportCenterId = intent.getLongExtra("sportCenterId", 0)
-
+        viewModel.userId = this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE).getLong("UserId", 0)
         viewModel.init(this)
 
 
@@ -77,7 +78,7 @@ class LeaveRatingActivity : ComponentActivity() {
                     title = { Text("Rate Your Experience") },
                     backgroundColor = Color.White,
                     navigationIcon = {
-                        IconButton(onClick = { /*TODO*/ }) {
+                        IconButton(onClick = { finish() }) {
                             Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                         }
                     }

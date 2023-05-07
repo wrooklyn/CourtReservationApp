@@ -6,6 +6,7 @@ import it.polito.mad.courtreservationapp.db.AppDatabase
 import it.polito.mad.courtreservationapp.models.User
 import it.polito.mad.courtreservationapp.db.dao.UserDao
 import it.polito.mad.courtreservationapp.db.relationships.UserWithReservations
+import it.polito.mad.courtreservationapp.db.relationships.UserWithSportMasteries
 
 //import it.polito.mad.courtreservationapp.db.relationships.UserWithReservations
 
@@ -35,5 +36,9 @@ class UserRepository(private val application: Application) {
 
     fun getUserReservations(userId: Long): LiveData<UserWithReservations>{
         return userDao.getByIdWithReservations(userId)
+    }
+
+    fun getUserWithMasteries(userId: Long): LiveData<UserWithSportMasteries>{
+        return userDao.getByIdWithSportMasteries(userId)
     }
 }

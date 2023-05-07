@@ -17,12 +17,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.view_model.SportCenterViewModel
+import it.polito.mad.courtreservationapp.view_model.SportMasteryViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
 
 
 class HomeFragment : Fragment() {
 
     private lateinit var viewModel: SportCenterViewModel
+    private lateinit var vm: SportMasteryViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -10,25 +10,29 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithReservations
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithServices
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourts
-import it.polito.mad.courtreservationapp.db.repository.CourtRepository
-import it.polito.mad.courtreservationapp.db.repository.ReservationRepository
-import it.polito.mad.courtreservationapp.db.repository.SportCenterRepository
-import it.polito.mad.courtreservationapp.db.repository.UserRepository
+import it.polito.mad.courtreservationapp.db.repository.*
 import it.polito.mad.courtreservationapp.models.Court
+import it.polito.mad.courtreservationapp.models.Review
 import it.polito.mad.courtreservationapp.models.SportCenter
 import it.polito.mad.courtreservationapp.models.User
 import it.polito.mad.courtreservationapp.views.ratings.LeaveRatingActivity
+import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
 
 
 class LeaveRatingViewModel(application: Application): AndroidViewModel(application) {
     private val tag: String = "LeaveRatingViewModel"
-    //private val reviewRepo: ReviewRepository = ReviewRepository(application)
+    private val reviewRepo: ReviewRepository = ReviewRepository(application)
     private val sportCenterRepo: SportCenterRepository = SportCenterRepository(application)
 
     lateinit var sportCenterWithCourtsLiveData: LiveData<SportCenterWithCourts>
+    lateinit var context: LeaveRatingActivity
 
     //display
     var sportCenterName = mutableStateOf("")
@@ -38,6 +42,7 @@ class LeaveRatingViewModel(application: Application): AndroidViewModel(applicati
     var courtId: Long = 0
     var sportCenterId: Long = 0
     var reservationId: Long = 0
+    var userId: Long = 0
 
     //new data
     var selectedRating : Int = 0
@@ -46,13 +51,23 @@ class LeaveRatingViewModel(application: Application): AndroidViewModel(applicati
 
 
     fun submitRating(){
-        Log.v(tag, "$selectedRating")
-        Log.v(tag, "$reviewText")
-        Log.v(tag, "$selectedImprovements")
+        viewModelScope.launch {
+            val today = LocalDateTime.now()
+            val df = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val dateStr = today.format(df)
+
+            Log.v(tag, "$selectedRating")
+            Log.v(tag, "$reviewText")
+            Log.v(tag, "$selectedImprovements")
+            val review: Review = Review(courtId, userId, reservationId, reviewText, selectedRating, dateStr)
+            reviewRepo.insertReview(review)
+            context.finish()
+        }
     }
 
     fun init( ctx: LeaveRatingActivity){
         sportCenterWithCourtsLiveData = sportCenterRepo.getCenterWithCourts(sportCenterId)
+        context = ctx
     }
 
 }
