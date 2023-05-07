@@ -31,6 +31,10 @@
         <item name="colorControlNormal">#FFFFFF</item>
         <item name="colorControlActivated">#FFC107</item>
     </style>
+    <style name="RatingBar2" parent="Theme.AppCompat" >
+        <item name="colorControlNormal">#D3D3D3</item>
+        <item name="colorControlActivated">#FFC107</item>
+    </style>
 
     <style name="sport_navigation_label" parent="Widget.MaterialComponents.BottomNavigationView">
         <item name="fontFamily">@font/roboto_medium</item>

@@ -8,9 +8,6 @@ import android.view.ViewGroup
 import it.polito.mad.courtreservationapp.R
 
 class ReviewsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,13 +23,13 @@ class ReviewsFragment : Fragment() {
     }
 
     companion object {
+        fun newInstance(position: Int): ReviewsFragment {
+            val fragment = ReviewsFragment()
+            val args = Bundle()
+            args.putInt("position", position)
 
-        var POSITION_ARG = "position_arg"
-        @JvmStatic
-        fun newInstance(position:Int) = ReviewsFragment().apply {
-            arguments=Bundle().apply {
-                putInt(POSITION_ARG, position)
-            }
+            fragment.arguments = args
+            return fragment
         }
 
     }
