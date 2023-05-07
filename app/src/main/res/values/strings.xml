@@ -94,4 +94,6 @@
     <string name="courts">Courts</string>
     <string name="reviews">Reviews</string>
     <string name="title_activity_leave_rating">LeaveRatingActivity</string>
+    <string name="title_activity_profile_achievements">ProfileAchievements</string>
+    <string name="title_activity_add_edit_interest">AddEditInterest</string>
 </resources>

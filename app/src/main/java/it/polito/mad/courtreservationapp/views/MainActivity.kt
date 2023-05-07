@@ -17,9 +17,9 @@ import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
 import it.polito.mad.courtreservationapp.view_model.SportCenterViewModel
 import it.polito.mad.courtreservationapp.view_model.UserViewModel
 import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
+import it.polito.mad.courtreservationapp.views.profile.ShowProfileFragment
 import it.polito.mad.courtreservationapp.views.ratings.LeaveRatingActivity
 import it.polito.mad.courtreservationapp.views.reservationManager.BrowseReservationsFragment
-import it.polito.mad.courtreservationapp.views.reservationManager.CreateReservationActivity
 
 class MainActivity : AppCompatActivity() {
 

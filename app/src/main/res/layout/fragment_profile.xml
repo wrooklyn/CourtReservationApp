@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_blue_background"
-    tools:context=".views.ShowProfileFragment">
+    tools:context=".views.profile.ShowProfileFragment">
 
     <TextView
         android:id="@+id/profile_heading"
@@ -266,6 +266,13 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/composeContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/addressCL"
+            />
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/genderCL"
             android:layout_width="match_parent"
@@ -276,7 +283,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addressCL">
+            app:layout_constraintTop_toBottomOf="@+id/composeContainer">
 
             <ImageView
                 android:id="@+id/genderIcon"

@@ -1,4 +1,4 @@
-package it.polito.mad.courtreservationapp.views
+package it.polito.mad.courtreservationapp.views.profile
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -6,15 +6,17 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.models.Gender
+import it.polito.mad.courtreservationapp.views.AchievementSection
+import it.polito.mad.courtreservationapp.views.EditProfileActivity
 import it.polito.mad.utils.DiskUtil
 import org.json.JSONObject
 
@@ -92,6 +94,11 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
 
         view.findViewById<TextView>(R.id.editButtonTV).setOnClickListener{
             launchProfileEdit()
+        }
+
+        val composeView = view.findViewById<ComposeView>(R.id.composeContainer)
+        composeView.setContent {
+            AchievementSection(activity)
         }
     }
 
