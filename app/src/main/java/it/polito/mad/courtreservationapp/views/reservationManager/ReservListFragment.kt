@@ -1,6 +1,7 @@
 package it.polito.mad.courtreservationapp.views.reservationManager
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,7 +52,7 @@ class ReservListFragment: Fragment() {
         } else {
             reservationsWithSportCenter = userReservLocations.filter{ res -> LocalDate.parse(res.reservation.reservationDate).isBefore(LocalDate.now()) }
             reservationsWithServices = userReservServices.filter{ res -> LocalDate.parse(res.reservation.reservationDate).isBefore(LocalDate.now()) }
-            reservationsWithReview = userReservationWithReview.filter{ res -> LocalDate.parse(res.reservation.reservationDate).isAfter(LocalDate.now()) }
+            reservationsWithReview = userReservationWithReview.filter{ res -> LocalDate.parse(res.reservation.reservationDate).isBefore(LocalDate.now()) }
         }
     }
 
