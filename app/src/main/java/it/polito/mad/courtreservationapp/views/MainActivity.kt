@@ -13,10 +13,7 @@ import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCe
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
 import it.polito.mad.courtreservationapp.models.Reservation
 import it.polito.mad.courtreservationapp.models.User
-import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
-import it.polito.mad.courtreservationapp.view_model.SportCenterViewModel
-import it.polito.mad.courtreservationapp.view_model.SportMasteryViewModel
-import it.polito.mad.courtreservationapp.view_model.UserViewModel
+import it.polito.mad.courtreservationapp.view_model.*
 import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
 import it.polito.mad.courtreservationapp.views.profile.ShowProfileFragment
 import it.polito.mad.courtreservationapp.views.ratings.LeaveRatingActivity
@@ -28,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     val reservationBrowserViewModel: ReservationBrowserViewModel by viewModels()
     val sportCenterViewModel: SportCenterViewModel by viewModels()
     val sportMasteryViewModel: SportMasteryViewModel by viewModels()
+    val ratingViewModel: LeaveRatingViewModel by viewModels()
 
     lateinit var user: User
     lateinit var userReservations: List<Reservation>

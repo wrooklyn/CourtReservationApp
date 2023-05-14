@@ -1,6 +1,9 @@
 package it.polito.mad.courtreservationapp.views.reservationManager
 
+import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -9,6 +12,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -17,8 +22,12 @@ import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
 import it.polito.mad.courtreservationapp.models.TimeslotMap
+import it.polito.mad.courtreservationapp.view_model.LeaveRatingViewModel
 import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
+import it.polito.mad.courtreservationapp.views.ratings.LeaveRatingActivity
+import it.polito.mad.utils.BitmapUtil
+import it.polito.mad.utils.DiskUtil
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -41,8 +50,12 @@ class ReservationDetailsFragment : Fragment() {
     private lateinit var serviceDescriptions: Array<String>
 
     lateinit var viewModel: ReservationBrowserViewModel
+    lateinit var ratingViewModel: LeaveRatingViewModel
 
     private lateinit var mainContainerCL: ConstraintLayout
+
+    private val REQUEST_CODE_REVIEW = 1
+
 
     companion object {
         fun newInstance(
@@ -88,9 +101,23 @@ class ReservationDetailsFragment : Fragment() {
         }
     }
 
+    private val reviewActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data = result.data
+            val reviewSubmitted = data?.getBooleanExtra("review_submitted", false)
+            Log.i("REVIEW", "Review submitted is $reviewSubmitted")
+            if (reviewSubmitted == true) {
+                val leaveReviewButton = view?.findViewById<Button>(R.id.leave_review_button)
+                leaveReviewButton?.visibility = View.GONE
+            }
+        }
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = (activity as MainActivity).reservationBrowserViewModel
+        ratingViewModel =(activity as MainActivity).ratingViewModel
         centerName = requireArguments().getString("centerName")!!
         username = requireArguments().getString("username")!!
         sportCenterAddress = requireArguments().getString("sportCenterAddress")!!
@@ -104,8 +131,6 @@ class ReservationDetailsFragment : Fragment() {
         specialRequests = requireArguments().getString("specialRequests")
         serviceIds = requireArguments().getLongArray("serviceIds")!!
         serviceDescriptions = requireArguments().getStringArray("serviceDescriptions")!!
-
-
     }
 
     override fun onCreateView(
@@ -227,14 +252,32 @@ class ReservationDetailsFragment : Fragment() {
             }
         }
 
+        val leaveReviewButton = view.findViewById<Button>(R.id.leave_review_button)
+        leaveReviewButton.setOnClickListener{
+            val intent = Intent(activity, LeaveRatingActivity::class.java)
+            intent.putExtra("courtId", courtId)
+            intent.putExtra("reservationId", reservationId)
+            intent.putExtra("sportCenterId", sportCenterId)
+            reviewActivityResult.launch(intent)
+        }
+
         val reservationDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         val today = LocalDate.now()
         if (reservationDate > today) {
             editReservationButton.visibility = View.VISIBLE
             cancelReservationButton.visibility = View.VISIBLE
+            leaveReviewButton.visibility = View.GONE
         } else {
             editReservationButton.visibility = View.GONE
             cancelReservationButton.visibility = View.GONE
+            if(ratingViewModel.isAlreadyRated(reservationId)) {
+                Log.i("REVIEW", "Reservation $reservationId is already rated")
+                leaveReviewButton.visibility = View.GONE
+            }
+            else {
+                Log.i("REVIEW", "Reservation $reservationId is not already rated")
+                leaveReviewButton.visibility = View.VISIBLE
+            }
         }
     }
 

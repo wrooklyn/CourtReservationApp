@@ -1,6 +1,8 @@
 package it.polito.mad.courtreservationapp.views.ratings
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -98,8 +100,12 @@ class LeaveRatingActivity : ComponentActivity() {
                         .padding(16.dp),
                         colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.red_button)),
                         onClick = {
-                            if (viewModel.selectedRating != null)
-                                viewModel.submitRating() else null
+                            if (viewModel.selectedRating != null) {
+                                val resultIntent = Intent()
+                                resultIntent.putExtra("review_submitted", true)
+                                setResult(Activity.RESULT_OK, resultIntent)
+                                viewModel.submitRating()
+                            } else null
                         }) {
                         Text(
                             "Submit",

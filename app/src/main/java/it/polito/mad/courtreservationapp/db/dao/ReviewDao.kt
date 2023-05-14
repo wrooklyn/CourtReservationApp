@@ -24,4 +24,7 @@ interface ReviewDao {
 
     @Query("SELECT * FROM reviews WHERE reviewCourtId = :courtId ")
     fun getByCourtId(courtId: Long): LiveData<List<Review>>
+
+    @Query("SELECT * FROM reviews WHERE reviewReservationId = :reservationId")
+    fun getByReservationId(reservationId: Long): LiveData<Review>
 }
