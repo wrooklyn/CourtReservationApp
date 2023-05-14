@@ -33,8 +33,4 @@ class ReviewRepository(val application: Application) {
     fun getByCourtId(id: Long): LiveData<List<Review>>{
         return reviewDao.getByCourtId(id)
     }
-
-    fun getByReservationId(id: Long): LiveData<Review> {
-        return reviewDao.getByReservationId(id)
-    }
 }

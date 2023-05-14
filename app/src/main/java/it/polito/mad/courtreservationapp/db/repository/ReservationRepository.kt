@@ -7,13 +7,14 @@ import it.polito.mad.courtreservationapp.db.AppDatabase
 import it.polito.mad.courtreservationapp.db.crossref.ReservationServiceCrossRef
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
-import it.polito.mad.courtreservationapp.db.relationships.UserWithReservations
+import it.polito.mad.courtreservationapp.db.relationships.ReservationWithReview
 import it.polito.mad.courtreservationapp.models.Reservation
 
 class ReservationRepository(val application: Application) {
     private val db: AppDatabase = AppDatabase.getDatabase(application)
     private val reservationDao = db.reservationDao()
     private val reservationAndServiceDao = db.reservationAndServiceDao()
+    private val reviewDao = db.reviewDao()
 
     suspend fun insertReservationWithServices(reservationWithServices: ReservationWithServices){
         //save reservation
@@ -61,5 +62,9 @@ class ReservationRepository(val application: Application) {
 
     fun getReservationServicesByUserId(userId: Long): LiveData<List<ReservationWithServices>> {
         return reservationDao.getServicesByUserId(userId)
+    }
+
+    fun getReservationsReviewsByUserId(userId: Long): LiveData<List<ReservationWithReview>> {
+        return reservationDao.getReservationsWithReviewById(userId)
     }
 }

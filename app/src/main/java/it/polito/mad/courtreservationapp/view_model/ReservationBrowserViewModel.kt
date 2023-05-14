@@ -1,19 +1,14 @@
 package it.polito.mad.courtreservationapp.view_model
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.*
-import it.polito.mad.courtreservationapp.db.repository.CourtRepository
 import it.polito.mad.courtreservationapp.db.repository.ReservationRepository
-import it.polito.mad.courtreservationapp.db.repository.SportCenterRepository
 import it.polito.mad.courtreservationapp.models.Reservation
-import it.polito.mad.courtreservationapp.models.Service
 import it.polito.mad.courtreservationapp.models.SportCenter
-import it.polito.mad.courtreservationapp.models.User
 import kotlinx.coroutines.launch
 
 class ReservationBrowserViewModel(application: Application): AndroidViewModel(application) {
@@ -24,6 +19,7 @@ class ReservationBrowserViewModel(application: Application): AndroidViewModel(ap
     lateinit var userReservations: LiveData<List<Reservation>>
     lateinit var userReservationsLocations: LiveData<List<ReservationWithSportCenter>>
     lateinit var userReservationsServices: LiveData<List<ReservationWithServices>>
+    lateinit var userReservationsReviews: LiveData<List<ReservationWithReview>>
 
     val servicesIcons: Map<Long, Int> = mapOf(
         Pair(0, R.drawable.safety_shower),
@@ -35,6 +31,7 @@ class ReservationBrowserViewModel(application: Application): AndroidViewModel(ap
         userReservations = reservationRepo.getReservationsByUser(userId)
         userReservationsLocations = reservationRepo.getReservationLocationsByUserId(userId)
         userReservationsServices = reservationRepo.getReservationServicesByUserId(userId)
+        userReservationsReviews = reservationRepo.getReservationsReviewsByUserId(userId)
     }
 
     fun deleteReservation(reservationId: Long) {

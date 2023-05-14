@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
+import it.polito.mad.courtreservationapp.models.Review
 import it.polito.mad.courtreservationapp.models.TimeslotMap
 import it.polito.mad.courtreservationapp.view_model.LeaveRatingViewModel
 import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
@@ -48,6 +49,7 @@ class ReservationDetailsFragment : Fragment() {
     private var specialRequests: String? = null
     private lateinit var serviceIds: LongArray
     private lateinit var serviceDescriptions: Array<String>
+    private var reviewed: Boolean = false
 
     lateinit var viewModel: ReservationBrowserViewModel
     lateinit var ratingViewModel: LeaveRatingViewModel
@@ -61,7 +63,8 @@ class ReservationDetailsFragment : Fragment() {
         fun newInstance(
             username: String,
             reservWithSportCenter: ReservationWithSportCenter,
-            reservWithServices: ReservationWithServices
+            reservWithServices: ReservationWithServices,
+            reviewed: Boolean
         ): ReservationDetailsFragment {
             val fragment = ReservationDetailsFragment()
             val args = Bundle()
@@ -96,6 +99,7 @@ class ReservationDetailsFragment : Fragment() {
                 "serviceDescriptions",
                 reservWithServices.services.map { it.description }.toTypedArray()
             )
+            args.putBoolean("reviewed", reviewed)
             fragment.arguments = args
             return fragment
         }
@@ -131,6 +135,7 @@ class ReservationDetailsFragment : Fragment() {
         specialRequests = requireArguments().getString("specialRequests")
         serviceIds = requireArguments().getLongArray("serviceIds")!!
         serviceDescriptions = requireArguments().getStringArray("serviceDescriptions")!!
+        reviewed = requireArguments().getBoolean("reviewed")
     }
 
     override fun onCreateView(
@@ -270,7 +275,7 @@ class ReservationDetailsFragment : Fragment() {
         } else {
             editReservationButton.visibility = View.GONE
             cancelReservationButton.visibility = View.GONE
-            if(ratingViewModel.isAlreadyRated(reservationId)) {
+            if(reviewed) {
                 Log.i("REVIEW", "Reservation $reservationId is already rated")
                 leaveReviewButton.visibility = View.GONE
             }

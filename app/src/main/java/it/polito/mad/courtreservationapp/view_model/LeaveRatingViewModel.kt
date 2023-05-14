@@ -7,6 +7,8 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourts
 import it.polito.mad.courtreservationapp.db.repository.*
@@ -60,11 +62,4 @@ class LeaveRatingViewModel(application: Application): AndroidViewModel(applicati
         sportCenterWithCourtsLiveData = sportCenterRepo.getCenterWithCourts(sportCenterId)
         context = ctx
     }
-
-    fun isAlreadyRated(reservationId: Long): Boolean {
-        val review: Review? = reviewRepo.getByReservationId(reservationId).value
-        Log.i("REVIEW", "Review is $review")
-        return review != null
-    }
-
 }

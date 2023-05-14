@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
+import it.polito.mad.courtreservationapp.db.relationships.ReservationWithReview
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
 import it.polito.mad.courtreservationapp.models.TimeslotMap
@@ -23,6 +24,7 @@ class ReservListFragment: Fragment() {
     lateinit var user: User
     lateinit var reservationsWithSportCenter: List<ReservationWithSportCenter>
     lateinit var reservationsWithServices: List<ReservationWithServices>
+    lateinit var reservationsWithReview: List<ReservationWithReview>
 
     companion object{
         fun newInstance(isUpcoming: Boolean): ReservListFragment {
@@ -40,13 +42,16 @@ class ReservListFragment: Fragment() {
         user = (activity as MainActivity).user
         val userReservLocations = (activity as MainActivity).userReservationsLocations.sortedByDescending { res -> res.reservation.reservationDate }
         val userReservServices = (activity as MainActivity).userReservationsServices.sortedByDescending { res -> res.reservation.reservationDate }
+        val userReservationWithReview = (activity as MainActivity).userReservationsReviews.sortedByDescending { res -> res.reservation.reservationDate }
         val isUpcoming = requireArguments().getBoolean("isUpcoming")
         if(isUpcoming) {
             reservationsWithSportCenter = userReservLocations.filter{ res -> LocalDate.parse(res.reservation.reservationDate).isAfter(LocalDate.now()) }
             reservationsWithServices = userReservServices.filter{ res -> LocalDate.parse(res.reservation.reservationDate).isAfter(LocalDate.now()) }
+            reservationsWithReview = userReservationWithReview.filter{ res -> LocalDate.parse(res.reservation.reservationDate).isAfter(LocalDate.now()) }
         } else {
             reservationsWithSportCenter = userReservLocations.filter{ res -> LocalDate.parse(res.reservation.reservationDate).isBefore(LocalDate.now()) }
             reservationsWithServices = userReservServices.filter{ res -> LocalDate.parse(res.reservation.reservationDate).isBefore(LocalDate.now()) }
+            reservationsWithReview = userReservationWithReview.filter{ res -> LocalDate.parse(res.reservation.reservationDate).isAfter(LocalDate.now()) }
         }
     }
 
@@ -65,7 +70,8 @@ class ReservListFragment: Fragment() {
         recyclerView.adapter = adapter
         adapter.setOnItemClickListener(object : ReservationAdapter.OnItemClickListener{
             override fun onItemClick(position: Int) {
-                val fragment = ReservationDetailsFragment.newInstance(user.username, reservationsWithSportCenter[position], reservationsWithServices[position])
+                val reviewed = (reservationsWithReview[position].review != null)
+                val fragment = ReservationDetailsFragment.newInstance(user.username, reservationsWithSportCenter[position], reservationsWithServices[position], reviewed)
                 activity?.supportFragmentManager?.beginTransaction()
                     ?.replace(R.id.fragmentContainer, fragment, "fragmentId")
                     ?.commit()

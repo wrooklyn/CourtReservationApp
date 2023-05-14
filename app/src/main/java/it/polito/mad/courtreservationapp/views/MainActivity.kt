@@ -3,11 +3,13 @@ package it.polito.mad.courtreservationapp.views
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.databinding.ActivityMainBinding
+import it.polito.mad.courtreservationapp.db.relationships.ReservationWithReview
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
@@ -31,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var userReservations: List<Reservation>
     lateinit var userReservationsLocations: List<ReservationWithSportCenter>
     lateinit var userReservationsServices: List<ReservationWithServices>
+    lateinit var userReservationsReviews: List<ReservationWithReview>
     lateinit var binding: ActivityMainBinding
 
     lateinit var sportCenters : List<SportCenterWithCourtsAndServices>
@@ -70,6 +73,11 @@ class MainActivity : AppCompatActivity() {
 
         reservationBrowserViewModel.userReservationsServices.observe(this) {
             userReservationsServices = it
+        }
+
+        reservationBrowserViewModel.userReservationsReviews.observe(this) {
+            userReservationsReviews = it
+            Log.i("ASAASAS", "RESULT: $it")
         }
         /* -------------------- */
 
