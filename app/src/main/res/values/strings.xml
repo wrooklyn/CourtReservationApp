@@ -96,4 +96,7 @@
     <string name="title_activity_leave_rating">LeaveRatingActivity</string>
     <string name="title_activity_profile_achievements">ProfileAchievements</string>
     <string name="title_activity_add_edit_interest">AddEditInterest</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="past">Past</string>
+    <string name="leave_review">Leave a review</string>
 </resources>

@@ -4,14 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import it.polito.mad.courtreservationapp.R
-import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
-import it.polito.mad.courtreservationapp.models.TimeslotMap
 import it.polito.mad.courtreservationapp.views.MainActivity
 
 class BrowseReservationsFragment : Fragment() {
@@ -29,71 +26,30 @@ class BrowseReservationsFragment : Fragment() {
         val user = (activity as MainActivity).user
         val userReservLocations = (activity as MainActivity).userReservationsLocations.sortedByDescending { res -> res.reservation.reservationDate }
         val userReservServices = (activity as MainActivity).userReservationsServices.sortedByDescending { res -> res.reservation.reservationDate }
-        val recyclerView: RecyclerView = view.findViewById(R.id.reservations_recycler)
-        val adapter = ReservationAdapter(userReservLocations)
-        recyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        recyclerView.adapter = adapter
-        adapter.setOnItemClickListener(object : ReservationAdapter.OnItemClickListener{
-            override fun onItemClick(position: Int) {
-                val fragment = ReservationDetailsFragment.newInstance(user.username, userReservLocations[position], userReservServices[position])
-                activity?.supportFragmentManager?.beginTransaction()
-                    ?.replace(R.id.fragmentContainer, fragment, "fragmentId")
-                    ?.commit()
+        val tabReserv = view.findViewById<TabLayout>(R.id.reserv_tab_layout)
+        val pager = view.findViewById<ViewPager2>(R.id.reserv_view_pager)
+        val adapter = ReservationsAdapter(childFragmentManager, lifecycle)
+        pager.adapter = adapter
+
+        tabReserv.let {
+            pager.let { it1 ->
+                TabLayoutMediator(
+                    it, it1
+                ) { tab, position ->
+                    tab.text =
+                        (pager.adapter as ReservationsAdapter).reservFragmentNames[position] //Sets tabs names as mentioned in ViewPagerAdapter fragmentNames array, this can be implemented in many different ways.
+                    (pager.adapter as ReservationsAdapter).createFragment(position)
+                }.attach()
+            }
+        }
+
+        tabReserv.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                pager.currentItem = tab.position
             }
 
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
         })
-    }
-
-    class ReservationAdapter(private val reservationsLocations: List<ReservationWithSportCenter>): RecyclerView.Adapter<ReservationViewHolder>() {
-
-         private lateinit var reservListener: OnItemClickListener
-
-        interface OnItemClickListener {
-            fun onItemClick(position: Int)
-        }
-
-        fun setOnItemClickListener(listener: OnItemClickListener) {
-            reservListener = listener
-        }
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReservationViewHolder {
-            val itemView = LayoutInflater.from(parent.context).inflate(R.layout.reservation_card_item, parent, false)
-            return ReservationViewHolder(itemView, reservListener)
-        }
-
-        override fun getItemCount() = reservationsLocations.size
-
-        override fun onBindViewHolder(holder: ReservationViewHolder, position: Int) {
-            holder.bind(reservationsLocations[position])
-        }
-
-    }
-
-    class ReservationViewHolder(view: View, listener: ReservationAdapter.OnItemClickListener): RecyclerView.ViewHolder(view) {
-
-        private var reservLocationTV: TextView = view.findViewById(R.id.reservation_locationTV)
-        private var reservDatetimeTV: TextView = view.findViewById(R.id.reservation_datetimeTV)
-        private var reservImageIV: ImageView = view.findViewById(R.id.reservCardImage)
-        private var reservCourtTitle: TextView = view.findViewById(R.id.reservedCourtId)
-
-        fun bind(reservationWithSportCenter: ReservationWithSportCenter) {
-            reservCourtTitle.text = reservationWithSportCenter.courtWithSportCenter.court.sportName + " - Court " + reservationWithSportCenter.courtWithSportCenter.court.courtId
-            reservLocationTV.text = reservationWithSportCenter.courtWithSportCenter.sportCenter.address
-            reservDatetimeTV.text = reservationWithSportCenter.reservation.reservationDate + " - " + TimeslotMap.getTimeslotString(reservationWithSportCenter.reservation.timeSlotId)
-            when(reservationWithSportCenter.courtWithSportCenter.court.sportName) {
-                "Soccer" -> reservImageIV.setImageResource(R.drawable.football_court)
-                "Iceskate" -> reservImageIV.setImageResource(R.drawable.iceskating_rink)
-                "Basketball" -> reservImageIV.setImageResource(R.drawable.basket_center)
-                "Hockey" -> reservImageIV.setImageResource(R.drawable.hockey_png)
-                "Tennis" -> reservImageIV.setImageResource(R.drawable.tennis_court)
-                "Volley" -> reservImageIV.setImageResource(R.drawable.volley_court)
-                "Rugby" -> reservImageIV.setImageResource(R.drawable.rugby_court)
-            }
-        }
-
-        init{
-            itemView.setOnClickListener {
-                listener.onItemClick(bindingAdapterPosition)
-            }
-        }
     }
 }
