@@ -5,7 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWIthCourtsAndReviewsAndUsers
-import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndReviews
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
 import it.polito.mad.courtreservationapp.db.repository.SportCenterRepository
 
@@ -28,7 +27,7 @@ class SportCenterViewModel(application: Application) : AndroidViewModel(applicat
         Pair("Hockey",R.drawable.hockey),
         Pair("Tennis",R.drawable.tennis),
         Pair("Volley",R.drawable.volleyball),
-        Pair("Rugby",R.drawable.rudgby)
+        Pair("Rugby",R.drawable.rugby)
         )
     val sportCenterImages : Map<Long, Int> = mapOf(
         Pair(1, R.drawable.run_center),

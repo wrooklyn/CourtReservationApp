@@ -18,6 +18,7 @@ import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.models.Gender
 import it.polito.mad.courtreservationapp.views.AchievementSection
 import it.polito.mad.courtreservationapp.views.EditProfileActivity
+import it.polito.mad.courtreservationapp.views.MainActivity
 import it.polito.mad.utils.DiskUtil
 import org.json.JSONObject
 
@@ -99,7 +100,8 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
         }
         val composeView = view.findViewById<ComposeView>(R.id.composeContainer)
         composeView.setContent {
-            AchievementSection(activity)
+            val userWithSportMasteriesAndName = (activity as MainActivity).userWithSportMasteriesAndName
+            AchievementSection(activity, userWithSportMasteriesAndName)
         }
     }
 

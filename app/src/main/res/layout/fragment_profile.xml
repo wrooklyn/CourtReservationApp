@@ -278,12 +278,7 @@
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <androidx.compose.ui.platform.ComposeView
-                    android:id="@+id/composeContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@+id/addressCL"
-                    />
+
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/genderCL"
@@ -295,7 +290,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/composeContainer">
+                    app:layout_constraintTop_toBottomOf="@+id/addressCL">
 
                     <ImageView
                         android:id="@+id/genderIcon"
@@ -445,6 +440,26 @@
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/composeContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/achievementsTv"
+                    />
+
+                <TextView
+                    android:id="@+id/achievementsTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="15dp"
+                    android:fontFamily="@font/inter_semibold"
+                    android:text="Achievements"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textColor="@color/deep_blue"
+                    app:layout_constraintBottom_toTopOf="@id/composeContainer"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/phoneCL" />
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/logoutCL"
                     android:layout_width="wrap_content"
@@ -454,7 +469,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/phoneCL">
+                    app:layout_constraintTop_toBottomOf="@+id/composeContainer">
 
                     <TextView
                         android:id="@+id/logoutTV"
@@ -470,6 +485,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

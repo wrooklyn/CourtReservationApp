@@ -5,7 +5,7 @@ import androidx.room.Relation
 import it.polito.mad.courtreservationapp.models.SportMastery
 import it.polito.mad.courtreservationapp.models.User
 
-data class UserWithSportMasteries(
+data class UserWithSportMasteriesAndName(
     @Embedded
     val user: User,
     @Relation(
@@ -13,5 +13,5 @@ data class UserWithSportMasteries(
         entityColumn = "userId",
         parentColumn = "userId"
     )
-    val masteries: List<SportMastery>
+    val masteries: List<SportMasteryWithName>
 )

@@ -3,6 +3,7 @@ package it.polito.mad.courtreservationapp.views.profile
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,41 +11,35 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import it.polito.mad.courtreservationapp.R
-import it.polito.mad.courtreservationapp.views.profile.ui.theme.CourtReservationAppTheme
+import it.polito.mad.courtreservationapp.view_model.SportMasteryViewModel
 
 class AddEditInterestActivity : ComponentActivity() {
+    private val sportMasteryViewModel: SportMasteryViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        sportMasteryViewModel.userId = intent.getLongExtra("userId", 0L)
         setContent {
             it.polito.mad.courtreservationapp.views.ratings.ui.theme.CourtReservationAppTheme {
                 // A surface container using the 'background' color from the theme
@@ -89,7 +84,8 @@ class AddEditInterestActivity : ComponentActivity() {
                         .padding(16.dp),
                         colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.red_button)),
                         onClick = {
-                            //TODO
+                            sportMasteryViewModel.saveMastery()
+                            finish()
                         }) {
                         androidx.compose.material.Text(
                             "Submit",
@@ -134,14 +130,14 @@ class AddEditInterestActivity : ComponentActivity() {
     @Composable
     fun InterestList() {
         var selectedSport by remember { mutableStateOf("") }
-        val sportIconsId: Map<String, Int> = mapOf(
-            Pair("Soccer", R.drawable.soccer_ball),
-            Pair("Iceskate", R.drawable.ice_skate),
-            Pair("Basketball", R.drawable.basketball_icon),
-            Pair("Hockey", R.drawable.hockey),
-            Pair("Tennis", R.drawable.tennis),
-            Pair("Volley", R.drawable.volleyball),
-            Pair("Rugby", R.drawable.rudgby)
+        val sportIconsId: Map<String, Pair<Int, Int>> = mapOf(
+            Pair("Soccer", Pair(R.drawable.soccer_ball, 1)),
+            Pair("Volley", Pair(R.drawable.volleyball, 2)),
+            Pair("Hockey", Pair(R.drawable.hockey, 3)),
+            Pair("Basketball", Pair(R.drawable.basketball_icon, 4)),
+            Pair("Tennis", Pair(R.drawable.tennis, 5)),
+            Pair("Iceskate", Pair(R.drawable.ice_skate, 6)),
+            Pair("Rugby", Pair(R.drawable.rugby, 7))
         )
 
         val sportIconSize = 5.dp
@@ -155,13 +151,14 @@ class AddEditInterestActivity : ComponentActivity() {
                     modifier = Modifier.padding(5.dp),
                     onClick = {
                         selectedSport = if (thisButtonSelected) "" else it.first
+                        sportMasteryViewModel.sportId = sportIconsId[selectedSport]?.second?.toLong() ?: 0L
                     }) {
                     Image(
                         modifier = Modifier
                             .padding(vertical = sportIconSize + 5.dp, horizontal = sportIconSize)
                             .height(50.dp)
                             .width(50.dp),
-                        painter = painterResource(id = it.second),
+                        painter = painterResource(id = it.second.first),
                         contentDescription = it.first,
                     )
                 }
@@ -175,7 +172,7 @@ class AddEditInterestActivity : ComponentActivity() {
     @Composable
     fun MasteryLevel() {
         var isExpanded by remember { mutableStateOf(false) }
-        val items = listOf("Beginner", "Intermediate", "Expert")
+        val items = listOf("Beginner", "Intermediate", "Expert", "Professional")
         var selectedIndex by remember { mutableStateOf(0) }
         Box(
             modifier = Modifier
@@ -209,6 +206,7 @@ class AddEditInterestActivity : ComponentActivity() {
                 items.forEachIndexed { index, s ->
                     DropdownMenuItem(onClick = {
                         selectedIndex = index
+                        sportMasteryViewModel.level = index
                         isExpanded = false
                     }) {
                         Text(
@@ -236,6 +234,7 @@ class AddEditInterestActivity : ComponentActivity() {
             value = text,
             onValueChange = { newText ->
                 text = newText
+                sportMasteryViewModel.achievement = newText.text
             },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = colorResource(id = R.color.red_button),

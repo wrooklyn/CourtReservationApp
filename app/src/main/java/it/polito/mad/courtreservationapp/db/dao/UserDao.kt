@@ -5,7 +5,7 @@ import androidx.room.*
 import androidx.room.OnConflictStrategy.Companion.REPLACE
 import it.polito.mad.courtreservationapp.db.relationships.UserWithReservations
 import it.polito.mad.courtreservationapp.db.relationships.UserWithReservationsAndServices
-import it.polito.mad.courtreservationapp.db.relationships.UserWithSportMasteries
+import it.polito.mad.courtreservationapp.db.relationships.UserWithSportMasteriesAndName
 //import it.polito.mad.courtreservationapp.db.relationships.UserWithReservations
 import it.polito.mad.courtreservationapp.models.User
 
@@ -30,18 +30,23 @@ interface UserDao {
     @Query("SELECT * FROM users WHERE userId = :userId")
     fun getById(userId: Long): LiveData<User>
 
+    @Transaction
     @Query("SELECT * FROM users")
     fun getAllWithReservations(): LiveData<List<UserWithReservations>>
 
+    @Transaction
     @Query("SELECT * FROM users WHERE userId = :userId")
     fun getByIdWithReservations(userId: Long): LiveData<UserWithReservations>
 
+    @Transaction
     @Query("SELECT * FROM users")
     fun getAllWithReservationsAndServices(): LiveData<List<UserWithReservationsAndServices>>
 
+    @Transaction
     @Query("SELECT * FROM users WHERE userId = :userId")
     fun getByIdWithReservationsAndServices(userId: Long): LiveData<UserWithReservationsAndServices>
 
+    @Transaction
     @Query("SELECT * FROM users WHERE userId = :userId")
-    fun getByIdWithSportMasteries(userId: Long): LiveData<UserWithSportMasteries>
+    fun getByIdWithSportMasteries(userId: Long): LiveData<UserWithSportMasteriesAndName>
 }
