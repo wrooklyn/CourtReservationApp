@@ -65,6 +65,10 @@ class SportCenterRepository(val application: Application) {
         return sportCenterDao.getAllWithCourtsAndReviews()
     }
 
+    fun getAllWithCourtsAndReviewsAndUsers(): LiveData<List<SportCenterWIthCourtsAndReviewsAndUsers>>{
+        return sportCenterDao.getAllWithCourtsAndReviewsAndUsers()
+    }
+
     fun getCenterWithCourtsAndReviews(id: Long): LiveData<SportCenterWithCourtsAndReviews>{
         return sportCenterDao.getByIdWithCourtsAndReviews(id)
     }

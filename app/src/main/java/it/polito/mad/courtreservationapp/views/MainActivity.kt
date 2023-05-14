@@ -13,6 +13,7 @@ import it.polito.mad.courtreservationapp.db.relationships.ReservationWithReview
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
+import it.polito.mad.courtreservationapp.db.relationships.UserWithSportMasteriesAndName
 import it.polito.mad.courtreservationapp.models.Reservation
 import it.polito.mad.courtreservationapp.models.User
 import it.polito.mad.courtreservationapp.view_model.*
@@ -23,13 +24,14 @@ import it.polito.mad.courtreservationapp.views.reservationManager.BrowseReservat
 
 class MainActivity : AppCompatActivity() {
 
-    private val userViewModel: UserViewModel by viewModels()
+    val userViewModel: UserViewModel by viewModels()
     val reservationBrowserViewModel: ReservationBrowserViewModel by viewModels()
     val sportCenterViewModel: SportCenterViewModel by viewModels()
     val sportMasteryViewModel: SportMasteryViewModel by viewModels()
     val ratingViewModel: LeaveRatingViewModel by viewModels()
 
     lateinit var user: User
+    lateinit var userWithSportMasteriesAndName: UserWithSportMasteriesAndName
     lateinit var userReservations: List<Reservation>
     lateinit var userReservationsLocations: List<ReservationWithSportCenter>
     lateinit var userReservationsServices: List<ReservationWithServices>
@@ -54,6 +56,10 @@ class MainActivity : AppCompatActivity() {
         userViewModel.user.observe(this) {
             user = it
             loadUserInfo(user.userId)
+        }
+        userViewModel.userWithSportMasteriesAndNameLiveData.observe(this){
+            userViewModel.userWithSportMasteriesAndName = it
+            userWithSportMasteriesAndName = it
         }
 
         val sharedPreferences = this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)

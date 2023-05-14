@@ -63,4 +63,8 @@ interface SportCenterDao {
     @Query("SELECT * FROM sportCenters WHERE centerId = :centerId")
     fun getByIdWithCourtsAndReviews(centerId: Long): LiveData<SportCenterWithCourtsAndReviews>
 
+    @Transaction
+    @Query("SELECT * FROM sportCenters")
+    fun getAllWithCourtsAndReviewsAndUsers(): LiveData<List<SportCenterWIthCourtsAndReviewsAndUsers>>
+
 }

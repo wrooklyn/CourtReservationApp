@@ -1,22 +1,31 @@
 package it.polito.mad.courtreservationapp.view_model
 
-import android.app.Activity
 import android.app.Application
-import android.content.Intent
+import android.os.Handler
 import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import it.polito.mad.courtreservationapp.db.relationships.CourtWithReservations
+import it.polito.mad.courtreservationapp.db.relationships.CourtWithServices
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourts
 import it.polito.mad.courtreservationapp.db.repository.*
+import it.polito.mad.courtreservationapp.models.Court
 import it.polito.mad.courtreservationapp.models.Review
+import it.polito.mad.courtreservationapp.models.SportCenter
+import it.polito.mad.courtreservationapp.models.User
 import it.polito.mad.courtreservationapp.views.ratings.LeaveRatingActivity
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.concurrent.schedule
 
 
 class LeaveRatingViewModel(application: Application): AndroidViewModel(application) {
@@ -29,6 +38,7 @@ class LeaveRatingViewModel(application: Application): AndroidViewModel(applicati
 
     //display
     var sportCenterName = mutableStateOf("")
+    var isSubmitting = mutableStateOf(false)
     lateinit var courtName: String
 
     //data from caller
@@ -62,4 +72,5 @@ class LeaveRatingViewModel(application: Application): AndroidViewModel(applicati
         sportCenterWithCourtsLiveData = sportCenterRepo.getCenterWithCourts(sportCenterId)
         context = ctx
     }
+
 }

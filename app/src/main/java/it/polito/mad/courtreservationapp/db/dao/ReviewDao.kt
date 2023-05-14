@@ -2,6 +2,7 @@ package it.polito.mad.courtreservationapp.db.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import it.polito.mad.courtreservationapp.db.relationships.ReviewWithUser
 import it.polito.mad.courtreservationapp.models.Review
 
 @Dao
@@ -25,5 +26,8 @@ interface ReviewDao {
     @Query("SELECT * FROM reviews WHERE reviewCourtId = :courtId ")
     fun getByCourtId(courtId: Long): LiveData<List<Review>>
 
+    @Transaction
+    @Query("SELECT * FROM reviews")
+    fun getAllWithUser(): LiveData<List<ReviewWithUser>>
 
 }

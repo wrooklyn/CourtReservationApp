@@ -1,50 +1,39 @@
 package it.polito.mad.courtreservationapp.views.homeManager.tabFragments
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
-import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
-import it.polito.mad.courtreservationapp.db.relationships.CourtWithReviews
-import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndReviews
-import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
-import it.polito.mad.courtreservationapp.models.Court
-import it.polito.mad.courtreservationapp.models.Review
-import it.polito.mad.courtreservationapp.models.User
+import it.polito.mad.courtreservationapp.db.relationships.*
 import it.polito.mad.courtreservationapp.view_model.SportCenterViewModel
-import it.polito.mad.courtreservationapp.view_model.UserViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
-import it.polito.mad.courtreservationapp.views.reservationManager.CreateReservationActivity
 
 class ReviewsFragment : Fragment() {
 
     var position: Int = -1
     lateinit var viewModel: SportCenterViewModel
     private lateinit var sportCenterWithCourtsAndServices: SportCenterWithCourtsAndServices
-    lateinit var sportCenterWithCourtsAndReviews: SportCenterWithCourtsAndReviews
-    private var reviews: MutableList<Review> = mutableListOf()
+    lateinit var sportCenterWithCourtsAndReviews: SportCenterWIthCourtsAndReviewsAndUsers
+    private var reviews: MutableList<ReviewWithUser> = mutableListOf()
     private lateinit var courtsWithReviews: List<CourtWithReviews>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         viewModel = (activity as MainActivity).sportCenterViewModel
         position = requireArguments().getInt("position", -1)
-        sportCenterWithCourtsAndServices = viewModel.sportCentersWithCourtsAndServices[position]
-        sportCenterWithCourtsAndReviews = viewModel.sportCentersWithCourtsAndReviews[position]
-        courtsWithReviews = viewModel.sportCentersWithCourtsAndReviews[position].courtsWithReviews
+//        sportCenterWithCourtsAndServices = viewModel.sportCentersWithCourtsAndServices[position]
+        sportCenterWithCourtsAndReviews = viewModel.sportCentersWithCourtsAndReviewsAndUsers[position]
+//        courtsWithReviews = viewModel.sportCentersWithCourtsAndReviewsAndUsers[position].courtsWithReviews
 //        users = viewModelUser.
 
-        sportCenterWithCourtsAndReviews.courtsWithReviews.forEach(){courtWithReviews ->
-            reviews.addAll(courtWithReviews.reviews)
+        sportCenterWithCourtsAndReviews.courtsWithReviewsAndUsers.forEach{courtWithReviewsAndUsers ->
+            reviews.addAll(courtWithReviewsAndUsers.reviewsWithUser)
         }
     }
 
@@ -72,7 +61,7 @@ class ReviewsFragment : Fragment() {
         recyclerView?.adapter = adapter
     }
 
-    class ReviewAdapter(private val reviews: List<Review>): RecyclerView.Adapter<ReviewViewHolder>() {
+    class ReviewAdapter(private val reviews: MutableList<ReviewWithUser>): RecyclerView.Adapter<ReviewViewHolder>() {
 
         override fun getItemCount()=reviews.size
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewViewHolder {
@@ -81,7 +70,7 @@ class ReviewsFragment : Fragment() {
         }
         override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {
             reviews.forEach(){review ->
-                holder.bind(review.reviewUserId.toString(), review.text.toString(), review.rating.toFloat())
+                holder.bind(review)
             }
         }
     }
@@ -90,10 +79,10 @@ class ReviewsFragment : Fragment() {
         private val username: TextView = itemView.findViewById(R.id.userReviewTV)
         private val reviewText: TextView = itemView.findViewById(R.id.reviewTextTV)
         private val rating: RatingBar = itemView.findViewById(R.id.ratingBar3)
-        fun bind(usernameData:String, reviewData:String, ratingValue:Float){
-            username.text=usernameData
-            reviewText.text=reviewData
-            rating.rating=ratingValue
+        fun bind(reviewWithUser: ReviewWithUser){
+            username.text=reviewWithUser.user.username
+            reviewText.text=reviewWithUser.review.text
+            rating.rating=reviewWithUser.review.rating.toFloat()
         }
     }
 

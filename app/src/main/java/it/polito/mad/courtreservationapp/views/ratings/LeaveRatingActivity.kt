@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -28,6 +29,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.colorResource
@@ -39,11 +41,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.ViewModel
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourts
 import it.polito.mad.courtreservationapp.view_model.LeaveRatingViewModel
 import it.polito.mad.courtreservationapp.views.ratings.ui.theme.CourtReservationAppTheme
+import kotlinx.coroutines.delay
+import java.util.*
+import kotlin.concurrent.schedule
 
 class LeaveRatingActivity : ComponentActivity() {
 
@@ -54,7 +60,8 @@ class LeaveRatingActivity : ComponentActivity() {
         viewModel.courtId = intent.getLongExtra("courtId", 0)
         viewModel.reservationId = intent.getLongExtra("reservationId", 0)
         viewModel.sportCenterId = intent.getLongExtra("sportCenterId", 0)
-        viewModel.userId = this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE).getLong("UserId", 0)
+        viewModel.userId =
+            this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE).getLong("UserId", 0)
         viewModel.init(this)
 
 
@@ -94,12 +101,18 @@ class LeaveRatingActivity : ComponentActivity() {
                         .fillMaxWidth()
                         .background(Color.White, shape = RectangleShape)
                 ) {
-                    // Add your components here
+                    var isSubmitting by remember { viewModel.isSubmitting }
                     Button(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
+                    .fillMaxWidth()
+                    .padding(16.dp),
                         colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.red_button)),
                         onClick = {
+                            isSubmitting = true
+                            if (viewModel.selectedRating != null) {
+                                Timer().schedule(1000) {
+                                    viewModel.submitRating()
+                                }
+                            } else null
                             if (viewModel.selectedRating != null) {
                                 val resultIntent = Intent()
                                 resultIntent.putExtra("review_submitted", true)
@@ -107,7 +120,11 @@ class LeaveRatingActivity : ComponentActivity() {
                                 viewModel.submitRating()
                             } else null
                         }) {
-                        Text(
+                        if(isSubmitting)
+                                CircularProgressIndicator(
+                                    color = Color.White
+                                )
+                        else Text(
                             "Submit",
                             color = Color.White,
                             modifier = Modifier.padding(vertical = 5.dp)
@@ -143,8 +160,9 @@ class LeaveRatingActivity : ComponentActivity() {
     fun LeaveRatingCard() {
         var text by remember { mutableStateOf(TextFieldValue("")) }
         val sportCenter by viewModel.sportCenterWithCourtsLiveData.observeAsState()
-        val court = sportCenter?.courts?.first{court-> court.courtId==viewModel.courtId }
-        val displayName = "${sportCenter?.sportCenter?.name}\n${court?.sportName} Court - ${viewModel.courtId}"
+        val court = sportCenter?.courts?.first { court -> court.courtId == viewModel.courtId }
+        val displayName =
+            "${sportCenter?.sportCenter?.name}\n${court?.sportName} Court - ${viewModel.courtId}"
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -245,13 +263,29 @@ class LeaveRatingActivity : ComponentActivity() {
     fun StarRatingComponent() {
         val maxStars = 5
         var rating by remember { mutableStateOf(0) }
-        Row() {
+        var isSubmitting by remember { viewModel.isSubmitting }
+
+        Row(modifier = Modifier.zIndex(2f)) {
             for (index in 1..maxStars) {
+                val starScale by animateFloatAsState(
+                    targetValue = if (isSubmitting) 1.01f else 1f,
+                    animationSpec = keyframes {
+                        durationMillis = 300
+                        // define keyframes for the animation
+                        1f.at(0).with(LinearOutSlowInEasing) // start with initial size
+                        1.5f.at(75).with(FastOutSlowInEasing) // bounce up
+                        0.5f.at(175).with(LinearOutSlowInEasing) // bounce down
+                        1.0f.at(275).with(LinearOutSlowInEasing) // end with final size
+                        delayMillis = (index) * 150
+                    }
+                )
                 IconButton(
-                    onClick = { /*TODO*/
+                    onClick = {
                         rating = if (index == rating) 0 else index
                         viewModel.selectedRating = rating
-                    })
+                    },
+                    modifier = Modifier.scale(if (isSubmitting && index<=rating) starScale else 1f),
+                )
                 {
                     val color = if (index <= rating) Color(0xFFFFC107) else Color.Gray
                     Icon(
