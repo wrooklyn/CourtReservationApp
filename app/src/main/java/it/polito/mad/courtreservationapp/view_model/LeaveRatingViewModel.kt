@@ -1,6 +1,7 @@
 package it.polito.mad.courtreservationapp.view_model
 
 import android.app.Application
+import android.os.Handler
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,7 +24,8 @@ import it.polito.mad.courtreservationapp.views.ratings.LeaveRatingActivity
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Calendar
+import java.util.*
+import kotlin.concurrent.schedule
 
 
 class LeaveRatingViewModel(application: Application): AndroidViewModel(application) {
@@ -36,6 +38,7 @@ class LeaveRatingViewModel(application: Application): AndroidViewModel(applicati
 
     //display
     var sportCenterName = mutableStateOf("")
+    var isSubmitting = mutableStateOf(false)
     lateinit var courtName: String
 
     //data from caller
