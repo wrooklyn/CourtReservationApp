@@ -13,6 +13,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import it.polito.mad.courtreservationapp.R
+import it.polito.mad.courtreservationapp.db.relationships.SportCenterWIthCourtsAndReviewsAndUsers
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndReviews
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
 import it.polito.mad.courtreservationapp.models.Review
@@ -31,7 +32,7 @@ class CenterDetailFragment : Fragment() {
 
     private lateinit var viewModel: SportCenterViewModel
     private lateinit var sportCenterWithCourtsAndServices: SportCenterWithCourtsAndServices
-    private lateinit var sportCenterWithCourtsAndReviews: SportCenterWithCourtsAndReviews
+    private lateinit var sportCenterWithCourtsAndReviewsAndUsers: SportCenterWIthCourtsAndReviewsAndUsers
     private var reviews: MutableList<Review> = mutableListOf()
 
 
@@ -45,14 +46,14 @@ class CenterDetailFragment : Fragment() {
         viewModel = (activity as MainActivity).sportCenterViewModel
         sportCenterWithCourtsAndServices =
             viewModel.sportCentersWithCourtsAndServices[sportCenterPosition]
-        sportCenterWithCourtsAndReviews =
-            viewModel.sportCentersWithCourtsAndReviews[sportCenterPosition]
+        sportCenterWithCourtsAndReviewsAndUsers =
+            viewModel.sportCentersWithCourtsAndReviewsAndUsers[sportCenterPosition]
         centerName = sportCenterWithCourtsAndServices.sportCenter.name
         location = sportCenterWithCourtsAndServices.sportCenter.address
 
-        sportCenterWithCourtsAndReviews.courtsWithReviews.forEach() { court ->
-            court.reviews.forEach {
-                reviews.add(it)
+        sportCenterWithCourtsAndReviewsAndUsers.courtsWithReviewsAndUsers.forEach() { court ->
+            court.reviewsWithUser.forEach {
+                reviews.add(it.review)
             }
         }
     }

@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import it.polito.mad.courtreservationapp.db.AppDatabase
 import it.polito.mad.courtreservationapp.db.dao.ReviewDao
+import it.polito.mad.courtreservationapp.db.relationships.ReviewWithUser
 import it.polito.mad.courtreservationapp.models.Review
 
 class ReviewRepository(val application: Application) {
@@ -32,5 +33,9 @@ class ReviewRepository(val application: Application) {
 
     fun getByCourtId(id: Long): LiveData<List<Review>>{
         return reviewDao.getByCourtId(id)
+    }
+
+    fun getAllWithUser(): LiveData<List<ReviewWithUser>>{
+        return  reviewDao.getAllWithUser()
     }
 }

@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import it.polito.mad.courtreservationapp.R
+import it.polito.mad.courtreservationapp.db.relationships.SportCenterWIthCourtsAndReviewsAndUsers
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndReviews
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
 import it.polito.mad.courtreservationapp.db.repository.SportCenterRepository
@@ -12,9 +13,9 @@ class SportCenterViewModel(application: Application) : AndroidViewModel(applicat
 
     private val sportCenterRepository: SportCenterRepository = SportCenterRepository(application)
     val sportCentersLiveData: LiveData<List<SportCenterWithCourtsAndServices>> = sportCenterRepository.getAllWithCourtsAndServices()
-    val sportCentersWithReviewsLiveData: LiveData<List<SportCenterWithCourtsAndReviews>> = sportCenterRepository.getAllWithCourtsAndReviews()
+    val sportCentersWithReviewsAndUsersLiveData: LiveData<List<SportCenterWIthCourtsAndReviewsAndUsers>> = sportCenterRepository.getAllWithCourtsAndReviewsAndUsers()
     lateinit var sportCentersWithCourtsAndServices: List<SportCenterWithCourtsAndServices>
-    lateinit var sportCentersWithCourtsAndReviews: List<SportCenterWithCourtsAndReviews>
+    lateinit var sportCentersWithCourtsAndReviewsAndUsers: List<SportCenterWIthCourtsAndReviewsAndUsers>
 
     var sportFilters : MutableList<String> = mutableListOf()
     var allSports: MutableList<String> = mutableListOf()
@@ -63,7 +64,7 @@ class SportCenterViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    fun loadReviews(centersWithCourtsAndReviews: List<SportCenterWithCourtsAndReviews>){
-        sportCentersWithCourtsAndReviews = centersWithCourtsAndReviews
+    fun loadReviews(centersWIthCourtsAndReviewsAndUsers: List<SportCenterWIthCourtsAndReviewsAndUsers>){
+        sportCentersWithCourtsAndReviewsAndUsers = centersWIthCourtsAndReviewsAndUsers
     }
 }

@@ -34,7 +34,7 @@ class HomeFragment : Fragment() {
             viewModel.loadSportCenters(it)
             sportInitialize()
         }
-        viewModel.sportCentersWithReviewsLiveData.observe(this){
+        viewModel.sportCentersWithReviewsAndUsersLiveData.observe(this){
             Log.i("Test", "$it")
             viewModel.loadReviews(it)
         }
