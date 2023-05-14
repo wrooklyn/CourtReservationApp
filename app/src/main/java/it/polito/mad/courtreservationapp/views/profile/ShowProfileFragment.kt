@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.compose.ui.platform.ComposeView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.models.Gender
@@ -86,16 +87,16 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+        val view= inflater.inflate(R.layout.fragment_profile, container, false)
+        view.findViewById<ConstraintLayout>(R.id.mainLL).foreground.alpha = 0
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         view.findViewById<TextView>(R.id.editButtonTV).setOnClickListener{
             launchProfileEdit()
         }
-
         val composeView = view.findViewById<ComposeView>(R.id.composeContainer)
         composeView.setContent {
             AchievementSection(activity)

@@ -6,6 +6,7 @@
     android:id="@+id/mainLL"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:foreground="@drawable/shape_window_dim"
     android:background="@color/light_blue_background"
     tools:context=".views.profile.ShowProfileFragment">
 
