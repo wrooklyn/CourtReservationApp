@@ -3,22 +3,30 @@ package it.polito.mad.courtreservationapp.view_model
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWIthCourtsAndReviewsAndUsers
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
 import it.polito.mad.courtreservationapp.db.repository.FireSportCenterRepository
+import kotlinx.coroutines.tasks.await
 
 class SportCenterViewModel(application: Application) : AndroidViewModel(application) {
 
     private val sportCenterRepository: FireSportCenterRepository = FireSportCenterRepository(application)
-    val sportCentersLiveData: LiveData<List<SportCenterWithCourtsAndServices>> = sportCenterRepository.getAllWithCourtsAndServices()
+    var sportCentersLiveData: MutableLiveData<List<SportCenterWithCourtsAndServices>> = MutableLiveData()
     val sportCentersWithReviewsAndUsersLiveData: LiveData<List<SportCenterWIthCourtsAndReviewsAndUsers>> = sportCenterRepository.getAllWithCourtsAndReviewsAndUsers()
     lateinit var sportCentersWithCourtsAndServices: List<SportCenterWithCourtsAndServices>
     lateinit var sportCentersWithCourtsAndReviewsAndUsers: List<SportCenterWIthCourtsAndReviewsAndUsers>
 
     var sportFilters : MutableList<String> = mutableListOf()
     var allSports: MutableList<String> = mutableListOf()
-
+     fun initData(){
+        sportCenterRepository.getAllWithCourtsAndServices().addOnCompleteListener() { t->
+            sportCentersLiveData.value= t.result
+            println("updated ${t.result}")
+        }
+        //sportCentersWithReviewsAndUsersLiveData.value = sportCenterRepository.getAllWithCourtsAndReviewsAndUsers()
+    }
 
     val sportIconsId : Map<String, Int> = mapOf(
         Pair("Soccer",R.drawable.soccer_ball),

@@ -8,8 +8,11 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
+import com.google.firebase.firestore.ListenerRegistration
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.databinding.ActivityMainBinding
+import it.polito.mad.courtreservationapp.db.RemoteRepository.RemoteStorage
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithReview
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
@@ -18,6 +21,7 @@ import it.polito.mad.courtreservationapp.db.relationships.UserWithSportMasteries
 import it.polito.mad.courtreservationapp.db.repository.FireCourtRepository
 import it.polito.mad.courtreservationapp.db.repository.FireSportCenterRepository
 import it.polito.mad.courtreservationapp.models.Reservation
+import it.polito.mad.courtreservationapp.models.SportCenter
 import it.polito.mad.courtreservationapp.models.User
 import it.polito.mad.courtreservationapp.view_model.*
 import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
@@ -29,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
     val userViewModel: UserViewModel by viewModels()
     val reservationBrowserViewModel: ReservationBrowserViewModel by viewModels()
-    val sportCenterViewModel: SportCenterViewModel by viewModels()
+    val sportCenterViewModel: SportCenterViewModel by viewModels() //done
     val sportMasteryViewModel: SportMasteryViewModel by viewModels()
     val ratingViewModel: LeaveRatingViewModel by viewModels()
 
@@ -46,7 +50,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        sportCenterViewModel.initData()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -106,7 +110,16 @@ class MainActivity : AppCompatActivity() {
                     replaceFragment(BrowseReservationsFragment())
                 }
                 R.id.chat -> {
-                    FireSportCenterRepository(Application()).getAllWithCourtsAndServices()
+                    val sc = MutableLiveData<List<SportCenter>>()
+                    //initialize connection
+                    val l:ListenerRegistration = RemoteStorage.getAllSportCenters(sc)
+                    //use sc
+                    sc.observe(this){
+                       it.forEach(){
+                           println("Name is ${it.name}")
+                       }
+                    }
+                    //l.remove() //if you do it here instantly, it won't show anything. Must dispose where it is appropriate
                 }
                 R.id.profile -> {
                     replaceFragment(ShowProfileFragment())

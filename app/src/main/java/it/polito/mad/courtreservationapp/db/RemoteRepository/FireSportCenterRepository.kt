@@ -3,6 +3,8 @@ package it.polito.mad.courtreservationapp.db.repository
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.mad.courtreservationapp.db.AppDatabase
 import it.polito.mad.courtreservationapp.db.RemoteDataSource
@@ -49,58 +51,47 @@ class FireSportCenterRepository(val application: Application) {
         return sportCenterDao.getByIdWithCourtsAndReservations(id)
     }
 
-    fun getAllWithCourtsAndServices(): LiveData<List<SportCenterWithCourtsAndServices>> {
+    fun getAllWithCourtsAndServices(): Task<List<SportCenterWithCourtsAndServices>> {
         val db: FirebaseFirestore = RemoteDataSource.instance
-        val liveData = MutableLiveData<List<SportCenterWithCourtsAndServices>>()
-
+        val dataList = mutableListOf<SportCenterWithCourtsAndServices>()
         // Reference to your Firestore collection
         val sportCenterRef = db.collection("sport-centers")
-        sportCenterRef.addSnapshotListener { sportCenterSnapshot, exception ->
-            if (exception != null) {
-                // Handle any errors
-                // e.g., liveData.value = emptyList() or liveData.value = null
-                return@addSnapshotListener
-            }
-
-            val dataList = mutableListOf<SportCenterWithCourtsAndServices>()
+        val innerTasks = mutableListOf<Task<*>>()
+        return sportCenterRef.get().continueWithTask { task ->
+            val sportCenterSnapshot = task.result
             for (document in sportCenterSnapshot?.documents.orEmpty()) {
                 // Map Firestore document to YourDataModel and add it to dataList
                 println("help")
                 println(document.id)
                 println(document.data)
-                val sc_name: String = document.data?.get("name") as String
-                val sc_address = document.data?.get("address") as String
-                val sc_description = document.data?.get("description") as String
-                val sc_id =  document.data?.get("id") as Long
-                val sportCenter = SportCenter(sc_name, sc_address, sc_description, sc_id)
+                val scName: String = document.data?.get("name") as String
+                val scAddress = document.data?.get("address") as String
+                val scDescription = document.data?.get("description") as String
+                val scId = document.data?.get("id") as Long
+                val sportCenter = SportCenter(scName, scAddress, scDescription, scId)
                 val courtsOfCenterRef = sportCenterRef.document(document.id).collection("courts")
                 val courtWithServices = mutableListOf<CourtWithServices>()
-                courtsOfCenterRef.addSnapshotListener { courtSnapshot, exception ->
-                    if (exception != null) {
-                        // Handle any errors
-                        // e.g., liveData.value = emptyList() or liveData.value = null
-                        return@addSnapshotListener
-                    }
+
+                val innerTask =courtsOfCenterRef.get().continueWithTask { task ->
+                    val courtSnapshot = task.result
                     for (courtDocument in courtSnapshot?.documents.orEmpty()) {
                         println("xp ${courtDocument.data}")
-                        val c_sport_name = courtDocument.data?.get("sport_name") as String
-                        val c_court_id=19L
-                        val c_services = courtDocument.data?.get("services") as List<Long>?
-                        val s = c_services?.map { e -> Service("desct temporary", e) } ?: listOf()
-                        val c = Court(sc_id,c_sport_name,0,  c_court_id)
+                        val cSportName = courtDocument.data?.get("sport_name") as String
+                        val cCourtId = 19L
+                        val cServices = courtDocument.data?.get("services") as List<Long>?
+                        val s = cServices?.map { e -> Service("desct temporary", e) } ?: listOf()
+                        val c = Court(scId, cSportName, 0, cCourtId)
                         courtWithServices.add(CourtWithServices(c, s))
                     }
                     dataList.add(SportCenterWithCourtsAndServices(sportCenter, courtWithServices))
+                    Tasks.forResult(dataList)
                 }
-
-
+                innerTasks.add(innerTask)
             }
-
-            liveData.value = dataList
+            Tasks.whenAllComplete(innerTasks).continueWith { _ ->
+                dataList
+            }
         }
-
-        //return liveData
-        return liveData
     }
 
     fun getCenterWithCourtsAndServices(id: Long): LiveData<SportCenterWithCourtsAndServices> {
