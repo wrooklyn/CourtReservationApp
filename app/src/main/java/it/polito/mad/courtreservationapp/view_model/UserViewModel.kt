@@ -21,9 +21,9 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
             userRepo.insertUser(user)
         }
     }
-    fun setCurrentUser(userId: Long) {
-        user = userRepo.getById(userId)
-        userWithSportMasteriesAndNameLiveData = userRepo.getUserWithMasteries(userId)
+    fun setCurrentUser(email: String) {
+        user = userRepo.getById(email)
+        userWithSportMasteriesAndNameLiveData = userRepo.getUserWithMasteries(email)
     }
 
     fun updateUser(u: User) {

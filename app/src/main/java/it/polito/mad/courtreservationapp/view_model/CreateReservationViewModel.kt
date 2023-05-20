@@ -48,12 +48,12 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
     var sportCenterId: Long = 0
     var reservationId: Long = 0
     var userId: Long = 0
-
+    var email: String = ""
 
 
     fun initAll(ctx : CreateReservationActivity){
         initCourt(courtId, sportCenterId)
-        initUser(userId)
+        initUser(email)
 
         if(reservationId!=0L){
             reservationRepo.getByIdWithServices(reservationId).observe(ctx){
@@ -70,8 +70,8 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
         courtServicesLiveData = courtRepo.getByIdWithServices(courtId)
 
     }
-    private fun initUser(userId: Long){
-        userLiveData = userRepo.getById(userId)
+    private fun initUser(email: String){
+        userLiveData = userRepo.getById(email)
     }
 
 

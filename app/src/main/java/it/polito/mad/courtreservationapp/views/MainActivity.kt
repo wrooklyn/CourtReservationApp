@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         /* Setting the logged user */
         //hardcoded user
         /* Load user's info in both the User object and the shared preferences */
-        userViewModel.setCurrentUser(1)
+        userViewModel.setCurrentUser("chndavide@gmail.com")
         userViewModel.user.observe(this) {
             user = it
             loadUserInfo(user.userId)
