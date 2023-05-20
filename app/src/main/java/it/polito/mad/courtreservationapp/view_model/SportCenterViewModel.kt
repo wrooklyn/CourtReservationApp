@@ -8,24 +8,34 @@ import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWIthCourtsAndReviewsAndUsers
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
 import it.polito.mad.courtreservationapp.db.repository.FireSportCenterRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 
 class SportCenterViewModel(application: Application) : AndroidViewModel(application) {
 
     private val sportCenterRepository: FireSportCenterRepository = FireSportCenterRepository(application)
-    var sportCentersLiveData: MutableLiveData<List<SportCenterWithCourtsAndServices>> = MutableLiveData()
-    val sportCentersWithReviewsAndUsersLiveData: LiveData<List<SportCenterWIthCourtsAndReviewsAndUsers>> = sportCenterRepository.getAllWithCourtsAndReviewsAndUsers()
+    val sportCentersLiveData: MutableLiveData<List<SportCenterWithCourtsAndServices>> = MutableLiveData()
+    val sportCentersWithReviewsAndUsersLiveData: MutableLiveData<List<SportCenterWIthCourtsAndReviewsAndUsers>> = MutableLiveData()
     lateinit var sportCentersWithCourtsAndServices: List<SportCenterWithCourtsAndServices>
     lateinit var sportCentersWithCourtsAndReviewsAndUsers: List<SportCenterWIthCourtsAndReviewsAndUsers>
 
     var sportFilters : MutableList<String> = mutableListOf()
     var allSports: MutableList<String> = mutableListOf()
      fun initData(){
-        sportCenterRepository.getAllWithCourtsAndServices().addOnCompleteListener() { t->
-            sportCentersLiveData.value= t.result
-            println("updated ${t.result}")
-        }
-        //sportCentersWithReviewsAndUsersLiveData.value = sportCenterRepository.getAllWithCourtsAndReviewsAndUsers()
+         runBlocking(Dispatchers.Default) {
+             launch {
+                 sportCenterRepository.getAllWithCourtsAndServices().addOnCompleteListener() { t->
+                     sportCentersLiveData.postValue(t.result)
+                 }
+                 //this one is the new best approach
+                 val res = sportCenterRepository.getAllWithCourtsAndReviewsAndUsers()
+                     sportCentersWithReviewsAndUsersLiveData.postValue(res)
+                     println("updated: hehe ${res.first().courtsWithReviewsAndUsers}")
+             }
+         }
+
     }
 
     val sportIconsId : Map<String, Int> = mapOf(

@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     val reservationBrowserViewModel: ReservationBrowserViewModel by viewModels()
     val sportCenterViewModel: SportCenterViewModel by viewModels() //done
     val sportMasteryViewModel: SportMasteryViewModel by viewModels()
-    val ratingViewModel: LeaveRatingViewModel by viewModels()
+    val ratingViewModel: LeaveRatingViewModel by viewModels() //done
 
     lateinit var user: User
     lateinit var userWithSportMasteriesAndName: UserWithSportMasteriesAndName
