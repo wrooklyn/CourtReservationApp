@@ -100,7 +100,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
         }
         val composeView = view.findViewById<ComposeView>(R.id.composeContainer)
         composeView.setContent {
-            val userWithSportMasteriesAndName = (activity as MainActivity).userWithSportMasteriesAndName
+            val userWithSportMasteriesAndName = (activity as MainActivity).userViewModel.userWithSportMasteriesAndName
             AchievementSection(activity, userWithSportMasteriesAndName)
         }
     }
