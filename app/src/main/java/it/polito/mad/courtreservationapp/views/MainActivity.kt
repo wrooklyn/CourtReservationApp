@@ -1,5 +1,6 @@
 package it.polito.mad.courtreservationapp.views
 
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -14,6 +15,8 @@ import it.polito.mad.courtreservationapp.db.relationships.ReservationWithService
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
 import it.polito.mad.courtreservationapp.db.relationships.UserWithSportMasteriesAndName
+import it.polito.mad.courtreservationapp.db.repository.FireCourtRepository
+import it.polito.mad.courtreservationapp.db.repository.FireSportCenterRepository
 import it.polito.mad.courtreservationapp.models.Reservation
 import it.polito.mad.courtreservationapp.models.User
 import it.polito.mad.courtreservationapp.view_model.*
@@ -103,13 +106,7 @@ class MainActivity : AppCompatActivity() {
                     replaceFragment(BrowseReservationsFragment())
                 }
                 R.id.chat -> {
-                    //TODO remove this in production
-                    val intent = Intent(this, LeaveRatingActivity::class.java)
-                    intent.putExtra("courtId", 1L)
-                    intent.putExtra("reservationId", 1L)
-                    intent.putExtra("sportCenterId", 1L)
-                    startActivity(intent)
-                    replaceFragment(ShowUnimplementedFragment())
+                    FireSportCenterRepository(Application()).getAllWithCourtsAndServices()
                 }
                 R.id.profile -> {
                     replaceFragment(ShowProfileFragment())

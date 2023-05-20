@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     //room dependencies
     id 'org.jetbrains.kotlin.kapt'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -97,5 +98,9 @@ dependencies {
     //testing
     androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
     androidTestImplementation 'junit:junit:4.13.2'
+    //firebàis
+    implementation platform('com.google.firebase:firebase-bom:32.0.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-firestore-ktx'
 
 }

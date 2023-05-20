@@ -5,12 +5,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import it.polito.mad.courtreservationapp.db.relationships.UserWithSportMasteriesAndName
-import it.polito.mad.courtreservationapp.db.repository.UserRepository
+import it.polito.mad.courtreservationapp.db.repository.FireUserRepository
 import it.polito.mad.courtreservationapp.models.User
 import kotlinx.coroutines.launch
 
 class UserViewModel(application: Application): AndroidViewModel(application) {
-    private val userRepo: UserRepository = UserRepository(application)
+    private val userRepo: FireUserRepository = FireUserRepository(application)
 
     lateinit var user: LiveData<User>
     lateinit var userWithSportMasteriesAndNameLiveData: LiveData<UserWithSportMasteriesAndName>

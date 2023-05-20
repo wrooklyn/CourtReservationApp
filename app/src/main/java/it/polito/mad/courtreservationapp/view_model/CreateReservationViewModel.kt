@@ -1,17 +1,13 @@
 package it.polito.mad.courtreservationapp.view_model
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithReservations
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithServices
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
-import it.polito.mad.courtreservationapp.db.repository.CourtRepository
-import it.polito.mad.courtreservationapp.db.repository.ReservationRepository
-import it.polito.mad.courtreservationapp.db.repository.SportCenterRepository
-import it.polito.mad.courtreservationapp.db.repository.UserRepository
+import it.polito.mad.courtreservationapp.db.repository.*
 import it.polito.mad.courtreservationapp.models.Court
 import it.polito.mad.courtreservationapp.models.Reservation
 import it.polito.mad.courtreservationapp.models.SportCenter
@@ -22,10 +18,10 @@ import java.util.*
 
 class CreateReservationViewModel(application: Application): AndroidViewModel(application) {
     private val tag: String = "ReservationFragmentViewModel"
-    val reservationRepo: ReservationRepository = ReservationRepository(application)
+    val reservationRepo: FireReservationRepository = FireReservationRepository(application)
     private val courtRepo: CourtRepository = CourtRepository(application)
-    private val sportCenterRepo: SportCenterRepository = SportCenterRepository(application)
-    private val userRepo: UserRepository = UserRepository(application)
+    private val sportCenterRepo: FireSportCenterRepository = FireSportCenterRepository(application)
+    private val userRepo: FireUserRepository = FireUserRepository(application)
 
     lateinit var sportCenterLiveData: LiveData<SportCenter>
     lateinit var courtReservationsLiveData: LiveData<CourtWithReservations>

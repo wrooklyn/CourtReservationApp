@@ -22,9 +22,6 @@ class CourtRepository(private val application: Application) {
         courtDao.delete(court)
     }
 
-    fun getAll(): LiveData<List<Court>> {
-        return courtDao.getAll()
-    }
 
     fun getById(id: Long): LiveData<Court>{
         return courtDao.getById(id)

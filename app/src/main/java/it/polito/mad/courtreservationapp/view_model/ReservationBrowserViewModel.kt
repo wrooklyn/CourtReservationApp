@@ -6,13 +6,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.*
-import it.polito.mad.courtreservationapp.db.repository.ReservationRepository
+import it.polito.mad.courtreservationapp.db.repository.FireReservationRepository
 import it.polito.mad.courtreservationapp.models.Reservation
 import it.polito.mad.courtreservationapp.models.SportCenter
 import kotlinx.coroutines.launch
 
 class ReservationBrowserViewModel(application: Application): AndroidViewModel(application) {
-    private val reservationRepo: ReservationRepository = ReservationRepository(application)
+    private val reservationRepo: FireReservationRepository = FireReservationRepository(application)
 
     lateinit var sportCenter: LiveData<SportCenter>
 

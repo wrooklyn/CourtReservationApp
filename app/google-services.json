@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "203647685465",
+    "project_id": "courtreservation-26660",
+    "storage_bucket": "courtreservation-26660.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:203647685465:android:f203c709c8b9e634a37248",
+        "android_client_info": {
+          "package_name": "it.polito.mad.courtreservationapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "203647685465-9686f1cig0eujqmhqd1hkva6qlni38tl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "it.polito.mad.courtreservationapp",
+            "certificate_hash": "42b603c1d6c9c7dc75870af91eb84aceba8eaef1"
+          }
+        },
+        {
+          "client_id": "203647685465-kdp1smf3q3nc8vcaeqfseo6lcrfl083a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIEiLuLeYdZ5llxuHIn25Ak1zd3eWqg9g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "203647685465-kdp1smf3q3nc8vcaeqfseo6lcrfl083a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

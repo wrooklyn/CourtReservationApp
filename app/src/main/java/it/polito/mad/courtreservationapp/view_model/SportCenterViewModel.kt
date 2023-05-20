@@ -6,11 +6,11 @@ import androidx.lifecycle.LiveData
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWIthCourtsAndReviewsAndUsers
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
-import it.polito.mad.courtreservationapp.db.repository.SportCenterRepository
+import it.polito.mad.courtreservationapp.db.repository.FireSportCenterRepository
 
 class SportCenterViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val sportCenterRepository: SportCenterRepository = SportCenterRepository(application)
+    private val sportCenterRepository: FireSportCenterRepository = FireSportCenterRepository(application)
     val sportCentersLiveData: LiveData<List<SportCenterWithCourtsAndServices>> = sportCenterRepository.getAllWithCourtsAndServices()
     val sportCentersWithReviewsAndUsersLiveData: LiveData<List<SportCenterWIthCourtsAndReviewsAndUsers>> = sportCenterRepository.getAllWithCourtsAndReviewsAndUsers()
     lateinit var sportCentersWithCourtsAndServices: List<SportCenterWithCourtsAndServices>
