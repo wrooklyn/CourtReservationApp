@@ -5,12 +5,15 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourts
 import it.polito.mad.courtreservationapp.db.repository.*
 import it.polito.mad.courtreservationapp.models.Review
 import it.polito.mad.courtreservationapp.views.ratings.LeaveRatingActivity
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -20,7 +23,7 @@ class LeaveRatingViewModel(application: Application): AndroidViewModel(applicati
     private val reviewRepo: FireReviewRepository = FireReviewRepository(application)
     private val sportCenterRepo: FireSportCenterRepository = FireSportCenterRepository(application)
 
-    lateinit var sportCenterWithCourtsLiveData: LiveData<SportCenterWithCourts>
+     val sportCenterWithCourtsLiveData: MutableLiveData<SportCenterWithCourts> = MutableLiveData()
     lateinit var context: LeaveRatingActivity
 
     //display
@@ -50,13 +53,21 @@ class LeaveRatingViewModel(application: Application): AndroidViewModel(applicati
             Log.v(tag, "$reviewText")
             Log.v(tag, "$selectedImprovements")
             val review: Review = Review(courtId, userId, reservationId, reviewText, selectedRating, dateStr)
-            reviewRepo.insertReview(review)
+            reviewRepo.insertReview("A4pjoFykPhVSfpkfYUXK", "80A69RdLDZhzICaVa1qA", "Gabriel", "TeExQeFkvXgUrY3i30uA", reviewText, selectedRating, dateStr)
             context.finish()
         }
     }
 
     fun init( ctx: LeaveRatingActivity){
-        sportCenterWithCourtsLiveData = sportCenterRepo.getCenterWithCourts(sportCenterId)
+        //sportCenterWithCourtsLiveData = sportCenterRepo.getCenterWithCourts(sportCenterId)
+        //sportCenterWithCourtsLiveData = sportCenterRepo.getCenterWithCourts(sportCenterId)
+        runBlocking(Dispatchers.Default) {
+            launch {
+                val res = sportCenterRepo.getCenterWithCourts2("A4pjoFykPhVSfpkfYUXK")
+                sportCenterWithCourtsLiveData.postValue(res)
+                println("updated: hehe ${res}")
+            }
+        }
         context = ctx
     }
 

@@ -58,6 +58,7 @@ class LeaveRatingActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.courtId = intent.getLongExtra("courtId", 0)
+        viewModel.courtId = 19L //TODO remove this
         viewModel.reservationId = intent.getLongExtra("reservationId", 0)
         viewModel.sportCenterId = intent.getLongExtra("sportCenterId", 0)
         viewModel.userId =
@@ -162,7 +163,9 @@ class LeaveRatingActivity : ComponentActivity() {
         val sportCenter by viewModel.sportCenterWithCourtsLiveData.observeAsState()
         val court = sportCenter?.courts?.first { court -> court.courtId == viewModel.courtId }
         val displayName =
-            "${sportCenter?.sportCenter?.name}\n${court?.sportName} Court - ${viewModel.courtId}"
+           "${sportCenter?.sportCenter?.name}\n${court?.sportName} Court - ${viewModel.courtId}"
+
+
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -203,6 +206,9 @@ class LeaveRatingActivity : ComponentActivity() {
                 onValueChange = { newText ->
                     viewModel.reviewText = newText.text
                     text = newText
+                    println(text)
+                    println(newText)
+
                 },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = colorResource(id = R.color.red_button),
