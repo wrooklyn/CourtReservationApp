@@ -31,12 +31,12 @@ import androidx.room.PrimaryKey
     ]
 )
 data class Review(
-    val reviewCourtId: Long,
-    val reviewUserId: Long,
-    val reviewReservationId: Long,
-    val text: String?,
-    val rating: Int,
-    val reviewDate: String,
+    val reviewCourtId: Long = 0L,
+    val reviewUserId: Long = 0L,
+    val reviewReservationId: Long = 0L,
+    val text: String? = null,
+    val rating: Int = 0,
+    val reviewDate: String = "",
     @PrimaryKey(autoGenerate = true)
     val reviewId : Long = 0
 )

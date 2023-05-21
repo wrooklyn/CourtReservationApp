@@ -24,13 +24,13 @@ import androidx.room.PrimaryKey
     ]
 )
 data class Reservation(
-    val reservationDate: String,
-    val timeSlotId: Long,
+    val reservationDate: String = "",
+    val timeSlotId: Long = 0L,
 
-    val reservationUserId: Long,
-    val reservationCourtId: Long,
+    val reservationUserId: Long = 0L,
+    val reservationCourtId: Long = 0L,
 
-    val request: String?,
+    val request: String? = null,
 
     @PrimaryKey(autoGenerate = true)
     var reservationId: Long = 0,
