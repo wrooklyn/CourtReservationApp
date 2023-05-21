@@ -6,9 +6,8 @@ import android.preference.PreferenceManager
 
 object SavedPreference {
 
-    const val EMAIL= "email"
-    const val USERNAME="username"
-
+     var EMAIL= "email"
+     var USERNAME="username"
     private  fun getSharedPreference(ctx: Context?): SharedPreferences? {
         return PreferenceManager.getDefaultSharedPreferences(ctx)
     }
@@ -29,6 +28,7 @@ object SavedPreference {
             EMAIL,
             email
         )
+        EMAIL=email
     }
 
     fun setUsername(context: Context, username:String){
@@ -37,6 +37,7 @@ object SavedPreference {
             USERNAME,
             username
         )
+        USERNAME=username
     }
 
     fun getUsername(context: Context) = getSharedPreference(

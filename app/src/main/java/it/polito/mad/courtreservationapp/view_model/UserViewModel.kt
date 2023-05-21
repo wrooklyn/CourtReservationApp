@@ -49,9 +49,7 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
         runBlocking(Dispatchers.Default) {
             launch {
                 val res = userRepo.getUserWithMasteries(SavedPreference.getEmail(context))
-                println("$res")
                 userWithSportMasteriesAndNameLiveData.postValue(res)
-                println("updated: hehe ${res}")
             }
         }
 

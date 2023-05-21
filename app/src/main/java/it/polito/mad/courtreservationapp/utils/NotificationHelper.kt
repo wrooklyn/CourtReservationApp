@@ -6,6 +6,7 @@ import com.google.firebase.messaging.Constants.MessagePayloadKeys.SENDER_ID
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.RemoteMessage
 import it.polito.mad.courtreservationapp.db.RemoteDataSource
+import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
@@ -19,7 +20,7 @@ object NotificationHelper {
         if(isFirstLaunch == null || isFirstLaunch){
             //move code here theoretically
         }
-        val userRef = db.collection("users").document("gabryfine@gmail.com") //TODO logged user
+        val userRef = db.collection("users").document(SavedPreference.EMAIL)
         runBlocking {
             launch {
                 val id = FirebaseInstallations.getInstance().getToken(false).await()

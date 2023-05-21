@@ -77,7 +77,6 @@ class MainActivity : AppCompatActivity() {
             .build()
         mGoogleSignInClient= GoogleSignIn.getClient(this,gso)
 
-
         /* Setting the logged user */
         //hardcoded user
         /* Load user's info in both the User object and the shared preferences */
