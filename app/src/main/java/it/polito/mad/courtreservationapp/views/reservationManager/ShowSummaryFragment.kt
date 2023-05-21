@@ -17,7 +17,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.models.Gender
-import it.polito.mad.utils.DiskUtil
+import it.polito.mad.courtreservationapp.utils.DiskUtil
 import org.json.JSONObject
 import org.w3c.dom.Text
 

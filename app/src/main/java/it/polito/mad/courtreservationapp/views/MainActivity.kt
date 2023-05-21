@@ -1,5 +1,6 @@
 package it.polito.mad.courtreservationapp.views
 
+//import com.google.firebase.firestore.ListenerRegistration
 import android.app.Activity
 import android.app.Application
 import android.content.Context
@@ -18,23 +19,16 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ListenerRegistration
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.databinding.ActivityMainBinding
-import it.polito.mad.courtreservationapp.db.RemoteRepository.RemoteStorage
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithReview
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
-import it.polito.mad.courtreservationapp.db.relationships.UserWithSportMasteriesAndName
-import it.polito.mad.courtreservationapp.db.repository.FireCourtRepository
-import it.polito.mad.courtreservationapp.db.repository.FireSportCenterRepository
 import it.polito.mad.courtreservationapp.models.Reservation
-import it.polito.mad.courtreservationapp.models.SportCenter
-import it.polito.mad.courtreservationapp.models.User
 import it.polito.mad.courtreservationapp.view_model.*
 import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
 import it.polito.mad.courtreservationapp.views.login.Login
 import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import it.polito.mad.courtreservationapp.views.profile.ShowProfileFragment
-import it.polito.mad.courtreservationapp.views.ratings.LeaveRatingActivity
 import it.polito.mad.courtreservationapp.views.reservationManager.BrowseReservationsFragment
 import it.polito.mad.courtreservationapp.views.social.FriendList
 import it.polito.mad.courtreservationapp.views.social.ShowSocialPageFragment
@@ -107,7 +101,7 @@ class MainActivity : AppCompatActivity() {
         editor.putLong("UserId", 1).apply()
 
         /* Getting current user's reservations */
-        reservationBrowserViewModel.initUserReservations(1) // TODO: use actual user ID
+        reservationBrowserViewModel.initUserReservations(SavedPreference.getEmail(this))
 
         reservationBrowserViewModel.userReservations.observe(this) {
             userReservations = it

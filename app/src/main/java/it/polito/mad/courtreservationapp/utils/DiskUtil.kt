@@ -1,4 +1,4 @@
-package it.polito.mad.utils
+package it.polito.mad.courtreservationapp.utils
 
 import android.content.Context
 import android.net.Uri

@@ -112,4 +112,5 @@ dependencies {
 
     //icon
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
+    implementation 'com.google.firebase:firebase-messaging:22.0.0'
 }
