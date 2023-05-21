@@ -20,6 +20,8 @@ import it.polito.mad.courtreservationapp.view_model.*
 import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
 import it.polito.mad.courtreservationapp.views.profile.ShowProfileFragment
 import it.polito.mad.courtreservationapp.views.reservationManager.BrowseReservationsFragment
+import it.polito.mad.courtreservationapp.views.social.FriendList
+import it.polito.mad.courtreservationapp.views.social.ShowSocialPageFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -113,6 +115,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.chat -> {
                     //reservationBrowserViewModel.test(userViewModel.user.userId)
+                    replaceFragment(ShowSocialPageFragment())
                 }
                 R.id.profile -> {
                     replaceFragment(ShowProfileFragment())
