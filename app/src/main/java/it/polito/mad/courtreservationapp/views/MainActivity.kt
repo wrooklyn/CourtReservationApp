@@ -27,6 +27,7 @@ import it.polito.mad.courtreservationapp.models.SportCenter
 import it.polito.mad.courtreservationapp.models.User
 import it.polito.mad.courtreservationapp.view_model.*
 import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
+import it.polito.mad.courtreservationapp.views.login.Login
 import it.polito.mad.courtreservationapp.views.profile.ShowProfileFragment
 import it.polito.mad.courtreservationapp.views.ratings.LeaveRatingActivity
 import it.polito.mad.courtreservationapp.views.reservationManager.BrowseReservationsFragment
@@ -131,6 +132,7 @@ class MainActivity : AppCompatActivity() {
 //                           println("Name is ${it.name}")
                        }
                     }
+                    testDavide()
                     //l.remove() //if you do it here instantly, it won't show anything. Must dispose where it is appropriate
                 }
                 R.id.profile -> {
@@ -166,5 +168,10 @@ class MainActivity : AppCompatActivity() {
         editor.putInt("weight", userViewModel.user.weight)
         editor.putString("phone", userViewModel.user.phone)
         editor.apply()
+    }
+
+    private fun testDavide(){
+        val intent = Intent(this, Login::class.java)
+        startActivity(intent)
     }
 }

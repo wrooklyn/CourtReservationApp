@@ -29,6 +29,11 @@
             android:label="@string/title_activity_leave_rating"
             android:theme="@style/Theme.CourtReservationApp" />
         <activity
+            android:name=".views.login.Login"
+            android:exported="false"
+            android:label="Login"
+            android:theme="@style/Theme.CourtReservationApp" />
+        <activity
             android:name=".views.reservationManager.ReservationBrowserActivity"
             android:exported="false" />
         <activity
