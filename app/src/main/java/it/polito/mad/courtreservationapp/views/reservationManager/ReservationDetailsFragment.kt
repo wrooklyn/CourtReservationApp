@@ -27,8 +27,8 @@ import it.polito.mad.courtreservationapp.view_model.LeaveRatingViewModel
 import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
 import it.polito.mad.courtreservationapp.views.ratings.LeaveRatingActivity
-import it.polito.mad.utils.BitmapUtil
-import it.polito.mad.utils.DiskUtil
+import it.polito.mad.courtreservationapp.utils.BitmapUtil
+import it.polito.mad.courtreservationapp.utils.DiskUtil
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*

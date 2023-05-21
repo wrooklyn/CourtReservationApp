@@ -20,7 +20,7 @@ import it.polito.mad.courtreservationapp.models.Gender
 import it.polito.mad.courtreservationapp.views.AchievementSection
 import it.polito.mad.courtreservationapp.views.EditProfileActivity
 import it.polito.mad.courtreservationapp.views.MainActivity
-import it.polito.mad.utils.DiskUtil
+import it.polito.mad.courtreservationapp.utils.DiskUtil
 import org.json.JSONObject
 
 class ShowProfileFragment : Fragment(R.layout.fragment_profile) {

@@ -1,4 +1,4 @@
-package it.polito.mad.utils
+package it.polito.mad.courtreservationapp.utils
 
 /*
  * Copyright (C) 2017 The Android Open Source Project

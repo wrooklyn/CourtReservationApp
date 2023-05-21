@@ -26,8 +26,8 @@ import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.models.Gender
 import it.polito.mad.courtreservationapp.models.User
 import it.polito.mad.courtreservationapp.view_model.UserViewModel
-import it.polito.mad.utils.BitmapUtil
-import it.polito.mad.utils.DiskUtil
+import it.polito.mad.courtreservationapp.utils.BitmapUtil
+import it.polito.mad.courtreservationapp.utils.DiskUtil
 import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream

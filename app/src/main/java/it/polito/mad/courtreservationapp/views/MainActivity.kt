@@ -25,6 +25,7 @@ import it.polito.mad.courtreservationapp.db.repository.FireSportCenterRepository
 import it.polito.mad.courtreservationapp.models.Reservation
 import it.polito.mad.courtreservationapp.models.SportCenter
 import it.polito.mad.courtreservationapp.models.User
+import it.polito.mad.courtreservationapp.utils.FirebaseMessagingService
 import it.polito.mad.courtreservationapp.view_model.*
 import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
 import it.polito.mad.courtreservationapp.views.profile.ShowProfileFragment
@@ -32,6 +33,9 @@ import it.polito.mad.courtreservationapp.views.ratings.LeaveRatingActivity
 import it.polito.mad.courtreservationapp.views.reservationManager.BrowseReservationsFragment
 import it.polito.mad.courtreservationapp.views.social.FriendList
 import it.polito.mad.courtreservationapp.views.social.ShowSocialPageFragment
+import it.polito.mad.courtreservationapp.utils.NotificationHelper
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class MainActivity : AppCompatActivity() {
 
@@ -65,7 +69,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
+        NotificationHelper.init(this)
+        val intent = Intent(this, FirebaseMessagingService::class.java)
+        startService(intent)
 
         /* Setting the logged user */
         //hardcoded user
@@ -124,6 +130,7 @@ class MainActivity : AppCompatActivity() {
                     replaceFragment(BrowseReservationsFragment())
                 }
                 R.id.chat -> {
+                    NotificationHelper.sendPushNotificationToDevice("", "", "")
                     replaceFragment(ShowSocialPageFragment())
                 }
                 R.id.profile -> {
