@@ -4,7 +4,9 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import it.polito.mad.courtreservationapp.db.AppDatabase
 import it.polito.mad.courtreservationapp.db.RemoteDataSource
 import it.polito.mad.courtreservationapp.db.relationships.SportMasteryWithName
@@ -30,7 +32,13 @@ class FireUserRepository(private val application: Application) {
     }
 
     suspend fun updateUser(user: User) {
-        userDao.updateUser(user)
+//        userDao.updateUser(user)
+        val db: FirebaseFirestore = RemoteDataSource.instance
+//        val content = hashMapOf(
+//            "level" to level
+//        )
+
+        db.collection("users").document(user.email).set(user, SetOptions.merge())
     }
 
     fun getAll(): LiveData<List<User>>{
@@ -50,14 +58,16 @@ class FireUserRepository(private val application: Application) {
         val db: FirebaseFirestore = RemoteDataSource.instance
         val userDoc = db.collection("users").document(email).get().await()
         val username = userDoc.data?.get("username") as String? ?: ""
-        val first_name = userDoc.data?.get("first_name") as String? ?: ""
-        val last_name = userDoc.data?.get("last_name") as String? ?: ""
+        val firstName = userDoc.data?.get("firstName") as String? ?: ""
+        val lastName = userDoc.data?.get("lastName") as String? ?: ""
         val address = userDoc.data?.get("address") as String? ?: ""
         val gender = userDoc.data?.get("gender") as Long? ?: 0L
         val height = userDoc.data?.get("height") as Long? ?: 0L
         val weight = userDoc.data?.get("weight") as Long? ?: 0L
+        val phone = userDoc.data?.get("phone") as String? ?: ""
 
-        val user = User(username, first_name, last_name, email, address)
+        val user = User(username, firstName, lastName, email, address, gender.toInt(), height.toInt(), weight.toInt(), phone)
+        Log.i("getUser", "$user")
         val masterySnap = db.collection("users").document(email).collection("mastery").get().await()
         val masteries = mutableListOf<SportMasteryWithName>()
         for(mastery in masterySnap){

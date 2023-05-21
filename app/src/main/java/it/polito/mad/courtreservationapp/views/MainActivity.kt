@@ -11,6 +11,10 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ListenerRegistration
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.databinding.ActivityMainBinding
@@ -28,6 +32,7 @@ import it.polito.mad.courtreservationapp.models.User
 import it.polito.mad.courtreservationapp.view_model.*
 import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
 import it.polito.mad.courtreservationapp.views.login.Login
+import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import it.polito.mad.courtreservationapp.views.profile.ShowProfileFragment
 import it.polito.mad.courtreservationapp.views.ratings.LeaveRatingActivity
 import it.polito.mad.courtreservationapp.views.reservationManager.BrowseReservationsFragment
@@ -45,7 +50,7 @@ class MainActivity : AppCompatActivity() {
     val registerForActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
         println("${it}")
         if (it.resultCode == Activity.RESULT_OK){
-            userViewModel.refreshUser()
+            userViewModel.refreshUser(this)
         }
     }
 
@@ -59,25 +64,38 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var sportCenters : List<SportCenterWithCourtsAndServices>
 
+    // declare the GoogleSignInClient
+    lateinit var mGoogleSignInClient: GoogleSignInClient
+    // val auth is initialized by lazy
+    private val auth by lazy {
+        FirebaseAuth.getInstance()
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sportCenterViewModel.initData()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        mGoogleSignInClient= GoogleSignIn.getClient(this,gso)
 
 
         /* Setting the logged user */
         //hardcoded user
         /* Load user's info in both the User object and the shared preferences */
-        userViewModel.setCurrentUser("chndavide@gmail.com") //TODO: get email from login
+        Log.i("MainActivity, OnCreate", "${SavedPreference.getEmail(this)}")
+        userViewModel.setCurrentUser(SavedPreference.getEmail(this))
 //        userViewModel.userLiveData.observe(this) {
 //            userViewModel.user = it
 //            loadUserInfo()
 //        }
         userViewModel.userWithSportMasteriesAndNameLiveData.observe(this){
             println("observer got: $it")
+            println("Observer")
             userViewModel.user = it.user
             userViewModel.userWithSportMasteriesAndName = it
             loadUserInfo()
@@ -118,7 +136,8 @@ class MainActivity : AppCompatActivity() {
                     replaceFragment(HomeFragment())
                 }
                 R.id.explore -> {
-                    replaceFragment(ShowUnimplementedFragment())
+//                    replaceFragment(ShowUnimplementedFragment())
+                    testDavide()
                 }
 
                 R.id.calendar -> {
@@ -138,6 +157,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        println("onResume")
+        userViewModel.refreshUser(this)
+    }
+
     fun replaceFragment(fragment: Fragment) {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
@@ -150,6 +175,7 @@ class MainActivity : AppCompatActivity() {
         val sharedPreferences = this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
 //        editor.putLong("UserId", userId)
+        Log.i("loadUserInfo", "${userViewModel.user}")
         editor.putString("username", userViewModel.user.username)
         editor.putString("firstname", userViewModel.user.firstName)
         editor.putString("lastname", userViewModel.user.lastName)
@@ -163,6 +189,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun testDavide(){
+        Log.i("test", "login launch")
         val intent = Intent(this, Login::class.java)
         startActivity(intent)
     }

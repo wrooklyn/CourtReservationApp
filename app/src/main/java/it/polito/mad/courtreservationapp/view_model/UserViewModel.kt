@@ -2,6 +2,7 @@ package it.polito.mad.courtreservationapp.view_model
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -9,6 +10,7 @@ import it.polito.mad.courtreservationapp.db.relationships.UserWithSportMasteries
 import it.polito.mad.courtreservationapp.db.repository.FireUserRepository
 import it.polito.mad.courtreservationapp.models.User
 import it.polito.mad.courtreservationapp.views.MainActivity
+import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -42,11 +44,11 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
         }
 
     }
-    fun refreshUser() {
+    fun refreshUser(context: Context) {
         println("refresh")
         runBlocking(Dispatchers.Default) {
             launch {
-                val res = userRepo.getUserWithMasteries(user.email)
+                val res = userRepo.getUserWithMasteries(SavedPreference.getEmail(context))
                 println("$res")
                 userWithSportMasteriesAndNameLiveData.postValue(res)
                 println("updated: hehe ${res}")
@@ -57,6 +59,7 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
 
     fun updateUser(u: User) {
         viewModelScope.launch{
+            Log.i("updateUser", "$u")
             userRepo.updateUser(u)
         }
     }

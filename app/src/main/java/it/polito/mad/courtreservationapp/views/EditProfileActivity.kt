@@ -44,7 +44,7 @@ class EditProfileActivity : AppCompatActivity() {
 
     private var gender : Gender? = null
     private var height : Int = Int.MIN_VALUE
-    private var weight : Double = Double.MIN_VALUE
+    private var weight : Int = Int.MIN_VALUE
     private var phone : String?  = null
 
     private lateinit var mainLL: ConstraintLayout
@@ -111,7 +111,7 @@ class EditProfileActivity : AppCompatActivity() {
                 2 -> gender = Gender.OTHER
             }
             height = userInfo.getInt("height", Int.MIN_VALUE)
-            weight = userInfo.getInt("weight", Int.MIN_VALUE).toDouble()
+            weight = userInfo.getInt("weight", Int.MIN_VALUE)
 
             val path = userInfo.getString("photoPath", "")!!
             photoFile = DiskUtil.getFileFromPath(path) ?: DiskUtil.getDefaultImage(this)
@@ -174,7 +174,7 @@ class EditProfileActivity : AppCompatActivity() {
         }
 
         val weightView = findViewById<TextView>(R.id.editWeight)
-        weightView.text = if(weight != Double.MIN_VALUE) weight.toString() else null
+        weightView.text = if(weight != Int.MIN_VALUE) weight.toString() else null
         weightView.doAfterTextChanged {
             val value = weightView.text.toString().toDoubleOrNull() ?: Double.MIN_VALUE
             if( value < 0.0 || value > 150.0){
@@ -214,7 +214,7 @@ class EditProfileActivity : AppCompatActivity() {
             address = findViewById<TextView>(R.id.editAddress).text.toString()
             gender = findViewById<Spinner>(R.id.editGender).selectedItem as Gender
             height = findViewById<TextView>(R.id.editHeight).text.toString().toIntOrNull() ?: Int.MIN_VALUE
-            weight = findViewById<TextView>(R.id.editWeight).text.toString().toDoubleOrNull() ?: Double.MIN_VALUE
+            weight = findViewById<TextView>(R.id.editWeight).text.toString().toIntOrNull() ?: Int.MIN_VALUE
             phone = findViewById<TextView>(R.id.editPhone).text.toString()
             val sharedPref = getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
             val editor = sharedPref.edit()
@@ -240,7 +240,7 @@ class EditProfileActivity : AppCompatActivity() {
                 address!!,
                 gender!!.ordinal,
                 height,
-                weight.toInt(),
+                weight!!,
                 phone!!,
                 sharedPref.getLong("UserId", -1)))
             finish()

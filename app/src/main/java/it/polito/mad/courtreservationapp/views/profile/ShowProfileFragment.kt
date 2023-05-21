@@ -14,12 +14,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.compose.ui.platform.ComposeView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.models.Gender
 import it.polito.mad.courtreservationapp.views.AchievementSection
 import it.polito.mad.courtreservationapp.views.EditProfileActivity
 import it.polito.mad.courtreservationapp.views.MainActivity
+import it.polito.mad.courtreservationapp.views.login.Login
 import it.polito.mad.utils.DiskUtil
 import org.json.JSONObject
 
@@ -105,6 +107,15 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
         composeView.setContent {
             val userWithSportMasteriesAndName = (activity as MainActivity).userViewModel.userWithSportMasteriesAndName
             AchievementSection(activity as MainActivity, userWithSportMasteriesAndName)
+        }
+        view.findViewById<TextView>(R.id.logoutTV).setOnClickListener(){
+            val a = (activity as MainActivity)
+            a.mGoogleSignInClient.signOut().addOnCompleteListener {
+                a.getSharedPreferences("UserInfo", Context.MODE_PRIVATE).edit().clear().apply()
+                val intent= Intent(a, Login::class.java)
+                startActivity(intent)
+                a.finish()
+            }
         }
     }
 
