@@ -35,7 +35,7 @@ class CreateReservationActivity : AppCompatActivity() {
 
         //hardcoded user
 
-        viewModel.userId = this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE).getLong("UserId", 0)
+        viewModel.email = this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE).getString("email", "")!!
 
         viewModel.initAll(this)
 

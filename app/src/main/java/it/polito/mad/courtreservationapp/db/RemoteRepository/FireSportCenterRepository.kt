@@ -30,8 +30,14 @@ class FireSportCenterRepository(val application: Application) {
         return sportCenterDao.getAll()
     }
 
-    fun getById(id: Long): LiveData<SportCenter> {
-        return sportCenterDao.getById(id)
+    suspend fun getById(id: String): SportCenter {
+        val db: FirebaseFirestore = RemoteDataSource.instance
+        val sportCenterDoc = db.collection("sport-centers").document(id).get().await()
+        val scName: String = sportCenterDoc.data?.get("name") as String
+        val scAddress = sportCenterDoc.data?.get("address") as String
+        val scDescription = sportCenterDoc.data?.get("description") as String
+        val scId = sportCenterDoc.data?.get("id") as Long
+        return SportCenter(scName, scAddress, scDescription, scId)
     }
 
     fun getAllWithCourts(): LiveData<List<SportCenterWithCourts>> {

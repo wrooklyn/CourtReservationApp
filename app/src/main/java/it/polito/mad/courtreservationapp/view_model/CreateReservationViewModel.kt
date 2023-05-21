@@ -22,14 +22,14 @@ import java.util.*
 class CreateReservationViewModel(application: Application): AndroidViewModel(application) {
     private val tag: String = "ReservationFragmentViewModel"
     val reservationRepo: FireReservationRepository = FireReservationRepository(application)
-    private val courtRepo: CourtRepository = CourtRepository(application)
+    private val courtRepo: FireCourtRepository = FireCourtRepository(application)
     private val sportCenterRepo: FireSportCenterRepository = FireSportCenterRepository(application)
     private val userRepo: FireUserRepository = FireUserRepository(application)
 
-    lateinit var sportCenterLiveData: LiveData<SportCenter>
-    lateinit var courtReservationsLiveData: LiveData<CourtWithReservations>
-    lateinit var courtServicesLiveData: LiveData<CourtWithServices>
-    lateinit var userLiveData: MutableLiveData<User>
+    var sportCenterLiveData: MutableLiveData<SportCenter> = MutableLiveData()
+    var courtReservationsLiveData: MutableLiveData<CourtWithReservations> = MutableLiveData()
+    var courtServicesLiveData: MutableLiveData<CourtWithServices> = MutableLiveData()
+    var userLiveData: MutableLiveData<User> = MutableLiveData()
 
     lateinit var sportCenter: SportCenter
     lateinit var court: Court
@@ -47,11 +47,11 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
     var reservationServices : MutableList<Long> = mutableListOf()
     var reservationRequests : String = ""
 
-    var courtId: Long = 0
-    var sportCenterId: Long = 0
+    var courtId: String = "80A69RdLDZhzICaVa1qA" // TODO: remove hardcoded IDs, use actual ones
+    var sportCenterId: String = "A4pjoFykPhVSfpkfYUXK"
     var reservationId: Long = 0
     var userId: Long = 0
-    var email: String = ""
+    var email: String = "chndavide@gmail.com"
 
 
     fun initAll(ctx : CreateReservationActivity){
@@ -67,10 +67,14 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
             }
         }
     }
-    private fun initCourt(courtId: Long, centerId: Long){
-        sportCenterLiveData = sportCenterRepo.getById(centerId)
-        courtReservationsLiveData = courtRepo.getByIdWithReservations(courtId)
-        courtServicesLiveData = courtRepo.getByIdWithServices(courtId)
+    private fun initCourt(courtId: String, centerId: String){
+        runBlocking {
+            launch {
+                sportCenterLiveData.postValue(sportCenterRepo.getById(centerId))
+                courtReservationsLiveData.postValue(courtRepo.getByIdWithReservations(centerId, courtId))
+                courtServicesLiveData.postValue(courtRepo.getByIdWithServices(centerId, courtId))
+            }
+        }
 
     }
     private fun initUser(email: String){
