@@ -17,9 +17,9 @@ import androidx.room.PrimaryKey
 )
 data class Opening (
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
-    val centerId: Int,
-    val openingDay: Int,
-    val openingHour: Int,
-    val closingHour: Int
+    val id: Int = 0,
+    val centerId: Int = 0,
+    val openingDay: Int = 0,
+    val openingHour: Int = 0,
+    val closingHour: Int = 0
 )

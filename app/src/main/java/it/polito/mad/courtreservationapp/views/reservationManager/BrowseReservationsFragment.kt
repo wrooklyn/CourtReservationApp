@@ -23,7 +23,7 @@ class BrowseReservationsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val user = (activity as MainActivity).user
+        val user = (activity as MainActivity).userViewModel.user
         val userReservLocations = (activity as MainActivity).userReservationsLocations.sortedByDescending { res -> res.reservation.reservationDate }
         val userReservServices = (activity as MainActivity).userReservationsServices.sortedByDescending { res -> res.reservation.reservationDate }
         val tabReserv = view.findViewById<TabLayout>(R.id.reserv_tab_layout)

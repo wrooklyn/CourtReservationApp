@@ -1,19 +1,31 @@
 package it.polito.mad.courtreservationapp.db.repository
 
 import android.app.Application
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import it.polito.mad.courtreservationapp.db.AppDatabase
+import it.polito.mad.courtreservationapp.db.RemoteDataSource
 import it.polito.mad.courtreservationapp.models.SportMastery
 
 class FireSportMasteryRepository(private val application: Application) {
-    private val db: AppDatabase = AppDatabase.getDatabase(application)
-    private val sportMasteryDao = db.sportMasteryDao()
+//    private val db: AppDatabase = AppDatabase.getDatabase(application)
+//    private val sportMasteryDao = db.sportMasteryDao()
 
-    suspend fun insertSportMastery(sportMastery: SportMastery): Long{
-        return sportMasteryDao.save(sportMastery)
+    val db: FirebaseFirestore = RemoteDataSource.instance
+
+    suspend fun insertSportMastery(email: String, sport: String, level: Int, achievement: String?){
+        val content = hashMapOf(
+            "level" to level
+        )
+
+        db.collection("users").document(email).collection("mastery").document(sport).set(content, SetOptions.merge())
+        db.collection("users").document(email).collection("mastery").document(sport).update("achievements", FieldValue.arrayUnion(achievement ?: ""))
+//        return sportMasteryDao.save(sportMastery)
     }
 
-    suspend fun deleteSportMastery(sportMastery: SportMastery){
-        return sportMasteryDao.delete(sportMastery)
-    }
+//    suspend fun deleteSportMastery(sportMastery: SportMastery){
+//        return sportMasteryDao.delete(sportMastery)
+//    }
 
 }

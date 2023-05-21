@@ -16,9 +16,9 @@ import androidx.room.PrimaryKey
     ]
 )
 data class Court(
-    val courtCenterId: Long,
-    val sportName: String,
-    val fieldStatus: Int,
+    val courtCenterId: Long = 0L,
+    val sportName: String = "",
+    val fieldStatus: Int = 0,
 
     @PrimaryKey(autoGenerate = true)
     var courtId: Long = 0,

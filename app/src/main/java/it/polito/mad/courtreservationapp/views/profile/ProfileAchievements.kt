@@ -1,10 +1,12 @@
 package it.polito.mad.courtreservationapp.views
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -38,17 +40,18 @@ import it.polito.mad.courtreservationapp.views.profile.AddEditInterestActivity
 
 @Composable
 fun AchievementSection(
-    ctx: FragmentActivity?,
+    ctx: MainActivity,
     userWithSportMasteriesAndName: UserWithSportMasteriesAndName
 ){
 //    val sportsPlaceHolder = listOf<String>("Soccer", "Tennis", "Ice Skate")
-    val imageId = mapOf(1 to R.drawable.soccer_ball,
-        2 to R.drawable.volleyball,
-        3 to R.drawable.hockey,
-        4 to R.drawable.basketball_icon,
-        5 to R.drawable.tennis,
-        6 to R.drawable.ice_skate,
-        7 to R.drawable.rugby
+
+    val imageId = mapOf("soccer" to R.drawable.soccer_ball,
+        "volley" to R.drawable.volleyball,
+        "hocky" to R.drawable.hockey,
+        "basketball" to R.drawable.basketball_icon,
+        "tennis" to R.drawable.tennis,
+        "iceskate" to R.drawable.ice_skate,
+        "rugby" to R.drawable.rugby
     )
 
     var mainLL: ConstraintLayout? = ctx?.findViewById(R.id.mainLL)
@@ -57,16 +60,17 @@ fun AchievementSection(
 
         .padding(30.dp, 10.dp)) {
         for(s in userWithSportMasteriesAndName.masteries){
-            imageId[s.sport.id.toInt()]?.let { sportCard(s, it, ctx, mainLL) }
+            imageId[s.sport.name]?.let { sportCard(s, it, ctx, mainLL) }
             Spacer(modifier = Modifier.height(10.dp))
         }
         Button(
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.red_button)),
             onClick = {
+
             val interestId = 1L
             val intent = Intent(ctx, AddEditInterestActivity::class.java)
-            intent.putExtra("userId", userWithSportMasteriesAndName.user.userId)
-            ctx?.startActivity(intent)
+            intent.putExtra("email", userWithSportMasteriesAndName.user.email)
+            ctx.registerForActivity.launch(intent)
         }) {
             Icon(Icons.Default.Add, "Add")
         }
@@ -83,10 +87,10 @@ val InterRegular = FontFamily(
 
 private fun mapMastery(level: Int): String{
     return when(level){
-        1 -> "Beginner"
-        2 -> "Intermediate"
-        3 -> "Expert"
-        4 -> "Professional"
+        0 -> "Beginner"
+        1 -> "Intermediate"
+        2 -> "Expert"
+        3 -> "Professional"
         else -> "Error"
     }
 
@@ -119,7 +123,7 @@ fun sportCard(sport: SportMasteryWithName, imageId: Int, ctx: FragmentActivity?,
                     .findViewById<ImageView>(R.id.achievementImageView)
                     .setImageResource(imageId)
                 popupView.findViewById<TextView>(R.id.mastery_level).text =
-                    "${sport.sport.name} - ${mapMastery(sport.sportMastery.level)}"
+                    "${sport.sport.name.uppercase()} - ${mapMastery(sport.sportMastery.level)}"
                 popupView.findViewById<TextView>(R.id.achievementsTV).text =
                     sport.sportMastery.achievement
                 popupWindow.showAtLocation(mainLL, Gravity.CENTER, 0, 0)

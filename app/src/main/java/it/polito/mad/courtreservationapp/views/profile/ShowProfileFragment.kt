@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,7 +32,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
     private var address: String = ""
     private var gender: Gender = Gender.MALE
     private var height: Int = Int.MIN_VALUE
-    private var weight: Double = Double.MIN_VALUE
+    private var weight: Int = Int.MIN_VALUE
     private var phone: String? = null
     private lateinit var photoPath: String
 
@@ -58,7 +59,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        Log.i("Show Profile", "On Create")
         if (activity?.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
             activity?.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
             activity?.checkSelfPermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
@@ -88,6 +89,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        Log.i("Show Profile", "On CreateView")
         val view= inflater.inflate(R.layout.fragment_profile, container, false)
         view.findViewById<ConstraintLayout>(R.id.mainLL).foreground.alpha = 0
         return view
@@ -95,13 +97,14 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.i("Show Profile", "On ViewCreated")
         view.findViewById<TextView>(R.id.editButtonTV).setOnClickListener{
             launchProfileEdit()
         }
         val composeView = view.findViewById<ComposeView>(R.id.composeContainer)
         composeView.setContent {
-            val userWithSportMasteriesAndName = (activity as MainActivity).userWithSportMasteriesAndName
-            AchievementSection(activity, userWithSportMasteriesAndName)
+            val userWithSportMasteriesAndName = (activity as MainActivity).userViewModel.userWithSportMasteriesAndName
+            AchievementSection(activity as MainActivity, userWithSportMasteriesAndName)
         }
     }
 
@@ -130,7 +133,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
                 2 -> newGender = "Other"
             }
             height = userInfo.getInt("height", Int.MIN_VALUE)
-            weight = userInfo.getInt("weight", Int.MIN_VALUE).toDouble()
+            weight = userInfo.getInt("weight", Int.MIN_VALUE)
 
             photoPath = userInfo.getString("photoPath", "")!!
         }
@@ -142,7 +145,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
         activity?.findViewById<TextView>(R.id.addressTV)?.text = address
         activity?.findViewById<TextView>(R.id.genderTV)?.text = newGender
         activity?.findViewById<TextView>(R.id.heightTV)?.text = if(height == Int.MIN_VALUE) null else "$height cm"
-        activity?.findViewById<TextView>(R.id.weightTV)?.text = if(weight == Double.MIN_VALUE) null else "$weight kg"
+        activity?.findViewById<TextView>(R.id.weightTV)?.text = if(weight == Int.MIN_VALUE) null else "$weight kg"
         activity?.findViewById<TextView>(R.id.phoneTV)?.text = phone
 
         val pfpElement = activity?.findViewById<ImageView>(R.id.imageView2)
@@ -154,7 +157,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
         }
     }
 
-    fun launchProfileEdit() {
+    private fun launchProfileEdit() {
         val editProfileIntent = Intent(activity, EditProfileActivity::class.java)
         startActivity(editProfileIntent)
     }

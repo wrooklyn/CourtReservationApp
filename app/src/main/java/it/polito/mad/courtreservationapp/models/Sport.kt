@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "sports")
 data class Sport(
-    val name: String,
+    val name: String = "",
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0
 

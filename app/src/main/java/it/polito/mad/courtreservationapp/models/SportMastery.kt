@@ -24,9 +24,9 @@ import androidx.room.PrimaryKey
     ]
 )
 data class SportMastery(
-    val sportId: Long,
-    val userId: Long,
-    val level: Int,
+    val sportId: Long = 0L,
+    val userId: Long = 0L,
+    val level: Int = 0,
     val achievement: String?,
     @PrimaryKey(autoGenerate = true)
     val id : Long = 0

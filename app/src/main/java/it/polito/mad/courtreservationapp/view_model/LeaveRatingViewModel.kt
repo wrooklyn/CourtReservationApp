@@ -65,7 +65,7 @@ class LeaveRatingViewModel(application: Application): AndroidViewModel(applicati
             launch {
                 val res = sportCenterRepo.getCenterWithCourts2("A4pjoFykPhVSfpkfYUXK")
                 sportCenterWithCourtsLiveData.postValue(res)
-                println("updated: hehe ${res}")
+//                println("updated: hehe ${res}")
             }
         }
         context = ctx

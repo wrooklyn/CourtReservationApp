@@ -1,10 +1,12 @@
 package it.polito.mad.courtreservationapp.views
 
+import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -33,14 +35,21 @@ import it.polito.mad.courtreservationapp.views.social.ShowSocialPageFragment
 
 class MainActivity : AppCompatActivity() {
 
-    val userViewModel: UserViewModel by viewModels()
+    val userViewModel: UserViewModel by viewModels() //done
     val reservationBrowserViewModel: ReservationBrowserViewModel by viewModels()
     val sportCenterViewModel: SportCenterViewModel by viewModels() //done
-    val sportMasteryViewModel: SportMasteryViewModel by viewModels()
+    val sportMasteryViewModel: SportMasteryViewModel by viewModels() //done
     val ratingViewModel: LeaveRatingViewModel by viewModels() //done
 
-    lateinit var user: User
-    lateinit var userWithSportMasteriesAndName: UserWithSportMasteriesAndName
+    val registerForActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+        println("${it}")
+        if (it.resultCode == Activity.RESULT_OK){
+            userViewModel.refreshUser()
+        }
+    }
+
+//    lateinit var user: User
+//    lateinit var userWithSportMasteriesAndName: UserWithSportMasteriesAndName
     lateinit var userReservations: List<Reservation>
     lateinit var userReservationsLocations: List<ReservationWithSportCenter>
     lateinit var userReservationsServices: List<ReservationWithServices>
@@ -61,14 +70,17 @@ class MainActivity : AppCompatActivity() {
         /* Setting the logged user */
         //hardcoded user
         /* Load user's info in both the User object and the shared preferences */
-        userViewModel.setCurrentUser(1)
-        userViewModel.user.observe(this) {
-            user = it
-            loadUserInfo(user.userId)
-        }
+        userViewModel.setCurrentUser("chndavide@gmail.com") //TODO: get email from login
+//        userViewModel.userLiveData.observe(this) {
+//            userViewModel.user = it
+//            loadUserInfo()
+//        }
         userViewModel.userWithSportMasteriesAndNameLiveData.observe(this){
+            println("observer got: $it")
+            userViewModel.user = it.user
             userViewModel.userWithSportMasteriesAndName = it
-            userWithSportMasteriesAndName = it
+            loadUserInfo()
+
         }
 
         val sharedPreferences = this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
@@ -133,19 +145,19 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun loadUserInfo(userId: Long) {
+    private fun loadUserInfo() {
         val sharedPreferences = this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-        editor.putLong("UserId", userId)
-        editor.putString("username", user.username)
-        editor.putString("firstname", user.firstName)
-        editor.putString("lastname", user.lastName)
-        editor.putString("email", user.email)
-        editor.putString("address", user.address)
-        editor.putInt("gender", user.gender)
-        editor.putInt("height", user.height)
-        editor.putInt("weight", user.weight)
-        editor.putString("phone", user.phone)
+//        editor.putLong("UserId", userId)
+        editor.putString("username", userViewModel.user.username)
+        editor.putString("firstname", userViewModel.user.firstName)
+        editor.putString("lastname", userViewModel.user.lastName)
+        editor.putString("email", userViewModel.user.email)
+        editor.putString("address", userViewModel.user.address)
+        editor.putInt("gender", userViewModel.user.gender)
+        editor.putInt("height", userViewModel.user.height)
+        editor.putInt("weight", userViewModel.user.weight)
+        editor.putString("phone", userViewModel.user.phone)
         editor.apply()
     }
 }

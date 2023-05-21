@@ -3,6 +3,7 @@ package it.polito.mad.courtreservationapp.view_model
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithReservations
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithServices
@@ -13,7 +14,9 @@ import it.polito.mad.courtreservationapp.models.Reservation
 import it.polito.mad.courtreservationapp.models.SportCenter
 import it.polito.mad.courtreservationapp.models.User
 import it.polito.mad.courtreservationapp.views.reservationManager.CreateReservationActivity
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.*
 
 class CreateReservationViewModel(application: Application): AndroidViewModel(application) {
@@ -26,7 +29,7 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
     lateinit var sportCenterLiveData: LiveData<SportCenter>
     lateinit var courtReservationsLiveData: LiveData<CourtWithReservations>
     lateinit var courtServicesLiveData: LiveData<CourtWithServices>
-    lateinit var userLiveData: LiveData<User>
+    lateinit var userLiveData: MutableLiveData<User>
 
     lateinit var sportCenter: SportCenter
     lateinit var court: Court
@@ -48,12 +51,12 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
     var sportCenterId: Long = 0
     var reservationId: Long = 0
     var userId: Long = 0
-
+    var email: String = ""
 
 
     fun initAll(ctx : CreateReservationActivity){
         initCourt(courtId, sportCenterId)
-        initUser(userId)
+        initUser(email)
 
         if(reservationId!=0L){
             reservationRepo.getByIdWithServices(reservationId).observe(ctx){
@@ -70,8 +73,15 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
         courtServicesLiveData = courtRepo.getByIdWithServices(courtId)
 
     }
-    private fun initUser(userId: Long){
-        userLiveData = userRepo.getById(userId)
+    private fun initUser(email: String){
+        runBlocking(Dispatchers.Default) {
+            launch {
+                val res = userRepo.getUserWithMasteries(email)
+                userLiveData.postValue(res.user)
+                println("updated: hehe ${res}")
+            }
+        }
+
     }
 
 
