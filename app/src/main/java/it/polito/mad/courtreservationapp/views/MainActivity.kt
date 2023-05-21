@@ -31,6 +31,8 @@ import it.polito.mad.courtreservationapp.views.login.Login
 import it.polito.mad.courtreservationapp.views.profile.ShowProfileFragment
 import it.polito.mad.courtreservationapp.views.ratings.LeaveRatingActivity
 import it.polito.mad.courtreservationapp.views.reservationManager.BrowseReservationsFragment
+import it.polito.mad.courtreservationapp.views.social.FriendList
+import it.polito.mad.courtreservationapp.views.social.ShowSocialPageFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -123,17 +125,7 @@ class MainActivity : AppCompatActivity() {
                     replaceFragment(BrowseReservationsFragment())
                 }
                 R.id.chat -> {
-                    val sc = MutableLiveData<List<SportCenter>>()
-                    //initialize connection
-                    val l:ListenerRegistration = RemoteStorage.getAllSportCenters(sc)
-                    //use sc
-                    sc.observe(this){
-                       it.forEach(){
-//                           println("Name is ${it.name}")
-                       }
-                    }
-                    testDavide()
-                    //l.remove() //if you do it here instantly, it won't show anything. Must dispose where it is appropriate
+                    replaceFragment(ShowSocialPageFragment())
                 }
                 R.id.profile -> {
                     replaceFragment(ShowProfileFragment())

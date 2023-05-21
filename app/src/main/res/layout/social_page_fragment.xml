@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLL"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_blue_background"
-    tools:context=".views.homeManager.HomeFragment">
+    tools:context=".views.profile.ShowProfileFragment">
 
     <TextView
         android:id="@+id/discover_heading"
@@ -17,7 +19,7 @@
         android:fontFamily="@font/red_hat_display_black"
         android:gravity="bottom"
         android:lineSpacingExtra="1sp"
-        android:text="@string/discover_heading"
+        android:text="@string/social_page_title"
         android:textAppearance="@style/discover_heading"
         app:layout_constraintBottom_toTopOf="@+id/guideline10"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,7 +43,7 @@
         android:autoSizePresetSizes="@array/autosize_subtitle_sizes"
         android:autoSizeTextType="uniform"
         android:fontFamily="@font/red_hat_display_medium"
-        android:text="@string/category_subheading"
+        android:text="@string/social_page_subtitle"
         android:textAppearance="@style/category_subheading"
         app:layout_constraintBottom_toTopOf="@+id/guideline9"
         app:layout_constraintEnd_toEndOf="parent"
@@ -55,59 +57,42 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.16" />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
-            android:orientation="horizontal"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            app:layout_constraintBottom_toTopOf="@+id/constraintLayout15"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/guideline9"
-            app:layout_constraintVertical_bias="0.0">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/sports_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:reverseLayout="true"
-                tools:listitem="@layout/sports_list_item" />
-        </RelativeLayout>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.22" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout15"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@drawable/custom_rectangle"
+        android:background="@drawable/shape_rectangle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline">
+        app:layout_constraintTop_toTopOf="@+id/guideline2">
 
-
-        <FrameLayout
-            android:id="@+id/child_fragment_container"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_height="0dp"
             app:layout_constraintEnd_toEndOf="parent"
-            />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/constraintLayout15"
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
+            <androidx.compose.ui.platform.ComposeView
+                android:id="@+id/composeContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+        </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.33242133" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
