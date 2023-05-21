@@ -43,6 +43,8 @@
     <string name="chat_button_title">Chat</string>
     <string name="profile_button_title">Profile</string>
     <string name="profile_page_title">Profile</string>
+    <string name="social_page_title">Friends</string>
+    <string name="social_page_subtitle">It\'s more fun together!</string>
     <string name="at_username">\u0040username</string>
     <string name="email_example">email@example.com</string>
     <string name="address_example">Via Roma 1, Riva presso Chieri</string>
@@ -99,4 +101,5 @@
     <string name="upcoming">Upcoming</string>
     <string name="past">Past</string>
     <string name="leave_review">Leave a review</string>
+    <string name="title_activity_friend_list">FriendList</string>
 </resources>
