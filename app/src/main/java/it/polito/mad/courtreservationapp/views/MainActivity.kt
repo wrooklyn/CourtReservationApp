@@ -1,10 +1,12 @@
 package it.polito.mad.courtreservationapp.views
 
+import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -31,11 +33,18 @@ import it.polito.mad.courtreservationapp.views.reservationManager.BrowseReservat
 
 class MainActivity : AppCompatActivity() {
 
-    val userViewModel: UserViewModel by viewModels()
+    val userViewModel: UserViewModel by viewModels() //done
     val reservationBrowserViewModel: ReservationBrowserViewModel by viewModels()
     val sportCenterViewModel: SportCenterViewModel by viewModels() //done
-    val sportMasteryViewModel: SportMasteryViewModel by viewModels()
+    val sportMasteryViewModel: SportMasteryViewModel by viewModels() //done
     val ratingViewModel: LeaveRatingViewModel by viewModels() //done
+
+    val registerForActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+        println("${it}")
+        if (it.resultCode == Activity.RESULT_OK){
+            userViewModel.refreshUser()
+        }
+    }
 
 //    lateinit var user: User
 //    lateinit var userWithSportMasteriesAndName: UserWithSportMasteriesAndName
@@ -59,13 +68,17 @@ class MainActivity : AppCompatActivity() {
         /* Setting the logged user */
         //hardcoded user
         /* Load user's info in both the User object and the shared preferences */
-        userViewModel.setCurrentUser("chndavide@gmail.com")
-        userViewModel.userLiveData.observe(this) {
-            userViewModel.user = it
-            loadUserInfo()
-        }
+        userViewModel.setCurrentUser("chndavide@gmail.com") //TODO: get email from login
+//        userViewModel.userLiveData.observe(this) {
+//            userViewModel.user = it
+//            loadUserInfo()
+//        }
         userViewModel.userWithSportMasteriesAndNameLiveData.observe(this){
+            println("observer got: $it")
+            userViewModel.user = it.user
             userViewModel.userWithSportMasteriesAndName = it
+            loadUserInfo()
+
         }
 
         val sharedPreferences = this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
@@ -115,7 +128,7 @@ class MainActivity : AppCompatActivity() {
                     //use sc
                     sc.observe(this){
                        it.forEach(){
-                           println("Name is ${it.name}")
+//                           println("Name is ${it.name}")
                        }
                     }
                     //l.remove() //if you do it here instantly, it won't show anything. Must dispose where it is appropriate

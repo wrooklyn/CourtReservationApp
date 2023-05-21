@@ -1,5 +1,6 @@
 package it.polito.mad.courtreservationapp.views.profile
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,18 +29,21 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.view_model.SportMasteryViewModel
+import it.polito.mad.courtreservationapp.view_model.UserViewModel
 
 class AddEditInterestActivity : ComponentActivity() {
     private val sportMasteryViewModel: SportMasteryViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sportMasteryViewModel.userId = intent.getLongExtra("userId", 0L)
+        sportMasteryViewModel.email = intent.getStringExtra("email") ?: ""
         setContent {
             it.polito.mad.courtreservationapp.views.ratings.ui.theme.CourtReservationAppTheme {
                 // A surface container using the 'background' color from the theme
@@ -85,6 +89,7 @@ class AddEditInterestActivity : ComponentActivity() {
                         colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.red_button)),
                         onClick = {
                             sportMasteryViewModel.saveMastery()
+                            setResult(Activity.RESULT_OK)
                             finish()
                         }) {
                         androidx.compose.material.Text(
@@ -151,7 +156,7 @@ class AddEditInterestActivity : ComponentActivity() {
                     modifier = Modifier.padding(5.dp),
                     onClick = {
                         selectedSport = if (thisButtonSelected) "" else it.first
-                        sportMasteryViewModel.sportId = sportIconsId[selectedSport]?.second?.toLong() ?: 0L
+                        sportMasteryViewModel.sport = selectedSport.lowercase()
                     }) {
                     Image(
                         modifier = Modifier

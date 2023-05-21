@@ -31,7 +31,7 @@ class HomeFragment : Fragment() {
         super.onCreate(savedInstanceState)
         viewModel = (activity as MainActivity).sportCenterViewModel
         viewModel.sportCentersLiveData.observe(this){
-            println("observing : $it")
+//            println("observing : $it")
             viewModel.loadSportCenters(it)
             sportInitialize()
         }

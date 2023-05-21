@@ -41,6 +41,17 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
             }
         }
 
+    }
+    fun refreshUser() {
+        println("refresh")
+        runBlocking(Dispatchers.Default) {
+            launch {
+                val res = userRepo.getUserWithMasteries(user.email)
+                println("$res")
+                userWithSportMasteriesAndNameLiveData.postValue(res)
+                println("updated: hehe ${res}")
+            }
+        }
 
     }
 

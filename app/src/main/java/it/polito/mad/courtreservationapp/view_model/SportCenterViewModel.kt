@@ -32,7 +32,7 @@ class SportCenterViewModel(application: Application) : AndroidViewModel(applicat
                  //this one is the new best approach
                  val res = sportCenterRepository.getAllWithCourtsAndReviewsAndUsers()
                  sportCentersWithReviewsAndUsersLiveData.postValue(res)
-                 println("updated: hehe ${res.first().courtsWithReviewsAndUsers}")
+//                 println("updated: hehe ${res.first().courtsWithReviewsAndUsers}")
              }
          }
 
