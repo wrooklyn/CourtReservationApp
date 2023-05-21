@@ -130,7 +130,6 @@ class MainActivity : AppCompatActivity() {
                     replaceFragment(BrowseReservationsFragment())
                 }
                 R.id.chat -> {
-                    NotificationHelper.sendPushNotificationToDevice("", "", "")
                     replaceFragment(ShowSocialPageFragment())
                 }
                 R.id.profile -> {
