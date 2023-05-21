@@ -2,19 +2,29 @@ package it.polito.mad.courtreservationapp.db.repository
 
 import android.app.Application
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.mad.courtreservationapp.db.RemoteDataSource
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithReservations
-import it.polito.mad.courtreservationapp.db.relationships.CourtWithReviews
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithServices
 //import it.polito.mad.courtreservationapp.db.relationships.CourtWithServices
 import it.polito.mad.courtreservationapp.models.Court
+import it.polito.mad.courtreservationapp.models.Reservation
+import it.polito.mad.courtreservationapp.models.Service
+import kotlinx.coroutines.tasks.await
 
-class FireCourtRepository() {
+class FireCourtRepository(val application: Application) {
+
+    private val serviceMap: Map<Int, Service> = mapOf(
+        Pair(0, Service("Safety shower", 0)),
+        Pair(1, Service("Equipment", 1)),
+        Pair(2, Service("Coach", 2)),
+        Pair(3, Service("Refreshment", 3))
+    )
+
     private val db: FirebaseFirestore = RemoteDataSource.instance
 
-/*
+    /*
     fun getById(id: Long): LiveData<Court>{
         val liveData = MutableLiveData<Court>()
 
@@ -43,17 +53,42 @@ class FireCourtRepository() {
 
         return liveData
     }
+     */
 
-    fun getByIdWithServices(id: Long): LiveData<CourtWithServices>{
-        return courtDao.getByIdWithServices(id)
+    suspend fun getByIdWithServices(centerId: String, courtId: String): CourtWithServices {
+        val db: FirebaseFirestore = RemoteDataSource.instance
+        val courtDoc = db.collection("sport-centers").document(centerId).collection("court").document(courtId).get().await()
+        val sportName = courtDoc.data?.get("sport_name") as String
+        val courtItem = Court(0L, sportName, 0, 0L)
+        val servicesIds = courtDoc.data?.get("services") as Array<*>
+        return CourtWithServices(courtItem, servicesIds.map{ serviceMap[it]!!})
     }
 
-    fun getByIdWithReservations(id: Long): LiveData<CourtWithReservations>{
-        return courtDao.getByIdWithReservations(id)
+    suspend fun getByIdWithReservations(centerId: String, courtId: String): CourtWithReservations {
+        val db: FirebaseFirestore = RemoteDataSource.instance
+        val reservList: MutableList<Reservation> = mutableListOf()
+        val courtDoc =
+            db.collection("sport-centers").document(centerId).collection("courts").document(courtId)
+                .get().await()
+        val sportName = courtDoc.data?.get("sport_name") as String
+        val courtItem = Court(0L, sportName, 0, 0L)
+        val reservsSnapshot =
+            db.collection("sport-centers").document(centerId).collection("courts").document(courtId)
+                .collection("reservations").get().await()
+        if (reservsSnapshot != null) {
+            for (reservation in reservsSnapshot.documents) {
+                val reservReference: DocumentReference =
+                    reservation.data?.get("ref") as DocumentReference
+                val reservItem = reservReference.get().await()
+                val reservDate: String = reservItem.data?.get("date") as String
+                val request: String? = reservItem.data?.get("request") as String?
+                val timeslotId: Long = reservItem.data?.get("timeslot") as Long
+                val reservationItem = Reservation(reservDate, timeslotId, 0L, 0L, request, 0L)
+                reservList.add(reservationItem)
+            }
+        }
+        return CourtWithReservations(courtItem, reservList)
     }
-
-
- */
 /*
     suspend fun insertCourt(court: Court){
         courtDao.save(court)
@@ -89,7 +124,5 @@ class FireCourtRepository() {
     fun getByIdWithReviews(id: Long): LiveData<CourtWithReviews>{
         return courtDao.getByIdWithReviews(id)
     }
-
-*/
-
+ */
 }

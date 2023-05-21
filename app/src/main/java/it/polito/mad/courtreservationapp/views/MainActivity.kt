@@ -1,41 +1,27 @@
 package it.polito.mad.courtreservationapp.views
 
+//import com.google.firebase.firestore.ListenerRegistration
 import android.app.Activity
-import android.app.Application
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
-import com.google.firebase.firestore.ListenerRegistration
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.databinding.ActivityMainBinding
-import it.polito.mad.courtreservationapp.db.RemoteRepository.RemoteStorage
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithReview
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
-import it.polito.mad.courtreservationapp.db.relationships.UserWithSportMasteriesAndName
-import it.polito.mad.courtreservationapp.db.repository.FireCourtRepository
-import it.polito.mad.courtreservationapp.db.repository.FireSportCenterRepository
 import it.polito.mad.courtreservationapp.models.Reservation
-import it.polito.mad.courtreservationapp.models.SportCenter
-import it.polito.mad.courtreservationapp.models.User
-import it.polito.mad.courtreservationapp.utils.FirebaseMessagingService
 import it.polito.mad.courtreservationapp.view_model.*
 import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
 import it.polito.mad.courtreservationapp.views.profile.ShowProfileFragment
-import it.polito.mad.courtreservationapp.views.ratings.LeaveRatingActivity
 import it.polito.mad.courtreservationapp.views.reservationManager.BrowseReservationsFragment
 import it.polito.mad.courtreservationapp.views.social.FriendList
 import it.polito.mad.courtreservationapp.views.social.ShowSocialPageFragment
-import it.polito.mad.courtreservationapp.utils.NotificationHelper
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class MainActivity : AppCompatActivity() {
 
@@ -69,9 +55,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        NotificationHelper.init(this)
-        val intent = Intent(this, FirebaseMessagingService::class.java)
-        startService(intent)
+
 
         /* Setting the logged user */
         //hardcoded user
@@ -94,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         editor.putLong("UserId", 1).apply()
 
         /* Getting current user's reservations */
-        reservationBrowserViewModel.initUserReservations(1) // TODO: use actual user ID
+        reservationBrowserViewModel.initUserReservations("chndavide@gmail.com") // TODO: use actual user ID
 
         reservationBrowserViewModel.userReservations.observe(this) {
             userReservations = it
