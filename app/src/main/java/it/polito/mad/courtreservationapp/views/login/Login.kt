@@ -115,6 +115,11 @@ class Login : ComponentActivity() {
         val credential= GoogleAuthProvider.getCredential(account.idToken,null)
         firebaseAuth.signInWithCredential(credential).addOnCompleteListener {task->
             if(task.isSuccessful) {
+                Log.i("GoogleLogin" ,"${task.result.additionalUserInfo?.isNewUser}")
+                if(task.result.additionalUserInfo?.isNewUser == true){
+                    val data = hashMapOf("username" to "user${(Math.random()*100000).toInt()}")
+                    fireDB.collection("users").document(account.email!!).set(data, SetOptions.merge())
+                }
                 Log.i("UpdateUi", "${account.account?.name}")
                 Log.i("UpdateUi", "${account.email}")
                 Log.i("UpdateUi", "${account.displayName}")
@@ -145,11 +150,20 @@ class Login : ComponentActivity() {
     override fun onStart() {
         super.onStart()
         if(GoogleSignIn.getLastSignedInAccount(this)!=null){
+            val email = SavedPreference.getEmail(this)
+            val user = SavedPreference.getUsername(this)
+            SavedPreference.setEmail(this,email)
+            SavedPreference.setUsername(this,user)
+            Log.i("Login onStart", "email: ${SavedPreference.EMAIL}.")
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
         val currentUser = firebaseAuth.currentUser
         if (currentUser != null) {
+            val email = SavedPreference.getEmail(this)
+            val user = SavedPreference.getUsername(this)
+            SavedPreference.setEmail(this,email)
+            SavedPreference.setUsername(this,user)
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
