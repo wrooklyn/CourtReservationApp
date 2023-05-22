@@ -48,10 +48,8 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
         println("refresh")
         runBlocking(Dispatchers.Default) {
             launch {
-                val res = userRepo.getUserWithMasteries(SavedPreference.EMAIL)
-                println("$res")
+                val res = userRepo.getUserWithMasteries(SavedPreference.getEmail(context))
                 userWithSportMasteriesAndNameLiveData.postValue(res)
-                println("updated: hehe ${res}")
             }
         }
 

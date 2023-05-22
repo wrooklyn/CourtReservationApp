@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourts
 import it.polito.mad.courtreservationapp.db.repository.*
 import it.polito.mad.courtreservationapp.models.Review
+import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import it.polito.mad.courtreservationapp.views.ratings.LeaveRatingActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,7 +54,7 @@ class LeaveRatingViewModel(application: Application): AndroidViewModel(applicati
             Log.v(tag, "$reviewText")
             Log.v(tag, "$selectedImprovements")
             val review: Review = Review(courtId, userId, reservationId, reviewText, selectedRating, dateStr)
-            reviewRepo.insertReview("A4pjoFykPhVSfpkfYUXK", "80A69RdLDZhzICaVa1qA", "Gabriel", "TeExQeFkvXgUrY3i30uA", reviewText, selectedRating, dateStr)
+            reviewRepo.insertReview("A4pjoFykPhVSfpkfYUXK", "80A69RdLDZhzICaVa1qA", SavedPreference.USERNAME, "TeExQeFkvXgUrY3i30uA", reviewText, selectedRating, dateStr)
             context.finish()
         }
     }

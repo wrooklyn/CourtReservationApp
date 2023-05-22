@@ -10,6 +10,7 @@ import it.polito.mad.courtreservationapp.db.RemoteDataSource
 import it.polito.mad.courtreservationapp.db.repository.FireReviewRepository
 import it.polito.mad.courtreservationapp.db.repository.FireSportCenterRepository
 import it.polito.mad.courtreservationapp.models.Friend
+import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -20,7 +21,7 @@ class FriendListViewModel(application: Application) : AndroidViewModel(applicati
     val friendList: LiveData<List<Friend>> = _friendList
     private val l: ListenerRegistration = RemoteDataSource.instance
         .collection("users")
-        .document("gabryfine@gmail.com")
+        .document(SavedPreference.getEmail(application))
         .collection("friend_list")
         .addSnapshotListener { r, e ->
             runBlocking(Dispatchers.Default) {
@@ -37,7 +38,7 @@ class FriendListViewModel(application: Application) : AndroidViewModel(applicati
     fun acceptFriend(id : String){
         val friendsCollectionRef= RemoteDataSource.instance
             .collection("users")
-            .document("gabryfine@gmail.com")//TODO add authentication
+            .document(SavedPreference.EMAIL)
             .collection("friend_list")
         val fields : HashMap<String, Any> = hashMapOf("accepted" to true)
         friendsCollectionRef.document(id).update(fields)
@@ -46,7 +47,7 @@ class FriendListViewModel(application: Application) : AndroidViewModel(applicati
     fun declineFriend(id : String){
         val friendsCollectionRef= RemoteDataSource.instance
             .collection("users")
-            .document("gabryfine@gmail.com")
+            .document(SavedPreference.EMAIL)
             .collection("friend_list")
         friendsCollectionRef.document(id).delete()
     }
@@ -75,7 +76,7 @@ class FriendListViewModel(application: Application) : AndroidViewModel(applicati
                 .collection("users")
                 .document(friendEmail)
                 .collection("friend_list")
-                .document("Gabriel") //TODO auth
+                .document(SavedPreference.USERNAME)
             val data = hashMapOf(
                 "accepted" to false,
             )
