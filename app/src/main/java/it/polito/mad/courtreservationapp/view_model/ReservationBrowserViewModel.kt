@@ -1,5 +1,6 @@
 package it.polito.mad.courtreservationapp.view_model
 
+import FireReservationRepository
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -7,7 +8,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.*
-import it.polito.mad.courtreservationapp.db.repository.FireReservationRepository
 import it.polito.mad.courtreservationapp.models.Reservation
 import it.polito.mad.courtreservationapp.models.SportCenter
 import kotlinx.coroutines.launch

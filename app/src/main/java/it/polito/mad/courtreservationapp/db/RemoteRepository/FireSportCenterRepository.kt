@@ -1,4 +1,4 @@
-package it.polito.mad.courtreservationapp.db.repository
+
 
 import android.app.Application
 import androidx.lifecycle.LiveData
@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FirebaseFirestore
-import it.polito.mad.courtreservationapp.db.AppDatabase
 import it.polito.mad.courtreservationapp.db.RemoteDataSource
 import it.polito.mad.courtreservationapp.db.dao.SportCenterDao
 import it.polito.mad.courtreservationapp.db.relationships.*
@@ -15,19 +14,12 @@ import kotlinx.coroutines.tasks.await
 
 class FireSportCenterRepository(val application: Application) {
 
-    private val db: AppDatabase = AppDatabase.getDatabase(application)
-    private val sportCenterDao: SportCenterDao = db.sportCenterDao()
 
-    suspend fun insertCenter(sportCenter: SportCenter) {
-        sportCenterDao.save(sportCenter)
-    }
 
-    suspend fun deleteCenter(sportCenter: SportCenter) {
-        sportCenterDao.delete(sportCenter)
-    }
 
     fun getAll(): LiveData<List<SportCenter>> {
-        return sportCenterDao.getAll()
+        //return sportCenterDao.getAll()
+        return MutableLiveData(); //TODO
     }
 
     suspend fun getById(id: String): SportCenter {
@@ -36,17 +28,10 @@ class FireSportCenterRepository(val application: Application) {
         val scName: String = sportCenterDoc.data?.get("name") as String
         val scAddress = sportCenterDoc.data?.get("address") as String
         val scDescription = sportCenterDoc.data?.get("description") as String
-        val scId = sportCenterDoc.data?.get("id") as Long
-        return SportCenter(scName, scAddress, scDescription, scId)
+        return SportCenter(scName, scAddress, scDescription, sportCenterDoc.id)
     }
 
-    fun getAllWithCourts(): LiveData<List<SportCenterWithCourts>> {
-        return sportCenterDao.getAllWithCourts()
-    }
 
-    fun getCenterWithCourts(id: Long): LiveData<SportCenterWithCourts> {
-        return sportCenterDao.getByIdWithCourts(id)
-    }
     suspend fun getCenterWithCourts2(id: String): SportCenterWithCourts {
         val db: FirebaseFirestore = RemoteDataSource.instance
 
@@ -55,26 +40,19 @@ class FireSportCenterRepository(val application: Application) {
         val scAddress = sportCenterDoc.data?.get("address") as String
         val scDescription = sportCenterDoc.data?.get("description") as String
         val scId = sportCenterDoc.data?.get("id") as Long
-        val sportCenter = SportCenter(scName, scAddress, scDescription, scId)
+        val sportCenter = SportCenter(scName, scAddress, scDescription, sportCenterDoc.id)
         val courtsOfCenterRef = db.collection("sport-centers").document(id).collection("courts")
         val courtsList = mutableListOf<Court>()
         val courtSnapshot = courtsOfCenterRef.get().await()
         for (courtDocument in courtSnapshot?.documents.orEmpty()) {
 //            println("xp ${courtDocument.data}")
             val cSportName = courtDocument.data?.get("sport_name") as String
-            val cCourtId = 19L
-            val c = Court(scId, cSportName, 0, cCourtId)
+            val c = Court(sportCenterDoc.id, cSportName, 0, courtDocument.id)
             courtsList.add(c)
         }
         return SportCenterWithCourts(sportCenter, courtsList)
     }
-    fun getAllWithCourtsAndReservations(): LiveData<List<SportCenterWithCourtsAndReservations>> {
-        return sportCenterDao.getAllWithCourtsAndReservations()
-    }
 
-    fun getCenterWithCourtsAndReservations(id: Long): LiveData<SportCenterWithCourtsAndReservations> {
-        return sportCenterDao.getByIdWithCourtsAndReservations(id)
-    }
 
     fun getAllWithCourtsAndServices(): Task<List<SportCenterWithCourtsAndServices>> {
         val db: FirebaseFirestore = RemoteDataSource.instance
@@ -93,7 +71,7 @@ class FireSportCenterRepository(val application: Application) {
                 val scAddress = document.data?.get("address") as String
                 val scDescription = document.data?.get("description") as String
                 val scId = document.data?.get("id") as Long
-                val sportCenter = SportCenter(scName, scAddress, scDescription, scId)
+                val sportCenter = SportCenter(scName, scAddress, scDescription,document.id)
                 val courtsOfCenterRef = sportCenterRef.document(document.id).collection("courts")
                 val courtWithServices = mutableListOf<CourtWithServices>()
 
@@ -105,7 +83,7 @@ class FireSportCenterRepository(val application: Application) {
                         val cCourtId = 19L
                         val cServices = courtDocument.data?.get("services") as List<Long>?
                         val s = cServices?.map { e -> Service("desct temporary", e) } ?: listOf()
-                        val c = Court(scId, cSportName, 0, cCourtId)
+                        val c = Court(document.id, cSportName, 0, courtDocument.id)
                         courtWithServices.add(CourtWithServices(c, s))
                     }
                     dataList.add(SportCenterWithCourtsAndServices(sportCenter, courtWithServices))
@@ -119,21 +97,7 @@ class FireSportCenterRepository(val application: Application) {
         }
     }
 
-    fun getCenterWithCourtsAndServices(id: Long): LiveData<SportCenterWithCourtsAndServices> {
-        return sportCenterDao.getByIdWithCourtsAndServices(id)
-    }
 
-    fun getAllWithCourtsAndReservationsAndServices(): LiveData<List<SportCenterWithCourtsAndReservationsAndServices>> {
-        return sportCenterDao.getAllWithCourtsAndReservationsAndServices()
-    }
-
-    fun getCenterWithCourtsAndReservationsAndServices(id: Long): LiveData<SportCenterWithCourtsAndReservationsAndServices> {
-        return sportCenterDao.getByIdWithCourtsAndReservationsAndServices(id)
-    }
-
-    fun getAllWithCourtsAndReviews(): LiveData<List<SportCenterWithCourtsAndReviews>> {
-        return sportCenterDao.getAllWithCourtsAndReviews()
-    }
 
     suspend fun getAllWithCourtsAndReviewsAndUsers(): List<SportCenterWIthCourtsAndReviewsAndUsers> {
         val db: FirebaseFirestore = RemoteDataSource.instance
@@ -152,7 +116,7 @@ class FireSportCenterRepository(val application: Application) {
             val scAddress = document.data?.get("address") as String
             val scDescription = document.data?.get("description") as String
             val scId = document.data?.get("id") as Long
-            val sportCenter = SportCenter(scName, scAddress, scDescription, scId)
+            val sportCenter = SportCenter(scName, scAddress, scDescription, document.id)
             val courtsOfCenterRef = sportCenterRef.document(document.id).collection("courts")
             val courtWithReviewsAndUsersList = mutableListOf<CourtWithReviewsAndUsers>()
 
@@ -162,7 +126,7 @@ class FireSportCenterRepository(val application: Application) {
 //                println("xp ${courtDocument.data}")
                 val cSportName = courtDocument.data?.get("sport_name") as String
                 val cCourtId = 19L
-                val c = Court(scId, cSportName, 0, cCourtId)
+                val c = Court( document.id, cSportName, 0, courtDocument.id)
 
 
                 val reviewsOfCourtRef =
@@ -176,10 +140,10 @@ class FireSportCenterRepository(val application: Application) {
                             reservationDocument.data?.get("review_content") as String?
                         val reviewDate =
                             reservationDocument.data?.get("review_content") as String
-                        val review = Review(0L, 0L, 0L, reviewText, rating, reviewDate)
+                        val review = Review(courtDocument.id, null, reservationDocument.id, reviewText, rating, reviewDate, reservationDocument.id )
 
                         val username = reservationDocument.data?.get("user") as String
-                        val user = User(username, "", "", "", "", 0, 0, 0, "")
+                        val user = User(username, "", "", "", "", 0, 0, 0, "", "")
                         reviewsWithUsers.add(ReviewWithUser(review, user))
                     }
                 }
@@ -194,8 +158,5 @@ class FireSportCenterRepository(val application: Application) {
 
     }
 
-    fun getCenterWithCourtsAndReviews(id: Long): LiveData<SportCenterWithCourtsAndReviews> {
-        return sportCenterDao.getByIdWithCourtsAndReviews(id)
-    }
 
 }

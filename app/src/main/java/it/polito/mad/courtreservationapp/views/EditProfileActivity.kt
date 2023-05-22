@@ -28,6 +28,7 @@ import it.polito.mad.courtreservationapp.models.User
 import it.polito.mad.courtreservationapp.view_model.UserViewModel
 import it.polito.mad.courtreservationapp.utils.BitmapUtil
 import it.polito.mad.courtreservationapp.utils.DiskUtil
+import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
@@ -242,7 +243,7 @@ class EditProfileActivity : AppCompatActivity() {
                 height,
                 weight!!,
                 phone!!,
-                sharedPref.getLong("UserId", -1)))
+                SavedPreference.EMAIL))
             finish()
         } else {
             val inflater = getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater

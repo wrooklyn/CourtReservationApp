@@ -46,6 +46,7 @@ import androidx.lifecycle.ViewModel
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourts
 import it.polito.mad.courtreservationapp.view_model.LeaveRatingViewModel
+import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import it.polito.mad.courtreservationapp.views.ratings.ui.theme.CourtReservationAppTheme
 import kotlinx.coroutines.delay
 import java.util.*
@@ -57,12 +58,11 @@ class LeaveRatingActivity : ComponentActivity() {
     val viewModel by viewModels<LeaveRatingViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.courtId = intent.getLongExtra("courtId", 0)
-        viewModel.courtId = 19L //TODO remove this
-        viewModel.reservationId = intent.getLongExtra("reservationId", 0)
-        viewModel.sportCenterId = intent.getLongExtra("sportCenterId", 0)
+        viewModel.courtId = intent.getStringExtra("courtId")?:""
+        viewModel.reservationId = intent.getStringExtra("reservationId")?:""
+        viewModel.sportCenterId = intent.getStringExtra("sportCenterId")?:""
         viewModel.userId =
-            this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE).getLong("UserId", 0)
+            SavedPreference.EMAIL
         viewModel.init(this)
 
 

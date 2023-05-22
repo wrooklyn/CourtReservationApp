@@ -100,7 +100,10 @@ class UnfilteredHomeFragment : Fragment() {
         }
         override fun onBindViewHolder(holder: AvailableViewHolder, position: Int) {
             val currentCenter = centersList[position]
-            val currentImage = imagesList[currentCenter.centerId] ?: R.drawable.gesu
+            //TODO image from firebase
+            val currentImage =
+                //imagesList[currentCenter.centerId] ?:
+                R.drawable.gesu
             val currentLocation = currentCenter.address
 
 
@@ -140,7 +143,10 @@ class UnfilteredHomeFragment : Fragment() {
         }
         override fun onBindViewHolder(holder: PopularViewHolder, position: Int) {
             val currentCenter = popularCentersList[position]
-            val currentImage = imagesList[currentCenter.centerId] ?: R.drawable.gesu
+            //TODO image from firebase
+            val currentImage =
+                //imagesList[currentCenter.centerId] ?:
+                R.drawable.gesu
             val currentLocation = popularCentersList[position].address
             holder.bind(currentImage, currentLocation, currentCenter.name)
         }

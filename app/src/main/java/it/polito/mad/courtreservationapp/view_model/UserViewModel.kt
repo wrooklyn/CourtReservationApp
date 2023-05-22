@@ -25,11 +25,7 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
 
     lateinit var context: MainActivity
 
-    fun insertUser(user: User) {
-        viewModelScope.launch{
-            userRepo.insertUser(user)
-        }
-    }
+
 
     fun setCurrentUser(email: String) {
         println("setUser $email")

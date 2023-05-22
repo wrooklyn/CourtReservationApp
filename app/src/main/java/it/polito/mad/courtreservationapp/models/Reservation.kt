@@ -5,35 +5,15 @@ import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "reservations",
-    foreignKeys = [
-        ForeignKey(
-            entity = User::class,
-            parentColumns = ["userId"],
-            childColumns = ["reservationUserId"],
-            onDelete = CASCADE,
-            onUpdate = CASCADE
-        ),
-        ForeignKey(
-            entity = Court::class,
-            parentColumns = ["courtId"],
-            childColumns = ["reservationCourtId"],
-            onDelete = CASCADE,
-            onUpdate = CASCADE
-        )
-    ]
-)
 data class Reservation(
     val reservationDate: String = "",
     val timeSlotId: Long = 0L,
 
-    val reservationUserId: Long = 0L,
-    val reservationCourtId: Long = 0L,
+    val reservationUserId: String?,
+    val reservationCourtId: String?,
 
     val request: String? = null,
-
-    @PrimaryKey(autoGenerate = true)
-    var reservationId: Long = 0,
+    var reservationId: String,
 )
 
 //there will be a mapping of time slots in the form:

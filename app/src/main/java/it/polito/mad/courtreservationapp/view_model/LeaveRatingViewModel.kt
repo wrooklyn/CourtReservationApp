@@ -1,5 +1,6 @@
 package it.polito.mad.courtreservationapp.view_model
 
+import FireSportCenterRepository
 import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
@@ -33,10 +34,10 @@ class LeaveRatingViewModel(application: Application): AndroidViewModel(applicati
     lateinit var courtName: String
 
     //data from caller
-    var courtId: Long = 0
-    var sportCenterId: Long = 0
-    var reservationId: Long = 0
-    var userId: Long = 0
+    var courtId: String = ""
+    var sportCenterId: String = ""
+    var reservationId: String = ""
+    var userId: String = SavedPreference.EMAIL
 
     //new data
     var selectedRating : Int = 0
@@ -53,7 +54,7 @@ class LeaveRatingViewModel(application: Application): AndroidViewModel(applicati
             Log.v(tag, "$selectedRating")
             Log.v(tag, "$reviewText")
             Log.v(tag, "$selectedImprovements")
-            val review: Review = Review(courtId, userId, reservationId, reviewText, selectedRating, dateStr)
+
             reviewRepo.insertReview("A4pjoFykPhVSfpkfYUXK", "80A69RdLDZhzICaVa1qA", SavedPreference.USERNAME, "TeExQeFkvXgUrY3i30uA", reviewText, selectedRating, dateStr)
             context.finish()
         }

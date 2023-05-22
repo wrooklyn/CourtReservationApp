@@ -1,10 +1,10 @@
-package it.polito.mad.courtreservationapp.db.repository
+
 
 import android.app.Application
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import it.polito.mad.courtreservationapp.db.AppDatabase
 import it.polito.mad.courtreservationapp.db.RemoteDataSource
 import it.polito.mad.courtreservationapp.db.crossref.ReservationServiceCrossRef
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithSportCenter
@@ -15,10 +15,6 @@ import it.polito.mad.courtreservationapp.models.*
 import kotlinx.coroutines.tasks.await
 
 class FireReservationRepository(val application: Application) {
-    private val db: AppDatabase = AppDatabase.getDatabase(application)
-    private val reservationDao = db.reservationDao()
-    private val reservationAndServiceDao = db.reservationAndServiceDao()
-    private val reviewDao = db.reviewDao()
 
     private val serviceMap: Map<Int, Service> = mapOf(
         Pair(0, Service("Safety shower", 0)),
@@ -29,37 +25,41 @@ class FireReservationRepository(val application: Application) {
 
     suspend fun insertReservationWithServices(reservationWithServices: ReservationWithServices){
         //save reservation
+        /*
         val reservationId = reservationDao.save(reservationWithServices.reservation)
         reservationWithServices.reservation.reservationId = reservationId
         //save service requested
         for(service in reservationWithServices.services){
             reservationAndServiceDao.save(ReservationServiceCrossRef(reservationId, service.serviceId))
         }
+
+         */ //TODO replace with firebase
     }
 
     suspend fun deleteReservations(reservations: List<Reservation>){
-        for(reservation in reservations){
+       /* for(reservation in reservations){
             reservationDao.delete(reservation)
-        }
+        }*/ //TODO
     }
 
     suspend fun deleteReservationById(reservationId: Long) {
-        reservationDao.deleteById(reservationId)
+        //reservationDao.deleteById(reservationId) //TODO
     }
 
     fun getAll(): LiveData<List<Reservation>>{
-        return reservationDao.getAll()
+        //return reservationDao.getAll()
+        return MutableLiveData() //TODO
     }
 
     fun getById(reservationId: Long): LiveData<Reservation>{
-        return reservationDao.getById(reservationId)
+        //return reservationDao.getById(reservationId)
+        return MutableLiveData() //TODO
     }
 
-    fun getAllWithServices(): LiveData<List<ReservationWithServices>>{
-        return reservationDao.getAllWithServices()
-    }
-    fun getByIdWithServices(reservationId: Long): LiveData<ReservationWithServices>{
-        return reservationDao.getByIdWithServices(reservationId)
+
+    fun getByIdWithServices(reservationId: String): LiveData<ReservationWithServices>{
+        //return reservationDao.getByIdWithServices(reservationId)
+        return MutableLiveData() //TODO
     }
 
 
@@ -74,7 +74,7 @@ class FireReservationRepository(val application: Application) {
                 val reservDate: String = reservItem.data?.get("date") as String
                 val request: String? = reservItem.data?.get("request") as String?
                 val timeslotId: Long = reservItem.data?.get("timeslot") as Long
-                val reservationItem = Reservation(reservDate, timeslotId, 0L, 0L, request, 0L)
+                val reservationItem = Reservation(reservDate, timeslotId, userEmail, null, request, reservation.id)
                 result.add(reservationItem)
             }
         }
@@ -92,18 +92,18 @@ class FireReservationRepository(val application: Application) {
                 val reservDate: String = reservItem.data?.get("date") as String
                 val request: String? = reservItem.data?.get("request") as String?
                 val timeslotId: Long = reservItem.data?.get("timeslot") as Long
-                val reservationItem = Reservation(reservDate, timeslotId, 0L, 0L, request, 0L)
+                val reservationItem = Reservation(reservDate, timeslotId, userEmail, null, request, reservation.id)
                 val sportCenterId = reservReference.path.split("/")[1]
                 val sportCenterSnapshot = database.collection("sport-centers").document(sportCenterId).get().await()
                 val sportCenterName: String = sportCenterSnapshot.data?.get("name") as String
 
                 val sportCenterAddress: String = sportCenterSnapshot.data?.get("address") as String
                 val sportCenterDescription: String = sportCenterSnapshot.data?.get("description") as String
-                val sportCenterItem = SportCenter(sportCenterName, sportCenterAddress, sportCenterDescription, 0L)
+                val sportCenterItem = SportCenter(sportCenterName, sportCenterAddress, sportCenterDescription, sportCenterId)
                 val courtId = reservReference.path.split("/")[3]
                 val courtSnapshot = database.collection("sport-centers").document(sportCenterId).collection("courts").document(courtId).get().await()
                 val sportName = courtSnapshot.data?.get("sport_name") as String
-                val courtItem = Court(0L, sportName, 0, 0L)
+                val courtItem = Court(sportCenterId, sportName, 0, courtId)
                 val courtWithSC = CourtWithSportCenter(courtItem, sportCenterItem)
                 val reservWithSC = ReservationWithSportCenter(reservationItem, courtWithSC)
                 result.add(reservWithSC)
@@ -123,7 +123,7 @@ class FireReservationRepository(val application: Application) {
                 val reservDate: String = reservItem.data?.get("date") as String
                 val request: String? = reservItem.data?.get("request") as String?
                 val timeslotId: Long = reservItem.data?.get("timeslot") as Long
-                val reservationItem = Reservation(reservDate, timeslotId, 0L, 0L, request, 0L)
+                val reservationItem = Reservation(reservDate, timeslotId, userEmail, null, request, reservation.id)
                 val servicesIds = reservItem.data?.get("services") as ArrayList<*>
                 val serviceList = mutableListOf<Service>()
                 for(id in servicesIds){
@@ -149,11 +149,11 @@ class FireReservationRepository(val application: Application) {
                 val reservDate: String = reservItem.data?.get("date") as String
                 val request: String? = reservItem.data?.get("request") as String?
                 val timeslotId: Long = reservItem.data?.get("timeslot") as Long
-                val reservationItem = Reservation(reservDate, timeslotId, 0L, 0L, request, 0L)
+                val reservationItem = Reservation(reservDate, timeslotId, null, null, request, reservation.id)
                 val reviewText: String = reservItem.data?.get("review_content") as String
                 val rating: Int = (reservItem.data?.get("rating") as Long).toInt() //TODO review might not be there
                 val date: String = reservItem.data?.get("review_date") as String
-                val reviewItem = Review(0L, 0L, 0L, reviewText, rating, date, 0L)
+                val reviewItem = Review(null, null, reservation.id, reviewText, rating, date, reservation.id)
                 val reservWithReview = ReservationWithReview(reservationItem, reviewItem)
                 result.add(reservWithReview)
             }

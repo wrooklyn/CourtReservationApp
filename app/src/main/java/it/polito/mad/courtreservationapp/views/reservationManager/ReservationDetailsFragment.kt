@@ -81,13 +81,13 @@ class ReservationDetailsFragment : Fragment() {
                 "courtName",
                 "${reservWithSportCenter.courtWithSportCenter.court.sportName} court - #C${reservWithSportCenter.courtWithSportCenter.court.courtId}"
             )
-            args.putLong("courtId", reservWithSportCenter.courtWithSportCenter.court.courtId)
-            args.putLong("reservationId", reservWithSportCenter.reservation.reservationId)
+            args.putString("courtId", reservWithSportCenter.courtWithSportCenter.court.courtId)
+            args.putString("reservationId", reservWithSportCenter.reservation.reservationId)
             args.putString("date", reservWithSportCenter.reservation.reservationDate)
             args.putLong("timeslotId", reservWithSportCenter.reservation.timeSlotId)
             args.putString("sportName", reservWithSportCenter.courtWithSportCenter.court.sportName)
             args.putString("specialRequests", reservWithSportCenter.reservation.request)
-            args.putLong(
+            args.putString(
                 "sportCenterId",
                 reservWithSportCenter.courtWithSportCenter.sportCenter.centerId
             )

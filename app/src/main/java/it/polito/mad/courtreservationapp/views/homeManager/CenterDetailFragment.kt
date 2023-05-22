@@ -76,9 +76,10 @@ class CenterDetailFragment : Fragment() {
             reviews.map { it.rating }.average().run { if (isNaN()) 0.0F else this.toFloat() }
         val reviewTxt = if (reviews.size == 1) "review" else "reviews"
         view.findViewById<TextView>(R.id.numRating).text = "(${reviews.size} $reviewTxt)"
+        //TODO image from firestore
         val imageRes: Int =
-            viewModel.sportCenterImages[sportCenterWithCourtsAndServices.sportCenter.centerId]
-                ?: R.drawable.gesu
+            //viewModel.sportCenterImages[sportCenterWithCourtsAndServices.sportCenter.centerId] ?:
+                 R.drawable.gesu
         view.findViewById<ImageView>(R.id.bannerImage).setImageResource(imageRes)
 
         val adapter = ViewPagerAdapter(childFragmentManager, lifecycle, sportCenterPosition)

@@ -7,8 +7,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.ListenerRegistration
 import it.polito.mad.courtreservationapp.db.RemoteDataSource
-import it.polito.mad.courtreservationapp.db.repository.FireReviewRepository
-import it.polito.mad.courtreservationapp.db.repository.FireSportCenterRepository
 import it.polito.mad.courtreservationapp.models.Friend
 import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import kotlinx.coroutines.Dispatchers

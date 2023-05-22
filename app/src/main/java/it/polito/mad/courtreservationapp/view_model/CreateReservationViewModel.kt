@@ -1,5 +1,7 @@
 package it.polito.mad.courtreservationapp.view_model
 
+import FireReservationRepository
+import FireSportCenterRepository
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -49,7 +51,7 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
 
     var courtId: String = "80A69RdLDZhzICaVa1qA" // TODO: remove hardcoded IDs, use actual ones
     var sportCenterId: String = "A4pjoFykPhVSfpkfYUXK"
-    var reservationId: Long = 0
+    var reservationId: String = ""
     var userId: Long = 0
     var email: String = "chndavide@gmail.com"
 
@@ -58,7 +60,7 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
         initCourt(courtId, sportCenterId)
         initUser(email)
 
-        if(reservationId!=0L){
+        if(reservationId.isNotEmpty()){
             reservationRepo.getByIdWithServices(reservationId).observe(ctx){
                 reservationDate=it.reservation.reservationDate
                 reservationTimeSlots.add(it.reservation.timeSlotId)

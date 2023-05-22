@@ -27,15 +27,13 @@ class CreateReservationActivity : AppCompatActivity() {
 
         //TODO: get data from main activity
         viewModel.courtId = intent.getStringExtra("courtId")  ?: ""
-        viewModel.reservationId = intent.getLongExtra("reservationId", 0)
+        viewModel.reservationId = intent.getStringExtra("reservationId") ?: ""
         viewModel.sportCenterId = intent.getStringExtra("sportCenterId") ?: ""
 
 
         if(viewModel.courtId.isNullOrEmpty()) throw Exception("Invalid parameters")
 
         //hardcoded user
-
-        viewModel.email = this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE).getString("email", "")!!
 
         viewModel.initAll(this)
 

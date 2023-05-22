@@ -10,6 +10,5 @@ data class SportCenter(
     val name: String = "",
     val address: String = "",
     val description: String = "",
-    @PrimaryKey(autoGenerate = true)
-    var centerId: Long = 0
+    var centerId: String
 )

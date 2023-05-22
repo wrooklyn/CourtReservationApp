@@ -57,11 +57,17 @@ class FireCourtRepository(val application: Application) {
 
     suspend fun getByIdWithServices(centerId: String, courtId: String): CourtWithServices {
         val db: FirebaseFirestore = RemoteDataSource.instance
-        val courtDoc = db.collection("sport-centers").document(centerId).collection("court").document(courtId).get().await()
+        val courtDoc = db.collection("sport-centers").document(centerId).collection("courts").document(courtId).get().await()
         val sportName = courtDoc.data?.get("sport_name") as String
-        val courtItem = Court(0L, sportName, 0, 0L)
-        val servicesIds = courtDoc.data?.get("services") as Array<*>
-        return CourtWithServices(courtItem, servicesIds.map{ serviceMap[it]!!})
+        val courtItem = Court(centerId, sportName, 0, courtId)
+        val servicesIds = courtDoc.data?.get("services") as ArrayList<*>
+        val serviceList : MutableList<Service> = mutableListOf()
+        for(id in servicesIds){
+            val service = serviceMap[id]
+            if(service!=null)
+                serviceList.add(service)
+        }
+        return CourtWithServices(courtItem, serviceList)
     }
 
     suspend fun getByIdWithReservations(centerId: String, courtId: String): CourtWithReservations {
@@ -71,19 +77,19 @@ class FireCourtRepository(val application: Application) {
             db.collection("sport-centers").document(centerId).collection("courts").document(courtId)
                 .get().await()
         val sportName = courtDoc.data?.get("sport_name") as String
-        val courtItem = Court(0L, sportName, 0, 0L)
+        val courtItem = Court(centerId, sportName, 0, courtId)
         val reservsSnapshot =
             db.collection("sport-centers").document(centerId).collection("courts").document(courtId)
                 .collection("reservations").get().await()
         if (reservsSnapshot != null) {
             for (reservation in reservsSnapshot.documents) {
-                val reservReference: DocumentReference =
-                    reservation.data?.get("ref") as DocumentReference
-                val reservItem = reservReference.get().await()
-                val reservDate: String = reservItem.data?.get("date") as String
-                val request: String? = reservItem.data?.get("request") as String?
-                val timeslotId: Long = reservItem.data?.get("timeslot") as Long
-                val reservationItem = Reservation(reservDate, timeslotId, 0L, 0L, request, 0L)
+                //val reservReference: DocumentReference =
+                   // reservation.data?.get("ref") as DocumentReference? ?: continue
+                //val reservItem = reservReference.get().await()
+                val reservDate: String = reservation.data?.get("date") as String
+                val request: String? = reservation.data?.get("request") as String?
+                val timeslotId: Long = reservation.data?.get("timeslot") as Long
+                val reservationItem = Reservation(reservDate, timeslotId, null, centerId, request, reservation.id)
                 reservList.add(reservationItem)
             }
         }

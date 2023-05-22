@@ -3,7 +3,7 @@ package it.polito.mad.courtreservationapp.models
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "users")
+
 data class User(
 
     val username: String = "",
@@ -24,6 +24,5 @@ data class User(
 
     val phone: String = "",
 
-    @PrimaryKey(autoGenerate = true)
-    var userId: Long = 0
+    var userId: String
 )

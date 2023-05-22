@@ -4,9 +4,7 @@ import android.app.Application
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
-import it.polito.mad.courtreservationapp.db.AppDatabase
 import it.polito.mad.courtreservationapp.db.RemoteDataSource
-import it.polito.mad.courtreservationapp.models.SportMastery
 
 class FireSportMasteryRepository(private val application: Application) {
 //    private val db: AppDatabase = AppDatabase.getDatabase(application)

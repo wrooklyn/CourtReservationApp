@@ -109,7 +109,7 @@ class ShowCalendarFragment : Fragment() {
         calendarView.refreshCalendar(currentCalendar)
 
         //mark date
-        if(activity.viewModel.reservationId != 0L) {
+        if(activity.viewModel.reservationId.isNotEmpty()) {
             activity.viewModel.reservationRepo.getByIdWithServices(activity.viewModel.reservationId).observe(activity) {
                 val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                 val date = format.parse(activity.viewModel.reservationDate)
