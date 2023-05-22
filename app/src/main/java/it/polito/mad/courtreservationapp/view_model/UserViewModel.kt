@@ -32,7 +32,7 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun setCurrentUser(email: String) {
-        println("setUser")
+        println("setUser $email")
         runBlocking(Dispatchers.Default) {
             launch {
                 val res = userRepo.getUserWithMasteries(email)
@@ -48,7 +48,7 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
         println("refresh")
         runBlocking(Dispatchers.Default) {
             launch {
-                val res = userRepo.getUserWithMasteries(SavedPreference.getEmail(context))
+                val res = userRepo.getUserWithMasteries(SavedPreference.EMAIL)
                 println("$res")
                 userWithSportMasteriesAndNameLiveData.postValue(res)
                 println("updated: hehe ${res}")

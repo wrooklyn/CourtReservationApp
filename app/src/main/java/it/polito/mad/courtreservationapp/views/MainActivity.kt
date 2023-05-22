@@ -68,6 +68,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//        SavedPreference.EMAIL = SavedPreference.getEmail(this)
+//        SavedPreference.USERNAME = SavedPreference.getUsername(this)
+
         sportCenterViewModel.initData()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -81,8 +84,8 @@ class MainActivity : AppCompatActivity() {
         /* Setting the logged user */
         //hardcoded user
         /* Load user's info in both the User object and the shared preferences */
-        Log.i("MainActivity, OnCreate", "${SavedPreference.getEmail(this)}")
-        userViewModel.setCurrentUser(SavedPreference.getEmail(this))
+        Log.i("MainActivity, OnCreate", "${SavedPreference.EMAIL}")
+        userViewModel.setCurrentUser(SavedPreference.EMAIL)
 //        userViewModel.userLiveData.observe(this) {
 //            userViewModel.user = it
 //            loadUserInfo()
@@ -101,7 +104,7 @@ class MainActivity : AppCompatActivity() {
         editor.putLong("UserId", 1).apply()
 
         /* Getting current user's reservations */
-        reservationBrowserViewModel.initUserReservations(SavedPreference.getEmail(this))
+        reservationBrowserViewModel.initUserReservations(SavedPreference.EMAIL)
 
         reservationBrowserViewModel.userReservations.observe(this) {
             userReservations = it
@@ -151,11 +154,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        println("onResume")
-        userViewModel.refreshUser(this)
-    }
+//    override fun onResume() {
+//        super.onResume()
+////        println("onResume")
+////        userViewModel.refreshUser(this)
+//    }
 
     fun replaceFragment(fragment: Fragment) {
         val fragmentManager = supportFragmentManager

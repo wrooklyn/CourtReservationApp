@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.view_model.SportMasteryViewModel
 import it.polito.mad.courtreservationapp.view_model.UserViewModel
+import it.polito.mad.courtreservationapp.views.login.SavedPreference
 
 class AddEditInterestActivity : ComponentActivity() {
     private val sportMasteryViewModel: SportMasteryViewModel by viewModels()
@@ -43,7 +44,7 @@ class AddEditInterestActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sportMasteryViewModel.email = intent.getStringExtra("email") ?: ""
+        sportMasteryViewModel.email = SavedPreference.EMAIL
         setContent {
             it.polito.mad.courtreservationapp.views.ratings.ui.theme.CourtReservationAppTheme {
                 // A surface container using the 'background' color from the theme

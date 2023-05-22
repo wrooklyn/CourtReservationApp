@@ -2,18 +2,18 @@ package it.polito.mad.courtreservationapp.views.login
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 
 object SavedPreference {
 
-    const val EMAIL= "email"
-    const val USERNAME="username"
+    var EMAIL= "email"
+    var USERNAME="username"
 
-    private  fun getSharedPreference(ctx: Context?): SharedPreferences? {
+    private fun getSharedPreference(ctx: Context?): SharedPreferences? {
         return PreferenceManager.getDefaultSharedPreferences(ctx)
     }
 
-    private fun  editor(context: Context, const:String, string: String){
+    private fun editor(context: Context, const:String, string: String){
         getSharedPreference(
             context
         )?.edit()?.putString(const,string)?.apply()
@@ -21,7 +21,7 @@ object SavedPreference {
 
     fun getEmail(context: Context)= getSharedPreference(
         context
-    )?.getString(EMAIL,"") ?: ""
+    )?.getString(EMAIL,"") ?: EMAIL
 
     fun setEmail(context: Context, email: String){
         editor(
@@ -29,6 +29,7 @@ object SavedPreference {
             EMAIL,
             email
         )
+        EMAIL = email
     }
 
     fun setUsername(context: Context, username:String){
@@ -37,10 +38,11 @@ object SavedPreference {
             USERNAME,
             username
         )
+        USERNAME = username
     }
 
     fun getUsername(context: Context) = getSharedPreference(
         context
-    )?.getString(USERNAME,"")
+    )?.getString(USERNAME,"") ?: USERNAME
 
 }

@@ -1,6 +1,7 @@
 package it.polito.mad.courtreservationapp.view_model
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import it.polito.mad.courtreservationapp.db.repository.FireSportMasteryRepository
@@ -15,7 +16,7 @@ class SportMasteryViewModel(application: Application): AndroidViewModel(applicat
     fun saveMastery(){
         viewModelScope.launch {
 //            val sportMastery = SportMastery(sportId, email, level, achievement)
-//            Log.i("SM", "Saving $sportMastery")
+            Log.i("SM", "Saving $sport for $email")
             sportMasteryRepo.insertSportMastery(email, sport, level, achievement)
         }
     }

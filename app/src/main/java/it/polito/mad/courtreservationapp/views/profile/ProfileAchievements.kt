@@ -3,6 +3,7 @@ package it.polito.mad.courtreservationapp.views
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.*
@@ -16,7 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,6 +36,8 @@ import androidx.fragment.app.FragmentActivity
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.SportMasteryWithName
 import it.polito.mad.courtreservationapp.db.relationships.UserWithSportMasteriesAndName
+import it.polito.mad.courtreservationapp.models.User
+import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import it.polito.mad.courtreservationapp.views.profile.AddEditInterestActivity
 
 
@@ -44,6 +47,8 @@ fun AchievementSection(
     userWithSportMasteriesAndName: UserWithSportMasteriesAndName
 ){
 //    val sportsPlaceHolder = listOf<String>("Soccer", "Tennis", "Ice Skate")
+    Log.i("AchievementSection", "Calling compose")
+//    var userWithSportMastery by remember { mutableStateOf<UserWithSportMasteriesAndName>() }
 
     val imageId = mapOf("soccer" to R.drawable.soccer_ball,
         "volley" to R.drawable.volleyball,
@@ -69,7 +74,7 @@ fun AchievementSection(
 
             val interestId = 1L
             val intent = Intent(ctx, AddEditInterestActivity::class.java)
-            intent.putExtra("email", userWithSportMasteriesAndName.user.email)
+            intent.putExtra("email", SavedPreference.EMAIL)
             ctx.registerForActivity.launch(intent)
         }) {
             Icon(Icons.Default.Add, "Add")
@@ -148,13 +153,13 @@ fun sportCard(sport: SportMasteryWithName, imageId: Int, ctx: FragmentActivity?,
                     .clip(shape = CircleShape)
                     .size(size = 62.dp),
                 painter = painterResource(id = imageId),
-                contentDescription = "sport interest  image",
+                contentDescription = "sport interest image",
                 contentScale = ContentScale.Crop
             )
             Spacer(modifier = Modifier.width(width = 8.dp)) // gap between image and text
             Column(){
                 Text(
-                    text = "${sport.sport.name} - ${mapMastery(sport.sportMastery.level)} ",
+                    text = "${sport.sport.name.uppercase()} - ${mapMastery(sport.sportMastery.level)} ",
                     fontSize = 19.sp,
                     fontFamily = InterSemiBold
 

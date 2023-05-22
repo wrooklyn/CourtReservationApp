@@ -16,6 +16,8 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
+import androidx.preference.PreferenceManager
+import com.google.firebase.auth.FirebaseAuth
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.models.Gender
 import it.polito.mad.courtreservationapp.views.AchievementSection
@@ -106,17 +108,27 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
         val composeView = view.findViewById<ComposeView>(R.id.composeContainer)
         composeView.setContent {
             val userWithSportMasteriesAndName = (activity as MainActivity).userViewModel.userWithSportMasteriesAndName
+            Log.i("ShowProfile", "Achievement section receiving $userWithSportMasteriesAndName")
             AchievementSection(activity as MainActivity, userWithSportMasteriesAndName)
         }
         view.findViewById<TextView>(R.id.logoutTV).setOnClickListener(){
-            val a = (activity as MainActivity)
-            a.mGoogleSignInClient.signOut().addOnCompleteListener {
-                a.getSharedPreferences("UserInfo", Context.MODE_PRIVATE).edit().clear().apply()
-                val intent= Intent(a, Login::class.java)
-                startActivity(intent)
-                a.finish()
-            }
+            logout()
         }
+    }
+
+    private fun logout(){
+        val auth by lazy {
+            FirebaseAuth.getInstance()
+        }
+        val a = (activity as MainActivity)
+        a.mGoogleSignInClient.signOut().addOnCompleteListener {
+            a.getSharedPreferences("UserInfo", Context.MODE_PRIVATE).edit().clear().apply()
+            PreferenceManager.getDefaultSharedPreferences(a).edit().clear().apply()
+            val intent= Intent(a, Login::class.java)
+            startActivity(intent)
+            a.finish()
+        }
+        auth.signOut()
     }
 
     override fun onResume() {
