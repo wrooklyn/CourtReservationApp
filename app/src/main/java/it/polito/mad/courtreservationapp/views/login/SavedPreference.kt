@@ -24,21 +24,23 @@ object SavedPreference {
     )?.getString(EMAIL,"") ?: EMAIL
 
     fun setEmail(context: Context, email: String){
+        EMAIL = email
         editor(
             context,
             EMAIL,
             email
         )
-        EMAIL = email
+
     }
 
     fun setUsername(context: Context, username:String){
+        USERNAME = username
         editor(
             context,
             USERNAME,
             username
         )
-        USERNAME = username
+
     }
 
     fun getUsername(context: Context) = getSharedPreference(

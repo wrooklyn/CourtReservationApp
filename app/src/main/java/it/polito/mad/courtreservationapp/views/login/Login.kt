@@ -150,20 +150,21 @@ class Login : ComponentActivity() {
     override fun onStart() {
         super.onStart()
         if(GoogleSignIn.getLastSignedInAccount(this)!=null){
-            val email = SavedPreference.getEmail(this)
-            val user = SavedPreference.getUsername(this)
-            SavedPreference.setEmail(this,email)
-            SavedPreference.setUsername(this,user)
+            SavedPreference.EMAIL = GoogleSignIn.getLastSignedInAccount(this)?.email.toString()
+            SavedPreference.USERNAME = GoogleSignIn.getLastSignedInAccount(this)?.displayName.toString()
+//            SavedPreference.setEmail(this,email)
+//            SavedPreference.setUsername(this,user)
+            Log.i("Login onStart", "email: ${SavedPreference.USERNAME}.")
             Log.i("Login onStart", "email: ${SavedPreference.EMAIL}.")
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
         val currentUser = firebaseAuth.currentUser
         if (currentUser != null) {
-            val email = SavedPreference.getEmail(this)
-            val user = SavedPreference.getUsername(this)
-            SavedPreference.setEmail(this,email)
-            SavedPreference.setUsername(this,user)
+            SavedPreference.EMAIL = currentUser.email.toString()
+            SavedPreference.USERNAME = currentUser.displayName.toString()
+            Log.i("Login onStart", "email: ${SavedPreference.USERNAME}.")
+            Log.i("Login onStart", "email: ${SavedPreference.EMAIL}.")
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
