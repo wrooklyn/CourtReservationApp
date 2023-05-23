@@ -1,6 +1,7 @@
 package it.polito.mad.courtreservationapp.db.repository
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -15,7 +16,7 @@ import kotlinx.coroutines.tasks.await
 
 class FireCourtRepository(val application: Application) {
 
-    private val serviceMap: Map<Int, Service> = mapOf(
+    private val serviceMap: Map<Long, Service> = mapOf(
         Pair(0, Service("Safety shower", 0)),
         Pair(1, Service("Equipment", 1)),
         Pair(2, Service("Coach", 2)),
@@ -60,13 +61,15 @@ class FireCourtRepository(val application: Application) {
         val courtDoc = db.collection("sport-centers").document(centerId).collection("courts").document(courtId).get().await()
         val sportName = courtDoc.data?.get("sport_name") as String
         val courtItem = Court(centerId, sportName, 0, courtId)
-        val servicesIds = courtDoc.data?.get("services") as ArrayList<*>
+        val servicesIds = (courtDoc.data?.get("services") as ArrayList<*>?) ?: emptyList()
         val serviceList : MutableList<Service> = mutableListOf()
         for(id in servicesIds){
             val service = serviceMap[id]
+            Log.i("FireCourtRepo", "ServId: $id, service: $service")
             if(service!=null)
                 serviceList.add(service)
         }
+        Log.i("FireCourtRepo", "Court: $courtId, services: $servicesIds to $serviceList")
         return CourtWithServices(courtItem, serviceList)
     }
 

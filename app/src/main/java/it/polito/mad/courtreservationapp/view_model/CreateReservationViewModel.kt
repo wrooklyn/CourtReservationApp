@@ -3,8 +3,8 @@ package it.polito.mad.courtreservationapp.view_model
 import FireReservationRepository
 import FireSportCenterRepository
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithReservations
@@ -15,6 +15,7 @@ import it.polito.mad.courtreservationapp.models.Court
 import it.polito.mad.courtreservationapp.models.Reservation
 import it.polito.mad.courtreservationapp.models.SportCenter
 import it.polito.mad.courtreservationapp.models.User
+import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import it.polito.mad.courtreservationapp.views.reservationManager.CreateReservationActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,12 +54,13 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
     var sportCenterId: String = "A4pjoFykPhVSfpkfYUXK"
     var reservationId: String = ""
     var userId: Long = 0
-    var email: String = "chndavide@gmail.com"
+//    var email: String = SavedPreference.EMAIL
 
 
     fun initAll(ctx : CreateReservationActivity){
+        Log.i("CreateReservationVM", "using: $courtId, $sportCenterId, ${SavedPreference.EMAIL}")
         initCourt(courtId, sportCenterId)
-        initUser(email)
+        initUser(SavedPreference.EMAIL)
 
         if(reservationId.isNotEmpty()){
             reservationRepo.getByIdWithServices(reservationId).observe(ctx){
@@ -101,11 +103,12 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
                     courtWithServices.services.first { it.serviceId == id }
                 }
                 val resWithServices = ReservationWithServices(res, services)
+                Log.i("CreateReservationVm", "Saving: $resWithServices")
                 reservations.add(resWithServices)
             }
 
             for(reservation in reservations){
-                reservationRepo.insertReservationWithServices(reservation)
+                reservationRepo.insertReservationWithServices(reservation, sportCenterId)
             }
         }
     }

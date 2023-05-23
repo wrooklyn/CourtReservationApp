@@ -101,7 +101,7 @@ class ShowSummaryFragment : Fragment(R.layout.summary_layout) {
     private fun updateUI() {
     }
 
-    fun showConfirmationPopup(a: CreateReservationActivity){
+    private fun showConfirmationPopup(a: CreateReservationActivity){
         val inflater = a.getSystemService(AppCompatActivity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val popupView = inflater.inflate(R.layout.popup_window, null)
         val width = LinearLayout.LayoutParams.WRAP_CONTENT

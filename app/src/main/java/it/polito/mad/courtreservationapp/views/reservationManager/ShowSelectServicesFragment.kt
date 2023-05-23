@@ -41,6 +41,7 @@ class ShowSelectServicesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.i("Service Picker", "Services: ${(activity as CreateReservationActivity).viewModel.courtWithServices}")
         setUpServicesPicker(view, (activity as CreateReservationActivity))
         val editText = view.findViewById<EditText>(R.id.sv_text_field)
         editText.setText((activity as CreateReservationActivity).viewModel.reservationRequests)

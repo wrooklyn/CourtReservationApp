@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.mad.courtreservationapp.db.RemoteDataSource
-import it.polito.mad.courtreservationapp.db.crossref.ReservationServiceCrossRef
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithSportCenter
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
@@ -15,7 +14,7 @@ import it.polito.mad.courtreservationapp.models.*
 import kotlinx.coroutines.tasks.await
 
 class FireReservationRepository(val application: Application) {
-
+    private val database: FirebaseFirestore = RemoteDataSource.instance
     private val serviceMap: Map<Int, Service> = mapOf(
         Pair(0, Service("Safety shower", 0)),
         Pair(1, Service("Equipment", 1)),
@@ -23,7 +22,10 @@ class FireReservationRepository(val application: Application) {
         Pair(3, Service("Refreshment", 3))
     )
 
-    suspend fun insertReservationWithServices(reservationWithServices: ReservationWithServices){
+    suspend fun insertReservationWithServices(
+        reservationWithServices: ReservationWithServices,
+        sportCenterId: String
+    ){
         //save reservation
         /*
         val reservationId = reservationDao.save(reservationWithServices.reservation)
@@ -34,6 +36,19 @@ class FireReservationRepository(val application: Application) {
         }
 
          */ //TODO replace with firebase
+        val content = hashMapOf(
+            "date" to reservationWithServices.reservation.reservationDate,
+            "request" to reservationWithServices.reservation.request,
+            "timeslot" to reservationWithServices.reservation.timeSlotId,
+            "user" to reservationWithServices.reservation.reservationUserId,
+            "services" to reservationWithServices.services
+        )
+        database.collection("sport-centers").document(sportCenterId).collection("courts").document(reservationWithServices.reservation.reservationCourtId!!).collection("reservations").document().set(content).addOnSuccessListener{
+            //TODO: add reference in the user
+//            database.collection("users").document(reservationWithServices.reservation.reservationUserId!!).collection("reservations").document().set()
+        }
+
+
     }
 
     suspend fun deleteReservations(reservations: List<Reservation>){
@@ -65,7 +80,7 @@ class FireReservationRepository(val application: Application) {
 
     suspend fun getReservationsByUser(userEmail: String): List<Reservation> {
         val result: MutableList<Reservation> = mutableListOf()
-        val database: FirebaseFirestore = RemoteDataSource.instance
+
         val reservationsSnapshot = database.collection("users").document(userEmail).collection("reservations").get().await()
         if(reservationsSnapshot != null) {
             for(reservation in reservationsSnapshot.documents) {

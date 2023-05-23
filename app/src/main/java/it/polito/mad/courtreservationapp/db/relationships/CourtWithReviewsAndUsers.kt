@@ -6,12 +6,12 @@ import it.polito.mad.courtreservationapp.models.Court
 import it.polito.mad.courtreservationapp.models.Review
 
 data class CourtWithReviewsAndUsers(
-    @Embedded
+//    @Embedded
     val court: Court,
-    @Relation(
+    /*@Relation(
         entity = Review::class,
         entityColumn = "reviewCourtId",
         parentColumn = "courtId"
-    )
+    )*/
     val reviewsWithUser: List<ReviewWithUser>
 )

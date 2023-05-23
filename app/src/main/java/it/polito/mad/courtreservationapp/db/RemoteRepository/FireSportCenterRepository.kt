@@ -1,6 +1,7 @@
 
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Task
@@ -13,7 +14,7 @@ import it.polito.mad.courtreservationapp.models.*
 import kotlinx.coroutines.tasks.await
 
 class FireSportCenterRepository(val application: Application) {
-
+    val db: FirebaseFirestore = RemoteDataSource.instance
 
 
 
@@ -23,23 +24,23 @@ class FireSportCenterRepository(val application: Application) {
     }
 
     suspend fun getById(id: String): SportCenter {
-        val db: FirebaseFirestore = RemoteDataSource.instance
+
         val sportCenterDoc = db.collection("sport-centers").document(id).get().await()
-        val scName: String = sportCenterDoc.data?.get("name") as String
-        val scAddress = sportCenterDoc.data?.get("address") as String
-        val scDescription = sportCenterDoc.data?.get("description") as String
+        val scName = (sportCenterDoc.data?.get("name") as String?).toString()
+        val scAddress = (sportCenterDoc.data?.get("address") as String?).toString()
+        val scDescription = (sportCenterDoc.data?.get("description") as String?).toString()
         return SportCenter(scName, scAddress, scDescription, sportCenterDoc.id)
     }
 
 
     suspend fun getCenterWithCourts2(id: String): SportCenterWithCourts {
-        val db: FirebaseFirestore = RemoteDataSource.instance
+
 
         val sportCenterDoc = db.collection("sport-centers").document(id).get().await()
-        val scName: String = sportCenterDoc.data?.get("name") as String
-        val scAddress = sportCenterDoc.data?.get("address") as String
-        val scDescription = sportCenterDoc.data?.get("description") as String
-        val scId = sportCenterDoc.data?.get("id") as Long
+        val scName = (sportCenterDoc.data?.get("name") as String?).toString()
+        val scAddress = (sportCenterDoc.data?.get("address") as String?).toString()
+        val scDescription = (sportCenterDoc.data?.get("description") as String?).toString()
+//        val scId = sportCenterDoc.data?.get("id") as Long
         val sportCenter = SportCenter(scName, scAddress, scDescription, sportCenterDoc.id)
         val courtsOfCenterRef = db.collection("sport-centers").document(id).collection("courts")
         val courtsList = mutableListOf<Court>()
@@ -55,7 +56,7 @@ class FireSportCenterRepository(val application: Application) {
 
 
     fun getAllWithCourtsAndServices(): Task<List<SportCenterWithCourtsAndServices>> {
-        val db: FirebaseFirestore = RemoteDataSource.instance
+
         val dataList = mutableListOf<SportCenterWithCourtsAndServices>()
         // Reference to your Firestore collection
         val sportCenterRef = db.collection("sport-centers")
@@ -66,11 +67,12 @@ class FireSportCenterRepository(val application: Application) {
                 // Map Firestore document to YourDataModel and add it to dataList
 //                println("help")
 //                println(document.id)
-//                println(document.data)
-                val scName: String = document.data?.get("name") as String
-                val scAddress = document.data?.get("address") as String
-                val scDescription = document.data?.get("description") as String
-                val scId = document.data?.get("id") as Long
+                println(document.data)
+                val scName = (document.data?.get("name") as String?).toString()
+                val scAddress = (document.data?.get("address") as String?).toString()
+                val scDescription = (document.data?.get("description") as String?).toString()
+//                val scId = document.data?.get("id") as Long?
+//                Log.i("FireSportRepo", "scId: $scId")
                 val sportCenter = SportCenter(scName, scAddress, scDescription,document.id)
                 val courtsOfCenterRef = sportCenterRef.document(document.id).collection("courts")
                 val courtWithServices = mutableListOf<CourtWithServices>()
@@ -97,10 +99,75 @@ class FireSportCenterRepository(val application: Application) {
         }
     }
 
+    suspend fun getAllWithCourtsAndServices2(): List<SportCenterWithCourtsAndServices> {
+
+        val dataList = mutableListOf<SportCenterWithCourtsAndServices>()
+        // Reference to your Firestore collection
+        val sportCenterRef = db.collection("sport-centers")
+
+        val sportCenterSnapshot = sportCenterRef.get().await()
+        for (document in sportCenterSnapshot.documents){
+            val scName = (document.data?.get("name") as String?).toString()
+            val scAddress = (document.data?.get("address") as String?).toString()
+            val scDescription = (document.data?.get("description") as String?).toString()
+            val sportCenter = SportCenter(scName, scAddress, scDescription,document.id)
+            val courtsOfCenterRef = sportCenterRef.document(document.id).collection("courts")
+            val courtWithServices = mutableListOf<CourtWithServices>()
+            val courtsSnapshot = courtsOfCenterRef.get().await()
+
+            for(courtDocument in courtsSnapshot.documents){
+                val cSportName = courtDocument.data?.get("sport_name") as String
+                val cServices = courtDocument.data?.get("services") as List<Long>?
+                val s = cServices?.map { e -> Service("desct temporary", e) } ?: listOf()
+                val c = Court(document.id, cSportName, 0, courtDocument.id)
+                courtWithServices.add(CourtWithServices(c, s))
+            }
+            dataList.add(SportCenterWithCourtsAndServices(sportCenter, courtWithServices))
+        }
+
+
+            /*
+            val sportCenterSnapshot = task.result
+            for (document in sportCenterSnapshot?.documents.orEmpty()) {
+                // Map Firestore document to YourDataModel and add it to dataList
+//                println("help")
+//                println(document.id)
+                println(document.data)
+                val scName = (document.data?.get("name") as String?).toString()
+                val scAddress = (document.data?.get("address") as String?).toString()
+                val scDescription = (document.data?.get("description") as String?).toString()
+//                val scId = document.data?.get("id") as Long?
+//                Log.i("FireSportRepo", "scId: $scId")
+                val sportCenter = SportCenter(scName, scAddress, scDescription,document.id)
+                val courtsOfCenterRef = sportCenterRef.document(document.id).collection("courts")
+                val courtWithServices = mutableListOf<CourtWithServices>()
+
+                val innerTask = courtsOfCenterRef.get().continueWithTask { task ->
+                    val courtSnapshot = task.result
+                    for (courtDocument in courtSnapshot?.documents.orEmpty()) {
+//                        println("xp ${courtDocument.data}")
+                        val cSportName = courtDocument.data?.get("sport_name") as String
+                        val cCourtId = 19L
+                        val cServices = courtDocument.data?.get("services") as List<Long>?
+                        val s = cServices?.map { e -> Service("desct temporary", e) } ?: listOf()
+                        val c = Court(document.id, cSportName, 0, courtDocument.id)
+                        courtWithServices.add(CourtWithServices(c, s))
+                    }
+                    dataList.add(SportCenterWithCourtsAndServices(sportCenter, courtWithServices))
+                    Tasks.forResult(null)
+                }
+                innerTasks.add(innerTask)
+            }
+            Tasks.whenAllComplete(innerTasks).continueWith { _ ->
+                dataList
+            }*/
+        return dataList
+    }
+
 
 
     suspend fun getAllWithCourtsAndReviewsAndUsers(): List<SportCenterWIthCourtsAndReviewsAndUsers> {
-        val db: FirebaseFirestore = RemoteDataSource.instance
+
         val dataList = mutableListOf<SportCenterWIthCourtsAndReviewsAndUsers>()
         // Reference to your Firestore collection
         val sportCenterRef = db.collection("sport-centers")
@@ -111,11 +178,11 @@ class FireSportCenterRepository(val application: Application) {
             // Map Firestore document to YourDataModel and add it to dataList
 //            println("help")
 //            println(document.id)
-//            println(document.data)
+            println(document.data)
             val scName: String = document.data?.get("name") as String
             val scAddress = document.data?.get("address") as String
             val scDescription = document.data?.get("description") as String
-            val scId = document.data?.get("id") as Long
+//            val scId = document.data?.get("id") as Long
             val sportCenter = SportCenter(scName, scAddress, scDescription, document.id)
             val courtsOfCenterRef = sportCenterRef.document(document.id).collection("courts")
             val courtWithReviewsAndUsersList = mutableListOf<CourtWithReviewsAndUsers>()

@@ -25,10 +25,11 @@ class SportCenterViewModel(application: Application) : AndroidViewModel(applicat
     var allSports: MutableList<String> = mutableListOf()
      fun initData(){
          runBlocking(Dispatchers.Default) {
-             launch {
+             launch {/*
                  sportCenterRepository.getAllWithCourtsAndServices().addOnCompleteListener() { t->
                      sportCentersLiveData.postValue(t.result)
-                 }
+                 }*/
+                 sportCentersLiveData.postValue(sportCenterRepository.getAllWithCourtsAndServices2())
                  //this one is the new best approach
                  val res = sportCenterRepository.getAllWithCourtsAndReviewsAndUsers()
                  sportCentersWithReviewsAndUsersLiveData.postValue(res)

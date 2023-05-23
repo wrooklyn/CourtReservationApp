@@ -2,6 +2,7 @@ package it.polito.mad.courtreservationapp.views.homeManager.tabFragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +27,7 @@ class CourtFragment : Fragment() {
     var position: Int = -1
     lateinit var viewModel: SportCenterViewModel
     lateinit var sportCenterWithCourtsAndServices: SportCenterWithCourtsAndServices
-    lateinit var sportCenterWithCourtsAndReviews: SportCenterWithCourtsAndReviews
+//    lateinit var sportCenterWithCourtsAndReviews: SportCenterWithCourtsAndReviews
     private var courts: MutableList<Court> = mutableListOf()
     private lateinit var courtsWithReviewsAndUsers: List<CourtWithReviewsAndUsers>
 
@@ -61,7 +62,7 @@ class CourtFragment : Fragment() {
     private fun serviceInitialize(){
 
         val recyclerView: RecyclerView? = view?.findViewById(R.id.service_court_recycler)
-        val adapter = CourtDescriptionAdapter(viewModel.courtImages, courtsWithReviewsAndUsers)
+        val adapter = CourtDescriptionAdapter(viewModel.courtImages, courtsWithReviewsAndUsers) //TODO: image from firebase -> no map
 
         val llm : LinearLayoutManager = LinearLayoutManager(activity)
         recyclerView?.layoutManager = llm
@@ -78,12 +79,13 @@ class CourtFragment : Fragment() {
         }
         override fun onBindViewHolder(holder: CourtDescriptionViewHolder, position: Int) {
             val currentCourt = courts[position]
-            val currentImage = imageMap[currentCourt.court.sportName] ?: R.drawable.gesu
+            val currentImage = imageMap[currentCourt.court.sportName] ?: R.drawable.gesu //TODO: image from firebase
             val averageRating = currentCourt.reviewsWithUser.map { it.review.rating }.average().run { if (isNaN()) 0.0 else this}
             val ratingTxt = if (currentCourt.reviewsWithUser.size == 1) "review" else "reviews"
             val currentReview = "$averageRating (${currentCourt.reviewsWithUser.size} $ratingTxt)"
             holder.bind(currentImage, "${currentCourt.court.sportName} Court", currentReview)
             holder.itemView.findViewById<Button>(R.id.reserveButton).setOnClickListener{
+                Log.i("CourtFragment", "ReserveButtonPressed for: SC:${currentCourt.court.sportCenterId}, C: ${currentCourt.court} ")
                 val createReservationIntent: Intent = Intent(holder.itemView.context, CreateReservationActivity::class.java)
                 createReservationIntent.putExtra("sportCenterId",currentCourt.court.sportCenterId)
                 createReservationIntent.putExtra("courtId",currentCourt.court.courtId)
