@@ -21,6 +21,8 @@ class CreateReservationActivity : AppCompatActivity() {
     lateinit var binding: ActivityCreateReservationBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.i("Create Res Activity", "Starting activity")
+
         binding = ActivityCreateReservationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

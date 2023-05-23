@@ -43,6 +43,7 @@ class FireReservationRepository(val application: Application) {
             "user" to reservationWithServices.reservation.reservationUserId,
             "services" to reservationWithServices.services
         )
+        //TODO: decide to save services as {Id, name} or {Id}
         database.collection("sport-centers").document(sportCenterId).collection("courts").document(reservationWithServices.reservation.reservationCourtId!!).collection("reservations").document().set(content).addOnSuccessListener{
             //TODO: add reference in the user
 //            database.collection("users").document(reservationWithServices.reservation.reservationUserId!!).collection("reservations").document().set()
@@ -165,10 +166,10 @@ class FireReservationRepository(val application: Application) {
                 val request: String? = reservItem.data?.get("request") as String?
                 val timeslotId: Long = reservItem.data?.get("timeslot") as Long
                 val reservationItem = Reservation(reservDate, timeslotId, null, null, request, reservation.id)
-                val reviewText: String = reservItem.data?.get("review_content") as String
-                val rating: Int = (reservItem.data?.get("rating") as Long).toInt() //TODO review might not be there
-                val date: String = reservItem.data?.get("review_date") as String
-                val reviewItem = Review(null, null, reservation.id, reviewText, rating, date, reservation.id)
+                val reviewText = reservItem.data?.get("review_content") as String?
+                val rating = (reservItem.data?.get("rating") as Long?)?.toInt() //TODO review might not be there
+                val date = reservItem.data?.get("review_date") as String?
+                val reviewItem = Review(null, null, reservation.id, reviewText, rating?: 0, date?:"", reservation.id)
                 val reservWithReview = ReservationWithReview(reservationItem, reviewItem)
                 result.add(reservWithReview)
             }

@@ -84,6 +84,7 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
     private fun initUser(email: String){
         runBlocking(Dispatchers.Default) {
             launch {
+                Log.i("initUser", "$email")
                 val res = userRepo.getUserWithMasteries(email)
                 userLiveData.postValue(res.user)
                 println("updated: hehe ${res}")
@@ -97,7 +98,7 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
         viewModelScope.launch {
             val reservations: MutableList<ReservationWithServices> = mutableListOf()
             for(timeSlot in reservationTimeSlots){
-                val res = Reservation(reservationDate?: Calendar.getInstance().toString(), timeSlot, user.userId, courtWithReservations.court.courtId, reservationRequests, reservationId)
+                val res = Reservation(reservationDate?: Calendar.getInstance().toString(), timeSlot, SavedPreference.EMAIL, courtWithReservations.court.courtId, reservationRequests, reservationId)
 //            reservations.add(ReservationWithServices(res, reservationServices as List<Service>))
                 val services = reservationServices.map { id ->
                     courtWithServices.services.first { it.serviceId == id }
