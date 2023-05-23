@@ -84,69 +84,6 @@ class Login : ComponentActivity() {
         }
     }
 
-    // signInGoogle() function
-    private fun signInGoogle(){
-
-        val signInIntent: Intent =mGoogleSignInClient.signInIntent
-        startActivityForResult(signInIntent,reqCode)
-    }
-    // onActivityResult() function : this is where we provide the task and data for the Google Account
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode==reqCode){
-            val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
-            handleResult(task)
-        }
-    }
-    // handleResult() function -  this is where we update the UI after Google signin takes place
-    private fun handleResult(completedTask: Task<GoogleSignInAccount>){
-        try {
-            val account: GoogleSignInAccount? =completedTask.getResult(ApiException::class.java)
-            if (account != null) {
-                updateUIGoogle(account)
-            }
-        } catch (e:ApiException){
-            Toast.makeText(this,e.toString(),Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    // UpdateUI() function - this is where we specify what UI updation are needed after google signin has taken place.
-    private fun updateUIGoogle(account: GoogleSignInAccount){
-        val credential= GoogleAuthProvider.getCredential(account.idToken,null)
-        firebaseAuth.signInWithCredential(credential).addOnCompleteListener {task->
-            if(task.isSuccessful) {
-                Log.i("GoogleLogin" ,"${task.result.additionalUserInfo?.isNewUser}")
-                if(task.result.additionalUserInfo?.isNewUser == true){
-                    val data = hashMapOf("username" to "user${(Math.random()*100000).toInt()}")
-                    fireDB.collection("users").document(account.email!!).set(data, SetOptions.merge())
-                }
-                Log.i("UpdateUi", "${account.account?.name}")
-                Log.i("UpdateUi", "${account.email}")
-                Log.i("UpdateUi", "${account.displayName}")
-                SavedPreference.setEmail(this,account.email.toString())
-                SavedPreference.setUsername(this,account.displayName.toString())
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish()
-            }
-        }
-    }
-    private fun updateUI(account: FirebaseUser?){
-
-        val user = Firebase.auth.currentUser
-        user?.let {
-            Log.i("UpdateUi", "${account?.email}")
-            Log.i("UpdateUi", "${it.email}")
-            Log.i("UpdateUi", "${it.displayName}")
-            SavedPreference.setEmail(this,it.email.toString())
-            SavedPreference.setUsername(this,it.displayName.toString())
-            SavedPreference.EMAIL = it.email.toString()
-            SavedPreference.USERNAME = it.displayName.toString()
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
-    }
     override fun onStart() {
         super.onStart()
         if(GoogleSignIn.getLastSignedInAccount(this)!=null){
@@ -168,53 +105,6 @@ class Login : ComponentActivity() {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
-    }
-
-    private fun createAccount(email: String, password: String) {
-        // [START create_user_with_email]
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d("createAccount", "createUserWithEmail:success")
-                    val user = firebaseAuth.currentUser
-                    val data = hashMapOf("username" to "user${(Math.random()*100000).toInt()}")
-                    fireDB.collection("users").document(email).set(data, SetOptions.merge())
-                    updateUI(user!!)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w("createAccount", "createUserWithEmail:failure", task.exception)
-                    Toast.makeText(
-                        baseContext,
-                        "Authentication failed.",
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                    updateUI(null)
-                }
-            }
-        // [END create_user_with_email]
-    }
-    private fun signIn(email: String, password: String) {
-        // [START sign_in_with_email]
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d("createAccount", "signInWithEmail:success")
-                    val user = firebaseAuth.currentUser
-                    updateUI(user)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w("createAccount", "signInWithEmail:failure", task.exception)
-                    Toast.makeText(
-                        baseContext,
-                        "Authentication failed.",
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                    updateUI(null)
-                }
-            }
-        // [END sign_in_with_email]
     }
 
     @Composable
@@ -307,9 +197,6 @@ class Login : ComponentActivity() {
                     value = password,
                     onValueChange = { newText ->
                         password = newText
-                        println(password)
-                        println(newText)
-
                     },
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = colorResource(id = R.color.red_button),
@@ -349,7 +236,6 @@ class Login : ComponentActivity() {
                 colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.red_button)),
                 shape = CircleShape,
                 onClick = {
-                    println("sign in")
                     signIn(email, password)
                 }
             ) {
@@ -363,7 +249,6 @@ class Login : ComponentActivity() {
                 colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.red_button)),
                 shape = CircleShape,
                 onClick = {
-                    println("Sign up")
                     createAccount(email, password)
                 }
             ) {
@@ -388,7 +273,6 @@ class Login : ComponentActivity() {
                 ) {
                 Button(
                     onClick = {
-                        println("sign-in with google")
                         signInGoogle()
                     }
                 ){
@@ -400,6 +284,127 @@ class Login : ComponentActivity() {
 
     }
 
+    // signInGoogle() function
+    private fun signInGoogle(){
 
+        val signInIntent: Intent =mGoogleSignInClient.signInIntent
+        startActivityForResult(signInIntent,reqCode)
+    }
+    // onActivityResult() function : this is where we provide the task and data for the Google Account
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode==reqCode){
+            val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
+            handleResult(task)
+        }
+    }
+    // handleResult() function -  this is where we update the UI after Google signin takes place
+    private fun handleResult(completedTask: Task<GoogleSignInAccount>){
+        try {
+            val account: GoogleSignInAccount? =completedTask.getResult(ApiException::class.java)
+            if (account != null) {
+                updateUIGoogle(account)
+            }
+        } catch (e:ApiException){
+            showToast(e.toString())
+        }
+    }
+
+    // UpdateUI() function - this is where we specify what UI updation are needed after google signin has taken place.
+    private fun updateUIGoogle(account: GoogleSignInAccount){
+        val credential= GoogleAuthProvider.getCredential(account.idToken,null)
+        firebaseAuth.signInWithCredential(credential).addOnCompleteListener {task->
+            if(task.isSuccessful) {
+                Log.i("GoogleLogin" ,"${task.result.additionalUserInfo?.isNewUser}")
+                if(task.result.additionalUserInfo?.isNewUser == true){
+                    val data = hashMapOf("username" to "user${(Math.random()*100000).toInt()}")
+                    fireDB.collection("users").document(account.email!!).set(data, SetOptions.merge())
+                }
+                Log.i("UpdateUi", "${account.account?.name}")
+                Log.i("UpdateUi", "${account.email}")
+                Log.i("UpdateUi", "${account.displayName}")
+                SavedPreference.setEmail(this,account.email.toString())
+                SavedPreference.setUsername(this,account.displayName.toString())
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
+    }
+    private fun updateUI(account: FirebaseUser?){
+
+        val user = Firebase.auth.currentUser
+        user?.let {
+            Log.i("UpdateUi", "${account?.email}")
+            Log.i("UpdateUi", "${it.email}")
+            Log.i("UpdateUi", "${it.displayName}")
+            SavedPreference.setEmail(this,it.email.toString())
+            SavedPreference.setUsername(this,it.displayName.toString())
+            SavedPreference.EMAIL = it.email.toString()
+            SavedPreference.USERNAME = it.displayName.toString()
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+    }
+
+
+    private fun createAccount(email: String, password: String) {
+        // [START create_user_with_email]
+        if(email.isNullOrEmpty() || password.isNullOrEmpty()){
+            showToast("Email or Password null")
+            updateUI(null)
+        } else{
+            firebaseAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d("createAccount", "createUserWithEmail:success")
+                        val user = firebaseAuth.currentUser
+                        val data = hashMapOf("username" to "user${(Math.random()*100000).toInt()}")
+                        fireDB.collection("users").document(email).set(data, SetOptions.merge())
+                        updateUI(user!!)
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w("createAccount", "createUserWithEmail:failure", task.exception)
+                        showToast("Authentication failed.")
+                        updateUI(null)
+                    }
+                }
+        }
+
+        // [END create_user_with_email]
+    }
+    private fun signIn(email: String, password: String) {
+        // [START sign_in_with_email]
+        if(email.isNullOrEmpty() || password.isNullOrEmpty()){
+            showToast("Email or Password null")
+            updateUI(null)
+        } else {
+            firebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d("createAccount", "signInWithEmail:success")
+                        val user = firebaseAuth.currentUser
+                        updateUI(user)
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w("createAccount", "signInWithEmail:failure", task.exception)
+                        showToast("Authentication failed.")
+                        updateUI(null)
+                    }
+                }
+            // [END sign_in_with_email]
+        }
+    }
+
+    private fun showToast(text: String, duration: Int = Toast.LENGTH_SHORT){
+        Toast.makeText(
+            baseContext,
+            text,
+            duration,
+        ).show()
+    }
 
 }
