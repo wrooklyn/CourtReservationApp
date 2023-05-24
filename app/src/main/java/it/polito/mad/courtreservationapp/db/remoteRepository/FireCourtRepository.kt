@@ -3,8 +3,8 @@ package it.polito.mad.courtreservationapp.db.repository
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FirebaseFirestore
+import androidx.lifecycle.MutableLiveData
+import com.google.firebase.firestore.*
 import it.polito.mad.courtreservationapp.db.RemoteDataSource
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithReservations
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithServices
@@ -68,6 +68,49 @@ class FireCourtRepository(val application: Application) {
         val s = cServices?.let { ServiceUtils.getServices(it) } ?: emptyList()
 
         return CourtWithServices(courtItem, s)
+    }
+
+    fun observeCourtWithReservations(centerId: String, courtId: String): MutableLiveData<CourtWithReservations> {
+        val db: FirebaseFirestore = RemoteDataSource.instance
+        val courtRef =
+            db.collection("sport-centers").document(centerId).collection("courts").document(courtId)
+        return object : MutableLiveData<CourtWithReservations>() {
+            private var listenerRegistration: ListenerRegistration? = null
+
+            override fun onActive() {
+                super.onActive()
+                listenerRegistration = courtRef.addSnapshotListener { courtSnapshot, error ->
+                    if (error != null) {
+                        // Handle the error
+                        return@addSnapshotListener
+                    }
+
+                    courtSnapshot?.let { snapshot ->
+                        val sportName = snapshot.data?.get("sport_name") as String
+                        val image: String? = snapshot.data?.get("image_name") as String?
+                        val courtItem = Court(centerId, sportName, 0, courtId, image)
+                        val reservationsRef = snapshot.reference.collection("reservations")
+                        reservationsRef.get().addOnSuccessListener { reservationsSnapshot ->
+                            val reservations = reservationsSnapshot.documents.mapNotNull {
+                                val reservDate: String = it.data?.get("date") as String
+                                val request: String? = it.data?.get("request") as String?
+                                val timeslotId: Long = it.data?.get("timeslot") as Long
+                                Reservation(reservDate, timeslotId, null, centerId, request, it.id)
+                            }
+                            val courtWithReservations = courtItem?.let { CourtWithReservations(it, reservations) }
+                            value = courtWithReservations
+                        }.addOnFailureListener { exception ->
+                            // Handle the exception while fetching reservations
+                        }
+                    }
+                }
+            }
+
+            override fun onInactive() {
+                super.onInactive()
+                listenerRegistration?.remove()
+            }
+        }
     }
 
     suspend fun getByIdWithReservations(centerId: String, courtId: String): CourtWithReservations {

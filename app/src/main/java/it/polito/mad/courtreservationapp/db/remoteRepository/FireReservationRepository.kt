@@ -43,9 +43,14 @@ class FireReservationRepository(val application: Application) {
             "user" to reservationWithServices.reservation.reservationUserId,
             "services" to reservationWithServices.services
         )
+        val flag = hashMapOf(
+            "lastUpdated" to System.currentTimeMillis(),
+        ) as Map<String, Any>
         //TODO: decide to save services as {Id, name} or {Id}
         database.collection("sport-centers").document(sportCenterId).collection("courts").document(reservationWithServices.reservation.reservationCourtId!!).collection("reservations").document().set(content).addOnSuccessListener{
-            //TODO: add reference in the user
+        //This allows realtime updates to everyone reserving
+        database.collection("sport-centers").document(sportCenterId).collection("courts").document(reservationWithServices.reservation.reservationCourtId!!).update(flag)
+        //TODO: add reference in the user
 //            database.collection("users").document(reservationWithServices.reservation.reservationUserId!!).collection("reservations").document().set()
         }
 

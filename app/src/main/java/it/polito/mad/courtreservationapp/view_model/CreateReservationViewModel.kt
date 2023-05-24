@@ -50,10 +50,10 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
     var reservationServices : MutableList<Long> = mutableListOf()
     var reservationRequests : String = ""
 
-    var courtId: String = "80A69RdLDZhzICaVa1qA" // TODO: remove hardcoded IDs, use actual ones
-    var sportCenterId: String = "A4pjoFykPhVSfpkfYUXK"
+    var courtId: String = ""
+    var sportCenterId: String = ""
     var reservationId: String = ""
-    var userId: Long = 0
+    var userId: String = SavedPreference.EMAIL
 //    var email: String = SavedPreference.EMAIL
 
 
@@ -75,7 +75,8 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
         runBlocking {
             launch {
                 sportCenterLiveData.postValue(sportCenterRepo.getById(centerId))
-                courtReservationsLiveData.postValue(courtRepo.getByIdWithReservations(centerId, courtId))
+                courtReservationsLiveData = courtRepo.observeCourtWithReservations(centerId, courtId)
+                //courtReservationsLiveData.postValue(courtRepo.getByIdWithReservations(centerId, courtId))
                 courtServicesLiveData.postValue(courtRepo.getByIdWithServices(centerId, courtId))
             }
         }

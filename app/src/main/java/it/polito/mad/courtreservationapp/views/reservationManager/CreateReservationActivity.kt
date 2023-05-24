@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.databinding.ActivityCreateReservationBinding
 import it.polito.mad.courtreservationapp.view_model.CreateReservationViewModel
@@ -55,6 +56,7 @@ class CreateReservationActivity : AppCompatActivity() {
 
         viewModel.courtReservationsLiveData.observe(this) {
             viewModel.liveDataToData(it)
+            this.findViewById<RecyclerView>(R.id.recyclerView).adapter!!.notifyDataSetChanged()
         }
 
         viewModel.courtServicesLiveData.observe(this) {

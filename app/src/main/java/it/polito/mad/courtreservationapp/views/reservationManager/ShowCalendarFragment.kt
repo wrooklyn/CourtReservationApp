@@ -116,8 +116,6 @@ class ShowCalendarFragment : Fragment() {
                 calendarView.markDayAsSelectedDay(date)
                 view.findViewById<RecyclerView>(R.id.recyclerView).adapter?.notifyDataSetChanged()
             }
-        }else{
-            calendarView.markDayAsSelectedDay(Date())
         }
 
 

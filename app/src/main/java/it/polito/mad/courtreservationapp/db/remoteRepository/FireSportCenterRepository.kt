@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import it.polito.mad.courtreservationapp.db.RemoteDataSource
 import it.polito.mad.courtreservationapp.db.relationships.*
 import it.polito.mad.courtreservationapp.models.*
@@ -17,7 +16,7 @@ import java.util.Objects
 
 class FireSportCenterRepository(val application: Application) {
     val db: FirebaseFirestore = RemoteDataSource.instance
-    val storage: FirebaseStorage = RemoteDataSource.storageInstance
+
 
 
 
