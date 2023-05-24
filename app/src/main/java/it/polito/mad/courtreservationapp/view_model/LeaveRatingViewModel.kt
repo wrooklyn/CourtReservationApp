@@ -1,16 +1,14 @@
 package it.polito.mad.courtreservationapp.view_model
 
-import FireSportCenterRepository
+import it.polito.mad.courtreservationapp.db.remoteRepository.FireSportCenterRepository
 import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourts
 import it.polito.mad.courtreservationapp.db.repository.*
-import it.polito.mad.courtreservationapp.models.Review
 import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import it.polito.mad.courtreservationapp.views.ratings.LeaveRatingActivity
 import kotlinx.coroutines.Dispatchers

@@ -29,6 +29,7 @@ import it.polito.mad.courtreservationapp.views.MainActivity
 import it.polito.mad.courtreservationapp.views.ratings.LeaveRatingActivity
 import it.polito.mad.courtreservationapp.utils.BitmapUtil
 import it.polito.mad.courtreservationapp.utils.DiskUtil
+import it.polito.mad.courtreservationapp.utils.ImageUtils
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -50,6 +51,7 @@ class ReservationDetailsFragment : Fragment() {
     private lateinit var serviceIds: LongArray
     private lateinit var serviceDescriptions: Array<String>
     private var reviewed: Boolean = false
+    private var courtImage: String? = null
 
     lateinit var viewModel: ReservationBrowserViewModel
     lateinit var ratingViewModel: LeaveRatingViewModel
@@ -100,6 +102,7 @@ class ReservationDetailsFragment : Fragment() {
                 reservWithServices.services.map { it.description }.toTypedArray()
             )
             args.putBoolean("reviewed", reviewed)
+            args.putString("courtImage", reservWithSportCenter.courtWithSportCenter.court.image)
             fragment.arguments = args
             return fragment
         }
@@ -136,6 +139,7 @@ class ReservationDetailsFragment : Fragment() {
         serviceIds = requireArguments().getLongArray("serviceIds")!!
         serviceDescriptions = requireArguments().getStringArray("serviceDescriptions")!!
         reviewed = requireArguments().getBoolean("reviewed")
+        courtImage = requireArguments().getString("courtImage")
     }
 
     override fun onCreateView(
@@ -188,16 +192,8 @@ class ReservationDetailsFragment : Fragment() {
         timeslotTV.text = TimeslotMap.getTimeslotString(timeslotId)
         courtNameTV.text = courtName
         specialRequestsTV.text = specialRequests ?: "You did not have any special request"
-        Log.i("asdasd", "$sportName")
-        when (sportName) {
-            "Soccer" -> courtImageIV.setImageResource(R.drawable.football_court)
-            "Iceskate" -> courtImageIV.setImageResource(R.drawable.iceskating_rink)
-            "Basket" -> courtImageIV.setImageResource(R.drawable.basket_center)
-            "Hockey" -> courtImageIV.setImageResource(R.drawable.hockey_png)
-            "Tennis" -> courtImageIV.setImageResource(R.drawable.tennis_court)
-            "Volley" -> courtImageIV.setImageResource(R.drawable.volley_court)
-            "Swimming" -> courtImageIV.setImageResource(R.drawable.swimming_pool)
-        }
+        Log.i("asdasd", sportName)
+        ImageUtils.setImage("courts", courtImage, courtImageIV)
 
         val editReservationButton = view.findViewById<Button>(R.id.edit_reservation_button)
         editReservationButton.setOnClickListener {

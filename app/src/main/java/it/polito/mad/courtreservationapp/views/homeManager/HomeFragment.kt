@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
+import it.polito.mad.courtreservationapp.utils.IconUtils
 import it.polito.mad.courtreservationapp.view_model.SportCenterViewModel
 import it.polito.mad.courtreservationapp.view_model.SportMasteryViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
@@ -62,7 +63,7 @@ class HomeFragment : Fragment() {
     private fun sportInitialize(){
 
         val recyclerView: RecyclerView? = view?.findViewById(R.id.sports_recycler)
-        val adapter = SportsAdapter(viewModel.sportIconsId, viewModel.allSports, activity as MainActivity, this)
+        val adapter = SportsAdapter(viewModel.allSports, activity as MainActivity, this)
         recyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         recyclerView?.adapter = adapter
         adapter.setOnItemClickListener(object : SportsAdapter.OnItemClickListener{
@@ -73,7 +74,7 @@ class HomeFragment : Fragment() {
     }
 
     //Sports ScrollView
-    class SportsAdapter(private val imagesList: Map<String, Int>, private val namesList: List<String>, val activity: MainActivity, val fragment: HomeFragment): RecyclerView.Adapter<SportsViewHolder>() {
+    class SportsAdapter(private val namesList: List<String>, val activity: MainActivity, val fragment: HomeFragment): RecyclerView.Adapter<SportsViewHolder>() {
 
         private lateinit var sListener: OnItemClickListener
         interface OnItemClickListener{
@@ -90,7 +91,8 @@ class HomeFragment : Fragment() {
         }
         override fun onBindViewHolder(holder: SportsViewHolder, position: Int) {
             val currentName = namesList[position]
-            val currentImage = imagesList[currentName] ?: R.drawable.gesu
+            Log.i("HomeFragment", "SportIcons - current: $currentName")
+            val currentImage = IconUtils.getSportIcon(currentName)
             holder.bind(currentImage, currentName)
         }
     }

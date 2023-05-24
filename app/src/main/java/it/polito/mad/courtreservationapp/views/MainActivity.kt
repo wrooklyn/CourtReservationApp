@@ -132,8 +132,7 @@ class MainActivity : AppCompatActivity() {
                     replaceFragment(HomeFragment())
                 }
                 R.id.explore -> {
-//                    replaceFragment(ShowUnimplementedFragment())
-                    testDavide()
+                    replaceFragment(ShowUnimplementedFragment())
                 }
 
                 R.id.calendar -> {
@@ -153,11 +152,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-//    override fun onResume() {
-//        super.onResume()
-////        println("onResume")
-////        userViewModel.refreshUser(this)
-//    }
 
     fun replaceFragment(fragment: Fragment) {
         val fragmentManager = supportFragmentManager
@@ -182,11 +176,5 @@ class MainActivity : AppCompatActivity() {
         editor.putInt("weight", userViewModel.user.weight)
         editor.putString("phone", userViewModel.user.phone)
         editor.apply()
-    }
-
-    private fun testDavide(){
-        Log.i("test", "login launch")
-        val intent = Intent(this, Login::class.java)
-        startActivity(intent)
     }
 }

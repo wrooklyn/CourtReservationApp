@@ -87,23 +87,14 @@ class Login : ComponentActivity() {
     override fun onStart() {
         super.onStart()
         if(GoogleSignIn.getLastSignedInAccount(this)!=null){
-            SavedPreference.EMAIL = GoogleSignIn.getLastSignedInAccount(this)?.email.toString()
-            SavedPreference.USERNAME = GoogleSignIn.getLastSignedInAccount(this)?.displayName.toString()
-//            SavedPreference.setEmail(this,email)
-//            SavedPreference.setUsername(this,user)
-            Log.i("Login onStart", "email: ${SavedPreference.USERNAME}.")
-            Log.i("Login onStart", "email: ${SavedPreference.EMAIL}.")
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
+            startMain(GoogleSignIn.getLastSignedInAccount(this)?.email.toString(),
+                GoogleSignIn.getLastSignedInAccount(this)?.displayName.toString()
+            )
+
         }
         val currentUser = firebaseAuth.currentUser
         if (currentUser != null) {
-            SavedPreference.EMAIL = currentUser.email.toString()
-            SavedPreference.USERNAME = currentUser.displayName.toString()
-            Log.i("Login onStart", "email: ${SavedPreference.USERNAME}.")
-            Log.i("Login onStart", "email: ${SavedPreference.EMAIL}.")
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
+            startMain(currentUser.email.toString(), currentUser.displayName.toString())
         }
     }
 
@@ -323,11 +314,8 @@ class Login : ComponentActivity() {
                 Log.i("UpdateUi", "${account.account?.name}")
                 Log.i("UpdateUi", "${account.email}")
                 Log.i("UpdateUi", "${account.displayName}")
-                SavedPreference.setEmail(this,account.email.toString())
-                SavedPreference.setUsername(this,account.displayName.toString())
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish()
+
+                startMain(account.email.toString(), account.displayName.toString())
             }
         }
     }
@@ -338,13 +326,8 @@ class Login : ComponentActivity() {
             Log.i("UpdateUi", "${account?.email}")
             Log.i("UpdateUi", "${it.email}")
             Log.i("UpdateUi", "${it.displayName}")
-            SavedPreference.setEmail(this,it.email.toString())
-            SavedPreference.setUsername(this,it.displayName.toString())
-            SavedPreference.EMAIL = it.email.toString()
-            SavedPreference.USERNAME = it.displayName.toString()
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+
+            startMain(it.email.toString(), it.displayName.toString())
         }
     }
 
@@ -397,6 +380,17 @@ class Login : ComponentActivity() {
                 }
             // [END sign_in_with_email]
         }
+    }
+
+    private fun startMain(email: String, username: String){
+        SavedPreference.setEmail(this, email)
+        SavedPreference.setUsername(this, username)
+        SavedPreference.EMAIL = email
+        SavedPreference.USERNAME = username
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
     }
 
     private fun showToast(text: String, duration: Int = Toast.LENGTH_SHORT){

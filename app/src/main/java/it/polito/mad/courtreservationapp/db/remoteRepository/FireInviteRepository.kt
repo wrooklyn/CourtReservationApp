@@ -1,11 +1,10 @@
-package it.polito.mad.courtreservationapp.db.RemoteRepository
+package it.polito.mad.courtreservationapp.db.remoteRepository
 
 import android.app.Application
 import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.mad.courtreservationapp.db.RemoteDataSource
 import it.polito.mad.courtreservationapp.models.Invite
 import it.polito.mad.courtreservationapp.models.State
-import it.polito.mad.courtreservationapp.models.User
 import kotlinx.coroutines.tasks.await
 
 class FireInviteRepository(val application: Application) {

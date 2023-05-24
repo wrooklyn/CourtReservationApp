@@ -1,9 +1,8 @@
 package it.polito.mad.courtreservationapp.view_model
 
-import FireSportCenterRepository
+import it.polito.mad.courtreservationapp.db.remoteRepository.FireSportCenterRepository
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWIthCourtsAndReviewsAndUsers
@@ -11,7 +10,6 @@ import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsA
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.tasks.await
 
 class SportCenterViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -38,38 +36,6 @@ class SportCenterViewModel(application: Application) : AndroidViewModel(applicat
          }
 
     }
-
-    val sportIconsId : Map<String, Int> = mapOf(
-        Pair("Soccer",R.drawable.soccer_ball),
-        Pair("Iceskate",R.drawable.ice_skate),
-        Pair("Basketball",R.drawable.basketball_icon),
-        Pair("Hockey",R.drawable.hockey),
-        Pair("Tennis",R.drawable.tennis),
-        Pair("Volley",R.drawable.volleyball),
-        Pair("Rugby",R.drawable.rugby)
-        )
-    val sportCenterImages : Map<Long, Int> = mapOf(
-        Pair(1, R.drawable.run_center),
-        Pair(2, R.drawable.golf_center),
-        Pair(3, R.drawable.basket_center)
-    )
-    val servicesIcons: Map<Long, Int> = mapOf(
-        Pair(0, R.drawable.safety_shower),
-        Pair(1, R.drawable.equipment),
-        Pair(2, R.drawable.coach),
-        Pair(3, R.drawable.refreshment)
-    )
-
-    val courtImages: Map<String, Int> = mapOf(
-        Pair("Tennis",R.drawable.tennis_court),
-        Pair("Basketball",R.drawable.basket_court),
-        Pair("Soccer",R.drawable.football_court),
-        Pair("Volley",R.drawable.volley_court),
-        Pair("Iceskate", R.drawable.iceskating_rink),
-        Pair("Swimming", R.drawable.swimming_pool),
-        Pair("Hockey", R.drawable.hockey),
-        Pair("Rugby", R.drawable.rugby_court)
-    )
 
     fun loadSportCenters(centersWithCourtsAndServices: List<SportCenterWithCourtsAndServices>) {
         sportCentersWithCourtsAndServices = centersWithCourtsAndServices

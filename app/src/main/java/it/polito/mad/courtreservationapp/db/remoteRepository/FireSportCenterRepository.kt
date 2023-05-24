@@ -1,7 +1,6 @@
-
+package it.polito.mad.courtreservationapp.db.remoteRepository
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Task
@@ -9,11 +8,10 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import it.polito.mad.courtreservationapp.db.RemoteDataSource
-import it.polito.mad.courtreservationapp.db.dao.SportCenterDao
 import it.polito.mad.courtreservationapp.db.relationships.*
 import it.polito.mad.courtreservationapp.models.*
+import it.polito.mad.courtreservationapp.utils.ServiceUtils
 import kotlinx.coroutines.tasks.await
-import java.io.File
 
 class FireSportCenterRepository(val application: Application) {
     val db: FirebaseFirestore = RemoteDataSource.instance
@@ -95,7 +93,7 @@ class FireSportCenterRepository(val application: Application) {
                         val cSportName = courtDocument.data?.get("sport_name") as String
                         val cServices = courtDocument.data?.get("services") as List<*>?
                         val image: String? = courtDocument.data?.get("image_name") as String?
-                        val s = cServices?.map { e -> Service("desct temporary", e as Long) } ?: listOf()
+                        val s = ServiceUtils.getServices(cServices as List<Long>)
                         val c = Court(document.id, cSportName, 0, courtDocument.id, image)
                         courtWithServices.add(CourtWithServices(c, s))
                     }
@@ -130,7 +128,7 @@ class FireSportCenterRepository(val application: Application) {
             for(courtDocument in courtsSnapshot.documents){
                 val cSportName = courtDocument.data?.get("sport_name") as String
                 val cServices = courtDocument.data?.get("services") as List<*>?
-                val s = cServices?.map { e -> Service("desct temporary", e as Long) } ?: listOf()
+                val s = (cServices as List<Long>?)?.let { ServiceUtils.getServices(it) } ?: emptyList()
                 val image: String? = courtDocument.data?.get("image_name") as String?
                 val c = Court(document.id, cSportName, 0, courtDocument.id, image)
                 courtWithServices.add(CourtWithServices(c, s))

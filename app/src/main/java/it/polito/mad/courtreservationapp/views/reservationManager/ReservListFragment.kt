@@ -16,6 +16,7 @@ import it.polito.mad.courtreservationapp.db.relationships.ReservationWithService
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
 import it.polito.mad.courtreservationapp.models.TimeslotMap
 import it.polito.mad.courtreservationapp.models.User
+import it.polito.mad.courtreservationapp.utils.ImageUtils
 import it.polito.mad.courtreservationapp.views.MainActivity
 import it.polito.mad.courtreservationapp.views.homeManager.tabFragments.DescriptionFragment
 import java.time.LocalDate
@@ -115,15 +116,7 @@ class ReservListFragment: Fragment() {
             reservCourtTitle.text = reservationWithSportCenter.courtWithSportCenter.court.sportName + " - Court " + reservationWithSportCenter.courtWithSportCenter.court.courtId
             reservLocationTV.text = reservationWithSportCenter.courtWithSportCenter.sportCenter.address
             reservDatetimeTV.text = reservationWithSportCenter.reservation.reservationDate + " - " + TimeslotMap.getTimeslotString(reservationWithSportCenter.reservation.timeSlotId)
-            when(reservationWithSportCenter.courtWithSportCenter.court.sportName) {
-                "Soccer" -> reservImageIV.setImageResource(R.drawable.football_court)
-                "Iceskate" -> reservImageIV.setImageResource(R.drawable.iceskating_rink)
-                "Basketball" -> reservImageIV.setImageResource(R.drawable.basket_center)
-                "Hockey" -> reservImageIV.setImageResource(R.drawable.hockey_png)
-                "Tennis" -> reservImageIV.setImageResource(R.drawable.tennis_court)
-                "Volley" -> reservImageIV.setImageResource(R.drawable.volley_court)
-                "Rugby" -> reservImageIV.setImageResource(R.drawable.rugby_court)
-            }
+            ImageUtils.setImage("courts", reservationWithSportCenter.courtWithSportCenter.court.image, reservImageIV)
         }
 
         init{

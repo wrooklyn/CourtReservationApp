@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
 import it.polito.mad.courtreservationapp.models.Service
+import it.polito.mad.courtreservationapp.utils.IconUtils
 import it.polito.mad.courtreservationapp.view_model.SportCenterViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
 
@@ -50,6 +51,7 @@ class DescriptionFragment : Fragment() {
         view.findViewById<TextView>(R.id.descriptionView).text = sportCenterWithCourtsAndServices.sportCenter.description
         serviceInitialize()
         view.findViewById<TextView>(R.id.location_info).text = sportCenterWithCourtsAndServices.sportCenter.address
+        //TODO: get phone number and time from firebase
         view.findViewById<TextView>(R.id.phone_info).text = "+(555) 123-123${sportCenterWithCourtsAndServices.sportCenter.centerId}"
         view.findViewById<TextView>(R.id.time_info).text = "10:00AM - 9.00PM"
     }
@@ -64,7 +66,7 @@ class DescriptionFragment : Fragment() {
                 params?.height = 0
                 view?.findViewById<ConstraintLayout>(R.id.recycler_services_container_description)?.layoutParams=params
         } else {
-            val adapter = ServiceDescriptionAdapter(viewModel.servicesIcons, services)
+            val adapter = ServiceDescriptionAdapter(services)
             recyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
             recyclerView?.isNestedScrollingEnabled=false
             recyclerView?.adapter = adapter
@@ -72,7 +74,7 @@ class DescriptionFragment : Fragment() {
 
     }
 
-    class ServiceDescriptionAdapter(private val imagesMap: Map<Long, Int>, private val services: List<Service>): RecyclerView.Adapter<ServiceDescriptionViewHolder>() {
+    class ServiceDescriptionAdapter(private val services: List<Service>): RecyclerView.Adapter<ServiceDescriptionViewHolder>() {
 
         override fun getItemCount()=services.size
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ServiceDescriptionViewHolder {
@@ -80,17 +82,15 @@ class DescriptionFragment : Fragment() {
             return ServiceDescriptionViewHolder(itemView)
         }
         override fun onBindViewHolder(holder: ServiceDescriptionViewHolder, position: Int) {
-            val service = services[position]
-            val currentImage = imagesMap[service.serviceId] ?: R.drawable.gesu
-            holder.bind(currentImage, service.description)
+            holder.bind(services[position])
         }
     }
     class ServiceDescriptionViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
         private val titleImage: ImageView = itemView.findViewById(R.id.service_description_image)
         private val serviceName: TextView = itemView.findViewById(R.id.service_description_name)
-        fun bind(imageSrc: Int, activityName: String){
-            titleImage.setImageResource(imageSrc)
-            serviceName.text=activityName
+        fun bind(service: Service){
+            titleImage.setImageResource(IconUtils.getServiceIcon(service.serviceId))
+            serviceName.text= service.description
         }
     }
 

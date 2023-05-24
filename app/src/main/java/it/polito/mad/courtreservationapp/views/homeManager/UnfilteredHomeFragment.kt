@@ -45,7 +45,7 @@ class UnfilteredHomeFragment : Fragment() {
         }*/
 
 
-        val adapter = AvailableAdapter(centers, viewModel.sportCenterImages)
+        val adapter = AvailableAdapter(centers)
         val recyclerView: RecyclerView? = view?.findViewById(R.id.available_recycler)
         recyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         recyclerView?.adapter = adapter
@@ -67,7 +67,7 @@ class UnfilteredHomeFragment : Fragment() {
             center.sportCenter
         }
 
-        val adapter= PopularAdapter(viewModel.sportCenterImages, popularCentersList)
+        val adapter= PopularAdapter(popularCentersList)
         val recyclerView: RecyclerView? = view?.findViewById(R.id.popular_recycler)
         recyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         recyclerView?.adapter = adapter
@@ -83,7 +83,7 @@ class UnfilteredHomeFragment : Fragment() {
         })
     }
 
-    class AvailableAdapter(private val centersList: List<SportCenter>, private val imagesList: Map<Long, Int>): RecyclerView.Adapter<AvailableViewHolder>() {
+    class AvailableAdapter(private val centersList: List<SportCenter>): RecyclerView.Adapter<AvailableViewHolder>() {
 
         private lateinit var availableListener: OnItemClickListener
         interface OnItemClickListener{
@@ -101,7 +101,7 @@ class UnfilteredHomeFragment : Fragment() {
         override fun onBindViewHolder(holder: AvailableViewHolder, position: Int) {
             val currentCenter = centersList[position]
 
-//            val image = FireSportCenterRepository
+//            val image = it.polito.mad.courtreservationapp.db.RemoteRepository.FireSportCenterRepository
 //            val currentImage =
                 //imagesList[currentCenter.centerId] ?:
 //            R.drawable.gesu
@@ -130,7 +130,7 @@ class UnfilteredHomeFragment : Fragment() {
     }
 
     //Popular Centers
-    class PopularAdapter(private val imagesList: Map<Long, Int>, private val popularCentersList: List<SportCenter>): RecyclerView.Adapter<PopularViewHolder>() {
+    class PopularAdapter(private val popularCentersList: List<SportCenter>): RecyclerView.Adapter<PopularViewHolder>() {
 
         private lateinit var popularListener: OnItemClickListener
         interface OnItemClickListener{
@@ -146,10 +146,6 @@ class UnfilteredHomeFragment : Fragment() {
         }
         override fun onBindViewHolder(holder: PopularViewHolder, position: Int) {
             val currentCenter = popularCentersList[position]
-            //TODO image from firebase
-//            val currentImage =
-//                //imagesList[currentCenter.centerId] ?:
-//                R.drawable.gesu
             val currentLocation = popularCentersList[position].address
             holder.bind(currentCenter.image, currentLocation, currentCenter.name)
         }

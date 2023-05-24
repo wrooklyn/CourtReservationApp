@@ -1,7 +1,7 @@
 package it.polito.mad.courtreservationapp.view_model
 
 import FireReservationRepository
-import FireSportCenterRepository
+import it.polito.mad.courtreservationapp.db.remoteRepository.FireSportCenterRepository
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
