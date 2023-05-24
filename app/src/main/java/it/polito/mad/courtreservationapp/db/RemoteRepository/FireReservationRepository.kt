@@ -115,7 +115,8 @@ class FireReservationRepository(val application: Application) {
 
                 val sportCenterAddress: String = sportCenterSnapshot.data?.get("address") as String
                 val sportCenterDescription: String = sportCenterSnapshot.data?.get("description") as String
-                val sportCenterItem = SportCenter(sportCenterName, sportCenterAddress, sportCenterDescription, sportCenterId)
+                val image: String? = sportCenterSnapshot.data?.get("image_name") as String?
+                val sportCenterItem = SportCenter(sportCenterName, sportCenterAddress, sportCenterDescription, sportCenterId, image)
                 val courtId = reservReference.path.split("/")[3]
                 val courtSnapshot = database.collection("sport-centers").document(sportCenterId).collection("courts").document(courtId).get().await()
                 val sportName = courtSnapshot.data?.get("sport_name") as String

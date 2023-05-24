@@ -17,6 +17,7 @@ import it.polito.mad.courtreservationapp.db.relationships.SportCenterWIthCourtsA
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndReviews
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
 import it.polito.mad.courtreservationapp.models.Review
+import it.polito.mad.courtreservationapp.utils.ImageUtils
 import it.polito.mad.courtreservationapp.view_model.SportCenterViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
 
@@ -76,11 +77,9 @@ class CenterDetailFragment : Fragment() {
             reviews.map { it.rating }.average().run { if (isNaN()) 0.0F else this.toFloat() }
         val reviewTxt = if (reviews.size == 1) "review" else "reviews"
         view.findViewById<TextView>(R.id.numRating).text = "(${reviews.size} $reviewTxt)"
-        //TODO image from firestore
-        val imageRes: Int =
-            //viewModel.sportCenterImages[sportCenterWithCourtsAndServices.sportCenter.centerId] ?:
-                 R.drawable.gesu
-        view.findViewById<ImageView>(R.id.bannerImage).setImageResource(imageRes)
+        val banner = view.findViewById<ImageView>(R.id.bannerImage)
+        val imageSrc = sportCenterWithCourtsAndServices.sportCenter.image
+        ImageUtils.setImage("centers", imageSrc, banner)
 
         val adapter = ViewPagerAdapter(childFragmentManager, lifecycle, sportCenterPosition)
 

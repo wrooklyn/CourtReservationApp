@@ -10,3 +10,4 @@ data class Service(
     val description: String = "",
     var serviceId: Long = 0
 )
+//TODO: add notification service icon

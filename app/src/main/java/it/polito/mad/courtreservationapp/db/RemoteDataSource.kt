@@ -9,6 +9,7 @@ import androidx.room.RoomDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import it.polito.mad.courtreservationapp.db.crossref.CourtServiceCrossRef
 import it.polito.mad.courtreservationapp.db.crossref.ReservationServiceCrossRef
 import it.polito.mad.courtreservationapp.db.dao.*
@@ -18,4 +19,5 @@ import kotlinx.coroutines.internal.synchronized
 
 object RemoteDataSource {
     val instance: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
+    val storageInstance: FirebaseStorage by lazy { FirebaseStorage.getInstance() }
 }

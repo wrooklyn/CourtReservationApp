@@ -1,7 +1,6 @@
 package it.polito.mad.courtreservationapp.views.homeManager
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.models.SportCenter
+import it.polito.mad.courtreservationapp.utils.ImageUtils
 import it.polito.mad.courtreservationapp.view_model.SportCenterViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
 
@@ -23,7 +23,7 @@ class UnfilteredHomeFragment : Fragment() {
         super.onCreate(savedInstanceState)
         viewModel = (activity as MainActivity).sportCenterViewModel
         viewModel.sportCentersLiveData.observe(this){
-            viewModel.loadSportCenters(it)
+//            viewModel.loadSportCenters(it)
             availableInitialize()
             popularInitialize()
         }
@@ -45,12 +45,12 @@ class UnfilteredHomeFragment : Fragment() {
         }*/
 
 
-        val adapter= AvailableAdapter(centers, viewModel.sportCenterImages)
+        val adapter = AvailableAdapter(centers, viewModel.sportCenterImages)
         val recyclerView: RecyclerView? = view?.findViewById(R.id.available_recycler)
         recyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         recyclerView?.adapter = adapter
         recyclerView?.isNestedScrollingEnabled = false
-        adapter.setOnItemClickListener(object : AvailableAdapter.onItemClickListener{
+        adapter.setOnItemClickListener(object : AvailableAdapter.OnItemClickListener{
             override fun onItemClick(position: Int) {
                 val fragmentB = CenterDetailFragment.newInstance(position)
                 activity?.supportFragmentManager?.beginTransaction()
@@ -72,7 +72,7 @@ class UnfilteredHomeFragment : Fragment() {
         recyclerView?.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         recyclerView?.adapter = adapter
         recyclerView?.isNestedScrollingEnabled = false
-        adapter.setOnItemClickListener(object : PopularAdapter.onItemClickListener{
+        adapter.setOnItemClickListener(object : PopularAdapter.OnItemClickListener{
             override fun onItemClick(position: Int) {
                 val fragmentB = CenterDetailFragment.newInstance(position)
                 activity?.supportFragmentManager?.beginTransaction()
@@ -85,12 +85,12 @@ class UnfilteredHomeFragment : Fragment() {
 
     class AvailableAdapter(private val centersList: List<SportCenter>, private val imagesList: Map<Long, Int>): RecyclerView.Adapter<AvailableViewHolder>() {
 
-        private lateinit var availableListener: onItemClickListener
-        interface onItemClickListener{
+        private lateinit var availableListener: OnItemClickListener
+        interface OnItemClickListener{
             fun onItemClick(position: Int)
         }
 
-        fun setOnItemClickListener(listener: onItemClickListener){
+        fun setOnItemClickListener(listener: OnItemClickListener){
             availableListener=listener
         }
         override fun getItemCount()=centersList.size
@@ -100,22 +100,23 @@ class UnfilteredHomeFragment : Fragment() {
         }
         override fun onBindViewHolder(holder: AvailableViewHolder, position: Int) {
             val currentCenter = centersList[position]
-            //TODO image from firebase
-            val currentImage =
+
+//            val image = FireSportCenterRepository
+//            val currentImage =
                 //imagesList[currentCenter.centerId] ?:
-                R.drawable.gesu
+//            R.drawable.gesu
             val currentLocation = currentCenter.address
 
 
-            holder.bind(currentImage, currentLocation, currentCenter.name)
+            holder.bind(currentCenter.image, currentLocation, currentCenter.name)
         }
     }
-    class AvailableViewHolder(itemView: View, listener: AvailableAdapter.onItemClickListener):RecyclerView.ViewHolder(itemView){
+    class AvailableViewHolder(itemView: View, listener: AvailableAdapter.OnItemClickListener):RecyclerView.ViewHolder(itemView){
         private val titleImage: ImageView = itemView.findViewById(R.id.sport_center1)
         private val locationName: TextView = itemView.findViewById(R.id.location_name)
         private val centerName: TextView = itemView.findViewById(R.id.center_name)
-        fun bind(imageSrc: Int, lName: String, cName:String){
-            titleImage.setImageResource(imageSrc)
+        fun bind(imageSrc: String?, lName: String, cName:String){
+            ImageUtils.setImage("centers", imageSrc, titleImage)
             locationName.text=lName
             centerName.text = cName
         }
@@ -124,16 +125,18 @@ class UnfilteredHomeFragment : Fragment() {
                 listener.onItemClick(bindingAdapterPosition)
             }
         }
+
+
     }
 
     //Popular Centers
     class PopularAdapter(private val imagesList: Map<Long, Int>, private val popularCentersList: List<SportCenter>): RecyclerView.Adapter<PopularViewHolder>() {
 
-        private lateinit var popularListener: onItemClickListener
-        interface onItemClickListener{
+        private lateinit var popularListener: OnItemClickListener
+        interface OnItemClickListener{
             fun onItemClick(position: Int)
         }
-        fun setOnItemClickListener(listener: onItemClickListener){
+        fun setOnItemClickListener(listener: OnItemClickListener){
             popularListener=listener
         }
         override fun getItemCount()=popularCentersList.size
@@ -144,19 +147,19 @@ class UnfilteredHomeFragment : Fragment() {
         override fun onBindViewHolder(holder: PopularViewHolder, position: Int) {
             val currentCenter = popularCentersList[position]
             //TODO image from firebase
-            val currentImage =
-                //imagesList[currentCenter.centerId] ?:
-                R.drawable.gesu
+//            val currentImage =
+//                //imagesList[currentCenter.centerId] ?:
+//                R.drawable.gesu
             val currentLocation = popularCentersList[position].address
-            holder.bind(currentImage, currentLocation, currentCenter.name)
+            holder.bind(currentCenter.image, currentLocation, currentCenter.name)
         }
     }
-    class PopularViewHolder(itemView: View, listener: PopularAdapter.onItemClickListener):RecyclerView.ViewHolder(itemView){
+    class PopularViewHolder(itemView: View, listener: PopularAdapter.OnItemClickListener):RecyclerView.ViewHolder(itemView){
         private val titleImage: ImageView = itemView.findViewById(R.id.sport_center1)
         private val locationName: TextView = itemView.findViewById(R.id.location_name)
         private val centerName: TextView = itemView.findViewById(R.id.center_name)
-        fun bind(imageSrc: Int, lName: String, cName:String){
-            titleImage.setImageResource(imageSrc)
+        fun bind(imageSrc: String?, lName: String, cName:String){
+            ImageUtils.setImage("centers", imageSrc, titleImage)
             locationName.text=lName
             centerName.text = cName
         }

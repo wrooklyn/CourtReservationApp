@@ -31,7 +31,8 @@ class HomeFragment : Fragment() {
         super.onCreate(savedInstanceState)
         viewModel = (activity as MainActivity).sportCenterViewModel
         viewModel.sportCentersLiveData.observe(this){
-//            println("observing : $it")
+            Log.i("HomeFragment", "${it.map { s -> "${s.sportCenter.name} + image: ${s.sportCenter.image}" }}")
+            //init filter by sports
             viewModel.loadSportCenters(it)
             sportInitialize()
         }

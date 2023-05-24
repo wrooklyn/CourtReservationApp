@@ -7,14 +7,17 @@ import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import it.polito.mad.courtreservationapp.db.RemoteDataSource
 import it.polito.mad.courtreservationapp.db.dao.SportCenterDao
 import it.polito.mad.courtreservationapp.db.relationships.*
 import it.polito.mad.courtreservationapp.models.*
 import kotlinx.coroutines.tasks.await
+import java.io.File
 
 class FireSportCenterRepository(val application: Application) {
     val db: FirebaseFirestore = RemoteDataSource.instance
+    val storage: FirebaseStorage = RemoteDataSource.storageInstance
 
 
 
@@ -23,13 +26,18 @@ class FireSportCenterRepository(val application: Application) {
         return MutableLiveData(); //TODO
     }
 
+    suspend fun getImage(sportCenter: SportCenter){
+
+    }
+
     suspend fun getById(id: String): SportCenter {
 
         val sportCenterDoc = db.collection("sport-centers").document(id).get().await()
         val scName = (sportCenterDoc.data?.get("name") as String?).toString()
         val scAddress = (sportCenterDoc.data?.get("address") as String?).toString()
         val scDescription = (sportCenterDoc.data?.get("description") as String?).toString()
-        return SportCenter(scName, scAddress, scDescription, sportCenterDoc.id)
+        val image: String? = sportCenterDoc.data?.get("image_name") as String?
+        return SportCenter(scName, scAddress, scDescription, sportCenterDoc.id, image)
     }
 
 
@@ -41,7 +49,8 @@ class FireSportCenterRepository(val application: Application) {
         val scAddress = (sportCenterDoc.data?.get("address") as String?).toString()
         val scDescription = (sportCenterDoc.data?.get("description") as String?).toString()
 //        val scId = sportCenterDoc.data?.get("id") as Long
-        val sportCenter = SportCenter(scName, scAddress, scDescription, sportCenterDoc.id)
+        val image: String? = sportCenterDoc.data?.get("image_name") as String?
+        val sportCenter = SportCenter(scName, scAddress, scDescription, sportCenterDoc.id, image)
         val courtsOfCenterRef = db.collection("sport-centers").document(id).collection("courts")
         val courtsList = mutableListOf<Court>()
         val courtSnapshot = courtsOfCenterRef.get().await()
@@ -73,7 +82,8 @@ class FireSportCenterRepository(val application: Application) {
                 val scDescription = (document.data?.get("description") as String?).toString()
 //                val scId = document.data?.get("id") as Long?
 //                Log.i("FireSportRepo", "scId: $scId")
-                val sportCenter = SportCenter(scName, scAddress, scDescription,document.id)
+                val image: String? = document.data?.get("image_name") as String?
+                val sportCenter = SportCenter(scName, scAddress, scDescription,document.id, image)
                 val courtsOfCenterRef = sportCenterRef.document(document.id).collection("courts")
                 val courtWithServices = mutableListOf<CourtWithServices>()
 
@@ -110,7 +120,8 @@ class FireSportCenterRepository(val application: Application) {
             val scName = (document.data?.get("name") as String?).toString()
             val scAddress = (document.data?.get("address") as String?).toString()
             val scDescription = (document.data?.get("description") as String?).toString()
-            val sportCenter = SportCenter(scName, scAddress, scDescription,document.id)
+            val image: String? = document.data?.get("image_name") as String?
+            val sportCenter = SportCenter(scName, scAddress, scDescription,document.id, image)
             val courtsOfCenterRef = sportCenterRef.document(document.id).collection("courts")
             val courtWithServices = mutableListOf<CourtWithServices>()
             val courtsSnapshot = courtsOfCenterRef.get().await()
@@ -183,7 +194,8 @@ class FireSportCenterRepository(val application: Application) {
             val scAddress = document.data?.get("address") as String
             val scDescription = document.data?.get("description") as String
 //            val scId = document.data?.get("id") as Long
-            val sportCenter = SportCenter(scName, scAddress, scDescription, document.id)
+            val image: String? = document.data?.get("image_name") as String?
+            val sportCenter = SportCenter(scName, scAddress, scDescription, document.id, image)
             val courtsOfCenterRef = sportCenterRef.document(document.id).collection("courts")
             val courtWithReviewsAndUsersList = mutableListOf<CourtWithReviewsAndUsers>()
 
