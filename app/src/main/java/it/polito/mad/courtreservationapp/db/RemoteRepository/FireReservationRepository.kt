@@ -120,7 +120,8 @@ class FireReservationRepository(val application: Application) {
                 val courtId = reservReference.path.split("/")[3]
                 val courtSnapshot = database.collection("sport-centers").document(sportCenterId).collection("courts").document(courtId).get().await()
                 val sportName = courtSnapshot.data?.get("sport_name") as String
-                val courtItem = Court(sportCenterId, sportName, 0, courtId)
+                val imageCourt: String? = courtSnapshot.data?.get("image_name") as String?
+                val courtItem = Court(sportCenterId, sportName, 0, courtId, imageCourt)
                 val courtWithSC = CourtWithSportCenter(courtItem, sportCenterItem)
                 val reservWithSC = ReservationWithSportCenter(reservationItem, courtWithSC)
                 result.add(reservWithSC)

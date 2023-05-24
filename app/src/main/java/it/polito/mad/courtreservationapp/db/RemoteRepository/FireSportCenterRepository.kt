@@ -57,7 +57,8 @@ class FireSportCenterRepository(val application: Application) {
         for (courtDocument in courtSnapshot?.documents.orEmpty()) {
 //            println("xp ${courtDocument.data}")
             val cSportName = courtDocument.data?.get("sport_name") as String
-            val c = Court(sportCenterDoc.id, cSportName, 0, courtDocument.id)
+            val image: String? = courtDocument.data?.get("image_name") as String?
+            val c = Court(sportCenterDoc.id, cSportName, 0, courtDocument.id, image)
             courtsList.add(c)
         }
         return SportCenterWithCourts(sportCenter, courtsList)
@@ -92,10 +93,10 @@ class FireSportCenterRepository(val application: Application) {
                     for (courtDocument in courtSnapshot?.documents.orEmpty()) {
 //                        println("xp ${courtDocument.data}")
                         val cSportName = courtDocument.data?.get("sport_name") as String
-                        val cCourtId = 19L
-                        val cServices = courtDocument.data?.get("services") as List<Long>?
-                        val s = cServices?.map { e -> Service("desct temporary", e) } ?: listOf()
-                        val c = Court(document.id, cSportName, 0, courtDocument.id)
+                        val cServices = courtDocument.data?.get("services") as List<*>?
+                        val image: String? = courtDocument.data?.get("image_name") as String?
+                        val s = cServices?.map { e -> Service("desct temporary", e as Long) } ?: listOf()
+                        val c = Court(document.id, cSportName, 0, courtDocument.id, image)
                         courtWithServices.add(CourtWithServices(c, s))
                     }
                     dataList.add(SportCenterWithCourtsAndServices(sportCenter, courtWithServices))
@@ -128,9 +129,10 @@ class FireSportCenterRepository(val application: Application) {
 
             for(courtDocument in courtsSnapshot.documents){
                 val cSportName = courtDocument.data?.get("sport_name") as String
-                val cServices = courtDocument.data?.get("services") as List<Long>?
-                val s = cServices?.map { e -> Service("desct temporary", e) } ?: listOf()
-                val c = Court(document.id, cSportName, 0, courtDocument.id)
+                val cServices = courtDocument.data?.get("services") as List<*>?
+                val s = cServices?.map { e -> Service("desct temporary", e as Long) } ?: listOf()
+                val image: String? = courtDocument.data?.get("image_name") as String?
+                val c = Court(document.id, cSportName, 0, courtDocument.id, image)
                 courtWithServices.add(CourtWithServices(c, s))
             }
             dataList.add(SportCenterWithCourtsAndServices(sportCenter, courtWithServices))
@@ -204,8 +206,8 @@ class FireSportCenterRepository(val application: Application) {
             for (courtDocument in courtSnapshot?.documents.orEmpty()) {
 //                println("xp ${courtDocument.data}")
                 val cSportName = courtDocument.data?.get("sport_name") as String
-                val cCourtId = 19L
-                val c = Court( document.id, cSportName, 0, courtDocument.id)
+                val image: String? = courtDocument.data?.get("image_name") as String?
+                val c = Court( document.id, cSportName, 0, courtDocument.id, image)
 
 
                 val reviewsOfCourtRef =

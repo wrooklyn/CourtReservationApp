@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithReviewsAndUsers
-import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndReviews
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
 import it.polito.mad.courtreservationapp.models.Court
+import it.polito.mad.courtreservationapp.utils.ImageUtils
 import it.polito.mad.courtreservationapp.view_model.SportCenterViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
 import it.polito.mad.courtreservationapp.views.reservationManager.CreateReservationActivity
@@ -38,7 +38,7 @@ class CourtFragment : Fragment() {
         sportCenterWithCourtsAndServices = viewModel.sportCentersWithCourtsAndServices[position]
         courtsWithReviewsAndUsers = viewModel.sportCentersWithCourtsAndReviewsAndUsers[position].courtsWithReviewsAndUsers
 
-        sportCenterWithCourtsAndServices.courtsWithServices.forEach(){courtWithServices ->
+        sportCenterWithCourtsAndServices.courtsWithServices.forEach{courtWithServices ->
             if(!courts.contains(courtWithServices.court)){
                 courts.add(courtWithServices.court)
             }
@@ -62,7 +62,7 @@ class CourtFragment : Fragment() {
     private fun serviceInitialize(){
 
         val recyclerView: RecyclerView? = view?.findViewById(R.id.service_court_recycler)
-        val adapter = CourtDescriptionAdapter(viewModel.courtImages, courtsWithReviewsAndUsers) //TODO: image from firebase -> no map
+        val adapter = CourtDescriptionAdapter(courtsWithReviewsAndUsers)
 
         val llm : LinearLayoutManager = LinearLayoutManager(activity)
         recyclerView?.layoutManager = llm
@@ -70,7 +70,7 @@ class CourtFragment : Fragment() {
         recyclerView?.adapter = adapter
     }
 
-    class CourtDescriptionAdapter(private val imageMap: Map<String, Int>, private val courts: List<CourtWithReviewsAndUsers>): RecyclerView.Adapter<CourtDescriptionViewHolder>() {
+    class CourtDescriptionAdapter(private val courts: List<CourtWithReviewsAndUsers>): RecyclerView.Adapter<CourtDescriptionViewHolder>() {
 
         override fun getItemCount()=courts.size
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CourtDescriptionViewHolder {
@@ -78,11 +78,16 @@ class CourtFragment : Fragment() {
             return CourtDescriptionViewHolder(itemView)
         }
         override fun onBindViewHolder(holder: CourtDescriptionViewHolder, position: Int) {
+
             val currentCourt = courts[position]
-            val currentImage = imageMap[currentCourt.court.sportName] ?: R.drawable.gesu //TODO: image from firebase
+
+            val currentImage = currentCourt.court.image
             val averageRating = currentCourt.reviewsWithUser.map { it.review.rating }.average().run { if (isNaN()) 0.0 else this}
             val ratingTxt = if (currentCourt.reviewsWithUser.size == 1) "review" else "reviews"
             val currentReview = "$averageRating (${currentCourt.reviewsWithUser.size} $ratingTxt)"
+
+            Log.i("CourtFragment", "$currentCourt")
+
             holder.bind(currentImage, "${currentCourt.court.sportName} Court", currentReview)
             holder.itemView.findViewById<Button>(R.id.reserveButton).setOnClickListener{
                 Log.i("CourtFragment", "ReserveButtonPressed for: SC:${currentCourt.court.sportCenterId}, C: ${currentCourt.court} ")
@@ -97,8 +102,9 @@ class CourtFragment : Fragment() {
         private val titleImage: ImageView = itemView.findViewById(R.id.court_image)
         private val courtType: TextView = itemView.findViewById(R.id.court_type)
         private val reviewCourt: TextView = itemView.findViewById(R.id.review_description)
-        fun bind(imageSrc: Int, cType: String, rCourt: String){
-            titleImage.setImageResource(imageSrc)
+        fun bind(imageSrc: String?, cType: String, rCourt: String){
+
+            ImageUtils.setImage("courts", imageSrc, titleImage)
             courtType.text=cType
             reviewCourt.text=rCourt
         }

@@ -14,12 +14,13 @@ object ImageUtils {
         if(imageSrc.isNullOrEmpty()){
             imageView.setImageResource(R.drawable.gesu)
         } else {
-            val imageRef = storage.reference.child("centers/$imageSrc")
+            val imageRef = storage.reference.child("$path/$imageSrc")
             val localFile = File.createTempFile("tempImage", "jpg")
             imageRef.getFile(localFile).addOnSuccessListener {
                 val bitmap = BitmapFactory.decodeFile(localFile.absolutePath)
                 imageView.setImageBitmap(bitmap)
             }.addOnFailureListener{
+                imageView.setImageResource(R.drawable.gesu)
                 Log.i("BitMapUtil","$path/$imageSrc->$imageView | Error: $it")
             }
         }

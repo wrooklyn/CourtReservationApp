@@ -60,7 +60,8 @@ class FireCourtRepository(val application: Application) {
         val db: FirebaseFirestore = RemoteDataSource.instance
         val courtDoc = db.collection("sport-centers").document(centerId).collection("courts").document(courtId).get().await()
         val sportName = courtDoc.data?.get("sport_name") as String
-        val courtItem = Court(centerId, sportName, 0, courtId)
+        val image: String? = courtDoc.data?.get("image_name") as String?
+        val courtItem = Court(centerId, sportName, 0, courtId, image)
         val servicesIds = (courtDoc.data?.get("services") as ArrayList<*>?) ?: emptyList()
         val serviceList : MutableList<Service> = mutableListOf()
         for(id in servicesIds){
@@ -80,7 +81,8 @@ class FireCourtRepository(val application: Application) {
             db.collection("sport-centers").document(centerId).collection("courts").document(courtId)
                 .get().await()
         val sportName = courtDoc.data?.get("sport_name") as String
-        val courtItem = Court(centerId, sportName, 0, courtId)
+        val image: String? = courtDoc.data?.get("image_name") as String?
+        val courtItem = Court(centerId, sportName, 0, courtId, image)
         val reservsSnapshot =
             db.collection("sport-centers").document(centerId).collection("courts").document(courtId)
                 .collection("reservations").get().await()

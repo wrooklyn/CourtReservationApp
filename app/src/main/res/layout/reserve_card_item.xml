@@ -39,12 +39,10 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="-5dp"
                 android:scaleType="fitXY"
-                android:src="@drawable/basket_center"
                 app:layout_constraintBottom_toTopOf="@id/guideline4"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/tennis_court" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/court_type"
@@ -53,7 +51,6 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="25dp"
                 android:fontFamily="@font/inter_semibold"
-                android:text="Tennis Court"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="#D9541C"
                 app:layout_constraintBottom_toTopOf="@+id/location_container"
@@ -80,7 +77,6 @@
                     android:autoSizePresetSizes="@array/autosize_card_location_sizes"
                     android:autoSizeTextType="uniform"
                     android:fontFamily="@font/inter"
-                    android:text="5.0 (124 review)"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#4F4F4F"
                     android:textSize="12sp"
@@ -119,7 +115,7 @@
                 android:layout_marginBottom="50dp"
                 android:backgroundTint="#F16E64"
                 android:fontFamily="@font/roboto_medium"
-                android:text="Reserve"
+                android:text="@string/reserve"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/guideline5"
