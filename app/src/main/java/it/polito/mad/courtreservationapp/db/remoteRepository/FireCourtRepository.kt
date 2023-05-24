@@ -12,6 +12,7 @@ import it.polito.mad.courtreservationapp.db.relationships.CourtWithServices
 import it.polito.mad.courtreservationapp.models.Court
 import it.polito.mad.courtreservationapp.models.Reservation
 import it.polito.mad.courtreservationapp.models.Service
+import it.polito.mad.courtreservationapp.utils.ServiceUtils
 import kotlinx.coroutines.tasks.await
 
 class FireCourtRepository(val application: Application) {
@@ -62,16 +63,11 @@ class FireCourtRepository(val application: Application) {
         val sportName = courtDoc.data?.get("sport_name") as String
         val image: String? = courtDoc.data?.get("image_name") as String?
         val courtItem = Court(centerId, sportName, 0, courtId, image)
-        val servicesIds = (courtDoc.data?.get("services") as ArrayList<*>?) ?: emptyList()
-        val serviceList : MutableList<Service> = mutableListOf()
-        for(id in servicesIds){
-            val service = serviceMap[id]
-            Log.i("FireCourtRepo", "ServId: $id, service: $service")
-            if(service!=null)
-                serviceList.add(service)
-        }
-        Log.i("FireCourtRepo", "Court: $courtId, services: $servicesIds to $serviceList")
-        return CourtWithServices(courtItem, serviceList)
+
+        val cServices = courtDoc.data?.get("services") as List<*>?
+        val s = cServices?.let { ServiceUtils.getServices(it) } ?: emptyList()
+
+        return CourtWithServices(courtItem, s)
     }
 
     suspend fun getByIdWithReservations(centerId: String, courtId: String): CourtWithReservations {

@@ -77,6 +77,7 @@ class ShowSelectServicesFragment : Fragment() {
 
         //Populate recyclerView with data
         recyclerView.adapter = ServicesAdapter(activity.viewModel.courtWithServices.services, activity)
+        Log.i("ServiceFragment", "Services: ${activity.viewModel.courtWithServices.services}")
 
     }
 

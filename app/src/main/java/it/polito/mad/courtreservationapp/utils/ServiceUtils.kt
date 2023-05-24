@@ -12,15 +12,16 @@ object ServiceUtils {
         Pair(5L, Service("Lockers",5L))
     )
 
-    fun getService(serviceId: Long): Service{
-        return services[serviceId] ?: Service("Error", -1L)
-    }
-
-    fun getServices(serviceIdList: List<Long>): List<Service>{
-        val servicesList = mutableListOf<Service>()
-        serviceIdList.forEach{
-            servicesList.add(getService(it))
+    fun getServices(list: List<*>): List<Service>{
+        val services = mutableListOf<Service>()
+        for(item in list){
+            val ser = item as HashMap<*, *>
+            val description = (ser["description"] as String?) ?: ""
+            val serviceId = (ser["service_id"] as Long?) ?: 0L
+            val cost = (ser["cost"] as Double?) ?: 0.0
+            val service  = Service(description, serviceId, cost)
+            services.add(service)
         }
-        return servicesList
+        return services
     }
 }

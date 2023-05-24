@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 
 data class Service(
     val description: String = "",
-    var serviceId: Long = 0
+    val serviceId: Long = 0,
+    val cost: Double = 0.0
 )
 //TODO: add notification service icon
