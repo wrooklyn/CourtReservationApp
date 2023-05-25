@@ -23,6 +23,7 @@ import it.polito.mad.courtreservationapp.db.relationships.ReservationWithReview
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
+import it.polito.mad.courtreservationapp.models.Invite
 import it.polito.mad.courtreservationapp.models.Reservation
 import it.polito.mad.courtreservationapp.view_model.*
 import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     val sportCenterViewModel: SportCenterViewModel by viewModels() //done
     val sportMasteryViewModel: SportMasteryViewModel by viewModels() //done
     val ratingViewModel: LeaveRatingViewModel by viewModels() //done
+    val invitesViewModel: InvitesManagerViewModel by viewModels()
 
     val registerForActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
         println("${it}")
@@ -57,6 +59,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
 
     lateinit var sportCenters : List<SportCenterWithCourtsAndServices>
+
+    lateinit var userInvitesSent: List<Invite>
+    lateinit var userInvitesReceived: List<Invite>
 
     // declare the GoogleSignInClient
     lateinit var mGoogleSignInClient: GoogleSignInClient
@@ -123,6 +128,16 @@ class MainActivity : AppCompatActivity() {
         }
         /* -------------------- */
 
+        /* Invites */
+        invitesViewModel.pendingSentInvites.observe(this) {
+            userInvitesSent = it
+        }
+
+        invitesViewModel.pendingReceivedInvites.observe(this) {
+            userInvitesReceived = it
+        }
+
+        /* --------------------*/
 
 
         replaceFragment(HomeFragment())
@@ -132,7 +147,7 @@ class MainActivity : AppCompatActivity() {
                     replaceFragment(HomeFragment())
                 }
                 R.id.explore -> {
-                    replaceFragment(ShowUnimplementedFragment())
+                    //replaceFragment(ShowUnimplementedFragment())
                 }
 
                 R.id.calendar -> {

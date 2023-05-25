@@ -1,6 +1,6 @@
 package it.polito.mad.courtreservationapp.models
 
-enum class State(stateString: String){
+enum class Status(stateString: String){
     PENDING("pending"),
     ACCEPTED("accepted"),
     REFUSED("refused")
@@ -8,5 +8,5 @@ enum class State(stateString: String){
 
 data class Invite(
     val ReservationId: String,
-    val state: State
+    val status: Status
 )
