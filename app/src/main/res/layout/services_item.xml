@@ -2,10 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="20dp"
-    android:background="@drawable/custom_rectangle_4rounded">
+    android:layout_marginHorizontal="20dp"
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/sv_layout"
@@ -13,25 +13,22 @@
         android:layout_height="wrap_content"
         android:background="@drawable/custom_rectangle_4rounded"
         android:backgroundTint="#EFEFEF"
-        android:paddingLeft="20dp"
-        android:paddingTop="20dp"
-        android:paddingRight="20dp"
-        android:paddingBottom="20dp"
+        android:paddingHorizontal="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/sv_text">
+        app:layout_constraintBottom_toTopOf="@+id/sv_cost">
 
         <ImageView
             android:id="@+id/sv_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="icon"
+            android:contentDescription="@string/service_icon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/home" />
+            app:srcCompat="@drawable/shower_sv" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -39,10 +36,19 @@
         android:id="@+id/sv_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text="@string/service_name"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sv_layout" />
+    <TextView
+        android:id="@+id/sv_cost"
+        android:text="@string/service_cost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sv_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

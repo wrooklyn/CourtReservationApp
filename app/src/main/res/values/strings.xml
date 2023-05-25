@@ -103,4 +103,9 @@
     <string name="leave_review">Leave a review</string>
     <string name="title_activity_friend_list">FriendList</string>
     <string name="reserve">Reserve</string>
+    <string name="special_requests">Special Requests</string>
+    <string name="write_here_any_special_requests">Write here any special requests...</string>
+    <string name="service_icon">service_icon</string>
+    <string name="service_name">service_name</string>
+    <string name="service_cost">x.xx $</string>
 </resources>

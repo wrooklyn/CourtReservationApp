@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.models.Service
+import it.polito.mad.courtreservationapp.utils.IconUtils
 import it.polito.mad.courtreservationapp.views.reservationManager.CreateReservationActivity
 
 class ServicesAdapter(val data: List<Service>, val activity: CreateReservationActivity) :
@@ -44,20 +45,24 @@ class ServicesViewHolder(v: View, activity: CreateReservationActivity) :
     private val icon: ImageView = v.findViewById(R.id.sv_icon)
     private val layout: ConstraintLayout = v.findViewById(R.id.sv_layout)
     private val text: TextView = v.findViewById(R.id.sv_text)
+    private val costTV: TextView = v.findViewById(R.id.sv_cost)
     private val a = activity
     fun bind(u: Service) {
         text.text = u.description
+        costTV.text = "${u.cost} €"
 
 
         val blue = ContextCompat.getColor(a, R.color.deep_blue)
         val grey = Color.parseColor("#EFEFEF")
-        var drawable: Drawable? = null
-        when (u.serviceId.toInt()) {
-            0 -> drawable = ContextCompat.getDrawable(a, R.drawable.shower_sv)
-            1 -> drawable = ContextCompat.getDrawable(a, R.drawable.equipment_sv)
-            2 -> drawable = ContextCompat.getDrawable(a, R.drawable.personal_trainer_sv)
-            3 -> drawable = ContextCompat.getDrawable(a, R.drawable.food_sv)
-        }
+
+        var drawable: Drawable? = ContextCompat.getDrawable(a, IconUtils.getServiceIcon(u.serviceId))
+
+//        when (u.serviceId.toInt()) {
+//            0 -> drawable = ContextCompat.getDrawable(a, R.drawable.shower_sv)
+//            1 -> drawable = ContextCompat.getDrawable(a, R.drawable.equipment_sv)
+//            2 -> drawable = ContextCompat.getDrawable(a, R.drawable.personal_trainer_sv)
+//            3 -> drawable = ContextCompat.getDrawable(a, R.drawable.food_sv)
+//        }
 
 
         if (a.viewModel.reservationServices.contains(u.serviceId)) {
