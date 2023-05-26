@@ -151,8 +151,7 @@ class MainActivity : AppCompatActivity() {
 //                    invitesViewModel.inviteUser("z0kwVIF5nRwSzxXHb16r", "gabryfine@gmail.com", "matty.favret@gmail.com")
 //                    invitesViewModel.acceptInvite("z0kwVIF5nRwSzxXHb16r", "gabryfine@gmail.com", "matty.favret@gmail.com")
 //                    invitesViewModel.declineInvite("z0kwVIF5nRwSzxXHb16r", "chndavide@gmail.com", "matty.favret@gmail.com")
-                    invitesViewModel.getParticipantsByReservationId("z0kwVIF5nRwSzxXHb16r")
-                    Log.i("PARTICIPANTS", "${invitesViewModel.participants.value}")
+                    Log.i("MY RESERVATIONS", "$userReservations")
                 }
 
                 R.id.calendar -> {

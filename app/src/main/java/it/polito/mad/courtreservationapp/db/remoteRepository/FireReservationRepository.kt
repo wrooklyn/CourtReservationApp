@@ -35,7 +35,17 @@ class FireReservationRepository(val application: Application) {
             reservationAndServiceDao.save(ReservationServiceCrossRef(reservationId, service.serviceId))
         }
 
-         */ //TODO replace with firebase
+        */
+        val courtRef = database
+            .collection("sport-centers")
+            .document(sportCenterId)
+            .collection("courts")
+            .document(reservationWithServices.reservation.reservationCourtId!!)
+            .get().await()
+
+        val courtDisplayName = courtRef.data?.get("display_name") as String? ?: "Court ID"
+
+         //TODO replace with firebase
         val content = hashMapOf(
             "date" to reservationWithServices.reservation.reservationDate,
             "request" to reservationWithServices.reservation.request,
@@ -43,6 +53,7 @@ class FireReservationRepository(val application: Application) {
             "user" to reservationWithServices.reservation.reservationUserId,
             "services" to reservationWithServices.services,
             "courtId" to reservationWithServices.reservation.reservationCourtId,
+            "courtDisplayName" to courtDisplayName,
             "sportCenterId" to sportCenterId
         )
         val flag = hashMapOf(
@@ -53,7 +64,20 @@ class FireReservationRepository(val application: Application) {
             //This allows realtime updates to everyone reserving
             database.collection("sport-centers").document(sportCenterId).collection("courts").document(reservationWithServices.reservation.reservationCourtId!!).update(flag)
             database.collection("reservations").add(content)
+                .addOnSuccessListener{
+                    val id = it.id
+                    database.collection("reservations").document(id).update(flag)
+                }
             database.collection("users").document(reservationWithServices.reservation.reservationUserId!!).collection("reservations").add(content)
+                .addOnSuccessListener{
+                    val id = it.id
+                    database
+                        .collection("users")
+                        .document(reservationWithServices.reservation.reservationUserId!!)
+                        .collection("reservations")
+                        .document(id)
+                        .update(flag)
+                }
 
         //TODO: add reference in the user
 //            database.collection("users").document(reservationWithServices.reservation.reservationUserId!!).collection("reservations").document().set()
@@ -98,7 +122,7 @@ class FireReservationRepository(val application: Application) {
                         val reservDate: String = reservation.data?.get("date") as String
                         val request: String? = reservation.data?.get("request") as String?
                         val timeslotId: Long = reservation.data?.get("timeslot") as Long
-                        val courtId: String = reservation.data?.get("courtId") as String
+                        val courtId: String = reservation.data?.get("courtDisplayName") as String
                         val reservationItem = Reservation(reservDate, timeslotId, userEmail, courtId, request, reservation.id)
                         result.add(reservationItem)
                     }
@@ -119,6 +143,7 @@ class FireReservationRepository(val application: Application) {
                         val request: String? = reservation.data?.get("request") as String?
                         val timeslotId: Long = reservation.data?.get("timeslot") as Long
                         val courtId: String = reservation.data?.get("courtId") as String
+                        val courtDisplayName: String = reservation.data?.get("courtDisplayName") as String
                         val reservationItem = Reservation(reservDate, timeslotId, userEmail, courtId, request, reservation.id)
                         val sportCenterId: String = reservation.data?.get("sportCenterId") as String
                         val sportCenterRef = database.collection("sport-centers").document(sportCenterId)
@@ -134,7 +159,7 @@ class FireReservationRepository(val application: Application) {
                                     if(courtDoc.exists()) {
                                         val sportName: String = courtDoc.data?.get("sport_name") as String
                                         val imageName: String? = courtDoc.data?.get("image_name") as String?
-                                        val courtItem = Court(sportCenterId, sportName, 0, courtId, imageName)
+                                        val courtItem = Court(sportCenterId, sportName, 0, courtDisplayName, imageName)
                                         val courtWithSc = CourtWithSportCenter(courtItem, sportCenterItem)
                                         val reservationWithSc = ReservationWithSportCenter(reservationItem, courtWithSc)
                                         result.add(reservationWithSc)
