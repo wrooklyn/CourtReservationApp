@@ -1,6 +1,7 @@
 package it.polito.mad.courtreservationapp.db.remoteRepository
 
 import android.app.Application
+import androidx.room.util.query
 import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.mad.courtreservationapp.db.RemoteDataSource
 import it.polito.mad.courtreservationapp.models.Invite
@@ -37,10 +38,18 @@ class FireInviteRepository(val application: Application) {
 
     suspend fun getParticipantsByReservationId(reservationId: String): List<String> {
         val result: MutableList<String> = mutableListOf()
-        val participantsDocument = db.collection("reservations").document(reservationId).collection("participants").get().await()
-        for(participant in participantsDocument.documents) {
-            val participantEmail = participant.data?.get("email") as String
-            result.add(participantEmail)
+        val reservationSnapshot = db.collection("reservations").document(reservationId).get().await()
+        if(reservationSnapshot.exists()) {
+            if (reservationSnapshot.contains("participants")) {
+                val participants = reservationSnapshot.get("participants") as? ArrayList<*>
+                if (participants != null) {
+                    for (participant in participants) {
+                        result.add(participant as String)
+                    }
+                }
+            } else {
+                println("Participants not exists")
+            }
         }
         return result
     }
@@ -67,9 +76,22 @@ class FireInviteRepository(val application: Application) {
     }
 
     /* When accepting an invite need to:
-    *  1. set the invite state as ACCEPTED
-    *  2. add the user to the participants list for the reservation */
-    fun acceptInvite(reservationId: String, invitedUserEmail: String) {
+    *  1. set the invite state as ACCEPTED in the invites_sent collection of the inviter
+    *  2. set the invite state as ACCEPTED in the invites_received collection of the invited
+    *  3. add the invited user to the participants list for the reservation
+    * */
+    fun acceptInvite(reservationId: String, invitedUserEmail: String, inviterEmail: String) {
+        /* Set invite as ACCEPTED in the invites_sent collection of the inviter */
+        val inviteSentQuery = db.collection("users").document(inviterEmail).collection("invites_sent").whereEqualTo("reservationId", reservationId)
+        inviteSentQuery.get()
+            .addOnSuccessListener {querySnapshot ->
+                if(!querySnapshot.isEmpty) {
+                    val inviteSnapshot = querySnapshot.documents[0]
+                    val inviteReference = inviteSnapshot.reference
+                    inviteReference.update("status", Status.ACCEPTED.toString())
+                }
+            }
+        /* Set invite as ACCEPTED in the invites_received collection of the invited user */
         val inviteQuery = db.collection("users").document(invitedUserEmail).collection("invites_received").whereEqualTo("reservationId", reservationId)
         inviteQuery.get()
             .addOnSuccessListener { querySnapshot ->
@@ -79,6 +101,7 @@ class FireInviteRepository(val application: Application) {
                     inviteReference.update("status", Status.ACCEPTED.toString())
                         .addOnSuccessListener {
                             val reservationRef = db.collection("reservations").document(reservationId)
+                            /* Add the invited users to the participants collection of the reservation */
                             reservationRef.get().addOnSuccessListener { reservationSnapshot ->
                                 val participants = reservationSnapshot.get("participants") as MutableList<String>?
 
@@ -118,17 +141,35 @@ class FireInviteRepository(val application: Application) {
         return
     }
 
-    fun declineInvite(reservationId: String, invitedUserEmail: String) {
-        val inviteReference = db.collection("users").document(invitedUserEmail).collection("invites_received").document(reservationId)
-        inviteReference.update("status", Status.REFUSED.toString())
-            .addOnSuccessListener {
-                println("Invite declined successfully")
+    fun declineInvite(reservationId: String, invitedUserEmail: String, inviterEmail: String) {
+        /* Set invite as REFUSED in the invites_sent collection of the inviter */
+        val inviteSentQuery = db.collection("users").document(inviterEmail).collection("invites_sent").whereEqualTo("reservationId", reservationId)
+        inviteSentQuery.get()
+            .addOnSuccessListener {querySnapshot ->
+                if(!querySnapshot.isEmpty) {
+                    val inviteSnapshot = querySnapshot.documents[0]
+                    val inviteReference = inviteSnapshot.reference
+                    inviteReference.update("status", Status.REFUSED.toString())
+                }
             }
-            .addOnFailureListener{
-                println("Invite declined successfully")
+        /* Set invite as REFUSED in the invites_received collection of the invited user */
+        val inviteQuery = db.collection("users").document(invitedUserEmail).collection("invites_received").whereEqualTo("reservationId", reservationId)
+        inviteQuery.get()
+            .addOnSuccessListener { querySnapshot ->
+                if(!querySnapshot.isEmpty) {
+                    val inviteSnapshot = querySnapshot.documents[0]
+                    val inviteReference = inviteSnapshot.reference
+                    inviteReference.update("status", Status.REFUSED.toString())
+                        .addOnSuccessListener {
+                            println("Invite successfully declined")
+                        }
+                        .addOnFailureListener {
+                            println("Error accepting invite")
+                        }
+                } else {
+                    println("Invite not found")
+                }
             }
         return
     }
-
-
 }

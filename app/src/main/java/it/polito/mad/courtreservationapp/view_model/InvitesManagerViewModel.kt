@@ -1,6 +1,7 @@
 package it.polito.mad.courtreservationapp.view_model
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -47,11 +48,11 @@ class InvitesManagerViewModel(application: Application): AndroidViewModel(applic
         inviteRepository.inviteUser(reservationId, invitedUserEmail, inviterEmail)
     }
 
-    fun acceptInvite(reservationId: String, invitedUserEmail: String) {
-        inviteRepository.acceptInvite(reservationId, invitedUserEmail)
+    fun acceptInvite(reservationId: String, invitedUserEmail: String, inviterEmail: String) {
+        inviteRepository.acceptInvite(reservationId, invitedUserEmail, inviterEmail)
     }
 
-    fun declineInvite(reservationId: String, invitedUserEmail: String) {
-        inviteRepository.declineInvite(reservationId, invitedUserEmail)
+    fun declineInvite(reservationId: String, invitedUserEmail: String, inviterEmail: String) {
+        inviteRepository.declineInvite(reservationId, invitedUserEmail, inviterEmail)
     }
 }
