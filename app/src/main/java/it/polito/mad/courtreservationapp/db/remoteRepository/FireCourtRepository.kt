@@ -8,10 +8,9 @@ import com.google.firebase.firestore.*
 import it.polito.mad.courtreservationapp.db.RemoteDataSource
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithReservations
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithServices
+import it.polito.mad.courtreservationapp.db.relationships.CourtWithSportCenter
+import it.polito.mad.courtreservationapp.models.*
 //import it.polito.mad.courtreservationapp.db.relationships.CourtWithServices
-import it.polito.mad.courtreservationapp.models.Court
-import it.polito.mad.courtreservationapp.models.Reservation
-import it.polito.mad.courtreservationapp.models.Service
 import it.polito.mad.courtreservationapp.utils.ServiceUtils
 import kotlinx.coroutines.tasks.await
 
@@ -112,6 +111,45 @@ class FireCourtRepository(val application: Application) {
             }
         }
     }
+
+    fun getByIdWithSportCenter(
+        courtId: String,
+        sportCenterId: String,
+        callback: (CourtWithSportCenter?) -> Unit
+    ) {
+        val db = RemoteDataSource.instance
+        db.collection("sport-centers").document(sportCenterId).get()
+            .addOnSuccessListener { centerSnapshot ->
+                if (centerSnapshot.exists()) {
+                    val centerName = centerSnapshot.data?.get("name") as String
+                    val address = centerSnapshot.data?.get("address") as String
+                    val description = centerSnapshot.data?.get("description") as String
+                    val centerImage = centerSnapshot.data?.get("image_name") as String?
+                    val centerItem = SportCenter(centerName, address, description, sportCenterId, centerImage)
+                    db.collection("sport-centers")
+                        .document(sportCenterId)
+                        .collection("courts")
+                        .document(courtId)
+                        .get()
+                        .addOnSuccessListener { courtSnapshot ->
+                            if (courtSnapshot.exists()) {
+                                val sportName = courtSnapshot.data?.get("sport_name") as String
+                                val courtImage = courtSnapshot.data?.get("image_name") as String
+                                val courtItem = Court(sportCenterId, sportName, 0, courtId, courtImage)
+                                val result = CourtWithSportCenter(courtItem, centerItem)
+                                callback(result)
+                            } else {
+                                println("Could not find court with ID: $courtId in center with ID: $sportCenterId")
+                                callback(null)
+                            }
+                        }
+                } else {
+                    println("Could not find center with ID: $sportCenterId")
+                    callback(null)
+                }
+            }
+    }
+
 
     suspend fun getByIdWithReservations(centerId: String, courtId: String): CourtWithReservations {
         val db: FirebaseFirestore = RemoteDataSource.instance

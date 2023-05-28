@@ -7,9 +7,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import it.polito.mad.courtreservationapp.db.relationships.CourtWithReservations
-import it.polito.mad.courtreservationapp.db.relationships.CourtWithServices
-import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
+import it.polito.mad.courtreservationapp.db.relationships.*
 import it.polito.mad.courtreservationapp.db.repository.*
 import it.polito.mad.courtreservationapp.models.Court
 import it.polito.mad.courtreservationapp.models.Reservation
@@ -24,8 +22,8 @@ import java.util.*
 
 class CreateReservationViewModel(application: Application): AndroidViewModel(application) {
     private val tag: String = "ReservationFragmentViewModel"
-    val reservationRepo: FireReservationRepository = FireReservationRepository(application)
-    private val courtRepo: FireCourtRepository = FireCourtRepository(application)
+    val reservationRepo: FireReservationRepository = FireReservationRepository(application, null)
+    val courtRepo: FireCourtRepository = FireCourtRepository(application)
     private val sportCenterRepo: FireSportCenterRepository = FireSportCenterRepository(application)
     private val userRepo: FireUserRepository = FireUserRepository(application)
 
