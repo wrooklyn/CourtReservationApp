@@ -62,12 +62,12 @@ fun FriendList(viewModel: FriendListViewModel) {
             indicator = { tabPositions ->
                 TabRowDefaults.Indicator(
                     Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
-                    color = colorResource(id = R.color.red_button)
+                    color = colorResource(id = R.color.red_highlight)
 
                 )
             },
             backgroundColor = Color.White,
-            contentColor = colorResource(id = R.color.red_button)
+            contentColor = colorResource(id = R.color.red_highlight)
         ) {
             Tab( //friends
                 selected = pagerState.currentPage == 0,
@@ -77,7 +77,11 @@ fun FriendList(viewModel: FriendListViewModel) {
                         text = tabRowItems[0].title,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
-                        color = colorResource(id = R.color.red_button)
+                        color = colorResource(id = R.color.red_highlight),
+                        style = TextStyle(
+                                fontFamily = FontFamily(Font(R.font.roboto_medium)),
+                                fontSize = 18.sp,
+                        )
                     )
                 }
             )
@@ -87,9 +91,13 @@ fun FriendList(viewModel: FriendListViewModel) {
                 text = {
                     Text(
                         text = "${tabRowItems[1].title} ($unacceptedFriendsCount)",
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.roboto_medium)),
+                            fontSize = 18.sp,
+                        ),
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
-                        color = colorResource(id = R.color.red_button)
+                        color = colorResource(id = R.color.red_highlight)
                     )
                 }
             )
@@ -195,11 +203,11 @@ fun TabFriendRequests(
 
 val tabRowItems = listOf(
     TabRowItem(
-        title = "Friends",
+        title = "FRIENDS",
         screen = { viewModel -> TabFriendList(viewModel) },
     ),
     TabRowItem(
-        title = "Requests",
+        title = "REQUESTS",
         screen = { viewModel -> TabFriendRequests(viewModel) },
     ),
 )
