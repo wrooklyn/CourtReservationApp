@@ -32,7 +32,6 @@ class ShowSocialPageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val composeView = view.findViewById<ComposeView>(R.id.composeContainer) //TODO check
         composeView.setContent {
-
             FriendList(viewModel)
         }
     }

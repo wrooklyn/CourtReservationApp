@@ -234,7 +234,6 @@
                 android:id="@+id/tab_layout"
                 app:tabSelectedTextColor="@color/orange_highlight"
                 app:tabIndicatorColor="@color/orange_highlight"
-                app:tabIndicatorFullWidth="false"
 
                 >
 
