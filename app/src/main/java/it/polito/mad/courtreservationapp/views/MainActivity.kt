@@ -124,7 +124,6 @@ class MainActivity : AppCompatActivity() {
 
         reservationBrowserViewModel.userReservationsReviews.observe(this) {
             userReservationsReviews = it
-            Log.i("ASAASAS", "RESULT: $it")
         }
         /* -------------------- */
 
@@ -148,6 +147,11 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.explore -> {
                     //replaceFragment(ShowUnimplementedFragment())
+//                    invitesViewModel.inviteUser("z0kwVIF5nRwSzxXHb16r", "chndavide@gmail.com", "matty.favret@gmail.com")
+//                    invitesViewModel.inviteUser("z0kwVIF5nRwSzxXHb16r", "gabryfine@gmail.com", "matty.favret@gmail.com")
+//                    invitesViewModel.acceptInvite("z0kwVIF5nRwSzxXHb16r", "gabryfine@gmail.com", "matty.favret@gmail.com")
+//                    invitesViewModel.declineInvite("z0kwVIF5nRwSzxXHb16r", "chndavide@gmail.com", "matty.favret@gmail.com")
+                    Log.i("MY RESERVATIONS", "$userReservations")
                 }
 
                 R.id.calendar -> {

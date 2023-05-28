@@ -16,11 +16,7 @@ class FireReviewRepository(val application: Application) {
     suspend fun insertReview(sportCenterId:String, courtId : String, username:String, reservationId :String, reviewText:String, selectedRating:Int, dateStr:String){
         val db: FirebaseFirestore = RemoteDataSource.instance
 
-        val reviewDocRef = db.collection("sport-centers")
-            .document(sportCenterId)
-            .collection("courts")
-            .document(courtId)
-            .collection("reservations")
+        val reviewDocRef = db.collection("reservations")
             .document(reservationId)
 
         val updates = hashMapOf<String, Any>()
