@@ -1,6 +1,7 @@
 package it.polito.mad.courtreservationapp.view_model
 
 import android.app.Application
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -66,6 +67,10 @@ class FriendListViewModel(application: Application) : AndroidViewModel(applicati
                     }
                 }
                 val friend = usersCollectionRef.document(SavedPreference.EMAIL).collection("friend_list").document(email).get().await()
+                Log.d("invite users", friend.id)
+
+                Log.d("invite users", (friend.get("accepted")).toString())
+
                 if (friend.exists() && !(friend.get("accepted") as Boolean)){
                     newFriend = true
                 }
