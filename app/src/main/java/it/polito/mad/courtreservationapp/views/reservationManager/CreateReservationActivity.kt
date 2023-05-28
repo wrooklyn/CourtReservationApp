@@ -1,6 +1,5 @@
 package it.polito.mad.courtreservationapp.views.reservationManager
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -9,7 +8,14 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.databinding.ActivityCreateReservationBinding
+import it.polito.mad.courtreservationapp.db.relationships.ReservationWithReview
+import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
+import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
+import it.polito.mad.courtreservationapp.models.Reservation
 import it.polito.mad.courtreservationapp.view_model.CreateReservationViewModel
+import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
+import it.polito.mad.courtreservationapp.views.login.SavedPreference
+import java.util.*
 
 class CreateReservationActivity : AppCompatActivity() {
 
@@ -17,6 +23,7 @@ class CreateReservationActivity : AppCompatActivity() {
 
     //ViewModel
     val viewModel: CreateReservationViewModel by viewModels()
+    val RBViewModel: ReservationBrowserViewModel by viewModels()
 
 
     lateinit var binding: ActivityCreateReservationBinding
@@ -73,6 +80,37 @@ class CreateReservationActivity : AppCompatActivity() {
 
     fun commitReservation() {
         viewModel.saveReservation()
+        // TODO: fix this ungodly mess
+        /*
+        val reservations: MutableList<ReservationWithServices> = mutableListOf()
+        for(timeSlot in viewModel.reservationTimeSlots){
+            val res = Reservation(viewModel.reservationDate?: Calendar.getInstance().toString(), timeSlot, SavedPreference.EMAIL, viewModel.courtWithReservations.court.courtId, viewModel.reservationRequests, viewModel.reservationId)
+//            reservations.add(ReservationWithServices(res, reservationServices as List<Service>))
+            val services = viewModel.reservationServices.map { id ->
+                viewModel.courtWithServices.services.first { it.serviceId == id }
+            }
+            val resWithServices = ReservationWithServices(res, services)
+            Log.i("CreateReservationVm", "Saving: $resWithServices")
+            reservations.add(resWithServices)
+        }
+
+        for(reservation in reservations){
+            val userReservation = reservation.reservation
+            viewModel.courtRepo.getByIdWithSportCenter(viewModel.courtId, viewModel.sportCenterId) {result ->
+                val reservationLocation = ReservationWithSportCenter(
+                    reservation.reservation,
+                    result!!
+                )
+                val reservationWithReview = ReservationWithReview(reservation.reservation, null)
+                RBViewModel.addReservation(
+                    userReservation,
+                    reservationLocation,
+                    reservation,
+                    reservationWithReview
+                )
+            }
+        }
+        */
         finish()
     }
 

@@ -2,8 +2,6 @@ package it.polito.mad.courtreservationapp.views.reservationManager
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -12,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -21,18 +18,15 @@ import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
-import it.polito.mad.courtreservationapp.models.Review
 import it.polito.mad.courtreservationapp.models.TimeslotMap
+import it.polito.mad.courtreservationapp.utils.ImageUtils
 import it.polito.mad.courtreservationapp.view_model.LeaveRatingViewModel
 import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
+import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import it.polito.mad.courtreservationapp.views.ratings.LeaveRatingActivity
-import it.polito.mad.courtreservationapp.utils.BitmapUtil
-import it.polito.mad.courtreservationapp.utils.DiskUtil
-import it.polito.mad.courtreservationapp.utils.ImageUtils
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 
 class ReservationDetailsFragment : Fragment() {
@@ -41,12 +35,12 @@ class ReservationDetailsFragment : Fragment() {
     private lateinit var username: String
     private lateinit var sportCenterAddress: String
     private lateinit var courtName: String
-    private var courtId: Long = 0
-    private var reservationId: Long = 0
+    private lateinit var courtId: String
+    private lateinit var reservationId: String
     private lateinit var date: String
     private var timeslotId: Long = 0
     private lateinit var sportName: String
-    private var sportCenterId: Long = 0
+    private lateinit var sportCenterId: String
     private var specialRequests: String? = null
     private lateinit var serviceIds: LongArray
     private lateinit var serviceDescriptions: Array<String>
@@ -83,7 +77,7 @@ class ReservationDetailsFragment : Fragment() {
                 "courtName",
                 "${reservWithSportCenter.courtWithSportCenter.court.sportName} court - #C${reservWithSportCenter.courtWithSportCenter.court.courtId}"
             )
-            args.putString("courtId", reservWithSportCenter.courtWithSportCenter.court.courtId)
+            args.putString("courtId", reservWithServices.reservation.reservationCourtId)
             args.putString("reservationId", reservWithSportCenter.reservation.reservationId)
             args.putString("date", reservWithSportCenter.reservation.reservationDate)
             args.putLong("timeslotId", reservWithSportCenter.reservation.timeSlotId)
@@ -132,9 +126,9 @@ class ReservationDetailsFragment : Fragment() {
         date = requireArguments().getString("date")!!
         timeslotId = requireArguments().getLong("timeslotId")
         sportName = requireArguments().getString("sportName")!!
-        courtId = requireArguments().getLong("courtId")
-        reservationId = requireArguments().getLong("reservationId")
-        sportCenterId = requireArguments().getLong("sportCenterId")
+        courtId = requireArguments().getString("courtId")!!
+        reservationId = requireArguments().getString("reservationId")!!
+        sportCenterId = requireArguments().getString("sportCenterId")!!
         specialRequests = requireArguments().getString("specialRequests")
         serviceIds = requireArguments().getLongArray("serviceIds")!!
         serviceDescriptions = requireArguments().getStringArray("serviceDescriptions")!!
@@ -228,7 +222,10 @@ class ReservationDetailsFragment : Fragment() {
 
             yesButton.setOnClickListener {
                 (activity as MainActivity).reservationBrowserViewModel.deleteReservation(
-                    reservationId
+                    reservationId,
+                    SavedPreference.EMAIL,
+                    sportCenterId,
+                    courtId
                 )
                 popupWindow.dismiss()
                 val popupView2 = inflater.inflate(R.layout.reserv_cancel_confirmation, null)

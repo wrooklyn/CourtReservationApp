@@ -1,9 +1,9 @@
 
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.mad.courtreservationapp.db.RemoteDataSource
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithSportCenter
@@ -11,9 +11,10 @@ import it.polito.mad.courtreservationapp.db.relationships.ReservationWithService
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithReview
 import it.polito.mad.courtreservationapp.models.*
+import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
 import kotlinx.coroutines.tasks.await
 
-class FireReservationRepository(val application: Application) {
+class FireReservationRepository(val application: Application, val vm: ReservationBrowserViewModel?) {
     private val database: FirebaseFirestore = RemoteDataSource.instance
     private val serviceMap: Map<Int, Service> = mapOf(
         Pair(0, Service("Safety shower", 0)),
@@ -46,7 +47,7 @@ class FireReservationRepository(val application: Application) {
         val courtDisplayName = courtRef.data?.get("display_name") as String? ?: "Court ID"
 
          //TODO replace with firebase
-        val content = hashMapOf(
+        var content = hashMapOf(
             "date" to reservationWithServices.reservation.reservationDate,
             "request" to reservationWithServices.reservation.request,
             "timeslot" to reservationWithServices.reservation.timeSlotId,
@@ -56,32 +57,62 @@ class FireReservationRepository(val application: Application) {
             "courtDisplayName" to courtDisplayName,
             "sportCenterId" to sportCenterId
         )
+
         val flag = hashMapOf(
             "lastUpdated" to System.currentTimeMillis(),
         ) as Map<String, Any>
         //TODO: decide to save services as {Id, name} or {Id}
-        database.collection("sport-centers").document(sportCenterId).collection("courts").document(reservationWithServices.reservation.reservationCourtId!!).collection("reservations").document().set(content).addOnSuccessListener{
             //This allows realtime updates to everyone reserving
-            database.collection("sport-centers").document(sportCenterId).collection("courts").document(reservationWithServices.reservation.reservationCourtId!!).update(flag)
-            database.collection("reservations").add(content)
-                .addOnSuccessListener{
-                    val id = it.id
-                    database.collection("reservations").document(id).update(flag)
-                }
-            database.collection("users").document(reservationWithServices.reservation.reservationUserId!!).collection("reservations").add(content)
-                .addOnSuccessListener{
-                    val id = it.id
-                    database
-                        .collection("users")
-                        .document(reservationWithServices.reservation.reservationUserId!!)
-                        .collection("reservations")
-                        .document(id)
-                        .update(flag)
-                }
+        database.collection("reservations").add(content)
+            .addOnSuccessListener { documentReference ->
+                val id = documentReference.id
+                content["reservationId"] = id
+                database.collection("sport-centers").document(sportCenterId).collection("courts").document(reservationWithServices.reservation.reservationCourtId!!).collection("reservations").add(content)
+                database.collection("sport-centers").document(sportCenterId).collection("courts").document(reservationWithServices.reservation.reservationCourtId!!).update(flag)
+                database.collection("users").document(reservationWithServices.reservation.reservationUserId!!).collection("reservations").add(content)
+            }
 
+/*
+            val reservation = reservationWithServices.reservation
+            val court = getCourtItemBySportCenterIdCourtId(sportCenterId, reservation.reservationCourtId!!)
+            val sportCenter = getSportCenterItemBySportCenterId(sportCenterId)
+            val courtWithSC = CourtWithSportCenter(court!!, sportCenter!!)
+            val services = reservationWithServices.services
+            vm!!.addReservation(reservation, courtWithSC, services)
+
+ */
         //TODO: add reference in the user
 //            database.collection("users").document(reservationWithServices.reservation.reservationUserId!!).collection("reservations").document().set()
-        }
+    }
+
+    fun getCourtItemBySportCenterIdCourtId(sportCenterId: String, courtId: String): Court? {
+        var court: Court? = null
+        database.collection("sport-centers").document(sportCenterId).collection("courts").document(courtId)
+            .get()
+            .addOnSuccessListener { documentSnapshot ->
+                if(documentSnapshot.exists()) {
+                    val sportName = documentSnapshot.data?.get("sport_name") as String
+                    val imageName = documentSnapshot.data?.get("image_name") as String?
+                    court = Court(sportCenterId, sportName, 0, courtId, imageName)
+                }
+            }
+        return court
+    }
+
+    fun getSportCenterItemBySportCenterId(sportCenterId: String): SportCenter? {
+        var sportCenter: SportCenter? = null
+        database.collection("sport-centers").document(sportCenterId)
+            .get()
+            .addOnSuccessListener { documentSnapshot ->
+                if(documentSnapshot.exists()) {
+                    val name = documentSnapshot.data?.get("name") as String
+                    val address = documentSnapshot.data?.get("address") as String
+                    val description = documentSnapshot.data?.get("decription") as String
+                    val image = documentSnapshot.data?.get("image_name") as String?
+                    sportCenter = SportCenter(name, address, description, sportCenterId, image)
+                }
+            }
+        return sportCenter
     }
 
     suspend fun deleteReservations(reservations: List<Reservation>){
@@ -90,9 +121,68 @@ class FireReservationRepository(val application: Application) {
         }*/ //TODO
     }
 
-    suspend fun deleteReservationById(reservationId: Long) {
-        //reservationDao.deleteById(reservationId) //TODO
+    fun deleteReservationById(reservationId: String, userEmail: String, sportCenterId: String, courtId: String) {
+        deleteFromReservations(reservationId)
+        deleteFromUsersReservations(reservationId, userEmail)
+        deleteFromSportCenterCourtReservations(reservationId, sportCenterId, courtId)
     }
+
+    private fun deleteFromReservations(reservationId: String) {
+        val reservationRef = database.collection("reservations").document(reservationId)
+        reservationRef.delete()
+            .addOnSuccessListener {
+                println("Successfully deleted reservation $reservationId from reservations")
+            }
+            .addOnFailureListener{
+                println("Error deleting reservation $reservationId from reservations")
+            }
+    }
+
+    private fun deleteFromUsersReservations(reservationId: String, userEmail: String) {
+        database
+            .collection("users")
+            .document(userEmail)
+            .collection("reservations")
+            .whereEqualTo("reservationId", reservationId)
+            .get()
+            .addOnSuccessListener{
+                for(document in it.documents) {
+                    document.reference.delete()
+                        .addOnSuccessListener {
+                            println("Successfully deleted reservation $reservationId from users/$userEmail/reservations/$reservationId")
+                        }
+                        .addOnFailureListener {
+                            println("Error deleting reservation $reservationId from users/$userEmail/reservations/$reservationId")
+                        }
+                }
+            }
+    }
+
+    private fun deleteFromSportCenterCourtReservations(reservationId: String, sportCenterId: String, courtId: String) {
+        database
+            .collection("sport-centers")
+            .document(sportCenterId)
+            .collection("courts")
+            .document(courtId)
+            .collection("reservations")
+            .whereEqualTo("reservationId", reservationId)
+            .get()
+            .addOnSuccessListener{
+                for(document in it.documents) {
+                    document.reference.delete()
+                        .addOnSuccessListener {
+                            println("Successfully deleted reservation $reservationId from sport-centers/$sportCenterId/courts/$courtId/reservations")
+                        }
+                        .addOnFailureListener {
+                            println("Error deleting reservation $reservationId from sport-centers/$sportCenterId/courts/$courtId/reservations")
+                        }
+                }
+            }
+            .addOnFailureListener{
+                println("Error getting reservation from sport-centers/$sportCenterId/courts/$courtId/reservations/")
+            }
+    }
+
 
     fun getAll(): LiveData<List<Reservation>>{
         //return reservationDao.getAll()
