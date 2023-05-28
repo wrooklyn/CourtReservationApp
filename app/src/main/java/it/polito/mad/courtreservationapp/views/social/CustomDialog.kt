@@ -28,14 +28,14 @@ fun CustomDialog(onSendFriendRequest: (String) -> Unit, onDismiss: () -> Unit) {
                         fontFamily = FontFamily(Font(R.font.roboto_medium)),
                         fontSize = 18.sp
                     ),
-                    text = "Enter here the username",
+                    text = "Enter here the email",
                     modifier = Modifier.padding(bottom = 8.dp),
                 )
 
                 OutlinedTextField(
                     value = mail,
                     onValueChange = { mail = it },
-                    label = { Text("email") },
+                    label = { Text("Email") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp),
