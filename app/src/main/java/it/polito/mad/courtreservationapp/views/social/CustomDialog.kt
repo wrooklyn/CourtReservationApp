@@ -1,19 +1,15 @@
 package it.polito.mad.courtreservationapp.views.social
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,7 +18,7 @@ import it.polito.mad.courtreservationapp.R
 
 @Composable
 fun CustomDialog(onSendFriendRequest: (String) -> Unit, onDismiss: () -> Unit) {
-    var username by remember { mutableStateOf(TextFieldValue()) }
+    var mail by remember { mutableStateOf(TextFieldValue()) }
 
     Dialog(onDismissRequest = { onDismiss() }) {
         Surface(shape = MaterialTheme.shapes.medium) {
@@ -37,9 +33,9 @@ fun CustomDialog(onSendFriendRequest: (String) -> Unit, onDismiss: () -> Unit) {
                 )
 
                 OutlinedTextField(
-                    value = username,
-                    onValueChange = { username = it },
-                    label = { Text("Username") },
+                    value = mail,
+                    onValueChange = { mail = it },
+                    label = { Text("email") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp),
@@ -60,7 +56,7 @@ fun CustomDialog(onSendFriendRequest: (String) -> Unit, onDismiss: () -> Unit) {
                             contentColor = Color.White
                         ),
                         onClick = {
-                            onSendFriendRequest(username.text)
+                            onSendFriendRequest(mail.text)
                             onDismiss()
                         }
                     ) {

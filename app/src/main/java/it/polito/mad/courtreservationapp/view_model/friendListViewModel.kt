@@ -19,7 +19,7 @@ class FriendListViewModel(application: Application) : AndroidViewModel(applicati
     val friendList: LiveData<List<Friend>> = _friendList
     private val l: ListenerRegistration = RemoteDataSource.instance
         .collection("users")
-        .document(SavedPreference.getEmail(application))
+        .document(SavedPreference.EMAIL)
         .collection("friend_list")
         .addSnapshotListener { r, e ->
             runBlocking(Dispatchers.Default) {
@@ -40,6 +40,7 @@ class FriendListViewModel(application: Application) : AndroidViewModel(applicati
             .collection("friend_list")
         val fields : HashMap<String, Any> = hashMapOf("accepted" to true)
         friendsCollectionRef.document(id).update(fields)
+        RemoteDataSource.instance.collection("users").document(id).collection("friend_list").document(SavedPreference.EMAIL).set(fields)
     }
 
     fun declineFriend(id : String){
@@ -50,38 +51,41 @@ class FriendListViewModel(application: Application) : AndroidViewModel(applicati
         friendsCollectionRef.document(id).delete()
     }
 
-    fun addNewFriend(id:String){
+    fun addNewFriend(email:String){
         val usersCollectionRef= RemoteDataSource.instance
             .collection("users")
 
         var found = false
-        var friendEmail=""
+        var newFriend = false
         runBlocking(Dispatchers.Default) {
             launch {
                 val users = usersCollectionRef.get().await().documents
-
                 for(user in users){
-                    val username = user.data?.get("username") as String
-                    if(username == id) {
+                    if(user.id == email) {
                         found = true
-                        friendEmail = user.id
                     }
                 }
+                val friend = usersCollectionRef.document(SavedPreference.EMAIL).collection("friend_list").document(email).get().await()
+                if (friend.exists() && !(friend.get("accepted") as Boolean)){
+                    newFriend = true
+                }
+
+
             }
         }
-        if(found){
+        if(found && newFriend){
             val newFriendRef = RemoteDataSource.instance
                 .collection("users")
-                .document(friendEmail)
+                .document(email)
                 .collection("friend_list")
-                .document(SavedPreference.USERNAME)
+                .document(SavedPreference.EMAIL)
             val data = hashMapOf(
                 "accepted" to false,
             )
             newFriendRef.set(data)
             Toast.makeText(getApplication(), "Friend request sent", Toast.LENGTH_LONG).show()
         }else{
-            Toast.makeText(getApplication(), "Unable to find a player with that name", Toast.LENGTH_LONG).show()
+            Toast.makeText(getApplication(), "Unable to find a player with that name or already friends", Toast.LENGTH_LONG).show()
         }
     }
 
