@@ -52,6 +52,9 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
     var sportCenterId: String = ""
     var reservationId: String = ""
     var userId: String = SavedPreference.EMAIL
+
+    var rating: Long = 0L
+    var reviews: String = "0 reviews"
 //    var email: String = SavedPreference.EMAIL
 
 
@@ -155,6 +158,4 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
         }
         return servStr
     }
-
-
 }

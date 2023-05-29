@@ -85,7 +85,7 @@ class FireReservationRepository(val application: Application, val vm: Reservatio
             val reservLocation = ReservationWithSportCenter(reservation, courtWithSC)
             val reservServices = ReservationWithServices(reservation, services)
             val reservationReview = ReservationWithReview(reservation, null)
-//            vm!!.addReservation(reservation, reservLocation, reservServices, reservationReview) cannot be called because the vm is for the main activity
+//            vm!!.addReservation(reservation, reservLocation, reservServices, reservationReview) //cannot be called because the vm is for the main activity
 
         //TODO: add reference in the user
 //            database.collection("users").document(reservationWithServices.reservation.reservationUserId!!).collection("reservations").document().set()

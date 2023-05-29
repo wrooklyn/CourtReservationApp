@@ -1,14 +1,11 @@
 package it.polito.mad.courtreservationapp.views
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.*
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -38,7 +35,6 @@ import androidx.fragment.app.FragmentActivity
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.SportMasteryWithName
 import it.polito.mad.courtreservationapp.db.relationships.UserWithSportMasteriesAndName
-import it.polito.mad.courtreservationapp.models.User
 import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import it.polito.mad.courtreservationapp.views.profile.AddEditInterestActivity
 
@@ -80,7 +76,7 @@ fun AchievementSection(
             val interestId = 1L
             val intent = Intent(ctx, AddEditInterestActivity::class.java)
             intent.putExtra("email", SavedPreference.EMAIL)
-            ctx.registerForActivity.launch(intent)
+            ctx.registerForAchievementActivityResult.launch(intent)
         }) {
             Icon(Icons.Default.Add, "Add")
         }

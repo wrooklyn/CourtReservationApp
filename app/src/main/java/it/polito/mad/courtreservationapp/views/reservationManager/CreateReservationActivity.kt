@@ -1,5 +1,6 @@
 package it.polito.mad.courtreservationapp.views.reservationManager
 
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -39,7 +40,8 @@ class CreateReservationActivity : AppCompatActivity() {
         viewModel.courtId = intent.getStringExtra("courtId")  ?: ""
         viewModel.reservationId = intent.getStringExtra("reservationId") ?: ""
         viewModel.sportCenterId = intent.getStringExtra("sportCenterId") ?: ""
-
+        viewModel.rating = intent.getLongExtra("rating", 0L)
+        viewModel.reviews = intent.getStringExtra("reviews") ?: "0 reviews"
 
         if(viewModel.courtId.isNullOrEmpty()) throw Exception("Invalid parameters")
 
@@ -63,7 +65,7 @@ class CreateReservationActivity : AppCompatActivity() {
 
         viewModel.courtReservationsLiveData.observe(this) {
             viewModel.liveDataToData(it)
-            this.findViewById<RecyclerView>(R.id.recyclerView).adapter!!.notifyDataSetChanged()
+//            this.findViewById<RecyclerView>(R.id.recyclerView).adapter!!.notifyDataSetChanged()
         }
 
         viewModel.courtServicesLiveData.observe(this) {
@@ -110,7 +112,7 @@ class CreateReservationActivity : AppCompatActivity() {
                 )
             }
         }
-
+        setResult(Activity.RESULT_OK)
         finish()
     }
 
