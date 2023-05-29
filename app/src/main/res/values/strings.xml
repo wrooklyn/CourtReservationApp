@@ -108,4 +108,5 @@
     <string name="service_icon">service_icon</string>
     <string name="service_name">service_name</string>
     <string name="service_cost">x.xx $</string>
+    <string name="social">Social</string>
 </resources>
