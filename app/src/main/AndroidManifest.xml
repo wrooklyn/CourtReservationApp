@@ -70,7 +70,7 @@
         <activity
             android:name=".views.login.Login"
             android:exported="true"
-            android:label="Login"
+            android:label="TouchGrass"
             android:theme="@style/Theme.CourtReservationApp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

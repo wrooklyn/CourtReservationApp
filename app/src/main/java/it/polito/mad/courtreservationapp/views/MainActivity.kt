@@ -2,7 +2,6 @@ package it.polito.mad.courtreservationapp.views
 
 //import com.google.firebase.firestore.ListenerRegistration
 import android.app.Activity
-import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -11,27 +10,22 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ListenerRegistration
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.databinding.ActivityMainBinding
-import it.polito.mad.courtreservationapp.db.relationships.ReservationWithReview
-import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
-import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
-import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
+import it.polito.mad.courtreservationapp.db.relationships.*
 import it.polito.mad.courtreservationapp.models.Invite
 import it.polito.mad.courtreservationapp.models.Reservation
+import it.polito.mad.courtreservationapp.models.Sport
+import it.polito.mad.courtreservationapp.models.SportMastery
 import it.polito.mad.courtreservationapp.view_model.*
 import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
-import it.polito.mad.courtreservationapp.views.login.Login
 import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import it.polito.mad.courtreservationapp.views.profile.ShowProfileFragment
 import it.polito.mad.courtreservationapp.views.reservationManager.BrowseReservationsFragment
-import it.polito.mad.courtreservationapp.views.social.FriendList
 import it.polito.mad.courtreservationapp.views.social.ShowSocialPageFragment
 
 class MainActivity : AppCompatActivity() {
@@ -45,8 +39,22 @@ class MainActivity : AppCompatActivity() {
 
     val registerForActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
         println("${it}")
+        Log.d("registerActivity", "${it}")
         if (it.resultCode == Activity.RESULT_OK){
-            userViewModel.refreshUser(this)
+            val data: Intent? = it.data
+            val email= data?.getStringExtra("email")
+            val sport=data?.getStringExtra("sport")
+            val level=data?.getStringExtra("level")?.toInt()
+            val achievement= data?.getStringExtra("achievement")
+            Log.d("provaprova", email.toString()+"ciao")
+            Log.d("provaprova", sport.toString()+"ciao")
+            Log.d("provaprova", level.toString()+"ciao")
+            Log.d("provaprova", achievement.toString()+"ciao")
+
+            val mastery = SportMasteryWithName(SportMastery(0, "",level!!, achievement, 0), Sport(sport!!, 0))
+
+            //userViewModel.refreshUser(this)
+            userViewModel.updateMastery(mastery)
         }
     }
 

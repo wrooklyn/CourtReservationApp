@@ -20,7 +20,7 @@ object IconUtils {
         Pair(2, R.drawable.coach),
         Pair(3, R.drawable.refreshment),
         Pair(4, R.drawable.wifi),
-        Pair(5, R.drawable.home) //TODO: locker icon
+        Pair(5, R.drawable.lockers) //TODO: locker icon
     )
 
     fun getSportIcon(sportName: String): Int{

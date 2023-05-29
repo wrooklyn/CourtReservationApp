@@ -6,8 +6,10 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import it.polito.mad.courtreservationapp.db.relationships.SportMasteryWithName
 import it.polito.mad.courtreservationapp.db.relationships.UserWithSportMasteriesAndName
 import it.polito.mad.courtreservationapp.db.repository.FireUserRepository
+import it.polito.mad.courtreservationapp.models.SportMastery
 import it.polito.mad.courtreservationapp.models.User
 import it.polito.mad.courtreservationapp.views.MainActivity
 import it.polito.mad.courtreservationapp.views.login.SavedPreference
@@ -24,8 +26,6 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
     lateinit var userWithSportMasteriesAndName: UserWithSportMasteriesAndName
 
     lateinit var context: MainActivity
-
-
 
     fun setCurrentUser(email: String) {
         println("setUser $email")
@@ -49,6 +49,15 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
             }
         }
 
+    }
+
+    fun updateMastery(mastery: SportMasteryWithName){
+        val currentMasteryList:MutableList<SportMasteryWithName> =
+            (userWithSportMasteriesAndNameLiveData.value?.masteries?.toMutableList()?: mutableListOf())
+        currentMasteryList.add(mastery)
+
+        val newUserwithMastery =  UserWithSportMasteriesAndName(userWithSportMasteriesAndNameLiveData.value!!.user, currentMasteryList)
+        userWithSportMasteriesAndNameLiveData.postValue(newUserwithMastery)
     }
 
     fun updateUser(u: User) {
