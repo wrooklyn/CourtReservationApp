@@ -110,9 +110,12 @@ class ShowCalendarFragment : Fragment() {
 
         //mark date
         if(activity.viewModel.reservationId.isNotEmpty()) {
+            println("Ao capo qua ce stà il dato. ${activity.viewModel.reservationId}")
             activity.viewModel.reservationRepo.getByIdWithServices(activity.viewModel.reservationId).observe(activity) {
+
                 val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                val date = format.parse(activity.viewModel.reservationDate)
+                val date = format.parse(it.reservation.reservationDate)
+                println("Invece la data è $date")
                 calendarView.markDayAsSelectedDay(date)
                 view.findViewById<RecyclerView>(R.id.recyclerView).adapter?.notifyDataSetChanged()
             }

@@ -11,7 +11,9 @@ import it.polito.mad.courtreservationapp.db.relationships.ReservationWithService
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithReview
 import it.polito.mad.courtreservationapp.models.*
+import it.polito.mad.courtreservationapp.utils.ServiceUtils
 import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
+import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import kotlinx.coroutines.tasks.await
 
 class FireReservationRepository(val application: Application, val vm: ReservationBrowserViewModel?) {
@@ -134,11 +136,7 @@ class FireReservationRepository(val application: Application, val vm: Reservatio
         return SportCenter(name, address, description, sportCenterId, image)
     }
 
-    suspend fun deleteReservations(reservations: List<Reservation>){
-       /* for(reservation in reservations){
-            reservationDao.delete(reservation)
-        }*/ //TODO
-    }
+
 
     fun deleteReservationById(reservationId: String, userEmail: String, sportCenterId: String, courtId: String) {
         deleteFromReservations(reservationId)
@@ -203,20 +201,31 @@ class FireReservationRepository(val application: Application, val vm: Reservatio
     }
 
 
-    fun getAll(): LiveData<List<Reservation>>{
-        //return reservationDao.getAll()
-        return MutableLiveData() //TODO
-    }
-
-    fun getById(reservationId: Long): LiveData<Reservation>{
-        //return reservationDao.getById(reservationId)
-        return MutableLiveData() //TODO
-    }
 
 
-    fun getByIdWithServices(reservationId: String): LiveData<ReservationWithServices>{
+
+     fun getByIdWithServices(reservationId: String): LiveData<ReservationWithServices>{
         //return reservationDao.getByIdWithServices(reservationId)
-        return MutableLiveData() //TODO
+        val resLiveData = MutableLiveData<ReservationWithServices>()
+        database.collection("reservations").document(reservationId).get().addOnSuccessListener {
+            if(it.exists()){
+                val courtId = it.data?.get("courtId") as String?
+                val date = it.data?.get("date") as String
+                val timeslot = it.data?.get("timeslot") as Long
+                val requests = it.data?.get("request") as String
+                val servicesIds = it.data?.get("services") as ArrayList<*>
+                val serviceList = mutableListOf<Service>()
+                for (id in servicesIds) {
+                    val serv = serviceMap[id]
+                    if (serv != null)
+                        serviceList.add(serv)
+                }
+                val reservation = Reservation(date, timeslot,SavedPreference.EMAIL, courtId, requests, reservationId)
+                val item = ReservationWithServices(reservation,serviceList)
+                resLiveData.postValue(item)
+            }
+        }
+        return resLiveData
     }
 
 
