@@ -16,8 +16,8 @@
         android:icon="@drawable/calendar"/>
     <item
             android:id="@+id/chat"
-            android:title="@string/chat_button_title"
-            android:icon="@drawable/chat"/>
+            android:title="@string/social"
+            android:icon="@drawable/social_nav"/>
     <item
         android:id="@+id/profile"
         android:title="@string/profile_button_title"
