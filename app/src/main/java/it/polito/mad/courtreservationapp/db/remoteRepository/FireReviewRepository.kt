@@ -19,6 +19,8 @@ class FireReviewRepository(val application: Application) {
         val reviewDocRef = db.collection("reservations")
             .document(reservationId)
 
+        //TODO: add review in sportcenter/courts/reservations and users/reservations
+
         val updates = hashMapOf<String, Any>()
         updates["rating"] = selectedRating
         updates["review_date"] = dateStr

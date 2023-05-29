@@ -53,7 +53,7 @@ class LeaveRatingViewModel(application: Application): AndroidViewModel(applicati
             Log.v(tag, "$reviewText")
             Log.v(tag, "$selectedImprovements")
 
-            reviewRepo.insertReview("A4pjoFykPhVSfpkfYUXK", "80A69RdLDZhzICaVa1qA", SavedPreference.USERNAME, "TeExQeFkvXgUrY3i30uA", reviewText, selectedRating, dateStr)
+            reviewRepo.insertReview(sportCenterId, courtId, SavedPreference.EMAIL, reservationId, reviewText, selectedRating, dateStr)
             context.finish()
         }
     }
@@ -63,7 +63,7 @@ class LeaveRatingViewModel(application: Application): AndroidViewModel(applicati
         //sportCenterWithCourtsLiveData = sportCenterRepo.getCenterWithCourts(sportCenterId)
         runBlocking(Dispatchers.Default) {
             launch {
-                val res = sportCenterRepo.getCenterWithCourts2("A4pjoFykPhVSfpkfYUXK")
+                val res = sportCenterRepo.getCenterWithCourts2(sportCenterId)
                 sportCenterWithCourtsLiveData.postValue(res)
 //                println("updated: hehe ${res}")
             }
