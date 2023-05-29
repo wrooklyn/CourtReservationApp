@@ -81,7 +81,7 @@ class CreateReservationActivity : AppCompatActivity() {
     fun commitReservation() {
         viewModel.saveReservation()
         // TODO: fix this ungodly mess
-        /*
+
         val reservations: MutableList<ReservationWithServices> = mutableListOf()
         for(timeSlot in viewModel.reservationTimeSlots){
             val res = Reservation(viewModel.reservationDate?: Calendar.getInstance().toString(), timeSlot, SavedPreference.EMAIL, viewModel.courtWithReservations.court.courtId, viewModel.reservationRequests, viewModel.reservationId)
@@ -110,7 +110,7 @@ class CreateReservationActivity : AppCompatActivity() {
                 )
             }
         }
-        */
+
         finish()
     }
 
