@@ -11,7 +11,9 @@ import it.polito.mad.courtreservationapp.db.relationships.ReservationWithService
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithReview
 import it.polito.mad.courtreservationapp.models.*
+import it.polito.mad.courtreservationapp.utils.ServiceUtils
 import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
+import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import kotlinx.coroutines.tasks.await
 
 class FireReservationRepository(val application: Application, val vm: ReservationBrowserViewModel?) {
@@ -27,6 +29,11 @@ class FireReservationRepository(val application: Application, val vm: Reservatio
         reservationWithServices: ReservationWithServices,
         sportCenterId: String
     ){
+        //optional reservationId reservationWithServices.reservation.reservationId
+        val reservationId = reservationWithServices.reservation.reservationId
+        var isEdit = !reservationWithServices.reservation.reservationId.isNullOrEmpty()
+
+
         //save reservation
         /*
         val reservationId = reservationDao.save(reservationWithServices.reservation)
@@ -46,7 +53,7 @@ class FireReservationRepository(val application: Application, val vm: Reservatio
 
         val courtDisplayName = courtRef.data?.get("display_name") as String? ?: "Court ID"
 
-         //TODO replace with firebase
+
         var content = hashMapOf(
             "date" to reservationWithServices.reservation.reservationDate,
             "request" to reservationWithServices.reservation.request,
@@ -61,34 +68,45 @@ class FireReservationRepository(val application: Application, val vm: Reservatio
         val flag = hashMapOf(
             "lastUpdated" to System.currentTimeMillis(),
         ) as Map<String, Any>
-        //TODO: decide to save services as {Id, name} or {Id}
-            //This allows realtime updates to everyone reserving
-        database.collection("reservations").add(content)
-            .addOnSuccessListener { documentReference ->
-                val id = documentReference.id
-                content["reservationId"] = id
-                database.collection("sport-centers").document(sportCenterId).collection("courts")
-                    .document(reservationWithServices.reservation.reservationCourtId!!)
-                    .collection("reservations").add(content)
-                database.collection("sport-centers").document(sportCenterId).collection("courts")
-                    .document(reservationWithServices.reservation.reservationCourtId!!).update(flag)
-                database.collection("users")
-                    .document(reservationWithServices.reservation.reservationUserId!!)
-                    .collection("reservations").add(content)
-            }
 
-            val reservation = reservationWithServices.reservation
-            val court = getCourtItemBySportCenterIdCourtId(sportCenterId, reservation.reservationCourtId!!)
-            val sportCenter = getSportCenterItemBySportCenterId(sportCenterId)
-            val courtWithSC = CourtWithSportCenter(court!!, sportCenter!!)
-            val services = reservationWithServices.services
-            val reservLocation = ReservationWithSportCenter(reservation, courtWithSC)
-            val reservServices = ReservationWithServices(reservation, services)
-            val reservationReview = ReservationWithReview(reservation, null)
-//            vm!!.addReservation(reservation, reservLocation, reservServices, reservationReview) //cannot be called because the vm is for the main activity
 
-        //TODO: add reference in the user
-//            database.collection("users").document(reservationWithServices.reservation.reservationUserId!!).collection("reservations").document().set()
+        if(isEdit){
+            database.collection("reservations").document(reservationId).set(content)
+                .addOnSuccessListener { documentReference ->
+                    //content["reservationId"] = reservationId
+                    database.collection("sport-centers").document(sportCenterId).collection("courts")
+                        .document(reservationWithServices.reservation.reservationCourtId).collection("reservations")
+                        .whereEqualTo("reservationId", reservationId).get().addOnSuccessListener {
+                            for (document in it.documents) {
+                                document.reference.set(content)
+                            }
+                        }
+                    database.collection("sport-centers").document(sportCenterId).collection("courts")
+                        .document(reservationWithServices.reservation.reservationCourtId!!).update(flag)
+                    database.collection("users")
+                        .document(reservationWithServices.reservation.reservationUserId!!)
+                        .collection("reservations")
+                        .whereEqualTo("reservationId", reservationId).get().addOnSuccessListener {
+                            for (document in it.documents) {
+                                document.reference.set(content)
+                            }
+                        }
+                }
+        }else{
+            database.collection("reservations").add(content)
+                .addOnSuccessListener { documentReference ->
+                    val id = documentReference.id
+                    content["reservationId"] = id
+                    database.collection("sport-centers").document(sportCenterId).collection("courts")
+                        .document(reservationWithServices.reservation.reservationCourtId!!)
+                        .collection("reservations").add(content)
+                    database.collection("sport-centers").document(sportCenterId).collection("courts")
+                        .document(reservationWithServices.reservation.reservationCourtId!!).update(flag)
+                    database.collection("users")
+                        .document(reservationWithServices.reservation.reservationUserId!!)
+                        .collection("reservations").add(content)
+                }
+        }
     }
 
     suspend fun getCourtItemBySportCenterIdCourtId(sportCenterId: String, courtId: String): Court? {
@@ -118,11 +136,7 @@ class FireReservationRepository(val application: Application, val vm: Reservatio
         return SportCenter(name, address, description, sportCenterId, image)
     }
 
-    suspend fun deleteReservations(reservations: List<Reservation>){
-       /* for(reservation in reservations){
-            reservationDao.delete(reservation)
-        }*/ //TODO
-    }
+
 
     fun deleteReservationById(reservationId: String, userEmail: String, sportCenterId: String, courtId: String) {
         deleteFromReservations(reservationId)
@@ -187,20 +201,31 @@ class FireReservationRepository(val application: Application, val vm: Reservatio
     }
 
 
-    fun getAll(): LiveData<List<Reservation>>{
-        //return reservationDao.getAll()
-        return MutableLiveData() //TODO
-    }
-
-    fun getById(reservationId: Long): LiveData<Reservation>{
-        //return reservationDao.getById(reservationId)
-        return MutableLiveData() //TODO
-    }
 
 
-    fun getByIdWithServices(reservationId: String): LiveData<ReservationWithServices>{
+
+     fun getByIdWithServices(reservationId: String): LiveData<ReservationWithServices>{
         //return reservationDao.getByIdWithServices(reservationId)
-        return MutableLiveData() //TODO
+        val resLiveData = MutableLiveData<ReservationWithServices>()
+        database.collection("reservations").document(reservationId).get().addOnSuccessListener {
+            if(it.exists()){
+                val courtId = it.data?.get("courtId") as String?
+                val date = it.data?.get("date") as String
+                val timeslot = it.data?.get("timeslot") as Long
+                val requests = it.data?.get("request") as String
+                val servicesIds = it.data?.get("services") as ArrayList<*>
+                val serviceList = mutableListOf<Service>()
+                for (id in servicesIds) {
+                    val serv = serviceMap[id]
+                    if (serv != null)
+                        serviceList.add(serv)
+                }
+                val reservation = Reservation(date, timeslot,SavedPreference.EMAIL, courtId, requests, reservationId)
+                val item = ReservationWithServices(reservation,serviceList)
+                resLiveData.postValue(item)
+            }
+        }
+        return resLiveData
     }
 
 

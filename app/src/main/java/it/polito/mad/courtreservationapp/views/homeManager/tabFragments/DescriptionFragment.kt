@@ -22,6 +22,7 @@ class DescriptionFragment : Fragment() {
 
 
     private var services: MutableList<Service> = mutableListOf()
+    private var serviceIds: MutableList<Long> = mutableListOf()
     var position: Int = -1
     lateinit var viewModel: SportCenterViewModel
     lateinit var sportCenterWithCourtsAndServices: SportCenterWithCourtsAndServices
@@ -32,11 +33,13 @@ class DescriptionFragment : Fragment() {
         sportCenterWithCourtsAndServices = viewModel.sportCentersWithCourtsAndServices[position]
         sportCenterWithCourtsAndServices.courtsWithServices.forEach(){courtWithServices ->
             courtWithServices.services.forEach(){service ->
-                if(!services.contains(service)){
+                if(!serviceIds.contains(service.serviceId)){
                     services.add(service)
+                    serviceIds.add(service.serviceId)
                 }
             }
         }
+
     }
 
     override fun onCreateView(

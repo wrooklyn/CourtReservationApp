@@ -44,7 +44,6 @@ class CreateReservationActivity : AppCompatActivity() {
         viewModel.reviews = intent.getStringExtra("reviews") ?: "0 reviews"
 
         if(viewModel.courtId.isNullOrEmpty()) throw Exception("Invalid parameters")
-
         //hardcoded user
 
         viewModel.initAll(this)
