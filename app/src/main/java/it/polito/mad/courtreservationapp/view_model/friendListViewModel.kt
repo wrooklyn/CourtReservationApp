@@ -58,7 +58,7 @@ class FriendListViewModel(application: Application) : AndroidViewModel(applicati
             .collection("users")
 
         var found = false
-        var newFriend = false
+        var newFriend = true
         val friendRef = usersCollectionRef.document(SavedPreference.EMAIL).collection("friend_list").document(email)
         var friend: DocumentSnapshot
         var alreadyFriend = false
@@ -78,7 +78,7 @@ class FriendListViewModel(application: Application) : AndroidViewModel(applicati
 
 
                 if (friend.exists() && !(friend.get("accepted") as Boolean)){ // if document of new friend is present && accepted = false
-                    newFriend = true
+                    newFriend = false
                 }else if(!found){
                     userNotFound = true
 
