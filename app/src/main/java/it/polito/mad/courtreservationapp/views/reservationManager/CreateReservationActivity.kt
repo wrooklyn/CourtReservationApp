@@ -81,6 +81,7 @@ class CreateReservationActivity : AppCompatActivity() {
     fun commitReservation() {
         viewModel.saveReservation()
         // TODO: fix this ungodly mess
+
         val reservations: MutableList<ReservationWithServices> = mutableListOf()
         for(timeSlot in viewModel.reservationTimeSlots){
             val res = Reservation(viewModel.reservationDate?: Calendar.getInstance().toString(), timeSlot, SavedPreference.EMAIL, viewModel.courtWithReservations.court.courtId, viewModel.reservationRequests, viewModel.reservationId)
@@ -109,6 +110,7 @@ class CreateReservationActivity : AppCompatActivity() {
                 )
             }
         }
+
         finish()
     }
 
@@ -139,7 +141,7 @@ class CreateReservationActivity : AppCompatActivity() {
             0 -> replaceFragment(ShowCalendarFragment())
             1 -> replaceFragment(ShowSelectServicesFragment())
             2 -> replaceFragment(ShowSummaryFragment())
-            3 -> commitReservation()
+            //3 -> commitReservation()
         }
     }
 }

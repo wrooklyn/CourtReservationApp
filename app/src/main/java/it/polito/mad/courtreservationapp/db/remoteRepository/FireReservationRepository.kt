@@ -67,52 +67,55 @@ class FireReservationRepository(val application: Application, val vm: Reservatio
             .addOnSuccessListener { documentReference ->
                 val id = documentReference.id
                 content["reservationId"] = id
-                database.collection("sport-centers").document(sportCenterId).collection("courts").document(reservationWithServices.reservation.reservationCourtId!!).collection("reservations").add(content)
-                database.collection("sport-centers").document(sportCenterId).collection("courts").document(reservationWithServices.reservation.reservationCourtId!!).update(flag)
-                database.collection("users").document(reservationWithServices.reservation.reservationUserId!!).collection("reservations").add(content)
+                database.collection("sport-centers").document(sportCenterId).collection("courts")
+                    .document(reservationWithServices.reservation.reservationCourtId!!)
+                    .collection("reservations").add(content)
+                database.collection("sport-centers").document(sportCenterId).collection("courts")
+                    .document(reservationWithServices.reservation.reservationCourtId!!).update(flag)
+                database.collection("users")
+                    .document(reservationWithServices.reservation.reservationUserId!!)
+                    .collection("reservations").add(content)
             }
 
-/*
             val reservation = reservationWithServices.reservation
             val court = getCourtItemBySportCenterIdCourtId(sportCenterId, reservation.reservationCourtId!!)
             val sportCenter = getSportCenterItemBySportCenterId(sportCenterId)
             val courtWithSC = CourtWithSportCenter(court!!, sportCenter!!)
             val services = reservationWithServices.services
-            vm!!.addReservation(reservation, courtWithSC, services)
+            val reservLocation = ReservationWithSportCenter(reservation, courtWithSC)
+            val reservServices = ReservationWithServices(reservation, services)
+            val reservationReview = ReservationWithReview(reservation, null)
+            vm!!.addReservation(reservation, reservLocation, reservServices, reservationReview)
 
- */
         //TODO: add reference in the user
 //            database.collection("users").document(reservationWithServices.reservation.reservationUserId!!).collection("reservations").document().set()
     }
 
-    fun getCourtItemBySportCenterIdCourtId(sportCenterId: String, courtId: String): Court? {
-        var court: Court? = null
-        database.collection("sport-centers").document(sportCenterId).collection("courts").document(courtId)
-            .get()
-            .addOnSuccessListener { documentSnapshot ->
-                if(documentSnapshot.exists()) {
-                    val sportName = documentSnapshot.data?.get("sport_name") as String
-                    val imageName = documentSnapshot.data?.get("image_name") as String?
-                    court = Court(sportCenterId, sportName, 0, courtId, imageName)
-                }
-            }
-        return court
+    suspend fun getCourtItemBySportCenterIdCourtId(sportCenterId: String, courtId: String): Court? {
+        Log.i(
+            "CREATING RESERVATION",
+            "Getting court with ID: $courtId from sport center: $sportCenterId"
+        )
+        val courtRef =
+            database.collection("sport-centers").document(sportCenterId).collection("courts")
+                .document(courtId)
+                .get()
+                .await()
+        val sportName = courtRef.data?.get("sport_name") as String
+        val imageName = courtRef.data?.get("image_name") as String?
+        return Court(sportCenterId, sportName, 0, courtId, imageName)
     }
 
-    fun getSportCenterItemBySportCenterId(sportCenterId: String): SportCenter? {
-        var sportCenter: SportCenter? = null
-        database.collection("sport-centers").document(sportCenterId)
+    suspend fun getSportCenterItemBySportCenterId(sportCenterId: String): SportCenter? {
+        Log.i("CREATING RESERVATION", "Getting sport center with ID: $sportCenterId")
+        val sportCenterRef = database.collection("sport-centers").document(sportCenterId)
             .get()
-            .addOnSuccessListener { documentSnapshot ->
-                if(documentSnapshot.exists()) {
-                    val name = documentSnapshot.data?.get("name") as String
-                    val address = documentSnapshot.data?.get("address") as String
-                    val description = documentSnapshot.data?.get("decription") as String
-                    val image = documentSnapshot.data?.get("image_name") as String?
-                    sportCenter = SportCenter(name, address, description, sportCenterId, image)
-                }
-            }
-        return sportCenter
+            .await()
+        val name = sportCenterRef.data?.get("name") as String
+        val address = sportCenterRef.data?.get("address") as String
+        val description = sportCenterRef.data?.get("description") as String
+        val image = sportCenterRef.data?.get("image_name") as String?
+        return SportCenter(name, address, description, sportCenterId, image)
     }
 
     suspend fun deleteReservations(reservations: List<Reservation>){
