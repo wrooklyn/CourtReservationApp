@@ -96,7 +96,7 @@ class FriendListViewModel(application: Application) : AndroidViewModel(applicati
                         "accepted" to false,
                     )
                     newFriendRef.set(data)
-                    Toast.makeText(getApplication(), "Friend request sent", Toast.LENGTH_LONG).show()
+                    //Toast.makeText(getApplication(), "Friend request sent", Toast.LENGTH_LONG).show()
                     successful = true
                 }
                 if(found && successful && !friend.exists()){ // if accepted = false --> true
