@@ -96,19 +96,13 @@ class FriendListViewModel(application: Application) : AndroidViewModel(applicati
                         "accepted" to false,
                     )
                     newFriendRef.set(data)
-                    //Toast.makeText(getApplication(), "Friend request sent", Toast.LENGTH_LONG).show()
                     successful = true
                 }
                 if(found && successful && !friend.exists()){ // if accepted = false --> true
                     requestSent = true
                 }
-                Log.d("hello1", successful.toString())
-                Log.d("hello2", friend.exists().toString())
-                Log.d("hello3", requestSent.toString())
-
             }
         }
-
         if(userNotFound){
             Toast.makeText(getApplication(), "Unable to find a player with that name", Toast.LENGTH_LONG).show()
         }else if(!userNotFound && requestSent){
