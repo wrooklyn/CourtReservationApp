@@ -195,10 +195,11 @@ class ReservationDetailsFragment : Fragment() {
             intent.putExtra("courtId", courtId)
             intent.putExtra("reservationId", reservationId)
             intent.putExtra("sportCenterId", sportCenterId)
-            startActivity(intent)
-            Handler().postDelayed({
-                (activity as MainActivity).replaceFragment(BrowseReservationsFragment())
-            }, 1000)
+            (context as MainActivity).registerForReservationActivityResult.launch(intent)
+//            startActivity(intent)
+//            Handler().postDelayed({
+//                (activity as MainActivity).replaceFragment(BrowseReservationsFragment())
+//            }, 1000)
         }
 
         val cancelReservationButton = view.findViewById<Button>(R.id.cancel_reserv_button)

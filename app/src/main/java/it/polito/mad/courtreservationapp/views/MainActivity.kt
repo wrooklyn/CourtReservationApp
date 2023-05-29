@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
     val ratingViewModel: LeaveRatingViewModel by viewModels() //done
     val invitesViewModel: InvitesManagerViewModel by viewModels()
 
-    val registerForActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+    val registerForAchievementActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
         println("${it}")
         Log.d("registerActivity", "${it}")
         if (it.resultCode == Activity.RESULT_OK){
@@ -55,6 +55,14 @@ class MainActivity : AppCompatActivity() {
 
             //userViewModel.refreshUser(this)
             userViewModel.updateMastery(mastery)
+        }
+    }
+
+    val registerForReservationActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+        println("$it")
+        Log.d("registerActivityReservation", "$it")
+        if (it.resultCode == Activity.RESULT_OK){
+            reservationBrowserViewModel.initUserReservations(SavedPreference.EMAIL)
         }
     }
 

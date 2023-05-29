@@ -54,14 +54,20 @@ class ShowSummaryFragment : Fragment(R.layout.summary_layout) {
         val servicesTitle: TextView = view.findViewById(R.id.servicesTitle)
         val services: TextView = view.findViewById(R.id.servicesTV)
         val params: ViewGroup.LayoutParams = view.findViewById<ConstraintLayout>(R.id.serviceCL).layoutParams
+        val ratingBar:RatingBar = view.findViewById(R.id.ratingBar)
+        val reviewsTv: TextView = view.findViewById(R.id.textView6)
 
-
-        sportCenterName.text = a.viewModel.sportCenter.name//"The Athetic Club";
-        addressSubtitle.text = a.viewModel.sportCenter.address//"Via delle ciliegie";
-        address.text = a.viewModel.sportCenter.address//"Via delle ciliegie";
+        sportCenterName.text = a.viewModel.sportCenter.name
+        addressSubtitle.text = a.viewModel.sportCenter.address
+        address.text = a.viewModel.sportCenter.address
         username.text = a.viewModel.user.username
         date.text = a.viewModel.reservationDate
         a.viewModel.reservationTimeSlots.sort()
+
+        ratingBar.rating = a.viewModel.rating.toFloat()
+        reviewsTv.text = a.viewModel.reviews
+
+
         val slotStr: String = a.viewModel.reservationTimeSlots.fold("") { acc, i ->
             val startH = 10 + i
             val endH = startH + 1

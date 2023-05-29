@@ -108,5 +108,9 @@
     <string name="service_icon">service_icon</string>
     <string name="service_name">service_name</string>
     <string name="service_cost">x.xx $</string>
+    <string name="summary">Summary</string>
+    <string name="here_s_a_summary_of_your_order">Here\'s a summary of your order</string>
+    <string name="sportcentername">SportCenterName</string>
+    <string name="sportcenter_address">SportCenter Address</string>
     <string name="social">Social</string>
 </resources>

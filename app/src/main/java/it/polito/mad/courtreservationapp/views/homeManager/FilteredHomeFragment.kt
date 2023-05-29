@@ -80,10 +80,14 @@ class FilteredHomeFragment : Fragment() {
             holder.bind(currentCourt.court.image, "${currentCourt.court.sportName} Court", currentReview)
 
             holder.itemView.findViewById<Button>(R.id.reserveButton).setOnClickListener{
+
                 val createReservationIntent: Intent = Intent(holder.itemView.context, CreateReservationActivity::class.java)
                 createReservationIntent.putExtra("sportCenterId",currentCourt.court.sportCenterId)
                 createReservationIntent.putExtra("courtId",currentCourt.court.courtId)
-                holder.itemView.context.startActivity(createReservationIntent)
+                createReservationIntent.putExtra("rating", averageRating)
+                createReservationIntent.putExtra("reviews", currentReview)
+                (holder.itemView.context as MainActivity).registerForReservationActivityResult.launch(createReservationIntent)
+//                holder.itemView.context.startActivity(createReservationIntent)
             }
         }
     }

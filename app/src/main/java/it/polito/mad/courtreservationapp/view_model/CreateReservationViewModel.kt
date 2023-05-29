@@ -52,6 +52,9 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
     var sportCenterId: String = ""
     var reservationId: String = ""
     var userId: String = SavedPreference.EMAIL
+
+    var rating: Long = 0L
+    var reviews: String = "0 reviews"
 //    var email: String = SavedPreference.EMAIL
 
 
@@ -96,8 +99,10 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
     fun saveReservation(){
         viewModelScope.launch {
             val reservations: MutableList<ReservationWithServices> = mutableListOf()
+            Log.i("CreateReservationVm", "time slots: $reservationTimeSlots")
+            val today = Calendar.getInstance().toString()
             for(timeSlot in reservationTimeSlots){
-                val res = Reservation(reservationDate?: Calendar.getInstance().toString(), timeSlot, SavedPreference.EMAIL, courtWithReservations.court.courtId, reservationRequests, reservationId)
+                val res = Reservation(reservationDate?: today, timeSlot, SavedPreference.EMAIL, courtWithReservations.court.courtId, reservationRequests, reservationId)
 //            reservations.add(ReservationWithServices(res, reservationServices as List<Service>))
                 val services = reservationServices.map { id ->
                     courtWithServices.services.first { it.serviceId == id }
@@ -110,6 +115,7 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
             for(reservation in reservations){
                 reservationRepo.insertReservationWithServices(reservation, sportCenterId)
             }
+            Log.i("CreateReservationVm", "Finished saveReservation")
         }
     }
 
@@ -152,6 +158,4 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
         }
         return servStr
     }
-
-
 }

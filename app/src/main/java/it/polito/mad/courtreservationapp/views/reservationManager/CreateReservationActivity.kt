@@ -1,5 +1,6 @@
 package it.polito.mad.courtreservationapp.views.reservationManager
 
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -39,7 +40,8 @@ class CreateReservationActivity : AppCompatActivity() {
         viewModel.courtId = intent.getStringExtra("courtId")  ?: ""
         viewModel.reservationId = intent.getStringExtra("reservationId") ?: ""
         viewModel.sportCenterId = intent.getStringExtra("sportCenterId") ?: ""
-
+        viewModel.rating = intent.getLongExtra("rating", 0L)
+        viewModel.reviews = intent.getStringExtra("reviews") ?: "0 reviews"
 
         if(viewModel.courtId.isNullOrEmpty()) throw Exception("Invalid parameters")
 
@@ -63,7 +65,7 @@ class CreateReservationActivity : AppCompatActivity() {
 
         viewModel.courtReservationsLiveData.observe(this) {
             viewModel.liveDataToData(it)
-            this.findViewById<RecyclerView>(R.id.recyclerView).adapter!!.notifyDataSetChanged()
+//            this.findViewById<RecyclerView>(R.id.recyclerView).adapter!!.notifyDataSetChanged()
         }
 
         viewModel.courtServicesLiveData.observe(this) {
@@ -81,7 +83,7 @@ class CreateReservationActivity : AppCompatActivity() {
     fun commitReservation() {
         viewModel.saveReservation()
         // TODO: fix this ungodly mess
-
+        Log.i("CreateReservationAcitvity","commitReservation start")
         val reservations: MutableList<ReservationWithServices> = mutableListOf()
         for(timeSlot in viewModel.reservationTimeSlots){
             val res = Reservation(viewModel.reservationDate?: Calendar.getInstance().toString(), timeSlot, SavedPreference.EMAIL, viewModel.courtWithReservations.court.courtId, viewModel.reservationRequests, viewModel.reservationId)
@@ -90,7 +92,7 @@ class CreateReservationActivity : AppCompatActivity() {
                 viewModel.courtWithServices.services.first { it.serviceId == id }
             }
             val resWithServices = ReservationWithServices(res, services)
-            Log.i("CreateReservationVm", "Saving: $resWithServices")
+            Log.i("CreateReservationActivity", "Saving again(?): $resWithServices")
             reservations.add(resWithServices)
         }
 
@@ -110,7 +112,7 @@ class CreateReservationActivity : AppCompatActivity() {
                 )
             }
         }
-
+        setResult(Activity.RESULT_OK)
         finish()
     }
 
