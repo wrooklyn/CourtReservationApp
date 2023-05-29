@@ -252,7 +252,7 @@ class FireReservationRepository(val application: Application, val vm: Reservatio
                                     if(courtDoc.exists()) {
                                         val sportName: String = courtDoc.data?.get("sport_name") as String
                                         val imageName: String? = courtDoc.data?.get("image_name") as String?
-                                        val courtItem = Court(sportCenterId, sportName, 0, courtDisplayName, imageName)
+                                        val courtItem = Court(sportCenterId, sportName, 0, courtId, imageName)
                                         val courtWithSc = CourtWithSportCenter(courtItem, sportCenterItem)
                                         val reservationWithSc = ReservationWithSportCenter(reservationItem, courtWithSc)
                                         result.add(reservationWithSc)

@@ -3,7 +3,6 @@ package it.polito.mad.courtreservationapp.views.reservationManager
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -46,6 +45,8 @@ class ReservationDetailsFragment : Fragment() {
     private lateinit var serviceDescriptions: Array<String>
     private var reviewed: Boolean = false
     private var courtImage: String? = null
+    private var rating: Double = 0.0
+    private var reviews: String = "0 reviews"
 
     lateinit var viewModel: ReservationBrowserViewModel
     lateinit var ratingViewModel: LeaveRatingViewModel
@@ -60,7 +61,9 @@ class ReservationDetailsFragment : Fragment() {
             username: String,
             reservWithSportCenter: ReservationWithSportCenter,
             reservWithServices: ReservationWithServices,
-            reviewed: Boolean
+            reviewed: Boolean,
+            averageRating: Double,
+            currentReview: String
         ): ReservationDetailsFragment {
             val fragment = ReservationDetailsFragment()
             val args = Bundle()
@@ -75,7 +78,7 @@ class ReservationDetailsFragment : Fragment() {
             )
             args.putString(
                 "courtName",
-                "${reservWithSportCenter.courtWithSportCenter.court.sportName} court - #C${reservWithSportCenter.courtWithSportCenter.court.courtId}"
+                "${reservWithSportCenter.courtWithSportCenter.court.sportName} Court"
             )
             args.putString("courtId", reservWithServices.reservation.reservationCourtId)
             args.putString("reservationId", reservWithSportCenter.reservation.reservationId)
@@ -97,6 +100,8 @@ class ReservationDetailsFragment : Fragment() {
             )
             args.putBoolean("reviewed", reviewed)
             args.putString("courtImage", reservWithSportCenter.courtWithSportCenter.court.image)
+            args.putDouble("rating", averageRating)
+            args.putString("reviews", currentReview)
             fragment.arguments = args
             return fragment
         }
@@ -134,6 +139,8 @@ class ReservationDetailsFragment : Fragment() {
         serviceDescriptions = requireArguments().getStringArray("serviceDescriptions")!!
         reviewed = requireArguments().getBoolean("reviewed")
         courtImage = requireArguments().getString("courtImage")
+        rating = requireArguments().getDouble("rating")
+        reviews = requireArguments().getString("reviews") ?: "0 reviews"
     }
 
     override fun onCreateView(
@@ -174,6 +181,8 @@ class ReservationDetailsFragment : Fragment() {
         val courtNameTV: TextView = view.findViewById(R.id.courtnameTV)
         val courtImageIV: ImageView = view.findViewById(R.id.courtImageIV)
         val specialRequestsTV: TextView = view.findViewById(R.id.specialRequestsTV)
+        val ratingBar: RatingBar = view.findViewById(R.id.ratingBar)
+        val reviewsTv: TextView = view.findViewById(R.id.textView6)
 
         mainContainerCL = view.findViewById(R.id.mainContainerCL)
         mainContainerCL.foreground.alpha = 0
@@ -188,6 +197,8 @@ class ReservationDetailsFragment : Fragment() {
         specialRequestsTV.text = specialRequests ?: "You did not have any special request"
         Log.i("asdasd", sportName)
         ImageUtils.setImage("courts", courtImage, courtImageIV)
+        ratingBar.stepSize = rating.toFloat()
+        reviewsTv.text = reviews
 
         val editReservationButton = view.findViewById<Button>(R.id.edit_reservation_button)
         editReservationButton.setOnClickListener {

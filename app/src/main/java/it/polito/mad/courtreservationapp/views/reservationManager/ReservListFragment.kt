@@ -11,14 +11,13 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
-import it.polito.mad.courtreservationapp.db.relationships.ReservationWithReview
-import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
-import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
+import it.polito.mad.courtreservationapp.db.relationships.*
+import it.polito.mad.courtreservationapp.models.Court
+import it.polito.mad.courtreservationapp.models.SportCenter
 import it.polito.mad.courtreservationapp.models.TimeslotMap
 import it.polito.mad.courtreservationapp.models.User
 import it.polito.mad.courtreservationapp.utils.ImageUtils
 import it.polito.mad.courtreservationapp.views.MainActivity
-import it.polito.mad.courtreservationapp.views.homeManager.tabFragments.DescriptionFragment
 import java.time.LocalDate
 
 class ReservListFragment: Fragment() {
@@ -27,6 +26,7 @@ class ReservListFragment: Fragment() {
     lateinit var reservationsWithSportCenter: List<ReservationWithSportCenter>
     lateinit var reservationsWithServices: List<ReservationWithServices>
     lateinit var reservationsWithReview: List<ReservationWithReview>
+    lateinit var sportCentersWithCourtsAndReviewsAndUsers: List<SportCenterWIthCourtsAndReviewsAndUsers>
 
     companion object{
         fun newInstance(isUpcoming: Boolean): ReservListFragment {
@@ -42,6 +42,7 @@ class ReservListFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         user = (activity as MainActivity).userViewModel.user
+        sportCentersWithCourtsAndReviewsAndUsers = (activity as MainActivity).sportCenterViewModel.sportCentersWithCourtsAndReviewsAndUsers
         val userReservLocations = (activity as MainActivity).userReservationsLocations.sortedByDescending { res -> res.reservation.reservationDate }
         val userReservServices = (activity as MainActivity).userReservationsServices.sortedByDescending { res -> res.reservation.reservationDate }
         val userReservationWithReview = (activity as MainActivity).userReservationsReviews.sortedByDescending { res -> res.reservation.reservationDate }
@@ -73,7 +74,19 @@ class ReservListFragment: Fragment() {
         adapter.setOnItemClickListener(object : ReservationAdapter.OnItemClickListener{
             override fun onItemClick(position: Int) {
                 val reviewed = (reservationsWithReview[position].review != null)
-                val fragment = ReservationDetailsFragment.newInstance(user.username, reservationsWithSportCenter[position], reservationsWithServices[position], reviewed)
+                val sportCenter: SportCenter = reservationsWithSportCenter[position].courtWithSportCenter.sportCenter
+                Log.i("ReservListFrag", "sportCenter: $sportCenter")
+                val court: Court = reservationsWithSportCenter[position].courtWithSportCenter.court
+                Log.i("ReservListFrag", "court: $court")
+                val sportCenterWithCourtsAndReviews = sportCentersWithCourtsAndReviewsAndUsers.first { sportCenterWithAll -> sportCenterWithAll.sportCenter == sportCenter }
+                Log.i("ReservListFrag", "sportCenterFiltered: $sportCenterWithCourtsAndReviews")
+                val courtWithReviewsAndUsers = sportCenterWithCourtsAndReviews.courtsWithReviewsAndUsers.first{ courtWithReviewsAndUsers ->  courtWithReviewsAndUsers.court == court }
+                Log.i("ReservListFrag", "courtFiltered: $courtWithReviewsAndUsers")
+                val averageRating = courtWithReviewsAndUsers.reviewsWithUser.map { it.review.rating }.average().run { if (isNaN()) 0.0 else this}
+                val ratingTxt = if (courtWithReviewsAndUsers.reviewsWithUser.size == 1) "review" else "reviews"
+                val currentReview = "$averageRating (${courtWithReviewsAndUsers.reviewsWithUser.size} $ratingTxt)"
+
+                val fragment = ReservationDetailsFragment.newInstance(user.username, reservationsWithSportCenter[position], reservationsWithServices[position], reviewed, averageRating, currentReview)
                 activity?.supportFragmentManager?.beginTransaction()
                     ?.replace(R.id.fragmentContainer, fragment, "fragmentId")
                     ?.commit()
@@ -113,7 +126,7 @@ class ReservListFragment: Fragment() {
         private var reservCourtTitle: TextView = view.findViewById(R.id.reservedCourtId)
 
         fun bind(reservationWithSportCenter: ReservationWithSportCenter) {
-            reservCourtTitle.text = reservationWithSportCenter.courtWithSportCenter.court.sportName + " - Court " + reservationWithSportCenter.courtWithSportCenter.court.courtId
+            reservCourtTitle.text = reservationWithSportCenter.courtWithSportCenter.court.sportName + " Court"
             reservLocationTV.text = reservationWithSportCenter.courtWithSportCenter.sportCenter.address
             reservDatetimeTV.text = reservationWithSportCenter.reservation.reservationDate + " - " + TimeslotMap.getTimeslotString(reservationWithSportCenter.reservation.timeSlotId)
             ImageUtils.setImage("courts", reservationWithSportCenter.courtWithSportCenter.court.image, reservImageIV)

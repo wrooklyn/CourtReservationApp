@@ -75,7 +75,7 @@ class ShowSummaryFragment : Fragment(R.layout.summary_layout) {
         }
 
         timeslot.text = slotStr;
-        courtname.text = "${a.viewModel.courtWithServices.court.sportName} court - ${a.viewModel.courtWithServices.court.courtId}"
+        courtname.text = "${a.viewModel.courtWithServices.court.sportName} court"
 
         services.text = a.viewModel.getServicesInfo()
 
