@@ -1,6 +1,7 @@
 package it.polito.mad.courtreservationapp.views.profile
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -90,7 +91,13 @@ class AddEditInterestActivity : ComponentActivity() {
                         colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.red_button)),
                         onClick = {
                             sportMasteryViewModel.saveMastery()
-                            setResult(Activity.RESULT_OK)
+                            // In the activity that is being finished
+                            val data = Intent()
+                            data.putExtra("email", sportMasteryViewModel.email)
+                            data.putExtra("sport", sportMasteryViewModel.sport)
+                            data.putExtra("level", sportMasteryViewModel.level.toString())
+                            data.putExtra("achievement", sportMasteryViewModel.achievement)
+                            setResult(Activity.RESULT_OK, data)
                             finish()
                         }) {
                         androidx.compose.material.Text(

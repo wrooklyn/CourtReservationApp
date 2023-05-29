@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.*
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.*
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,12 +42,12 @@ import it.polito.mad.courtreservationapp.models.User
 import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import it.polito.mad.courtreservationapp.views.profile.AddEditInterestActivity
 
-
 @Composable
 fun AchievementSection(
     ctx: MainActivity,
-    userWithSportMasteriesAndName: UserWithSportMasteriesAndName
+    userWithSportMasteriesAndName: UserWithSportMasteriesAndName,
 ){
+
 //    val sportsPlaceHolder = listOf<String>("Soccer", "Tennis", "Ice Skate")
     Log.i("AchievementSection", "Calling compose")
 //    var userWithSportMastery by remember { mutableStateOf<UserWithSportMasteriesAndName>() }
@@ -60,11 +62,14 @@ fun AchievementSection(
     )
 
     var mainLL: ConstraintLayout? = ctx?.findViewById(R.id.mainLL)
+
+    val liveDataValue by ctx.userViewModel.userWithSportMasteriesAndNameLiveData.observeAsState()
+
     Column(modifier = Modifier
         .fillMaxWidth()
 
         .padding(30.dp, 10.dp)) {
-        for(s in userWithSportMasteriesAndName.masteries){
+        for(s in liveDataValue?.masteries?: mutableListOf()){
             imageId[s.sport.name]?.let { sportCard(s, it, ctx, mainLL) }
             Spacer(modifier = Modifier.height(10.dp))
         }

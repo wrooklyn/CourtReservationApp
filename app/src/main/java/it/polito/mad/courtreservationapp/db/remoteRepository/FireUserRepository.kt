@@ -2,13 +2,11 @@ package it.polito.mad.courtreservationapp.db.repository
 
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.LiveData
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import it.polito.mad.courtreservationapp.db.RemoteDataSource
 import it.polito.mad.courtreservationapp.db.relationships.SportMasteryWithName
 import it.polito.mad.courtreservationapp.models.User
-import it.polito.mad.courtreservationapp.db.relationships.UserWithReservations
 import it.polito.mad.courtreservationapp.db.relationships.UserWithSportMasteriesAndName
 import it.polito.mad.courtreservationapp.models.Sport
 import it.polito.mad.courtreservationapp.models.SportMastery
