@@ -15,6 +15,7 @@ import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCe
 import it.polito.mad.courtreservationapp.models.Reservation
 import it.polito.mad.courtreservationapp.view_model.CreateReservationViewModel
 import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
+import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
 import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import java.util.*
 
@@ -76,6 +77,7 @@ class CreateReservationActivity : AppCompatActivity() {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragmentContainer, fragment)
+
         fragmentTransaction.commit()
     }
 

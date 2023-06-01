@@ -57,9 +57,14 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val childFragment: Fragment = UnfilteredHomeFragment()
         val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
-        transaction.replace(R.id.child_fragment_container, childFragment).commit()
+        transaction.replace(R.id.child_fragment_container, childFragment).addToBackStack(null).commit()
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Call the method to reload your RecyclerView data here
+        sportInitialize()
+    }
     private fun sportInitialize(){
 
         val recyclerView: RecyclerView? = view?.findViewById(R.id.sports_recycler)

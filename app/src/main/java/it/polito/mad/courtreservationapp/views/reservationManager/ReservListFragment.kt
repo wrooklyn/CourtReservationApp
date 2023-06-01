@@ -89,6 +89,7 @@ class ReservListFragment: Fragment() {
                 val fragment = ReservationDetailsFragment.newInstance(user.username, reservationsWithSportCenter[position], reservationsWithServices[position], reviewed, averageRating, currentReview)
                 activity?.supportFragmentManager?.beginTransaction()
                     ?.replace(R.id.fragmentContainer, fragment, "fragmentId")
+                    ?.addToBackStack(null)
                     ?.commit()
             }
         })

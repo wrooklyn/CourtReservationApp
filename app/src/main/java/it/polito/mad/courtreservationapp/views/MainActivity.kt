@@ -6,10 +6,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -182,15 +184,70 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+        val homeFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer) as? HomeFragment
+        homeFragment?.let {
+            moveTaskToBack(true)
+            binding.bottomNavigation.selectedItemId = R.id.home
+        } ?: run {
+            if (supportFragmentManager.backStackEntryCount > 1) {  // check if there are more than one fragment in the back stack
+                supportFragmentManager.popBackStack()
+                val lastFragment = supportFragmentManager.fragments.lastOrNull()
+                when (lastFragment) {
+                    is HomeFragment -> {
+                        binding.bottomNavigation.selectedItemId = R.id.home
+                    }
+                    is ShowUnimplementedFragment -> {
+                        binding.bottomNavigation.selectedItemId = R.id.explore
+                    }
+                    is BrowseReservationsFragment -> {
+                        binding.bottomNavigation.selectedItemId = R.id.calendar
+                    }
+                    is ShowSocialPageFragment -> {
+                        binding.bottomNavigation.selectedItemId = R.id.chat
+                    }
+                    is ShowProfileFragment -> {
+                        binding.bottomNavigation.selectedItemId = R.id.profile
+                    }
+                    else -> {
+                        binding.bottomNavigation.selectedItemId = R.id.home
+                    }
+                }
+            } else {
+                replaceFragment(HomeFragment())  // load HomeFragment if back stack is empty
+                binding.bottomNavigation.selectedItemId = R.id.home
+                clearBackStack() // Clear the back stack
+            }
+        }
+    }
 
+    fun clearBackStack() {
+        val manager = supportFragmentManager
+        if (manager.backStackEntryCount > 0) {
+            val first = manager.getBackStackEntryAt(0)
+            manager.popBackStack(first.id, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        }
+    }
     fun replaceFragment(fragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
+
+        if (fragment is HomeFragment) {
+            transaction.replace(R.id.fragmentContainer, fragment)
+        } else {
+            transaction.replace(R.id.fragmentContainer, fragment)
+            transaction.addToBackStack(null)
+        }
+
+        transaction.commit()
+    }
+
+
+    /*    fun replaceHomeFragment(fragment: Fragment) {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragmentContainer, fragment)
         fragmentTransaction.commit()
-    }
-
-
+    }*/
     private fun loadUserInfo() {
         val sharedPreferences = this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
