@@ -3,6 +3,7 @@ package it.polito.mad.courtreservationapp.views.profile
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -24,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -62,6 +64,7 @@ class AddEditInterestActivity : ComponentActivity() {
 
     @Composable
     fun PageLayout() {
+        val context = LocalContext.current
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -90,15 +93,19 @@ class AddEditInterestActivity : ComponentActivity() {
                         .padding(16.dp),
                         colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.red_button)),
                         onClick = {
-                            sportMasteryViewModel.saveMastery()
-                            // In the activity that is being finished
-                            val data = Intent()
-                            data.putExtra("email", sportMasteryViewModel.email)
-                            data.putExtra("sport", sportMasteryViewModel.sport)
-                            data.putExtra("level", sportMasteryViewModel.level.toString())
-                            data.putExtra("achievement", sportMasteryViewModel.achievement)
-                            setResult(Activity.RESULT_OK, data)
-                            finish()
+                            if(!sportMasteryViewModel.sport.isNullOrEmpty()){
+                                sportMasteryViewModel.saveMastery()
+                                // In the activity that is being finished
+                                val data = Intent()
+                                data.putExtra("email", sportMasteryViewModel.email)
+                                data.putExtra("sport", sportMasteryViewModel.sport)
+                                data.putExtra("level", sportMasteryViewModel.level.toString())
+                                data.putExtra("achievement", sportMasteryViewModel.achievement)
+                                setResult(Activity.RESULT_OK, data)
+                                finish()
+                            } else {
+                                Toast.makeText(context, "Please select a sport", Toast.LENGTH_SHORT).show()
+                            }
                         }) {
                         androidx.compose.material.Text(
                             "Submit",

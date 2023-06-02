@@ -43,20 +43,7 @@ class MainActivity : AppCompatActivity() {
         println("${it}")
         Log.d("registerActivity", "${it}")
         if (it.resultCode == Activity.RESULT_OK){
-            val data: Intent? = it.data
-            val email= data?.getStringExtra("email")
-            val sport=data?.getStringExtra("sport")
-            val level=data?.getStringExtra("level")?.toInt()
-            val achievement= data?.getStringExtra("achievement")
-            Log.d("provaprova", email.toString()+"ciao")
-            Log.d("provaprova", sport.toString()+"ciao")
-            Log.d("provaprova", level.toString()+"ciao")
-            Log.d("provaprova", achievement.toString()+"ciao")
-
-            val mastery = SportMasteryWithName(SportMastery(0, "",level!!, achievement, 0), Sport(sport!!, 0))
-
-            //userViewModel.refreshUser(this)
-            userViewModel.updateMastery(mastery)
+            userViewModel.refreshUser(this)
         }
     }
 
