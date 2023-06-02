@@ -2,6 +2,7 @@ package it.polito.mad.courtreservationapp.views.reservationManager
 
 import android.app.Activity
 import android.content.Intent
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -261,15 +262,16 @@ class ReservationDetailsFragment : Fragment() {
                 popupWindow.dismiss()
             }
         }
-
         val leaveReviewButton = view.findViewById<Button>(R.id.leave_review_button)
-        leaveReviewButton.setOnClickListener{
-            val intent = Intent(activity, LeaveRatingActivity::class.java)
-            intent.putExtra("courtId", courtId)
-            intent.putExtra("reservationId", reservationId)
-            intent.putExtra("sportCenterId", sportCenterId)
-            reviewActivityResult.launch(intent)
-        }
+
+            leaveReviewButton.setOnClickListener{
+                val intent = Intent(activity, LeaveRatingActivity::class.java)
+                intent.putExtra("courtId", courtId)
+                intent.putExtra("reservationId", reservationId)
+                intent.putExtra("sportCenterId", sportCenterId)
+                reviewActivityResult.launch(intent)
+            }
+
 
         val reservationDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         val today = LocalDate.now()
@@ -288,6 +290,10 @@ class ReservationDetailsFragment : Fragment() {
                 Log.i("REVIEW", "Reservation $reservationId is not already rated")
                 leaveReviewButton.visibility = View.VISIBLE
             }
+        }
+        val isReviewed = viewModel.hasAlreadyReviewed(sportCenterId, courtId, reservationId)
+        if(isReviewed){
+            leaveReviewButton.visibility=View.GONE
         }
     }
 

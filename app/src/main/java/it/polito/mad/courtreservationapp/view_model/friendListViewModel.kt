@@ -106,7 +106,7 @@ class FriendListViewModel(application: Application) : AndroidViewModel(applicati
         if(userNotFound){
             Toast.makeText(getApplication(), "Unable to find a player with that name", Toast.LENGTH_LONG).show()
         }else if(!userNotFound && requestSent){
-            Toast.makeText(getApplication(), "Friend request already sent", Toast.LENGTH_LONG).show()
+            Toast.makeText(getApplication(), "Friend request sent", Toast.LENGTH_LONG).show()
         }else if(!userNotFound && !requestSent && alreadyFriend){
             Toast.makeText(getApplication(), "Already friends", Toast.LENGTH_LONG).show()
         }
