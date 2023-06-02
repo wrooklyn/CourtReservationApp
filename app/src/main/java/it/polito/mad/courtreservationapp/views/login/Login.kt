@@ -44,6 +44,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -57,6 +58,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.ktx.Firebase
@@ -691,6 +693,7 @@ class Login : ComponentActivity() {
             Log.i("UpdateUi", "${it.email}")
             Log.i("UpdateUi", "${it.displayName}")
 
+
             startMain(it.email.toString(), it.displayName.toString())
         }
     }
@@ -756,16 +759,34 @@ class Login : ComponentActivity() {
                     Log.d("createAccount", "createUserWithEmail:success")
                     val user = firebaseAuth.currentUser
                     val data = hashMapOf("username" to username, "firstName" to firstname, "lastName" to lastname)
-                    fireDB.collection("users").document(email).set(data, SetOptions.merge())
-                    updateUI(user!!)
+                    fireDB.collection("users").document(email.toLowerCase()).set(data, SetOptions.merge())
+                    setUserName(username, user){
+                        updateUI(user!!)
+                    }
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w("createAccount", "createUserWithEmail:failure", task.exception)
                     showToast(task.exception.toString().split(": ")[1])
+
                     updateUI(null)
                 }
             }
 
+    }
+
+    private fun setUserName(username: String, user: FirebaseUser?, onSuccess: () -> Unit){
+        val profileUpdates = UserProfileChangeRequest.Builder()
+            .setDisplayName(username)
+            .build()
+
+        user?.updateProfile(profileUpdates)
+            ?.addOnCompleteListener { updateTask ->
+                if (updateTask.isSuccessful) {
+                    onSuccess()
+                } else {
+                    // Handle the error during displayName update
+                }
+            }
     }
 
     private fun startMain(email: String, username: String){

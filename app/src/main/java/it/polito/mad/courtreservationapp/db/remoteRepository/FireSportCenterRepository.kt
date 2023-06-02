@@ -98,10 +98,7 @@ class FireSportCenterRepository(val application: Application) {
 
         val sportCenterSnapshot = sportCenterRef.get().await()
         for (document in sportCenterSnapshot?.documents.orEmpty()) {
-            // Map Firestore document to YourDataModel and add it to dataList
-//            println("help")
-//            println(document.id)
-            println(document.data)
+            println("centerDoc: ${document.data}")
             val scName: String = document.data?.get("name") as String
             val scAddress = document.data?.get("address") as String
             val scDescription = document.data?.get("description") as String

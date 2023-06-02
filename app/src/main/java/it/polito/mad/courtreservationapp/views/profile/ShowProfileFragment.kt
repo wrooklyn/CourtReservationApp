@@ -27,6 +27,7 @@ import it.polito.mad.courtreservationapp.views.EditProfileActivity
 import it.polito.mad.courtreservationapp.views.MainActivity
 import it.polito.mad.courtreservationapp.views.login.Login
 import it.polito.mad.courtreservationapp.utils.DiskUtil
+import it.polito.mad.courtreservationapp.utils.TimerLogger
 import org.json.JSONObject
 
 class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
@@ -43,6 +44,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
     private lateinit var photoPath: String
 
     private fun loadDefaultPrefs() {
+        val timer = TimerLogger("loadDefaultPrefs")
         val sharedPrefs = activity?.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
         val editor = sharedPrefs?.edit()
 
@@ -61,9 +63,11 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
 
         editor?.putString("profile", profileData.toString())
         editor?.apply()
+        timer.stop()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val timer = TimerLogger("onCreate")
         super.onCreate(savedInstanceState)
         Log.i("Show Profile", "On Create")
         if (activity?.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
@@ -88,16 +92,19 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
             editor.putBoolean("isFirstLaunch", false)
             editor.apply()
         }
+        timer.stop()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val timer = TimerLogger("onCreatedView")
         // Inflate the layout for this fragment
         Log.i("Show Profile", "On CreateView")
         val view= inflater.inflate(R.layout.fragment_profile, container, false)
         view.findViewById<ConstraintLayout>(R.id.mainLL).foreground.alpha = 0
+        timer.stop()
         return view
     }
 
@@ -108,14 +115,17 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
             launchProfileEdit()
         }
         val composeView = view.findViewById<ComposeView>(R.id.composeContainer)
+        val timer = TimerLogger("onViewCreated")
         composeView.setContent {
             val userWithSportMasteriesAndName = (activity as MainActivity).userViewModel.userWithSportMasteriesAndName
             Log.i("ShowProfile", "Achievement section receiving $userWithSportMasteriesAndName")
             AchievementSection(activity as MainActivity, userWithSportMasteriesAndName)
         }
+        timer.stop()
         view.findViewById<TextView>(R.id.logoutTV).setOnClickListener(){
             logout()
         }
+
     }
 
     private fun logout(){

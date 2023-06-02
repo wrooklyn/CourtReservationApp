@@ -9,6 +9,7 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
@@ -35,7 +36,7 @@ class CenterDetailFragment : Fragment() {
     private lateinit var viewModel: SportCenterViewModel
     private lateinit var sportCenterWithCourtsAndServices: SportCenterWithCourtsAndServices
     private lateinit var sportCenterWithCourtsAndReviewsAndUsers: SportCenterWIthCourtsAndReviewsAndUsers
-    private var reviews: MutableList<Review> = mutableListOf()
+    private var reviews= MutableLiveData<List<Review>>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,16 +49,24 @@ class CenterDetailFragment : Fragment() {
         viewModel = (activity as MainActivity).sportCenterViewModel
         sportCenterWithCourtsAndServices =
             viewModel.sportCentersWithCourtsAndServices[sportCenterPosition]
-        sportCenterWithCourtsAndReviewsAndUsers =
-            viewModel.sportCentersWithCourtsAndReviewsAndUsers[sportCenterPosition]
+
         centerName = sportCenterWithCourtsAndServices.sportCenter.name
         location = sportCenterWithCourtsAndServices.sportCenter.address
-
-        sportCenterWithCourtsAndReviewsAndUsers.courtsWithReviewsAndUsers.forEach() { court ->
-            court.reviewsWithUser.forEach {
-                reviews.add(it.review)
+        viewModel.sportCentersWithReviewsAndUsersLiveData.observe(this){
+            val newList = mutableListOf<Review>()
+            println("number of sportcenters ${it.size}")
+            sportCenterWithCourtsAndReviewsAndUsers = it[sportCenterPosition]
+            sportCenterWithCourtsAndReviewsAndUsers.courtsWithReviewsAndUsers.forEach() { court ->
+                println("   number of courts ${court.court.courtId}")
+                court.reviewsWithUser.forEach { r->
+                    println("       rating ${r.review.rating}")
+                    newList.add(r.review)
+                }
             }
+            println(newList)
+            reviews.postValue(newList)
         }
+
     }
 
     override fun onCreateView(
@@ -73,10 +82,17 @@ class CenterDetailFragment : Fragment() {
 
         view.findViewById<TextView>(R.id.centerTitle).text = centerName
         view.findViewById<TextView>(R.id.centerAddress).text = location
-        view.findViewById<RatingBar>(R.id.ratingBar).rating =
-            reviews.map { it.rating }.average().run { if (isNaN()) 0.0F else this.toFloat() }
-        val reviewTxt = if (reviews.size == 1) "review" else "reviews"
-        view.findViewById<TextView>(R.id.numRating).text = "(${reviews.size} $reviewTxt)"
+        view.findViewById<RatingBar>(R.id.ratingBar).rating = 0.0F
+        reviews.observe(this.viewLifecycleOwner){
+            val data = it.map { r-> r.rating }.average();
+            if(data!=null){
+                view.findViewById<RatingBar>(R.id.ratingBar).rating = data.run { if (isNaN()) 0.0F else this.toFloat() }
+            }
+            val reviewTxt = if (it.size == 1) "review" else "reviews"
+            view.findViewById<TextView>(R.id.numRating).text = "(${it.size} $reviewTxt)"
+        }
+
+        println("data : $reviews")
         val banner = view.findViewById<ImageView>(R.id.bannerImage)
         val imageSrc = sportCenterWithCourtsAndServices.sportCenter.image
         ImageUtils.setImage("centers", imageSrc, banner)

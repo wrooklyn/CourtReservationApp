@@ -2,7 +2,7 @@ package it.polito.mad.courtreservationapp.views.login
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.preference.PreferenceManager
+import android.preference.PreferenceManager
 
 object SavedPreference {
 

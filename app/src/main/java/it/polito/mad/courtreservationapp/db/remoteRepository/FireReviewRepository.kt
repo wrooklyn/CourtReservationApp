@@ -16,11 +16,17 @@ class FireReviewRepository(val application: Application) {
     suspend fun insertReview(sportCenterId:String, courtId : String, username:String, reservationId :String, reviewText:String, selectedRating:Int, dateStr:String){
         val db: FirebaseFirestore = RemoteDataSource.instance
 
-        val reviewDocRef = db.collection("reservations")
-            .document(reservationId)
-
-        //TODO: add review in sportcenter/courts/reservations and users/reservations
-
+        val reviewDocQuery = db.collection("sport-centers")
+            .document(sportCenterId)
+            .collection("courts")
+            .document(courtId).collection("reservations")
+            .whereEqualTo("reservationId", reservationId).get().await()
+        val docId = reviewDocQuery.documents.first().id
+        val reviewDocRef = db.collection("sport-centers")
+            .document(sportCenterId)
+            .collection("courts")
+            .document(courtId).collection("reservations")
+            .document(docId)
         val updates = hashMapOf<String, Any>()
         updates["rating"] = selectedRating
         updates["review_date"] = dateStr
