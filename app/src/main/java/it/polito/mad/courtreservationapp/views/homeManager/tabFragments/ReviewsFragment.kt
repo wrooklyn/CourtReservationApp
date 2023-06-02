@@ -1,6 +1,7 @@
 package it.polito.mad.courtreservationapp.views.homeManager.tabFragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -24,7 +25,7 @@ class ReviewsFragment : Fragment() {
     private lateinit var courtsWithReviews: List<CourtWithReviews>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        Log.i("ReviewsFragment", "OnCreate")
         viewModel = (activity as MainActivity).sportCenterViewModel
         position = requireArguments().getInt("position", -1)
 //        sportCenterWithCourtsAndServices = viewModel.sportCentersWithCourtsAndServices[position]
@@ -35,6 +36,7 @@ class ReviewsFragment : Fragment() {
         sportCenterWithCourtsAndReviews.courtsWithReviewsAndUsers.forEach{courtWithReviewsAndUsers ->
             reviews.addAll(courtWithReviewsAndUsers.reviewsWithUser)
         }
+        Log.i("ReviewsFragment", "reviews: $reviews")
     }
 
     override fun onCreateView(
@@ -42,18 +44,19 @@ class ReviewsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        Log.i("ReviewsFragment", "OnCreateView")
         return inflater.inflate(R.layout.fragment_reviews, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.i("ReviewsFragment", "OnViewCreated")
         serviceInitialize()
     }
 
     private fun serviceInitialize() {
         val recyclerView: RecyclerView? = view?.findViewById(R.id.reviewRecycler)
-        val adapter =
-            ReviewsFragment.ReviewAdapter(reviews)
+        val adapter = ReviewAdapter(reviews)
 
         val llm : LinearLayoutManager = LinearLayoutManager(activity)
         recyclerView?.layoutManager = llm
@@ -69,9 +72,9 @@ class ReviewsFragment : Fragment() {
             return ReviewViewHolder(itemView)
         }
         override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {
-            reviews.forEach(){review ->
-                holder.bind(review)
-            }
+            Log.i("ReviewAdapter", "Reviews to bind ${reviews.size}: $reviews")
+            holder.bind(reviews[position])
+            Log.i("ReviewAdapter", "-------------------------")
         }
     }
 
@@ -80,6 +83,7 @@ class ReviewsFragment : Fragment() {
         private val reviewText: TextView = itemView.findViewById(R.id.reviewTextTV)
         private val rating: RatingBar = itemView.findViewById(R.id.ratingBar3)
         fun bind(reviewWithUser: ReviewWithUser){
+            Log.i("ReviewViewHolder", "Setting: $reviewWithUser")
             username.text=reviewWithUser.user.username
             reviewText.text=reviewWithUser.review.text
             rating.rating=reviewWithUser.review.rating.toFloat()

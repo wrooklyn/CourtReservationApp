@@ -19,4 +19,8 @@ UseCases: [GABRI, MATTEO]
 ***X***  -after reserving there's no reservation! *AFTER SETTING THE CORRECT USERNAME IT WORKS, NEEDS MORE INVESTIGATION WITH FRESH ACCOUNTS*
 -add instant refresh of ratings after leaving one
 ***X***  -can still leave a review a second time
--0 stars in reservation detail page,although it says 1 review
+***X***  -0 stars in reservation detail page,although it says 1 review
+***X***  -reviews tab shows only the first review -> look into adapter
+-sport filter does not show sportcenter info -> modify card and/or adapter
+***X*** -leave rating: delete id in the summary
+-reviews should show the related court

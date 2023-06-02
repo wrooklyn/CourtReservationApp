@@ -65,7 +65,49 @@ class ServicesViewHolder(v: View, activity: CreateReservationActivity) :
 //        }
 
 
-        if (a.viewModel.reservationServices.contains(u.serviceId)) {
+//        if (a.viewModel.reservationServices.contains(u.serviceId)) {
+//            layout.backgroundTintList = ColorStateList.valueOf(blue)
+//            icon.setBackgroundColor(blue)
+//            drawable?.setColorFilter(
+//                ContextCompat.getColor(a, R.color.white),
+//                PorterDuff.Mode.SRC_IN
+//            )
+//            icon.setImageDrawable(drawable)
+//        } else {
+//            layout.backgroundTintList = ColorStateList.valueOf(grey)
+//            icon.setBackgroundColor(grey)
+//            drawable?.setColorFilter(
+//                ContextCompat.getColor(a, R.color.black),
+//                PorterDuff.Mode.SRC_IN
+//            )
+//            icon.setImageDrawable(drawable)
+//        }
+//
+//
+//        layout.setOnClickListener {
+//            if (a.viewModel.reservationServices.contains(u.serviceId)) {
+//                a.viewModel.reservationServices.remove(u.serviceId);
+//                layout.backgroundTintList = ColorStateList.valueOf(grey)
+//                icon.setBackgroundColor(grey)
+//                drawable?.setColorFilter(
+//                    ContextCompat.getColor(a, R.color.black),
+//                    PorterDuff.Mode.SRC_IN
+//                )
+//                icon.setImageDrawable(drawable)
+//            } else {
+//                a.viewModel.reservationServices.add(u.serviceId);
+//                layout.backgroundTintList = ColorStateList.valueOf(blue)
+//                icon.setBackgroundColor(blue)
+//                drawable?.setColorFilter(
+//                    ContextCompat.getColor(a, R.color.white),
+//                    PorterDuff.Mode.SRC_IN
+//                )
+//                icon.setImageDrawable(drawable)
+//            }
+//        }
+
+        //new
+        if (a.viewModel.reservationServices.contains(u)) {
             layout.backgroundTintList = ColorStateList.valueOf(blue)
             icon.setBackgroundColor(blue)
             drawable?.setColorFilter(
@@ -82,11 +124,9 @@ class ServicesViewHolder(v: View, activity: CreateReservationActivity) :
             )
             icon.setImageDrawable(drawable)
         }
-
-
         layout.setOnClickListener {
-            if (a.viewModel.reservationServices.contains(u.serviceId)) {
-                a.viewModel.reservationServices.remove(u.serviceId);
+            if (a.viewModel.reservationServices.contains(u)) {
+                a.viewModel.reservationServices.remove(u);
                 layout.backgroundTintList = ColorStateList.valueOf(grey)
                 icon.setBackgroundColor(grey)
                 drawable?.setColorFilter(
@@ -95,7 +135,7 @@ class ServicesViewHolder(v: View, activity: CreateReservationActivity) :
                 )
                 icon.setImageDrawable(drawable)
             } else {
-                a.viewModel.reservationServices.add(u.serviceId);
+                a.viewModel.reservationServices.add(u);
                 layout.backgroundTintList = ColorStateList.valueOf(blue)
                 icon.setBackgroundColor(blue)
                 drawable?.setColorFilter(
