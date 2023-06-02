@@ -163,7 +163,7 @@ class LeaveRatingActivity : ComponentActivity() {
         val sportCenter by viewModel.sportCenterWithCourtsLiveData.observeAsState()
         val court = sportCenter?.courts?.first { court -> court.courtId == viewModel.courtId }
         val displayName =
-           "${sportCenter?.sportCenter?.name}\n${court?.sportName} Court - ${viewModel.courtId}"
+           "${sportCenter?.sportCenter?.name}\n${court?.sportName} Court"
 
 
         Column(

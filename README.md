@@ -21,4 +21,5 @@ UseCases: [GABRI, MATTEO]
 ***X***  -0 stars in reservation detail page,although it says 1 review
 ***X***  -reviews tab shows only the first review -> look into adapter
 -sport filter does not show sportcenter info -> modify card and/or adapter
--leave rating: delete id in the summary
+***X*** -leave rating: delete id in the summary
+-reviews should show the related court
