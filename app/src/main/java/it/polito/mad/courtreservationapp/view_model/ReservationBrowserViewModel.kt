@@ -7,12 +7,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import it.polito.mad.courtreservationapp.R
+import it.polito.mad.courtreservationapp.db.RemoteDataSource
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithReview
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
 import it.polito.mad.courtreservationapp.models.Reservation
 import it.polito.mad.courtreservationapp.models.SportCenter
+import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.tasks.await
 
 class ReservationBrowserViewModel(application: Application): AndroidViewModel(application) {
     private val reservationRepo: FireReservationRepository = FireReservationRepository(application, null)
@@ -94,5 +98,23 @@ class ReservationBrowserViewModel(application: Application): AndroidViewModel(ap
         val updatedReservationsReview = userReservationsReviews.value?.toMutableList() ?: mutableListOf()
         updatedReservationsReview.add(reservationReview)
         _userReservationsReviews.postValue(updatedReservationsReview)
+    }
+
+    fun hasAlreadyReviewed(sportCenterId: String, courtId: String, reservationId: String): Boolean{
+        var result = false
+        runBlocking {
+            launch {
+                val db = RemoteDataSource.instance
+                val query=db.collection("sport-centers")
+                    .document(sportCenterId)
+                    .collection("courts")
+                    .document(courtId)
+                    .collection("reservations")
+                    .whereEqualTo("reservationId",reservationId)
+                    .get().await()
+                result= query.documents.first().data?.contains("review_date")?:false
+            }
+        }
+        return result
     }
 }
