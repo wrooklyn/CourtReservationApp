@@ -102,9 +102,12 @@ class FireSportCenterRepository(val application: Application) {
             val scName: String = document.data?.get("name") as String
             val scAddress = document.data?.get("address") as String
             val scDescription = document.data?.get("description") as String
-//            val scId = document.data?.get("id") as Long
+            val coordinatesString = (document.data?.get("coordinates") as String).split(",")
+            val latitude = coordinatesString[0].toDouble()
+            val longitude = coordinatesString[0].toDouble()
+            val coordinates = Coordinates(latitude, longitude)
             val image: String? = document.data?.get("image_name") as String?
-            val sportCenter = SportCenter(scName, scAddress, scDescription, document.id, image)
+            val sportCenter = SportCenter(scName, scAddress, scDescription, document.id, image, coordinates)
             val courtsOfCenterRef = sportCenterRef.document(document.id).collection("courts")
             val courtWithReviewsAndUsersList = mutableListOf<CourtWithReviewsAndUsers>()
 

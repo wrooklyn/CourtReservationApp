@@ -8,6 +8,7 @@ Must:
 
 Optional:
 -notifiche push
+-filter by timeslot/date
 
 UseCases: [GABRI, MATTEO]
 ***X***  -Signup -> Login (username is empty!!) *AGGIUNTA FUNZIONE SETUSERNAME PER LA REGISTRAZIONE CON EMAIL NORMALE*

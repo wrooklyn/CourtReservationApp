@@ -1,7 +1,10 @@
 package it.polito.mad.courtreservationapp.views.homeManager
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,14 +23,16 @@ import it.polito.mad.courtreservationapp.utils.IconUtils
 import it.polito.mad.courtreservationapp.view_model.SportCenterViewModel
 import it.polito.mad.courtreservationapp.view_model.SportMasteryViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
-
+import com.google.android.gms.location.*
+import it.polito.mad.courtreservationapp.models.Coordinates
+import it.polito.mad.courtreservationapp.views.login.SavedPreference
 
 class HomeFragment : Fragment() {
 
     private lateinit var viewModel: SportCenterViewModel
     private lateinit var vm: SportMasteryViewModel
-
-
+    private val LOCATION_PERMISSION_REQUEST_CODE = 1001
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = (activity as MainActivity).sportCenterViewModel
@@ -41,6 +46,7 @@ class HomeFragment : Fragment() {
             Log.i("Test", "$it")
             viewModel.loadReviews(it)
         }
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
     }
 
@@ -58,6 +64,37 @@ class HomeFragment : Fragment() {
         val childFragment: Fragment = UnfilteredHomeFragment()
         val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
         transaction.replace(R.id.child_fragment_container, childFragment).addToBackStack(null).commit()
+
+
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // Request the permissions if they have not been granted
+            requestPermissions(
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_PERMISSION_REQUEST_CODE
+            )
+        } else {
+            // Permissions have already been granted, proceed with getting the location
+            getUserLocation()
+        }
+
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+    println("$requestCode, $permissions, $grantResults")
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                println("Permissions accepted")
+                getUserLocation()
+            }
+        }
     }
 
     override fun onResume() {
@@ -150,6 +187,28 @@ class HomeFragment : Fragment() {
             itemView.setOnClickListener {
                 listener.onItemClick(bindingAdapterPosition)
             }
+        }
+    }
+    private fun getUserLocation() {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    location?.let {
+                        val latitude=it.latitude
+                        val longitude=it.longitude
+                        SavedPreference.coordinates= Coordinates(latitude,longitude)
+                        println("${SavedPreference.coordinates}")
+                    }
+                }
+                .addOnFailureListener { exception: Exception ->
+                    // Handle any errors that occur while retrieving the location
+                }
+        } else {
+            // Location permission not granted, handle the scenario
         }
     }
 
