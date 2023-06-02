@@ -9,10 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import it.polito.mad.courtreservationapp.db.relationships.*
 import it.polito.mad.courtreservationapp.db.repository.*
-import it.polito.mad.courtreservationapp.models.Court
-import it.polito.mad.courtreservationapp.models.Reservation
-import it.polito.mad.courtreservationapp.models.SportCenter
-import it.polito.mad.courtreservationapp.models.User
+import it.polito.mad.courtreservationapp.models.*
 import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import it.polito.mad.courtreservationapp.views.reservationManager.CreateReservationActivity
 import kotlinx.coroutines.Dispatchers
@@ -45,8 +42,9 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
     //new reservation data
     var reservationDate : String? = null
     var reservationTimeSlots : MutableList<Long> = mutableListOf()
-    var reservationServices : MutableList<Long> = mutableListOf()
+//    var reservationServices : MutableList<Long> = mutableListOf()
     var reservationRequests : String = ""
+    var reservationServices: MutableList<Service> = mutableListOf()
 
     var courtId: String = ""
     var sportCenterId: String = ""
@@ -67,7 +65,7 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
             reservationRepo.getByIdWithServices(reservationId).observe(ctx){
                 reservationDate=it.reservation.reservationDate
                 reservationTimeSlots.add(it.reservation.timeSlotId)
-                reservationServices=it.services.map { service -> service.serviceId }.toMutableList()
+                reservationServices=it.services.map { service -> service }.toMutableList()
                 reservationRequests=it.reservation.request?:""
             }
         }
@@ -104,9 +102,7 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
             for(timeSlot in reservationTimeSlots){
                 val res = Reservation(reservationDate?: today, timeSlot, SavedPreference.EMAIL, courtWithReservations.court.courtId, reservationRequests, reservationId)
 //            reservations.add(ReservationWithServices(res, reservationServices as List<Service>))
-                val services = reservationServices.map { id ->
-                    courtWithServices.services.first { it.serviceId == id }
-                }
+                val services = reservationServices
                 val resWithServices = ReservationWithServices(res, services)
                 Log.i("CreateReservationVm", "Saving: $resWithServices")
                 reservations.add(resWithServices)
@@ -142,14 +138,32 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
         courtWithServices = data
     }
 
+//    fun getServicesInfo(): String{
+//        var servStr: String = reservationServices.fold("") { acc, i ->
+//            if (acc.isNotEmpty()) {
+//                "$acc, ${courtWithServices.services.first { service -> service.serviceId == i }.description}"
+//            } else {
+//                courtWithServices.services.first { service -> service.serviceId == i }.description
+//            }
+//        }
+//        if (servStr.isNotEmpty()) {
+//            servStr = "I'd like to request $servStr.\n"
+//        }
+//        if (reservationRequests.isNotEmpty()) {
+//            servStr = "${servStr}Other requests: $reservationRequests"
+//        }
+//        return servStr
+//    }
+
     fun getServicesInfo(): String{
         var servStr: String = reservationServices.fold("") { acc, i ->
             if (acc.isNotEmpty()) {
-                "$acc, ${courtWithServices.services.first { service -> service.serviceId == i }.description}"
+                "$acc, ${i.description}(${i.cost})"
             } else {
-                courtWithServices.services.first { service -> service.serviceId == i }.description
+                "${i.description}(${i.cost})"
             }
         }
+        Log.i("CreateReservationViewModel", "str: $servStr")
         if (servStr.isNotEmpty()) {
             servStr = "I'd like to request $servStr.\n"
         }
