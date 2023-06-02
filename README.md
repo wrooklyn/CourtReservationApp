@@ -19,3 +19,5 @@ UseCases: [GABRI, MATTEO]
 -add instant refresh of ratings after leaving one
 -can still leave a review a second time
 -0 stars in reservation detail page,although it says 1 review
+-reviews tab shows only the first review -> look into adapter
+-sport filter does not show sportcenter info -> modify card and/or adapter

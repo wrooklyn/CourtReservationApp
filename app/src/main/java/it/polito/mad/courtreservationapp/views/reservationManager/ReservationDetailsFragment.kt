@@ -197,7 +197,7 @@ class ReservationDetailsFragment : Fragment() {
         specialRequestsTV.text = specialRequests ?: "You did not have any special request"
         Log.i("asdasd", sportName)
         ImageUtils.setImage("courts", courtImage, courtImageIV)
-        ratingBar.stepSize = rating.toFloat()
+        ratingBar.rating = rating.toFloat()
         reviewsTv.text = reviews
 
         val editReservationButton = view.findViewById<Button>(R.id.edit_reservation_button)
