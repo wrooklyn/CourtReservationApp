@@ -59,31 +59,45 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout10">
 
+            <ImageView
+                android:id="@+id/add_friends_button"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="69dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="40dp"
+                android:background="#00FFFFFF"
+                android:src="@drawable/add_friends_icon"
+                app:layout_constraintBottom_toTopOf="@id/edit_reservation_button"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/edit_reservation_button"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.1" />
+
             <Button
                 android:id="@+id/edit_reservation_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="20dp"
                 android:backgroundTint="@color/red_button"
                 android:text="@string/edit"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.9"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintTop_toBottomOf="@+id/add_friends_button" />
 
             <Button
                 android:id="@+id/leave_review_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
                 android:backgroundTint="@color/red_button"
                 android:text="@string/leave_review"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.9"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0"/>
+                app:layout_constraintVertical_bias="1.0" />
 
             <TextView
                 android:id="@+id/centerName"

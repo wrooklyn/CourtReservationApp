@@ -239,6 +239,7 @@ class ReservationDetailsFragment : Fragment() {
             val inflater =
                 (activity as MainActivity).getSystemService(AppCompatActivity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val popupView = inflater.inflate(R.layout.popup_confirm_delete_reserv, null)
+            val popupInviteFriendsView = inflater.inflate(R.layout.popup_invite_friends, null)
             val width = LinearLayout.LayoutParams.WRAP_CONTENT
             val height = LinearLayout.LayoutParams.WRAP_CONTENT
             val focusable = true // lets taps outside the popup also dismiss it
@@ -282,6 +283,11 @@ class ReservationDetailsFragment : Fragment() {
                 popupWindow.dismiss()
             }
         }
+        val addFriendsButton = view.findViewById<ImageView>(R.id.add_friends_button)
+        addFriendsButton.setOnClickListener {
+
+        }
+
         val leaveReviewButton = view.findViewById<Button>(R.id.leave_review_button)
 
         leaveReviewButton.setOnClickListener{
@@ -301,6 +307,7 @@ class ReservationDetailsFragment : Fragment() {
             leaveReviewButton.visibility = View.GONE
         } else {
             editReservationButton.visibility = View.GONE
+            addFriendsButton.visibility = View.GONE
             cancelReservationButton.visibility = View.GONE
             if(reviewed) {
                 Log.i("REVIEW", "Reservation $reservationId is already rated")
