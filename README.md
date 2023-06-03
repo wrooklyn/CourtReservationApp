@@ -2,7 +2,7 @@ Must:
 -Make sure everything works 
 -Invite to play, display people in lobby, etc [XIAO]
 -Search by location [GABRI] *IT WORKS BUT IT NEEDS THE XML BUTTON*
--Prices in summary, details etc [DAVIDE]
+***X*** -Prices in summary, details etc [DAVIDE]
 -Fill the db [1 sportcenter a testa]
 -Make less dramatic the loadings [GABRI] *ADDED A TIMELOGGER FUNCTION TO STUDY PERFORMANCE*
 
@@ -21,7 +21,7 @@ UseCases: [GABRI, MATTEO]
 ***X***  -can still leave a review a second time
 ***X***  -0 stars in reservation detail page,although it says 1 review
 ***X***  -reviews tab shows only the first review -> look into adapter
--sport filter does not show sportcenter info -> modify card and/or adapter
+***X*** -sport filter does not show sportcenter info -> modify card and/or adapter
 ***X*** -leave rating: delete id in the summary
 -reviews should show the related court
 -The "x" to close the reservation creation has 3 different positions
