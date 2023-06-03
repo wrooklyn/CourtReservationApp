@@ -104,7 +104,7 @@ class FireSportCenterRepository(val application: Application) {
             val scDescription = document.data?.get("description") as String
             val coordinatesString = (document.data?.get("coordinates") as String).split(",")
             val latitude = coordinatesString[0].toDouble()
-            val longitude = coordinatesString[0].toDouble()
+            val longitude = coordinatesString[1].toDouble()
             val coordinates = Coordinates(latitude, longitude)
             val image: String? = document.data?.get("image_name") as String?
             val sportCenter = SportCenter(scName, scAddress, scDescription, document.id, image, coordinates)

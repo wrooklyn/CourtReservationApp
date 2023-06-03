@@ -19,6 +19,8 @@ class SportCenterViewModel(application: Application) : AndroidViewModel(applicat
     lateinit var sportCentersWithCourtsAndServices: List<SportCenterWithCourtsAndServices>
     lateinit var sportCentersWithCourtsAndReviewsAndUsers: List<SportCenterWIthCourtsAndReviewsAndUsers>
 
+    val isPopupOpen = MutableLiveData(false)
+    var distanceFilterValue : Double? = null
     var sportFilters : MutableList<String> = mutableListOf()
     var allSports: MutableList<String> = mutableListOf()
      fun initData(){

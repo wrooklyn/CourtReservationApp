@@ -33,24 +33,34 @@ class FilteredHomeFragment : Fragment() {
         viewModel = (activity as MainActivity).sportCenterViewModel
 
         sportCentersWithCourtsAndReviews = viewModel.sportCentersWithCourtsAndReviewsAndUsers
-        val distance: Double = 12.0 //TODO real distance by the user
+        val distanceLimit = viewModel.distanceFilterValue
 
         for (sportCenter in sportCentersWithCourtsAndReviews) {
             println("${sportCenter.sportCenter.name} : ${sportCenter.sportCenter.coordinates}")
 
             val userCoordinates = SavedPreference.coordinates
             val centerCoordinates = sportCenter.sportCenter.coordinates
-            if (userCoordinates != null) {
-                if (userCoordinates.calculateDistance(centerCoordinates!!) > distance) {
-                    //continue TODO uncomment this to apply the filter
+
+            if (userCoordinates != null && distanceLimit!=null) {
+                val distance = userCoordinates.calculateDistance(centerCoordinates!!)
+                println("user : $userCoordinates")
+                println("center : $centerCoordinates")
+                println("distance : ${String.format("%.2f", distance)} KM")
+                if (distance > distanceLimit) {
+                    println("IS EXCLUDED")
+                    continue
                 }
+                println("IS INCLUDED")
             }
 
-            sportCenter.courtsWithReviewsAndUsers.forEach { court ->
-                if (viewModel.sportFilters.contains(court.court.sportName)) {
-                    courts.add(court)
+
+                sportCenter.courtsWithReviewsAndUsers.forEach { court ->
+                    if (viewModel.sportFilters.contains(court.court.sportName) ||  viewModel.sportFilters.isEmpty()) {
+                        courts.add(court)
+                    }
                 }
-            }
+
+
         }
     }
 

@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -25,6 +26,8 @@ import it.polito.mad.courtreservationapp.view_model.SportMasteryViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
 import com.google.android.gms.location.*
 import it.polito.mad.courtreservationapp.models.Coordinates
+import it.polito.mad.courtreservationapp.utils.TimerLogger
+import it.polito.mad.courtreservationapp.views.AchievementSection
 import it.polito.mad.courtreservationapp.views.login.SavedPreference
 
 class HomeFragment : Fragment() {
@@ -65,7 +68,14 @@ class HomeFragment : Fragment() {
         val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
         transaction.replace(R.id.child_fragment_container, childFragment).addToBackStack(null).commit()
 
-
+        val composeView = view.findViewById<ComposeView>(R.id.composeContainer)
+        composeView.setContent {
+            LocationFilter(activity as MainActivity, viewModel){
+                val childFragment: Fragment = FilteredHomeFragment()
+                val transaction: FragmentTransaction = this.childFragmentManager.beginTransaction()
+                transaction.replace(R.id.child_fragment_container, childFragment).commit()
+            }
+        }
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -183,6 +193,7 @@ class HomeFragment : Fragment() {
             }
 
         }
+
         init{
             itemView.setOnClickListener {
                 listener.onItemClick(bindingAdapterPosition)
