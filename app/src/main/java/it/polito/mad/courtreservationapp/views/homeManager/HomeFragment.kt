@@ -1,6 +1,7 @@
 package it.polito.mad.courtreservationapp.views.homeManager
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -14,6 +15,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.compose.ui.platform.ComposeView
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -34,8 +36,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var viewModel: SportCenterViewModel
 //    private lateinit var vm: SportMasteryViewModel
-    private val LOCATION_PERMISSION_REQUEST_CODE = 1001
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = (activity as MainActivity).sportCenterViewModel
@@ -49,8 +50,7 @@ class HomeFragment : Fragment() {
             Log.i("Test", "$it")
             viewModel.loadReviews(it)
         }
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-
+        
     }
 
     override fun onCreateView(
@@ -79,20 +79,7 @@ class HomeFragment : Fragment() {
                 transaction.replace(R.id.child_fragment_container, childFragment).commit()
             }
         }
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // Request the permissions if they have not been granted
-            requestPermissions(
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                LOCATION_PERMISSION_REQUEST_CODE
-            )
-        } else {
-            // Permissions have already been granted, proceed with getting the location
-            getUserLocation()
-        }
+
 
     }
 
@@ -101,14 +88,15 @@ class HomeFragment : Fragment() {
         permissions: Array<String>,
         grantResults: IntArray
     ) {
-    println("$requestCode, $permissions, $grantResults")
+        println("$requestCode, $permissions, $grantResults")
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 println("Permissions accepted")
-                getUserLocation()
+                getUserLocation(activity as MainActivity)
             }
         }
     }
+
 
     override fun onResume() {
         super.onResume()
@@ -203,26 +191,30 @@ class HomeFragment : Fragment() {
             }
         }
     }
-    private fun getUserLocation() {
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener { location: Location? ->
-                    location?.let {
-                        val latitude=it.latitude
-                        val longitude=it.longitude
-                        SavedPreference.coordinates= Coordinates(latitude,longitude)
-                        println("${SavedPreference.coordinates}")
+    companion object {
+        fun getUserLocation(activity: MainActivity) {
+            val fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
+
+            if (ContextCompat.checkSelfPermission(
+                    activity,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                fusedLocationClient.lastLocation
+                    .addOnSuccessListener { location: Location? ->
+                        location?.let {
+                            val latitude=it.latitude
+                            val longitude=it.longitude
+                            SavedPreference.coordinates= Coordinates(latitude,longitude)
+                            println("${SavedPreference.coordinates}")
+                        }
                     }
-                }
-                .addOnFailureListener { exception: Exception ->
-                    // Handle any errors that occur while retrieving the location
-                }
-        } else {
-            // Location permission not granted, handle the scenario
+                    .addOnFailureListener { exception: Exception ->
+                        // Handle any errors that occur while retrieving the location
+                    }
+            } else {
+                // Location permission not granted, handle the scenario
+            }
         }
     }
 

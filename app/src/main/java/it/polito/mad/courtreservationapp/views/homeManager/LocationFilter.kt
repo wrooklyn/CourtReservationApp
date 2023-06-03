@@ -1,5 +1,7 @@
 package it.polito.mad.courtreservationapp.views.homeManager
 
+import android.Manifest
+import android.content.pm.PackageManager
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Filter
@@ -9,10 +11,15 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.view_model.SportCenterViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
+import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment.Companion.getUserLocation
 
+const val LOCATION_PERMISSION_REQUEST_CODE = 1001
 @Composable
 fun LocationFilter(
     ctx: MainActivity,
@@ -37,8 +44,24 @@ fun LocationFilter(
 
     if (isPopupOpen?.value == true) {
         MyPopup(viewModel, changeFragment)
+        if (ContextCompat.checkSelfPermission(
+                ctx,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // Request the permissions if they have not been granted
+            ctx.requestPermissions(
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_PERMISSION_REQUEST_CODE
+            )
+        } else {
+            // Permissions have already been granted, proceed with getting the location
+            getUserLocation(ctx)
+        }
     }
 }
+
+
 
 @Composable
 fun MyPopup(viewModel: SportCenterViewModel, changeFragment:() -> Unit) {
