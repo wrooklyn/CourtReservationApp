@@ -106,7 +106,7 @@ class FilteredHomeFragment : Fragment() {
             val averageRating = currentCourt.reviewsWithUser.map { it.review.rating }.average()
                 .run { if (isNaN()) 0.0 else this }
             val ratingTxt = if (currentCourt.reviewsWithUser.size == 1) "review" else "reviews"
-            val currentReview = "$averageRating (${currentCourt.reviewsWithUser.size} $ratingTxt)"
+            val currentReview = String.format("%.2f (${currentCourt.reviewsWithUser.size} $ratingTxt)", averageRating)
 
             holder.bind(
                 currentCourt.court.image,

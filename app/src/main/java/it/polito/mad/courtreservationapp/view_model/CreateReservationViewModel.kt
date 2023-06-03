@@ -173,7 +173,7 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
         return servStr
     }
     fun getTotalServiceCost(): String{
-        val total: Double = reservationServices.fold(0.0) { acc, i ->
+        val total: Double = reservationServices.fold(court.cost) { acc, i ->
             Log.i("ServicePrices", "$acc + ${i.cost}")
             acc + i.cost
         }
