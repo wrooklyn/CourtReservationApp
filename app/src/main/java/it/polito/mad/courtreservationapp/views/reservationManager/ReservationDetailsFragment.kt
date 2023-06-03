@@ -22,7 +22,9 @@ import it.polito.mad.courtreservationapp.utils.IconUtils
 import it.polito.mad.courtreservationapp.utils.ImageUtils
 import it.polito.mad.courtreservationapp.view_model.LeaveRatingViewModel
 import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
+import it.polito.mad.courtreservationapp.view_model.SportCenterViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
+import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
 import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import it.polito.mad.courtreservationapp.views.ratings.LeaveRatingActivity
 import java.time.LocalDate
@@ -51,7 +53,7 @@ class ReservationDetailsFragment : Fragment() {
     private var reviews: String = "0 reviews"
 
     lateinit var viewModel: ReservationBrowserViewModel
-    lateinit var ratingViewModel: LeaveRatingViewModel
+    private lateinit var sportCenterViewModel: SportCenterViewModel
 
     private lateinit var mainContainerCL: ConstraintLayout
 
@@ -124,6 +126,7 @@ class ReservationDetailsFragment : Fragment() {
                 val leaveReviewButton = view?.findViewById<Button>(R.id.leave_review_button)
                 leaveReviewButton?.visibility = View.GONE
             }
+            sportCenterViewModel.initData()
         }
     }
 
@@ -131,7 +134,7 @@ class ReservationDetailsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = (activity as MainActivity).reservationBrowserViewModel
-        ratingViewModel =(activity as MainActivity).ratingViewModel
+        sportCenterViewModel =(activity as MainActivity).sportCenterViewModel
         centerName = requireArguments().getString("centerName")!!
         username = requireArguments().getString("username")!!
         sportCenterAddress = requireArguments().getString("sportCenterAddress")!!

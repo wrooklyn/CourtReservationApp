@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.*
+import it.polito.mad.courtreservationapp.models.Court
 import it.polito.mad.courtreservationapp.view_model.SportCenterViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
 
@@ -21,7 +22,7 @@ class ReviewsFragment : Fragment() {
     lateinit var viewModel: SportCenterViewModel
     private lateinit var sportCenterWithCourtsAndServices: SportCenterWithCourtsAndServices
     lateinit var sportCenterWithCourtsAndReviews: SportCenterWIthCourtsAndReviewsAndUsers
-    private var reviews: MutableList<ReviewWithUser> = mutableListOf()
+    private var reviews: MutableList<Pair<ReviewWithUser, Court>> = mutableListOf()
     private lateinit var courtsWithReviews: List<CourtWithReviews>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +35,9 @@ class ReviewsFragment : Fragment() {
 //        users = viewModelUser.
 
         sportCenterWithCourtsAndReviews.courtsWithReviewsAndUsers.forEach{courtWithReviewsAndUsers ->
-            reviews.addAll(courtWithReviewsAndUsers.reviewsWithUser)
+            courtWithReviewsAndUsers.reviewsWithUser.forEach{review ->
+                reviews.add(Pair(review, courtWithReviewsAndUsers.court))
+            }
         }
         Log.i("ReviewsFragment", "reviews: $reviews")
     }
@@ -64,7 +67,7 @@ class ReviewsFragment : Fragment() {
         recyclerView?.adapter = adapter
     }
 
-    class ReviewAdapter(private val reviews: MutableList<ReviewWithUser>): RecyclerView.Adapter<ReviewViewHolder>() {
+    class ReviewAdapter(private val reviews: MutableList<Pair<ReviewWithUser, Court>>): RecyclerView.Adapter<ReviewViewHolder>() {
 
         override fun getItemCount()=reviews.size
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewViewHolder {
@@ -82,11 +85,15 @@ class ReviewsFragment : Fragment() {
         private val username: TextView = itemView.findViewById(R.id.userReviewTV)
         private val reviewText: TextView = itemView.findViewById(R.id.reviewTextTV)
         private val rating: RatingBar = itemView.findViewById(R.id.ratingBar3)
-        fun bind(reviewWithUser: ReviewWithUser){
+        private val courtTv: TextView = itemView.findViewById(R.id.courtNameTV)
+        fun bind(pair: Pair<ReviewWithUser, Court>){
+            val reviewWithUser = pair.first
+            val court = pair.second
             Log.i("ReviewViewHolder", "Setting: $reviewWithUser")
             username.text=reviewWithUser.user.username
             reviewText.text=reviewWithUser.review.text
             rating.rating=reviewWithUser.review.rating.toFloat()
+            courtTv.text = "${court.sportName} Court"
         }
     }
 

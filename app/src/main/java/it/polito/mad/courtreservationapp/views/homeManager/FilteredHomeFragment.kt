@@ -96,7 +96,7 @@ class FilteredHomeFragment : Fragment() {
             viewType: Int
         ): FilteredCourtsViewHolder {
             val itemView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.reserve_card_item, parent, false)
+                .inflate(R.layout.reserve_card_location_item, parent, false)
             return FilteredCourtsViewHolder(itemView)
         }
 

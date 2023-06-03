@@ -53,7 +53,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:scaleType="centerCrop"
-                        android:contentDescription="pfp_image"
+                        android:contentDescription="@string/profile_picture"
                         android:src="@drawable/default_pfp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintDimensionRatio="1:1"
@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:fontFamily="@font/roboto"
-                android:text="As a tennis enthusiast, I've played on my fair share of courts, but none have left a lasting impression quite like the Sunnyside Tennis Center. "
+                android:text="@string/review_placeholder"
                 android:textColor="#534A4A"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -91,6 +91,19 @@
                 android:theme="@style/RatingBar2"
                 app:layout_constraintBottom_toTopOf="@id/reviewTextTV"
                 app:layout_constraintStart_toStartOf="@+id/userReviewTV"
+                app:layout_constraintTop_toBottomOf="@id/userReviewTV"
+                app:layout_constraintEnd_toStartOf="@id/courtNameTV"
+                />
+
+            <TextView
+                android:id="@+id/courtNameTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/courtName"
+                android:layout_marginStart="10dp"
+                app:layout_constraintBottom_toTopOf="@id/reviewTextTV"
+                app:layout_constraintStart_toEndOf="@id/ratingBar3"
+
                 app:layout_constraintTop_toBottomOf="@id/userReviewTV" />
 
             <TextView
@@ -99,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:fontFamily="@font/roboto_medium"
-                android:text="Brooklyn Wright"
+                android:text="@string/username"
                 android:textColor="#000000"
                 app:layout_constraintStart_toEndOf="@+id/cardView"
                 app:layout_constraintTop_toTopOf="parent" />

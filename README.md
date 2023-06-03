@@ -23,5 +23,5 @@ UseCases: [GABRI, MATTEO]
 ***X***  -reviews tab shows only the first review -> look into adapter
 ***X*** -sport filter does not show sportcenter info -> modify card and/or adapter
 ***X*** -leave rating: delete id in the summary
--reviews should show the related court
+-***reviews should show the related court*** -> fix location of the textfield
 -The "x" to close the reservation creation has 3 different positions

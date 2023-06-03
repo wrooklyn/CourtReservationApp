@@ -114,4 +114,6 @@
     <string name="sportcenter_address">SportCenter Address</string>
     <string name="social">Social</string>
     <string name="nnn_reviews">nnn reviews</string>
+    <string name="review_placeholder">As a tennis enthusiast, I\'ve played on my fair share of courts, but none have left a lasting impression quite like the Sunnyside Tennis Center.</string>
+    <string name="courtName">Courtname</string>
 </resources>
