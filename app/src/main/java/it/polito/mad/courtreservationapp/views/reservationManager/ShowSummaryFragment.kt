@@ -71,7 +71,12 @@ class ShowSummaryFragment : Fragment(R.layout.summary_layout) {
         val slotStr: String = a.viewModel.reservationTimeSlots.fold("") { acc, i ->
             val startH = 10 + i
             val endH = startH + 1
-            "$acc$startH:00 - $endH:00\n"
+            if(acc.isNullOrEmpty()){
+                "$startH:00 - $endH:00"
+            } else {
+                "$acc\n$startH:00 - $endH:00"
+            }
+
         }
 
         timeslot.text = slotStr;
