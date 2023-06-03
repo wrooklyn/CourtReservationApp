@@ -13,7 +13,7 @@ Optional:
 UseCases: [GABRI, MATTEO]
 ***X***  -Signup -> Login (username is empty!!) *AGGIUNTA FUNZIONE SETUSERNAME PER LA REGISTRAZIONE CON EMAIL NORMALE*
 ***X***  -Friend request (Request arrives from "email"!!, toast message says" already sent" when it is the first time!, does not create even the collection in the sender account!!, requests don't arrive real time or at all!!)
--Add achivements (***If empty it crashes!!***, popup not scalable!)
+***X***  -Add achivements (If empty it crashes!!, popup not scalable!)
 ***X***  -leave reviews broken
 ***X***  -hockey court sportplex has gesu!
 ***X***  -after reserving there's no reservation! *AFTER SETTING THE CORRECT USERNAME IT WORKS, NEEDS MORE INVESTIGATION WITH FRESH ACCOUNTS*
