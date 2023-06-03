@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import it.polito.mad.courtreservationapp.db.remoteRepository.FireInviteRepository
 import it.polito.mad.courtreservationapp.models.Invite
 import it.polito.mad.courtreservationapp.models.User
+import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import kotlinx.coroutines.launch
 
 class InvitesManagerViewModel(application: Application): AndroidViewModel(application) {
@@ -23,6 +24,7 @@ class InvitesManagerViewModel(application: Application): AndroidViewModel(applic
     private val _participants = MutableLiveData<List<String>>()
     val participants: LiveData<List<String>> = _participants
 
+    private val _friendList = MutableLiveData<List<String>>()
     fun getPendingSent(userId: String) {
         viewModelScope.launch {
             val invitesSent = inviteRepository.getPendingSentByUserId(userId)
@@ -55,7 +57,16 @@ class InvitesManagerViewModel(application: Application): AndroidViewModel(applic
     fun declineInvite(reservationId: String, invitedUserEmail: String, inviterEmail: String) {
         inviteRepository.declineInvite(reservationId, invitedUserEmail, inviterEmail)
     }
-    fun getFriends(inviterEmail: String){
+    fun getFriends(inviterEmail: String) {
+        viewModelScope.launch {
+            val friendList = inviteRepository.getFriendsByEmail(inviterEmail)
+            _friendList.postValue(friendList)
+        }
+    }
 
+    fun inviteGroup (reservationId: String, mailList : List<String>){
+        for(email in mailList){
+            inviteUser(reservationId, email, SavedPreference.EMAIL)
+        }
     }
 }
