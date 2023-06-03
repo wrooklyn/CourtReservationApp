@@ -19,7 +19,7 @@ import java.util.*
 
 class CreateReservationViewModel(application: Application): AndroidViewModel(application) {
     private val tag: String = "ReservationFragmentViewModel"
-    val reservationRepo: FireReservationRepository = FireReservationRepository(application, null)
+    val reservationRepo: FireReservationRepository = FireReservationRepository(application)
     val courtRepo: FireCourtRepository = FireCourtRepository(application)
     private val sportCenterRepo: FireSportCenterRepository = FireSportCenterRepository(application)
     private val userRepo: FireUserRepository = FireUserRepository(application)

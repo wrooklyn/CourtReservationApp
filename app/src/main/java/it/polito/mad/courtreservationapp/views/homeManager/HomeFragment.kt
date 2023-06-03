@@ -50,7 +50,7 @@ class HomeFragment : Fragment() {
             Log.i("Test", "$it")
             viewModel.loadReviews(it)
         }
-        
+
     }
 
     override fun onCreateView(
@@ -192,7 +192,7 @@ class HomeFragment : Fragment() {
         }
     }
     companion object {
-        fun getUserLocation(activity: MainActivity) {
+        fun getUserLocation(activity: MainActivity, callback: (() -> Unit)? = null) {
             val fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
 
             if (ContextCompat.checkSelfPermission(
@@ -207,6 +207,9 @@ class HomeFragment : Fragment() {
                             val longitude=it.longitude
                             SavedPreference.coordinates= Coordinates(latitude,longitude)
                             println("${SavedPreference.coordinates}")
+                            if(callback!=null){
+                                callback()
+                            }
                         }
                     }
                     .addOnFailureListener { exception: Exception ->

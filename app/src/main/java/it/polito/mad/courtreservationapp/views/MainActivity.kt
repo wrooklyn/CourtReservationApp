@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
@@ -35,27 +37,31 @@ class MainActivity : AppCompatActivity() {
     val userViewModel: UserViewModel by viewModels() //done
     val reservationBrowserViewModel: ReservationBrowserViewModel by viewModels()
     val sportCenterViewModel: SportCenterViewModel by viewModels() //done
-//    val sportMasteryViewModel: SportMasteryViewModel by viewModels() //done
+    val friendListViewModel: FriendListViewModel by viewModels() //done
+
+    //    val sportMasteryViewModel: SportMasteryViewModel by viewModels() //done
 //    val ratingViewModel: LeaveRatingViewModel by viewModels() //done
     val invitesViewModel: InvitesManagerViewModel by viewModels()
 
-    val registerForAchievementActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-        println("${it}")
-        Log.d("registerActivity", "${it}")
-        if (it.resultCode == Activity.RESULT_OK){
-            userViewModel.refreshUser(this)
+    val registerForAchievementActivityResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            println("${it}")
+            Log.d("registerActivity", "${it}")
+            if (it.resultCode == Activity.RESULT_OK) {
+                userViewModel.refreshUser(this)
+            }
         }
-    }
 
-    val registerForReservationActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-        println("$it")
-        Log.d("registerActivityReservation", "$it")
-        if (it.resultCode == Activity.RESULT_OK){
-            reservationBrowserViewModel.initUserReservations(SavedPreference.EMAIL)
+    val registerForReservationActivityResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            println("$it")
+            Log.d("registerActivityReservation", "$it")
+            if (it.resultCode == Activity.RESULT_OK) {
+                reservationBrowserViewModel.initUserReservations(SavedPreference.EMAIL)
+            }
         }
-    }
 
-//    lateinit var user: User
+    //    lateinit var user: User
 //    lateinit var userWithSportMasteriesAndName: UserWithSportMasteriesAndName
     lateinit var userReservations: List<Reservation>
     lateinit var userReservationsLocations: List<ReservationWithSportCenter>
@@ -63,13 +69,14 @@ class MainActivity : AppCompatActivity() {
     lateinit var userReservationsReviews: List<ReservationWithReview>
     lateinit var binding: ActivityMainBinding
 
-    lateinit var sportCenters : List<SportCenterWithCourtsAndServices>
+    lateinit var sportCenters: List<SportCenterWithCourtsAndServices>
 
     lateinit var userInvitesSent: List<Invite>
     lateinit var userInvitesReceived: List<Invite>
 
     // declare the GoogleSignInClient
     lateinit var mGoogleSignInClient: GoogleSignInClient
+
     // val auth is initialized by lazy
     private val auth by lazy {
         FirebaseAuth.getInstance()
@@ -82,13 +89,14 @@ class MainActivity : AppCompatActivity() {
 //        SavedPreference.USERNAME = SavedPreference.getUsername(this)
 
         sportCenterViewModel.initData()
+        friendListViewModel.getPendingReceived()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
-        mGoogleSignInClient= GoogleSignIn.getClient(this,gso)
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
         /* Setting the logged user */
         //hardcoded user
@@ -99,7 +107,7 @@ class MainActivity : AppCompatActivity() {
 //            userViewModel.user = it
 //            loadUserInfo()
 //        }
-        userViewModel.userWithSportMasteriesAndNameLiveData.observe(this){
+        userViewModel.userWithSportMasteriesAndNameLiveData.observe(this) {
             println("observer got: $it")
             println("Observer")
             userViewModel.user = it.user
@@ -172,7 +180,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        val homeFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer) as? HomeFragment
+        val homeFragment =
+            supportFragmentManager.findFragmentById(R.id.fragmentContainer) as? HomeFragment
         homeFragment?.let {
             moveTaskToBack(true)
             binding.bottomNavigation.selectedItemId = R.id.home
@@ -215,6 +224,7 @@ class MainActivity : AppCompatActivity() {
             manager.popBackStack(first.id, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
     }
+
     fun replaceFragment(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
 

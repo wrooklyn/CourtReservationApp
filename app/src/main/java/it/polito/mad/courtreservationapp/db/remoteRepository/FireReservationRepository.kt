@@ -16,7 +16,7 @@ import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
 import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import kotlinx.coroutines.tasks.await
 
-class FireReservationRepository(val application: Application, val vm: ReservationBrowserViewModel?) {
+class FireReservationRepository(val application: Application) {
     private val database: FirebaseFirestore = RemoteDataSource.instance
     private val serviceMap: Map<Int, Service> = mapOf(
         Pair(0, Service("Safety shower", 0)),
