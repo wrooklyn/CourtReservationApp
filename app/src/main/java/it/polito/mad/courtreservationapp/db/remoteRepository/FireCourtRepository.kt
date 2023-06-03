@@ -10,6 +10,7 @@ import it.polito.mad.courtreservationapp.db.relationships.CourtWithReservations
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithServices
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithSportCenter
 import it.polito.mad.courtreservationapp.models.*
+import it.polito.mad.courtreservationapp.utils.DbUtils
 //import it.polito.mad.courtreservationapp.db.relationships.CourtWithServices
 import it.polito.mad.courtreservationapp.utils.ServiceUtils
 import kotlinx.coroutines.tasks.await
@@ -59,9 +60,11 @@ class FireCourtRepository(val application: Application) {
     suspend fun getByIdWithServices(centerId: String, courtId: String): CourtWithServices {
         val db: FirebaseFirestore = RemoteDataSource.instance
         val courtDoc = db.collection("sport-centers").document(centerId).collection("courts").document(courtId).get().await()
-        val sportName = courtDoc.data?.get("sport_name") as String
-        val image: String? = courtDoc.data?.get("image_name") as String?
-        val courtItem = Court(centerId, sportName, 0, courtId, image)
+//        val sportName = courtDoc.data?.get("sport_name") as String
+//        val image: String? = courtDoc.data?.get("image_name") as String?
+//        val cost: Double = courtDoc.data?.get("cost") as Double
+//        val courtItem = Court(centerId, sportName, 0, courtId, cost, image)
+        val courtItem = DbUtils.getCourt(courtDoc, centerId)
 
         val cServices = courtDoc.data?.get("services") as List<*>?
         val s = cServices?.let { ServiceUtils.getServices(it) } ?: emptyList()
@@ -85,9 +88,11 @@ class FireCourtRepository(val application: Application) {
                     }
 
                     courtSnapshot?.let { snapshot ->
-                        val sportName = snapshot.data?.get("sport_name") as String
-                        val image: String? = snapshot.data?.get("image_name") as String?
-                        val courtItem = Court(centerId, sportName, 0, courtId, image)
+//                        val sportName = snapshot.data?.get("sport_name") as String
+//                        val image: String? = snapshot.data?.get("image_name") as String?
+//                        val cost: Double = snapshot.data?.get("cost") as Double
+//                        val courtItem = Court(centerId, sportName, 0, courtId, cost, image)
+                        val courtItem = DbUtils.getCourt(snapshot, centerId)
                         val reservationsRef = snapshot.reference.collection("reservations")
                         reservationsRef.get().addOnSuccessListener { reservationsSnapshot ->
                             val reservations = reservationsSnapshot.documents.mapNotNull {
@@ -133,9 +138,11 @@ class FireCourtRepository(val application: Application) {
                         .get()
                         .addOnSuccessListener { courtSnapshot ->
                             if (courtSnapshot.exists()) {
-                                val sportName = courtSnapshot.data?.get("sport_name") as String
-                                val courtImage = courtSnapshot.data?.get("image_name") as String
-                                val courtItem = Court(sportCenterId, sportName, 0, courtId, courtImage)
+//                                val sportName = courtSnapshot.data?.get("sport_name") as String
+//                                val courtImage = courtSnapshot.data?.get("image_name") as String
+//                                val cost: Double = courtSnapshot.data?.get("cost") as Double
+//                                val courtItem = Court(sportCenterId, sportName, 0, courtId, cost, courtImage)
+                                val courtItem = DbUtils.getCourt(courtSnapshot, sportCenterId)
                                 val result = CourtWithSportCenter(courtItem, centerItem)
                                 callback(result)
                             } else {
@@ -157,9 +164,11 @@ class FireCourtRepository(val application: Application) {
         val courtDoc =
             db.collection("sport-centers").document(centerId).collection("courts").document(courtId)
                 .get().await()
-        val sportName = courtDoc.data?.get("sport_name") as String
-        val image: String? = courtDoc.data?.get("image_name") as String?
-        val courtItem = Court(centerId, sportName, 0, courtId, image)
+//        val sportName = courtDoc.data?.get("sport_name") as String
+//        val image: String? = courtDoc.data?.get("image_name") as String?
+//        val cost: Double = courtDoc.data?.get("cost") as Double
+//        val courtItem = Court(centerId, sportName, 0, courtId, cost, image)
+        val courtItem = DbUtils.getCourt(courtDoc, centerId)
         val reservsSnapshot =
             db.collection("sport-centers").document(centerId).collection("courts").document(courtId)
                 .collection("reservations").get().await()
