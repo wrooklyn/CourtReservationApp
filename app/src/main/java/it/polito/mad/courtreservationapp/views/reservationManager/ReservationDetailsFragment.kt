@@ -191,7 +191,6 @@ class ReservationDetailsFragment : Fragment() {
         val specialRequestsTV: TextView = view.findViewById(R.id.specialRequestsTV)
         val ratingBar: RatingBar = view.findViewById(R.id.ratingBar)
         val reviewsTv: TextView = view.findViewById(R.id.textView6)
-        val servicesTitleTV: TextView = view.findViewById(R.id.servicesTitle)
         val totalTV: TextView = view.findViewById(R.id.totalTV)
         mainContainerCL = view.findViewById(R.id.mainContainerCL)
         mainContainerCL.foreground.alpha = 0
@@ -208,8 +207,8 @@ class ReservationDetailsFragment : Fragment() {
         ImageUtils.setImage("courts", courtImage, courtImageIV)
         ratingBar.rating = rating.toFloat()
         reviewsTv.text = reviews
-        val curText = totalTV.text
-        totalTV.text = String.format("$curText - Total: %.2f", serviceCosts.fold(0.0){
+
+        totalTV.text = String.format("Total: %.2f", serviceCosts.fold(0.0){
                 acc, el ->
             acc + el
         })

@@ -56,6 +56,7 @@ class ShowSummaryFragment : Fragment(R.layout.summary_layout) {
         val params: ViewGroup.LayoutParams = view.findViewById<ConstraintLayout>(R.id.serviceCL).layoutParams
         val ratingBar:RatingBar = view.findViewById(R.id.ratingBar)
         val reviewsTv: TextView = view.findViewById(R.id.textView6)
+        val totalTv: TextView = view.findViewById(R.id.totalTV)
 
         sportCenterName.text = a.viewModel.sportCenter.name
         addressSubtitle.text = a.viewModel.sportCenter.address
@@ -83,7 +84,7 @@ class ShowSummaryFragment : Fragment(R.layout.summary_layout) {
         courtname.text = "${a.viewModel.courtWithServices.court.sportName} court"
 
         services.text = a.viewModel.getServicesInfo()
-
+        totalTv.text = "Total: ${a.viewModel.getTotalServiceCost()} €"
         if (a.viewModel.reservationServices.isNullOrEmpty() && a.viewModel.reservationRequests.isNullOrEmpty()) {
             servicesTitle.visibility = View.INVISIBLE
             services.visibility = View.INVISIBLE

@@ -166,7 +166,6 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
         Log.i("CreateReservationViewModel", "str: $servStr")
         if (servStr.isNotEmpty()) {
             servStr = "I'd like to request $servStr.\n"
-            servStr += String.format("Total: ${getTotalServiceCost()} €\n", )
         }
         if (reservationRequests.isNotEmpty()) {
             servStr = "${servStr}Other requests: $reservationRequests"
