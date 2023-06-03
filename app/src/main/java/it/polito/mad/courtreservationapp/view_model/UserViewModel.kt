@@ -27,6 +27,9 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
 
     lateinit var context: MainActivity
 
+    val isPopupOpen = MutableLiveData(false)
+    val sport = MutableLiveData<SportMasteryWithName>()
+
     fun setCurrentUser(email: String) {
         println("setUser $email")
         runBlocking(Dispatchers.Default) {

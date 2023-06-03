@@ -37,13 +37,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import it.polito.mad.courtreservationapp.R
+import it.polito.mad.courtreservationapp.utils.IconUtils
 import it.polito.mad.courtreservationapp.view_model.SportMasteryViewModel
 import it.polito.mad.courtreservationapp.view_model.UserViewModel
 import it.polito.mad.courtreservationapp.views.login.SavedPreference
 
 class AddEditInterestActivity : ComponentActivity() {
     private val sportMasteryViewModel: SportMasteryViewModel by viewModels()
-    private val userViewModel: UserViewModel by viewModels()
+//    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -156,7 +157,7 @@ class AddEditInterestActivity : ComponentActivity() {
             Pair("Hockey", Pair(R.drawable.hockey, 3)),
             Pair("Basketball", Pair(R.drawable.basketball_icon, 4)),
             Pair("Tennis", Pair(R.drawable.tennis, 5)),
-            Pair("Iceskate", Pair(R.drawable.ice_skate, 6)),
+            Pair("Iceskating", Pair(R.drawable.ice_skate, 6)),
             Pair("Rugby", Pair(R.drawable.rugby, 7))
         )
 
@@ -178,7 +179,7 @@ class AddEditInterestActivity : ComponentActivity() {
                             .padding(vertical = sportIconSize + 5.dp, horizontal = sportIconSize)
                             .height(50.dp)
                             .width(50.dp),
-                        painter = painterResource(id = it.second.first),
+                        painter = painterResource(id = IconUtils.getSportIcon(it.first)),
                         contentDescription = it.first,
                     )
                 }

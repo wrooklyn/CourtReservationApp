@@ -35,8 +35,8 @@ class MainActivity : AppCompatActivity() {
     val userViewModel: UserViewModel by viewModels() //done
     val reservationBrowserViewModel: ReservationBrowserViewModel by viewModels()
     val sportCenterViewModel: SportCenterViewModel by viewModels() //done
-    val sportMasteryViewModel: SportMasteryViewModel by viewModels() //done
-    val ratingViewModel: LeaveRatingViewModel by viewModels() //done
+//    val sportMasteryViewModel: SportMasteryViewModel by viewModels() //done
+//    val ratingViewModel: LeaveRatingViewModel by viewModels() //done
     val invitesViewModel: InvitesManagerViewModel by viewModels()
 
     val registerForAchievementActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){

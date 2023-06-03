@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.utils.IconUtils
 import it.polito.mad.courtreservationapp.view_model.SportCenterViewModel
-import it.polito.mad.courtreservationapp.view_model.SportMasteryViewModel
+//import it.polito.mad.courtreservationapp.view_model.SportMasteryViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
 import com.google.android.gms.location.*
 import it.polito.mad.courtreservationapp.models.Coordinates
@@ -33,7 +33,7 @@ import it.polito.mad.courtreservationapp.views.login.SavedPreference
 class HomeFragment : Fragment() {
 
     private lateinit var viewModel: SportCenterViewModel
-    private lateinit var vm: SportMasteryViewModel
+//    private lateinit var vm: SportMasteryViewModel
     private val LOCATION_PERMISSION_REQUEST_CODE = 1001
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     override fun onCreate(savedInstanceState: Bundle?) {

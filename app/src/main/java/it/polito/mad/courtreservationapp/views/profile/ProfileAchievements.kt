@@ -1,12 +1,8 @@
 package it.polito.mad.courtreservationapp.views
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.util.Log
-import android.view.Gravity
-import android.view.LayoutInflater
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -31,10 +27,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.FragmentActivity
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.SportMasteryWithName
 import it.polito.mad.courtreservationapp.db.relationships.UserWithSportMasteriesAndName
+import it.polito.mad.courtreservationapp.utils.IconUtils
+import it.polito.mad.courtreservationapp.view_model.UserViewModel
 import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import it.polito.mad.courtreservationapp.views.profile.AddEditInterestActivity
 
@@ -48,25 +45,27 @@ fun AchievementSection(
     Log.i("AchievementSection", "Calling compose")
 //    var userWithSportMastery by remember { mutableStateOf<UserWithSportMasteriesAndName>() }
 
-    val imageId = mapOf("soccer" to R.drawable.soccer_ball,
-        "volley" to R.drawable.volleyball,
-        "hocky" to R.drawable.hockey,
-        "basketball" to R.drawable.basketball_icon,
-        "tennis" to R.drawable.tennis,
-        "iceskate" to R.drawable.ice_skate,
-        "rugby" to R.drawable.rugby
-    )
+//    val imageId = mapOf("soccer" to R.drawable.soccer_ball,
+//        "volley" to R.drawable.volleyball,
+//        "hocky" to R.drawable.hockey,
+//        "basketball" to R.drawable.basketball_icon,
+//        "tennis" to R.drawable.tennis,
+//        "iceskate" to R.drawable.ice_skate,
+//        "rugby" to R.drawable.rugby
+//    )
 
     var mainLL: ConstraintLayout? = ctx?.findViewById(R.id.mainLL)
-
-    val liveDataValue by ctx.userViewModel.userWithSportMasteriesAndNameLiveData.observeAsState()
+    val userViewModel = ctx.userViewModel
+    val liveDataValue by userViewModel.userWithSportMasteriesAndNameLiveData.observeAsState()
 
     Column(modifier = Modifier
         .fillMaxWidth()
 
         .padding(30.dp, 10.dp)) {
         for(s in liveDataValue?.masteries?: mutableListOf()){
-            imageId[s.sport.name]?.let { sportCard(s, it, ctx, mainLL) }
+//            imageId[s.sport.name]?.let { sportCard(s, it, ctx, mainLL) }
+            Log.i("Achievement", "$s")
+            SportCard(sport = s, imageId = IconUtils.getSportIcon(s.sport.name), viewModel = userViewModel, mainLL = mainLL)
             Spacer(modifier = Modifier.height(10.dp))
         }
         Button(
@@ -101,9 +100,11 @@ private fun mapMastery(level: Int): String{
     }
 
 }
-@SuppressLint("MissingInflatedId")
+
 @Composable
-fun sportCard(sport: SportMasteryWithName, imageId: Int, ctx: FragmentActivity?, mainLL: ConstraintLayout?){
+fun SportCard(sport: SportMasteryWithName, imageId: Int, viewModel: UserViewModel, mainLL: ConstraintLayout?){
+    var isPopupOpen = viewModel.isPopupOpen.observeAsState()
+    var sportSelected = viewModel.sport.observeAsState()
 
     androidx.compose.material.Card(
         elevation = 4.dp,
@@ -113,37 +114,41 @@ fun sportCard(sport: SportMasteryWithName, imageId: Int, ctx: FragmentActivity?,
             .fillMaxWidth()
             .clickable(
                 interactionSource = MutableInteractionSource(),
-                indication = null,
+                indication = null
             ) {
-
-                val inflater =
-                    ctx?.getSystemService(AppCompatActivity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-                var popupView = inflater.inflate(R.layout.popup_details_achievements, null)
-                val width = LinearLayout.LayoutParams.WRAP_CONTENT
-                val height = LinearLayout.LayoutParams.WRAP_CONTENT
-                val focusable = true // lets taps outside the popup also dismiss it
-                var popupWindow = PopupWindow(popupView, width, height, focusable)
-                val closeButton = popupView.findViewById<Button>(R.id.closeButtonAchievements)
-
-                popupView
-                    .findViewById<ImageView>(R.id.achievementImageView)
-                    .setImageResource(imageId)
-                popupView.findViewById<TextView>(R.id.mastery_level).text =
-                    "${sport.sport.name.uppercase()} - ${mapMastery(sport.sportMastery.level)}"
-                popupView.findViewById<TextView>(R.id.achievementsTV).text =
-                    sport.sportMastery.achievement
-                popupWindow.showAtLocation(mainLL, Gravity.CENTER, 0, 0)
-                mainLL?.foreground?.alpha = 160
-
-                popupWindow.setOnDismissListener {
-                    mainLL?.foreground?.alpha = 0
-                }
-
-                closeButton.setOnClickListener {
-                    popupWindow.dismiss()
-                }
+                viewModel.isPopupOpen.value = true
+                viewModel.sport.value = sport
+//                val inflater =
+//                    ctx?.getSystemService(AppCompatActivity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+//                var popupView = inflater.inflate(R.layout.popup_details_achievements, null)
+//                val width = LinearLayout.LayoutParams.WRAP_CONTENT
+//                val height = LinearLayout.LayoutParams.WRAP_CONTENT
+//                val focusable = true // lets taps outside the popup also dismiss it
+//                var popupWindow = PopupWindow(popupView, width, height, focusable)
+//                val closeButton = popupView.findViewById<Button>(R.id.closeButtonAchievements)
+//
+//                popupView
+//                    .findViewById<ImageView>(R.id.achievementImageView)
+//                    .setImageResource(imageId)
+//                popupView.findViewById<TextView>(R.id.mastery_level).text =
+//                    "${sport.sport.name.uppercase()} - ${mapMastery(sport.sportMastery.level)}"
+//                popupView.findViewById<TextView>(R.id.achievementsTV).text =
+//                    sport.sportMastery.achievement
+//                popupWindow.showAtLocation(mainLL, Gravity.CENTER, 0, 0)
+//                mainLL?.foreground?.alpha = 160
+//
+//                popupWindow.setOnDismissListener {
+//                    mainLL?.foreground?.alpha = 0
+//                }
+//
+//                closeButton.setOnClickListener {
+//                    popupWindow.dismiss()
+//                }
             }
     ) {
+        if(isPopupOpen.value == true){
+            AchievementPopup(viewModel)
+        }
         Row(
             modifier = Modifier.padding(all = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -179,4 +184,40 @@ fun sportCard(sport: SportMasteryWithName, imageId: Int, ctx: FragmentActivity?,
 
         }
     }
+}
+
+@Composable
+fun AchievementPopup(viewModel: UserViewModel) {
+    val sport = viewModel.sport.value
+    AlertDialog(
+        onDismissRequest = {
+            viewModel.isPopupOpen.value = false
+        },
+        title = { 
+            Row() {
+                Log.i("Popup", "$sport")
+                Image(painter = painterResource(id = IconUtils.getSportIcon(sport?.sport?.name ?: "")), contentDescription = sport?.sport?.name)
+                Text("${sport?.sport?.name?.uppercase()} - ${mapMastery(sport?.sportMastery?.level ?: -1)}")
+            }
+            
+                },
+        confirmButton = {
+            Button(
+                onClick = {
+                    viewModel.isPopupOpen.value = false
+                }
+            ) {
+                Text("Close")
+            }
+        },
+
+        text = {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text("${sport?.sportMastery?.achievement}")
+
+            }
+        }
+    )
 }

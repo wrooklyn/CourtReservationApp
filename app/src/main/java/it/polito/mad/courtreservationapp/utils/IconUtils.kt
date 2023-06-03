@@ -4,14 +4,14 @@ import it.polito.mad.courtreservationapp.R
 
 object IconUtils {
     private val sportIconsId : Map<String, Int> = mapOf(
-        Pair("Soccer", R.drawable.soccer_ball),
-        Pair("Iceskating", R.drawable.ice_skate),
-        Pair("Basketball", R.drawable.basketball_icon),
-        Pair("Hockey", R.drawable.hockey),
-        Pair("Tennis", R.drawable.tennis),
-        Pair("Volley", R.drawable.volleyball),
-        Pair("Rugby", R.drawable.rugby),
-        Pair("Swimming", R.drawable.swimming) //TODO: better visibility icon
+        Pair("soccer", R.drawable.soccer_ball),
+        Pair("iceskating", R.drawable.ice_skate),
+        Pair("basketball", R.drawable.basketball_icon),
+        Pair("hockey", R.drawable.hockey),
+        Pair("tennis", R.drawable.tennis),
+        Pair("volley", R.drawable.volleyball),
+        Pair("rugby", R.drawable.rugby),
+        Pair("swimming", R.drawable.swimming) //TODO: better visibility icon
     )
     private val servicesIcons: Map<Long, Int> = mapOf(
         Pair(0, R.drawable.safety_shower),
@@ -23,7 +23,7 @@ object IconUtils {
     )
 
     fun getSportIcon(sportName: String): Int{
-        return sportIconsId[sportName] ?: R.drawable.gesu
+        return sportIconsId[sportName.lowercase()] ?: R.drawable.gesu
     }
 
     fun getServiceIcon(serviceId: Long): Int{
