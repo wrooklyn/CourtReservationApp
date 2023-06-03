@@ -47,14 +47,17 @@ class ReservListFragment: Fragment() {
         val userReservServices = (activity as MainActivity).userReservationsServices.sortedByDescending { res -> res.reservation.reservationDate }
         val userReservationWithReview = (activity as MainActivity).userReservationsReviews.sortedByDescending { res -> res.reservation.reservationDate }
         val isUpcoming = requireArguments().getBoolean("isUpcoming")
+
         if(isUpcoming) {
             reservationsWithSportCenter = userReservLocations.filter{ res -> LocalDate.parse(res.reservation.reservationDate).isAfter(LocalDate.now()) }
             reservationsWithServices = userReservServices.filter{ res -> LocalDate.parse(res.reservation.reservationDate).isAfter(LocalDate.now()) }
             reservationsWithReview = userReservationWithReview.filter{ res -> LocalDate.parse(res.reservation.reservationDate).isAfter(LocalDate.now()) }
+            Log.i("Upcoming", "$reservationsWithSportCenter")
         } else {
             reservationsWithSportCenter = userReservLocations.filter{ res -> LocalDate.parse(res.reservation.reservationDate).isBefore(LocalDate.now()) }
             reservationsWithServices = userReservServices.filter{ res -> LocalDate.parse(res.reservation.reservationDate).isBefore(LocalDate.now()) }
             reservationsWithReview = userReservationWithReview.filter{ res -> LocalDate.parse(res.reservation.reservationDate).isBefore(LocalDate.now()) }
+            Log.i("Past", "$reservationsWithSportCenter")
         }
     }
 

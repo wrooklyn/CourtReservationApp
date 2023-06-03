@@ -81,7 +81,7 @@ class ReservationDetailsFragment : Fragment() {
                 "courtName",
                 "${reservWithSportCenter.courtWithSportCenter.court.sportName} Court"
             )
-            args.putString("courtId", reservWithServices.reservation.reservationCourtId)
+            args.putString("courtId", reservWithSportCenter.reservation.reservationCourtId)
             args.putString("reservationId", reservWithSportCenter.reservation.reservationId)
             args.putString("date", reservWithSportCenter.reservation.reservationDate)
             args.putLong("timeslotId", reservWithSportCenter.reservation.timeSlotId)
@@ -264,13 +264,13 @@ class ReservationDetailsFragment : Fragment() {
         }
         val leaveReviewButton = view.findViewById<Button>(R.id.leave_review_button)
 
-            leaveReviewButton.setOnClickListener{
-                val intent = Intent(activity, LeaveRatingActivity::class.java)
-                intent.putExtra("courtId", courtId)
-                intent.putExtra("reservationId", reservationId)
-                intent.putExtra("sportCenterId", sportCenterId)
-                reviewActivityResult.launch(intent)
-            }
+        leaveReviewButton.setOnClickListener{
+            val intent = Intent(activity, LeaveRatingActivity::class.java)
+            intent.putExtra("courtId", courtId)
+            intent.putExtra("reservationId", reservationId)
+            intent.putExtra("sportCenterId", sportCenterId)
+            reviewActivityResult.launch(intent)
+        }
 
 
         val reservationDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))

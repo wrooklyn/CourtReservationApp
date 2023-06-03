@@ -2,6 +2,7 @@ package it.polito.mad.courtreservationapp.view_model
 
 import FireReservationRepository
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -104,6 +105,10 @@ class ReservationBrowserViewModel(application: Application): AndroidViewModel(ap
         var result = false
         runBlocking {
             launch {
+                Log.i("ReservationBrowserVM", "sportcenter: ${sportCenterId}")
+                Log.i("ReservationBrowserVM", "court: ${courtId}")
+                Log.i("ReservationBrowserVM", "reservation: ${reservationId}")
+//                Log.i("ReservationBrowserVM", "result: ${query.documents}")
                 val db = RemoteDataSource.instance
                 val query=db.collection("sport-centers")
                     .document(sportCenterId)
@@ -112,6 +117,7 @@ class ReservationBrowserViewModel(application: Application): AndroidViewModel(ap
                     .collection("reservations")
                     .whereEqualTo("reservationId",reservationId)
                     .get().await()
+                Log.i("ReservationBrowserVM", "result: ${query.documents}")
                 result= query.documents.first().data?.contains("review_date")?:false
             }
         }
