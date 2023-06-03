@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithReviewsAndUsers
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWIthCourtsAndReviewsAndUsers
+import it.polito.mad.courtreservationapp.models.SportCenter
 import it.polito.mad.courtreservationapp.utils.ImageUtils
 import it.polito.mad.courtreservationapp.view_model.SportCenterViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
@@ -25,7 +26,7 @@ class FilteredHomeFragment : Fragment() {
     //    var position: Int = -1
     lateinit var viewModel: SportCenterViewModel
     lateinit var sportCentersWithCourtsAndReviews: List<SportCenterWIthCourtsAndReviewsAndUsers>
-    private var courts: MutableList<CourtWithReviewsAndUsers> = mutableListOf()
+    private var courts: MutableList<Pair<CourtWithReviewsAndUsers, SportCenter>> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +57,7 @@ class FilteredHomeFragment : Fragment() {
 
             sportCenter.courtsWithReviewsAndUsers.forEach { court ->
                 if (viewModel.sportFilters.contains(court.court.sportName) ||  viewModel.sportFilters.isEmpty()) {
-                    courts.add(court)
+                    courts.add(Pair(court, sportCenter.sportCenter))
                 }
             }
 
@@ -86,7 +87,7 @@ class FilteredHomeFragment : Fragment() {
         recyclerView?.adapter = adapter
     }
 
-    class FilteredCourtsAdapter(private val courts: MutableList<CourtWithReviewsAndUsers>) :
+    class FilteredCourtsAdapter(private val courts: MutableList<Pair<CourtWithReviewsAndUsers, SportCenter>>) :
         RecyclerView.Adapter<FilteredCourtsViewHolder>() {
 
         override fun getItemCount() = courts.size
@@ -100,7 +101,8 @@ class FilteredHomeFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: FilteredCourtsViewHolder, position: Int) {
-            val currentCourt = courts[position]
+            val currentCourt = courts[position].first
+            val sportCenter = courts[position].second
             val averageRating = currentCourt.reviewsWithUser.map { it.review.rating }.average()
                 .run { if (isNaN()) 0.0 else this }
             val ratingTxt = if (currentCourt.reviewsWithUser.size == 1) "review" else "reviews"
@@ -109,7 +111,8 @@ class FilteredHomeFragment : Fragment() {
             holder.bind(
                 currentCourt.court.image,
                 "${currentCourt.court.sportName} Court",
-                currentReview
+                currentReview,
+                sportCenter
             )
 
             holder.itemView.findViewById<Button>(R.id.reserveButton).setOnClickListener {
@@ -132,10 +135,12 @@ class FilteredHomeFragment : Fragment() {
         private val titleImage: ImageView = itemView.findViewById(R.id.court_image)
         private val courtType: TextView = itemView.findViewById(R.id.court_type)
         private val reviewCourt: TextView = itemView.findViewById(R.id.review_description)
-        fun bind(imageSrc: String?, cType: String, rCourt: String) {
+        private val locationTv: TextView = itemView.findViewById(R.id.centerLocationTV)
+        fun bind(imageSrc: String?, cType: String, rCourt: String, sportCenter: SportCenter) {
             ImageUtils.setImage("courts", imageSrc, titleImage)
             courtType.text = cType
             reviewCourt.text = rCourt
+            locationTv.text = "${sportCenter.name} - ${sportCenter.address}"
         }
     }
 

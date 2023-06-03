@@ -53,14 +53,14 @@
                 android:fontFamily="@font/inter_semibold"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="#D9541C"
-                app:layout_constraintBottom_toTopOf="@+id/location_container"
+                app:layout_constraintBottom_toTopOf="@+id/review_cl"
                 app:layout_constraintEnd_toEndOf="@id/guideline5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/guideline4"
                 app:layout_constraintVertical_bias="0.5" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/location_container"
+                android:id="@+id/review_cl"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
@@ -82,11 +82,11 @@
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/location_center_icon"
+                    app:layout_constraintStart_toEndOf="@id/review_iv"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:id="@+id/location_center_icon"
+                    android:id="@+id/review_iv"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -96,6 +96,45 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintWidth_percent="0.1"
                     app:srcCompat="@drawable/star" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/location_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="5dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/review_cl">
+
+                <TextView
+                    android:id="@+id/centerLocationTV"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="10dp"
+                    android:autoSizePresetSizes="@array/autosize_card_location_sizes"
+                    android:autoSizeTextType="uniform"
+                    android:fontFamily="@font/inter"
+                    android:text="@string/location_town"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#4F4F4F"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/location_center_icon"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/location_center_icon"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toStartOf="@id/centerLocationTV"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.1"
+                    app:srcCompat="@drawable/icons8_location_100__1_" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
