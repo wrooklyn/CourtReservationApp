@@ -109,17 +109,17 @@ class LeaveRatingActivity : ComponentActivity() {
                         colors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.red_button)),
                         onClick = {
                             isSubmitting = true
-                            if (viewModel.selectedRating != null) {
+                            if (viewModel.selectedRating != 0) {
                                 Timer().schedule(1000) {
                                     viewModel.submitRating()
                                 }
-                            } else null
-                            if (viewModel.selectedRating != null) {
+                            }
+                            if (viewModel.selectedRating != 0) {
                                 val resultIntent = Intent()
                                 resultIntent.putExtra("review_submitted", true)
                                 setResult(Activity.RESULT_OK, resultIntent)
                                 viewModel.submitRating()
-                            } else null
+                            }
                         }) {
                         if(isSubmitting)
                                 CircularProgressIndicator(
