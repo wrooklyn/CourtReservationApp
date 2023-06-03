@@ -1,15 +1,19 @@
 package it.polito.mad.courtreservationapp.view_model
 
+import FireReservationRepository
 import android.app.Application
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ListenerRegistration
 import it.polito.mad.courtreservationapp.db.RemoteDataSource
+import it.polito.mad.courtreservationapp.db.remoteRepository.FireInviteRepository
 import it.polito.mad.courtreservationapp.models.Friend
+import it.polito.mad.courtreservationapp.models.Invite
 import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,8 +21,11 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 
 class FriendListViewModel(application: Application) : AndroidViewModel(application) {
+    private val inviteRepository: FireInviteRepository = FireInviteRepository(application)
+    val reservationRepository =  FireReservationRepository(application)
     private val _friendList = MutableLiveData<List<Friend>>()
     val friendList: LiveData<List<Friend>> = _friendList
+    val invitesToPlay: MutableLiveData<List<Invite>> = MutableLiveData()
     private val l: ListenerRegistration = RemoteDataSource.instance
         .collection("users")
         .document(SavedPreference.EMAIL)
@@ -34,6 +41,23 @@ class FriendListViewModel(application: Application) : AndroidViewModel(applicati
             }
 
         }
+
+    fun getPendingReceived() { //TODO updates real time
+
+        viewModelScope.launch {
+            val invitesReceived = inviteRepository.getPendingReceivedByUserId(SavedPreference.EMAIL)
+            invitesToPlay.postValue(invitesReceived)
+            println(invitesReceived)
+        }
+    }
+
+    fun acceptInvite(invite: Invite) {
+        inviteRepository.acceptInvite(invite.reservationId, SavedPreference.EMAIL, invite.inviter)
+    }
+
+    fun declineInvite(invite: Invite) {
+        inviteRepository.declineInvite(invite.reservationId, SavedPreference.EMAIL, invite.inviter)
+    }
 
     fun acceptFriend(id : String){
         val friendsCollectionRef= RemoteDataSource.instance

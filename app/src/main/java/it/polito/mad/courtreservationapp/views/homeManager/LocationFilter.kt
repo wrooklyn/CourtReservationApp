@@ -43,7 +43,7 @@ fun LocationFilter(
     }
 
     if (isPopupOpen?.value == true) {
-        MyPopup(viewModel, changeFragment)
+        MyPopup(viewModel, changeFragment, ctx)
         if (ContextCompat.checkSelfPermission(
                 ctx,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -64,7 +64,7 @@ fun LocationFilter(
 
 
 @Composable
-fun MyPopup(viewModel: SportCenterViewModel, changeFragment:() -> Unit) {
+fun MyPopup(viewModel: SportCenterViewModel, changeFragment:() -> Unit, ctx: MainActivity) {
     var initialValue= viewModel.distanceFilterValue
     var sliderValue by remember { mutableStateOf(initialValue?.toInt()?:1) }
 
@@ -76,9 +76,21 @@ fun MyPopup(viewModel: SportCenterViewModel, changeFragment:() -> Unit) {
         confirmButton = {
             Button(
                 onClick = {
-                    viewModel.isPopupOpen.value = false
-                    viewModel.distanceFilterValue = sliderValue.toDouble()
-                    changeFragment()
+                    if (ContextCompat.checkSelfPermission(
+                            ctx,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        // not granted
+                        null
+                    }else{
+                        // granted
+                        getUserLocation(ctx){
+                            viewModel.isPopupOpen.value = false
+                            viewModel.distanceFilterValue = sliderValue.toDouble()
+                            changeFragment()
+                        }
+                    }
                 }
             ) {
                 Text("Confirm")

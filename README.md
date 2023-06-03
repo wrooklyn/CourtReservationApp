@@ -5,6 +5,7 @@ Must:
 ***X*** -Prices in summary, details etc [DAVIDE]
 -Fill the db [1 sportcenter a testa]
 -Make less dramatic the loadings [GABRI] *ADDED A TIMELOGGER FUNCTION TO STUDY PERFORMANCE*
+-Add prices to courts [DAVIDE]
 
 Optional:
 -notifiche push
@@ -25,3 +26,4 @@ UseCases: [GABRI, MATTEO]
 ***X*** -leave rating: delete id in the summary
 -***reviews should show the related court*** -> fix location of the textfield
 -The "x" to close the reservation creation has 3 different positions
+-fix button for location filter, also fix first permission granted bug

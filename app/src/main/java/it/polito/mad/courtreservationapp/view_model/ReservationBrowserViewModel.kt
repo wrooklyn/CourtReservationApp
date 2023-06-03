@@ -20,7 +20,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 
 class ReservationBrowserViewModel(application: Application): AndroidViewModel(application) {
-    private val reservationRepo: FireReservationRepository = FireReservationRepository(application, null)
+    private val reservationRepo: FireReservationRepository = FireReservationRepository(application)
 
     lateinit var sportCenter: LiveData<SportCenter>
 

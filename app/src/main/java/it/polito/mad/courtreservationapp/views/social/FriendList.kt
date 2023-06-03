@@ -30,6 +30,8 @@ import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.models.Friend
+import it.polito.mad.courtreservationapp.models.Invite
+import it.polito.mad.courtreservationapp.models.TimeslotMap
 import it.polito.mad.courtreservationapp.view_model.FriendListViewModel
 import kotlinx.coroutines.launch
 import java.util.*
@@ -42,15 +44,22 @@ fun FriendList(viewModel: FriendListViewModel) {
     val coroutineScope = rememberCoroutineScope()
     val friendListState = viewModel.friendList.observeAsState()
     val friendList: List<Friend> = friendListState.value ?: listOf()
+    val playInvitesListState = viewModel.invitesToPlay.observeAsState()
+    val playInvitesList: List<Invite> = playInvitesListState.value ?: listOf()
     var unacceptedFriendsCount: Int = 0
 
     for (friend in friendList) {
         if (!friend.accepted) unacceptedFriendsCount++
     }
+    for (invite in playInvitesList) {
+        unacceptedFriendsCount++
+    }
 
-    Column(modifier = Modifier
-        .fillMaxHeight()){
-        Column{
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+    ) {
+        Column {
             TabRow(
                 selectedTabIndex = pagerState.currentPage,
                 indicator = { tabPositions ->
@@ -123,35 +132,39 @@ fun TabFriendList(
             .fillMaxSize()
             .padding(16.dp),
     ) {
-        Column(modifier = Modifier.fillMaxHeight().verticalScroll(scrollState)) {
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .verticalScroll(scrollState)
+        ) {
             friendList.map {
                 ListTile(
                     title = it.username,
                     leading = { Icon(Icons.Default.ArrowDropDown, "profile pic") },
                 )
             }
-        if (showDialog) {
-            CustomDialog(
-                onDismiss = {
-                    showDialog = false
-                },
-                onSendFriendRequest = { username ->
-                    viewModel.addNewFriend(username)
-                    showDialog = false
-                })
-        }
+            if (showDialog) {
+                CustomDialog(
+                    onDismiss = {
+                        showDialog = false
+                    },
+                    onSendFriendRequest = { username ->
+                        viewModel.addNewFriend(username)
+                        showDialog = false
+                    })
+            }
         }
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.BottomEnd
         ) {
-        FloatingActionButton(
-            backgroundColor = colorResource(id = R.color.red_button),
-            onClick = {
-                showDialog = true
-            }) {
-            Icon(Icons.Default.Add, "Add", tint = Color.White)
-        }
+            FloatingActionButton(
+                backgroundColor = colorResource(id = R.color.red_button),
+                onClick = {
+                    showDialog = true
+                }) {
+                Icon(Icons.Default.Add, "Add", tint = Color.White)
+            }
         }
     }
 
@@ -165,15 +178,66 @@ fun TabFriendRequests(
     var friendList: List<Friend> = friendListState.value ?: listOf()
     friendList = friendList.filter { friend -> !friend.accepted }
 
+    val playInvitesListState = viewModel.invitesToPlay.observeAsState()
+    val playInvitesList: List<Invite> = playInvitesListState.value ?: listOf()
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
     ) {
         Column() {
+            playInvitesList.map {
+                ExpandableListTile(
+                    title = "${it.inviter} has invited you to play",
+                    leading = {
+                        Icon(Icons.Default.ArrowDropDown, "profile pic")
+                    },
+                    trailing = {
+                        Row() {
+                            Icon(Icons.Default.Done, "Accept",
+                                tint = colorResource(id = R.color.green_500),
+                                modifier = Modifier
+                                    .padding(end = 8.dp)
+                                    .clickable {
+                                        //viewModel.acceptInvite(it)
+                                    }
+                            )
+                            Icon(
+                                Icons.Default.Close,
+                                "Decline",
+                                tint = colorResource(id = R.color.red_button),
+                                modifier = Modifier
+                                    .padding(end = 8.dp)
+                                    .clickable {
+                                        //viewModel.declineInvite(it)
+                                    },
+                            )
+                        }
+                    },
+                    content = {
+                        val infos = it.additionalInfo!!
+
+                        Column() {
+                            Text(
+                                text = "You'll join the activity: ${infos.sport}",
+                                style = MaterialTheme.typography.body2
+                            )
+                            Text(
+                                text = "At ${infos.centerName}, ${infos.address}",
+                                style = MaterialTheme.typography.body2
+                            )
+                            Text(
+                                text = "On ${infos.date} at ${TimeslotMap.getTimeslotString(infos.timeslot)}",
+                                style = MaterialTheme.typography.body2
+                            )
+                        }
+                    }
+                )
+
+            }
             friendList.map {
                 ListTile(
-                    title = it.username,
+                    title = "${it.username} wants to be your friend",
                     leading = {
                         Icon(Icons.Default.ArrowDropDown, "profile pic")
                     },
@@ -206,7 +270,7 @@ fun TabFriendRequests(
 val tabRowItems = listOf(
     TabRowItem(
         title = "FRIENDS",
-        screen = { viewModel -> TabFriendList(viewModel)  },
+        screen = { viewModel -> TabFriendList(viewModel) },
     ),
     TabRowItem(
         title = "REQUESTS",

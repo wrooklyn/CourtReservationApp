@@ -18,7 +18,11 @@ import it.polito.mad.courtreservationapp.views.AchievementSection
 import it.polito.mad.courtreservationapp.views.MainActivity
 
 class ShowSocialPageFragment : Fragment() {
-    val viewModel by viewModels<FriendListViewModel>()
+    private lateinit var viewModel : FriendListViewModel
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = (activity as MainActivity).friendListViewModel
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

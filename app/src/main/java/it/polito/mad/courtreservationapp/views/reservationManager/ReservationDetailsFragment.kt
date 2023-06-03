@@ -242,7 +242,7 @@ class ReservationDetailsFragment : Fragment() {
             val inflater =
                 (activity as MainActivity).getSystemService(AppCompatActivity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val popupView = inflater.inflate(R.layout.popup_confirm_delete_reserv, null)
-            val popupInviteFriendsView = inflater.inflate(R.layout.popup_invite_friends, null)
+            //val popupInviteFriendsView = inflater.inflate(R.layout.popup_invite_friends, null)
             val width = LinearLayout.LayoutParams.WRAP_CONTENT
             val height = LinearLayout.LayoutParams.WRAP_CONTENT
             val focusable = true // lets taps outside the popup also dismiss it
