@@ -17,7 +17,7 @@ object ServiceUtils {
         for(item in list){
             val ser = item as HashMap<*, *>
             val description = (ser["description"] as String?) ?: ""
-            val serviceId = (ser["service_id"] as Long?) ?: 0L
+            val serviceId = (ser["serviceId"] as Long?) ?: 0L
             val cost = (ser["cost"] as Double?) ?: 0.0
             val service  = Service(description, serviceId, cost)
             services.add(service)

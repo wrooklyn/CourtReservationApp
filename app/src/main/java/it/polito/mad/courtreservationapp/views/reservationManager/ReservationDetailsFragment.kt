@@ -2,7 +2,6 @@ package it.polito.mad.courtreservationapp.views.reservationManager
 
 import android.app.Activity
 import android.content.Intent
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -19,6 +18,7 @@ import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithServices
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
 import it.polito.mad.courtreservationapp.models.TimeslotMap
+import it.polito.mad.courtreservationapp.utils.IconUtils
 import it.polito.mad.courtreservationapp.utils.ImageUtils
 import it.polito.mad.courtreservationapp.view_model.LeaveRatingViewModel
 import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
@@ -44,6 +44,7 @@ class ReservationDetailsFragment : Fragment() {
     private var specialRequests: String? = null
     private lateinit var serviceIds: LongArray
     private lateinit var serviceDescriptions: Array<String>
+    private lateinit var serviceCosts: DoubleArray
     private var reviewed: Boolean = false
     private var courtImage: String? = null
     private var rating: Double = 0.0
@@ -66,6 +67,8 @@ class ReservationDetailsFragment : Fragment() {
             averageRating: Double,
             currentReview: String
         ): ReservationDetailsFragment {
+            Log.i("ReservationDetailsFragment", "ResWithServices: $reservWithServices")
+            Log.i("ReservationDetailsFragment", "ResWithCenter: $reservWithSportCenter")
             val fragment = ReservationDetailsFragment()
             val args = Bundle()
             args.putString("username", username)
@@ -98,6 +101,10 @@ class ReservationDetailsFragment : Fragment() {
             args.putStringArray(
                 "serviceDescriptions",
                 reservWithServices.services.map { it.description }.toTypedArray()
+            )
+            args.putDoubleArray(
+                "serviceCosts",
+                reservWithServices.services.map { it.cost }.toTypedArray().toDoubleArray()
             )
             args.putBoolean("reviewed", reviewed)
             args.putString("courtImage", reservWithSportCenter.courtWithSportCenter.court.image)
@@ -138,6 +145,7 @@ class ReservationDetailsFragment : Fragment() {
         specialRequests = requireArguments().getString("specialRequests")
         serviceIds = requireArguments().getLongArray("serviceIds")!!
         serviceDescriptions = requireArguments().getStringArray("serviceDescriptions")!!
+        serviceCosts = requireArguments().getDoubleArray("serviceCosts") ?: doubleArrayOf()
         reviewed = requireArguments().getBoolean("reviewed")
         courtImage = requireArguments().getString("courtImage")
         rating = requireArguments().getDouble("rating")
@@ -157,14 +165,13 @@ class ReservationDetailsFragment : Fragment() {
         if (serviceIds.isEmpty()) {
             serviceTV.visibility = View.INVISIBLE
             params.height = 0
-            view.findViewById<ConstraintLayout>(R.id.servicesCL).layoutParams = params
+//            view.findViewById<ConstraintLayout>(R.id.servicesCL).layoutParams = params
         } else {
             serviceTV.visibility = View.VISIBLE
             recyclerView.adapter = RequestedServiceAdapter(
                 serviceIds,
                 serviceDescriptions,
-                viewModel.servicesIcons,
-                activity as MainActivity
+                serviceCosts
             )
 
         }
@@ -184,6 +191,7 @@ class ReservationDetailsFragment : Fragment() {
         val specialRequestsTV: TextView = view.findViewById(R.id.specialRequestsTV)
         val ratingBar: RatingBar = view.findViewById(R.id.ratingBar)
         val reviewsTv: TextView = view.findViewById(R.id.textView6)
+        val servicesTitleTV: TextView = view.findViewById(R.id.servicesTitle)
 
         mainContainerCL = view.findViewById(R.id.mainContainerCL)
         mainContainerCL.foreground.alpha = 0
@@ -200,6 +208,11 @@ class ReservationDetailsFragment : Fragment() {
         ImageUtils.setImage("courts", courtImage, courtImageIV)
         ratingBar.rating = rating.toFloat()
         reviewsTv.text = reviews
+//        val curText = servicesTitleTV.text
+//        servicesTitleTV.text = String.format("$curText - Total: %.2f", serviceCosts.fold(0.0){
+//                acc, el ->
+//            acc + el
+//        })
 
         val editReservationButton = view.findViewById<Button>(R.id.edit_reservation_button)
         editReservationButton.setOnClickListener {
@@ -218,7 +231,7 @@ class ReservationDetailsFragment : Fragment() {
         cancelReservationButton.setOnClickListener {
             val inflater =
                 (activity as MainActivity).getSystemService(AppCompatActivity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            var popupView = inflater.inflate(R.layout.popup_confirm_delete_reserv, null)
+            val popupView = inflater.inflate(R.layout.popup_confirm_delete_reserv, null)
             val width = LinearLayout.LayoutParams.WRAP_CONTENT
             val height = LinearLayout.LayoutParams.WRAP_CONTENT
             val focusable = true // lets taps outside the popup also dismiss it
@@ -300,8 +313,7 @@ class ReservationDetailsFragment : Fragment() {
     class RequestedServiceAdapter(
         private val serviceIds: LongArray,
         private val serviceDescriptions: Array<String>,
-        private val imagesMap: Map<Long, Int>,
-        val activity: MainActivity
+        private val serviceCosts: DoubleArray
     ) : RecyclerView.Adapter<RequestedServiceAdapter.RequestedServiceViewHolder>() {
         override fun onCreateViewHolder(
             parent: ViewGroup,
@@ -309,27 +321,29 @@ class ReservationDetailsFragment : Fragment() {
         ): RequestedServiceViewHolder {
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.service_description_item, parent, false)
-            return RequestedServiceViewHolder(view, activity)
+            return RequestedServiceViewHolder(view)
         }
 
         override fun onBindViewHolder(holder: RequestedServiceViewHolder, position: Int) {
             val serviceId = serviceIds[position]
             val serviceDescription = serviceDescriptions[position]
-            val imageId = imagesMap[serviceId] ?: R.drawable.gesu
-            holder.bind(serviceDescription, imageId)
+            val serviceCost = serviceCosts[position]
+            val imageId = IconUtils.getServiceIcon(serviceId)
+            holder.bind(serviceDescription, imageId, serviceCost)
         }
 
         override fun getItemCount() = serviceIds.size
 
-        class RequestedServiceViewHolder(itemView: View, activity: MainActivity) :
+        class RequestedServiceViewHolder(itemView: View) :
             RecyclerView.ViewHolder(itemView) {
             private val icon: ImageView = itemView.findViewById(R.id.service_description_image)
             private val serviceName: TextView = itemView.findViewById(R.id.service_description_name)
-            private val a = activity
-            fun bind(serviceDescription: String, imageSrc: Int) {
+
+            fun bind(serviceDescription: String, imageSrc: Int, serviceCost: Double) {
 
                 icon.setImageResource(imageSrc)
                 serviceName.text = serviceDescription
+
 
             }
 

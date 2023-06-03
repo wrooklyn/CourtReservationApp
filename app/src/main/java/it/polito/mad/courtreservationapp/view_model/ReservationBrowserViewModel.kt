@@ -36,12 +36,12 @@ class ReservationBrowserViewModel(application: Application): AndroidViewModel(ap
     private val _userReservationsReviews: MutableLiveData<List<ReservationWithReview>> = MutableLiveData()
     val userReservationsReviews: LiveData<List<ReservationWithReview>> = _userReservationsReviews
 
-    val servicesIcons: Map<Long, Int> = mapOf(
-        Pair(0, R.drawable.safety_shower),
-        Pair(1, R.drawable.equipment),
-        Pair(2, R.drawable.coach),
-        Pair(3, R.drawable.refreshment)
-    )
+//    val servicesIcons: Map<Long, Int> = mapOf(
+//        Pair(0, R.drawable.safety_shower),
+//        Pair(1, R.drawable.equipment),
+//        Pair(2, R.drawable.coach),
+//        Pair(3, R.drawable.refreshment)
+//    )
     fun initUserReservations(userEmail: String) {
         viewModelScope.launch{
             try {

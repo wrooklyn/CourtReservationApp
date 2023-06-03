@@ -311,13 +311,17 @@ class FireReservationRepository(val application: Application, val vm: Reservatio
                             request,
                             reservation.id
                         )
-                        val servicesIds = reservation.data?.get("services") as ArrayList<*>
-                        val serviceList = mutableListOf<Service>()
-                        for (id in servicesIds) {
-                            val serv = serviceMap[id]
-                            if (serv != null)
-                                serviceList.add(serv)
-                        }
+                        val services = reservation.data?.get("services") as ArrayList<*>
+                        val serviceList = ServiceUtils.getServices(services)
+
+//                        for (service in services) {
+//                            Log.i("ReservationRepo", "$service")
+//                            val id = (service as HashMap<*,*>)["serviceId"]
+////                            Log.i("ReservationRepo", "id: ${(service as Service).serviceId}")
+//                            val serv = serviceMap[id]
+//                            if (serv != null)
+//                                serviceList.add(serv)
+//                        }
                         val reservWithServices =
                             ReservationWithServices(reservationItem, serviceList)
                         result.add(reservWithServices)
