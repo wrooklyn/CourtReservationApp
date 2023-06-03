@@ -35,11 +35,10 @@
                 android:id="@+id/cardView"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginBottom="20dp"
                 android:innerRadius="0dp"
                 android:shape="ring"
                 app:cardCornerRadius="70dp"
-                app:layout_constraintBottom_toTopOf="@+id/reviewTextTV"
+                app:layout_constraintBottom_toBottomOf="@+id/ratingBar3"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -52,15 +51,14 @@
                         android:id="@+id/imageView4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:scaleType="centerCrop"
                         android:contentDescription="@string/profile_picture"
+                        android:scaleType="centerCrop"
                         android:src="@drawable/default_pfp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintDimensionRatio="1:1"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        />
+                        app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
@@ -69,13 +67,13 @@
                 android:id="@+id/reviewTextTV"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:fontFamily="@font/roboto"
                 android:text="@string/review_placeholder"
                 android:textColor="#534A4A"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ratingBar3" />
+                app:layout_constraintTop_toBottomOf="@+id/courtNameTV" />
 
             <RatingBar
                 android:id="@+id/ratingBar3"
@@ -83,28 +81,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:isIndicator="true"
                 android:max="5"
                 android:numStars="5"
                 android:rating="4"
                 android:stepSize="0.1"
                 android:theme="@style/RatingBar2"
-                app:layout_constraintBottom_toTopOf="@id/reviewTextTV"
+                app:layout_constraintBottom_toTopOf="@+id/courtNameTV"
                 app:layout_constraintStart_toStartOf="@+id/userReviewTV"
-                app:layout_constraintTop_toBottomOf="@id/userReviewTV"
-                app:layout_constraintEnd_toStartOf="@id/courtNameTV"
-                />
+                app:layout_constraintTop_toBottomOf="@id/userReviewTV" />
 
             <TextView
                 android:id="@+id/courtNameTV"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="19dp"
+                android:layout_marginBottom="20dp"
                 android:text="@string/courtName"
-                android:layout_marginStart="10dp"
                 app:layout_constraintBottom_toTopOf="@id/reviewTextTV"
-                app:layout_constraintStart_toEndOf="@id/ratingBar3"
-
-                app:layout_constraintTop_toBottomOf="@id/userReviewTV" />
+                app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
                 android:id="@+id/userReviewTV"

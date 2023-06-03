@@ -55,4 +55,7 @@ class InvitesManagerViewModel(application: Application): AndroidViewModel(applic
     fun declineInvite(reservationId: String, invitedUserEmail: String, inviterEmail: String) {
         inviteRepository.declineInvite(reservationId, invitedUserEmail, inviterEmail)
     }
+    fun getFriends(inviterEmail: String){
+
+    }
 }

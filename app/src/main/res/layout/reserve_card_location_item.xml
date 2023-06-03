@@ -64,7 +64,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 app:layout_constraintEnd_toEndOf="@id/guideline5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/court_type">
@@ -98,12 +98,14 @@
                     app:srcCompat="@drawable/star" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/location_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/review_cl">
 
@@ -129,11 +131,11 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintDimensionRatio="6:7"
                     app:layout_constraintEnd_toStartOf="@id/centerLocationTV"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.1"
+                    app:layout_constraintWidth_percent="0.06"
                     app:srcCompat="@drawable/icons8_location_100__1_" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -143,7 +145,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.61" />
+                app:layout_constraintGuide_percent="0.57" />
 
             <Button
                 android:id="@+id/reserveButton"
@@ -151,7 +153,7 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="25dp"
                 android:layout_marginEnd="15dp"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="70dp"
                 android:backgroundTint="#F16E64"
                 android:fontFamily="@font/roboto_medium"
                 android:text="@string/reserve"

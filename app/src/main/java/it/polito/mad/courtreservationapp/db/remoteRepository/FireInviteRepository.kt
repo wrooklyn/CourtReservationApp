@@ -6,6 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.mad.courtreservationapp.db.RemoteDataSource
 import it.polito.mad.courtreservationapp.models.Invite
 import it.polito.mad.courtreservationapp.models.Status
+import it.polito.mad.courtreservationapp.models.User
 import kotlinx.coroutines.tasks.await
 
 class FireInviteRepository(val application: Application) {
@@ -50,6 +51,16 @@ class FireInviteRepository(val application: Application) {
             } else {
                 println("Participants not exists")
             }
+        }
+        return result
+    }
+
+    suspend fun getFriendsByEmail(inviterEmail:String): List<String>{
+        val result: MutableList<String> = mutableListOf()
+        val friendsCollection = db.collection("users").document(inviterEmail).collection("friend_list").whereEqualTo("accepted", "true").get().await()
+        for(friend in friendsCollection.documents) {
+            val email = friend.id
+            result.add(email)
         }
         return result
     }
