@@ -31,6 +31,13 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.0998632" />
 
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/composeContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <TextView
         android:id="@+id/category_subheading"
         android:layout_width="match_parent"
@@ -78,7 +85,10 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:reverseLayout="true"
                 tools:listitem="@layout/sports_list_item" />
+
+
         </RelativeLayout>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout15"

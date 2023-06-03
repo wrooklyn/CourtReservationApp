@@ -3,12 +3,13 @@ package it.polito.mad.courtreservationapp.views.login
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import it.polito.mad.courtreservationapp.models.Coordinates
 
 object SavedPreference {
 
     var EMAIL= "email"
     var USERNAME="username"
-
+    var coordinates : Coordinates? = null
     private fun getSharedPreference(ctx: Context?): SharedPreferences? {
         return PreferenceManager.getDefaultSharedPreferences(ctx)
     }
