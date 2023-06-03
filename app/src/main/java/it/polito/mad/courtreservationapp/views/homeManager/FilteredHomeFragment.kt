@@ -54,12 +54,11 @@ class FilteredHomeFragment : Fragment() {
             }
 
 
-                sportCenter.courtsWithReviewsAndUsers.forEach { court ->
-                    if (viewModel.sportFilters.contains(court.court.sportName) ||  viewModel.sportFilters.isEmpty()) {
-                        courts.add(court)
-                    }
+            sportCenter.courtsWithReviewsAndUsers.forEach { court ->
+                if (viewModel.sportFilters.contains(court.court.sportName) ||  viewModel.sportFilters.isEmpty()) {
+                    courts.add(court)
                 }
-
+            }
 
         }
     }

@@ -65,9 +65,11 @@ fun MyPopup(viewModel: SportCenterViewModel, changeFragment:() -> Unit) {
             Button(
                 onClick = {
                     viewModel.isPopupOpen.value = false
+                    viewModel.distanceFilterValue = null
+                    changeFragment()
                 }
             ) {
-                Text("Dismiss")
+                Text("Reset")
             }
         },
 
