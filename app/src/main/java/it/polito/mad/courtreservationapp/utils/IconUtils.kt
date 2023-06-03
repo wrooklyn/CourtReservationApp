@@ -6,7 +6,7 @@ import it.polito.mad.courtreservationapp.models.Service
 object IconUtils {
     private val sportIconsId : Map<String, Int> = mapOf(
         Pair("Soccer", R.drawable.soccer_ball),
-        Pair("IceSkate", R.drawable.ice_skate),
+        Pair("Iceskating", R.drawable.ice_skate),
         Pair("Basketball", R.drawable.basketball_icon),
         Pair("Hockey", R.drawable.hockey),
         Pair("Tennis", R.drawable.tennis),

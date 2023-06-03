@@ -158,18 +158,27 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
     fun getServicesInfo(): String{
         var servStr: String = reservationServices.fold("") { acc, i ->
             if (acc.isNotEmpty()) {
-                "$acc, ${i.description}(${i.cost})"
+                "$acc, ${i.description}(${i.cost}€)"
             } else {
-                "${i.description}(${i.cost})"
+                "${i.description} (${i.cost}€)"
             }
         }
         Log.i("CreateReservationViewModel", "str: $servStr")
         if (servStr.isNotEmpty()) {
             servStr = "I'd like to request $servStr.\n"
+            servStr += String.format("Total: ${getTotalServiceCost()} €\n", )
         }
         if (reservationRequests.isNotEmpty()) {
             servStr = "${servStr}Other requests: $reservationRequests"
         }
         return servStr
+    }
+    fun getTotalServiceCost(): String{
+        val total: Double = reservationServices.fold(0.0) { acc, i ->
+            Log.i("ServicePrices", "$acc + ${i.cost}")
+            acc + i.cost
+        }
+
+        return String.format("%.2f", total)
     }
 }
