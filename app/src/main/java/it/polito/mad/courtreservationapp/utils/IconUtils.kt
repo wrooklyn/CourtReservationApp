@@ -1,7 +1,6 @@
 package it.polito.mad.courtreservationapp.utils
 
 import it.polito.mad.courtreservationapp.R
-import it.polito.mad.courtreservationapp.models.Service
 
 object IconUtils {
     private val sportIconsId : Map<String, Int> = mapOf(

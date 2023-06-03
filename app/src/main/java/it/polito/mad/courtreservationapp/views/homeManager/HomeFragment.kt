@@ -71,7 +71,10 @@ class HomeFragment : Fragment() {
         val composeView = view.findViewById<ComposeView>(R.id.composeContainer)
         composeView.setContent {
             LocationFilter(activity as MainActivity, viewModel){
-                val childFragment: Fragment = FilteredHomeFragment()
+                var childFragment: Fragment = FilteredHomeFragment()
+                if(viewModel.distanceFilterValue == null && viewModel.sportFilters.isEmpty()){
+                    childFragment = UnfilteredHomeFragment()
+                }
                 val transaction: FragmentTransaction = this.childFragmentManager.beginTransaction()
                 transaction.replace(R.id.child_fragment_container, childFragment).commit()
             }
