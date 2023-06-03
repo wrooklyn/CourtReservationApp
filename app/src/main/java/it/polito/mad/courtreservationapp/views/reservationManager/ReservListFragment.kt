@@ -89,7 +89,7 @@ class ReservListFragment: Fragment() {
                 Log.i("ReservListFrag", "courtFiltered: $courtWithReviewsAndUsers")
                 val averageRating = courtWithReviewsAndUsers.reviewsWithUser.map { it.review.rating }.average().run { if (isNaN()) 0.0 else this}
                 val ratingTxt = if (courtWithReviewsAndUsers.reviewsWithUser.size == 1) "review" else "reviews"
-                val currentReview = "$averageRating (${courtWithReviewsAndUsers.reviewsWithUser.size} $ratingTxt)"
+                val currentReview = String.format("%.1f (${courtWithReviewsAndUsers.reviewsWithUser.size} $ratingTxt)", averageRating)
 
                 val fragment = ReservationDetailsFragment.newInstance(user.username, reservationsWithSportCenter[position], reservationsWithServices[position], reviewed, averageRating, currentReview)
                 activity?.supportFragmentManager?.beginTransaction()

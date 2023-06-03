@@ -51,7 +51,7 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
     var reservationId: String = ""
     var userId: String = SavedPreference.EMAIL
 
-    var rating: Long = 0L
+    var rating: Double = 0.0
     var reviews: String = "0 reviews"
 //    var email: String = SavedPreference.EMAIL
 

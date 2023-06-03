@@ -41,7 +41,7 @@ class CreateReservationActivity : AppCompatActivity() {
         viewModel.courtId = intent.getStringExtra("courtId")  ?: ""
         viewModel.reservationId = intent.getStringExtra("reservationId") ?: ""
         viewModel.sportCenterId = intent.getStringExtra("sportCenterId") ?: ""
-        viewModel.rating = intent.getLongExtra("rating", 0L)
+        viewModel.rating = intent.getDoubleExtra("rating", 0.0)
         viewModel.reviews = intent.getStringExtra("reviews") ?: "0 reviews"
 
         if(viewModel.courtId.isNullOrEmpty()) throw Exception("Invalid parameters")

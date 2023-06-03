@@ -64,7 +64,7 @@ class ShowSummaryFragment : Fragment(R.layout.summary_layout) {
         username.text = a.viewModel.user.username
         date.text = a.viewModel.reservationDate
         a.viewModel.reservationTimeSlots.sort()
-
+        Log.i("ShowSummary", "rating: ${a.viewModel.rating}")
         ratingBar.rating = a.viewModel.rating.toFloat()
         reviewsTv.text = a.viewModel.reviews
 

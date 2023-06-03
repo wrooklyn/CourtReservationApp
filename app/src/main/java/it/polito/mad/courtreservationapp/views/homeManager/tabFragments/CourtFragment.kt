@@ -84,7 +84,7 @@ class CourtFragment : Fragment() {
             val currentImage = currentCourt.court.image
             val averageRating = currentCourt.reviewsWithUser.map { it.review.rating }.average().run { if (isNaN()) 0.0 else this}
             val ratingTxt = if (currentCourt.reviewsWithUser.size == 1) "review" else "reviews"
-            val currentReview = "$averageRating (${currentCourt.reviewsWithUser.size} $ratingTxt)"
+            val currentReview = String.format("%.1f (${currentCourt.reviewsWithUser.size} $ratingTxt)", averageRating)
 
             Log.i("CourtFragment", "$currentCourt")
 
@@ -92,6 +92,7 @@ class CourtFragment : Fragment() {
             holder.itemView.findViewById<Button>(R.id.reserveButton).setOnClickListener{
                 Log.i("CourtFragment", "ReserveButtonPressed for: SC:${currentCourt.court.sportCenterId}, C: ${currentCourt.court} ")
                 val createReservationIntent: Intent = Intent(holder.itemView.context, CreateReservationActivity::class.java)
+                Log.i("CourtFragment", "rating: $averageRating ")
                 createReservationIntent.putExtra("sportCenterId",currentCourt.court.sportCenterId)
                 createReservationIntent.putExtra("courtId",currentCourt.court.courtId)
                 createReservationIntent.putExtra("rating", averageRating)
