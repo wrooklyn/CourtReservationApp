@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
@@ -68,9 +69,13 @@ class HomeFragment : Fragment() {
         val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
         transaction.replace(R.id.child_fragment_container, childFragment).addToBackStack(null).commit()
 
+        val filterLocationButton = view.findViewById<ImageView>(R.id.location_filter_button)
+        var isPopUpOpen= mutableStateOf(false)
+
         val composeView = view.findViewById<ComposeView>(R.id.composeContainer)
+
         composeView.setContent {
-            LocationFilter(activity as MainActivity, viewModel){
+            LocationFilter(activity as MainActivity, viewModel, isPopUpOpen){
                 var childFragment: Fragment = FilteredHomeFragment()
                 if(viewModel.distanceFilterValue == null && viewModel.sportFilters.isEmpty()){
                     childFragment = UnfilteredHomeFragment()
@@ -80,6 +85,9 @@ class HomeFragment : Fragment() {
             }
         }
 
+        filterLocationButton.setOnClickListener {
+            isPopUpOpen.value=true
+        }
 
     }
 

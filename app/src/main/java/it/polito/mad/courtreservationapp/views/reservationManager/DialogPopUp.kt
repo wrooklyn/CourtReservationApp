@@ -81,7 +81,7 @@ fun PopUpContent(
                 }
                 Spacer(modifier = Modifier.width(35.dp))
                 Button(
-                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(Color(0xFFF16E64)),
+                    colors = ButtonDefaults.buttonColors(Color(0xFFF16E64)),
                     onClick = {
                         isDialogVisible.value = false
                         ctx.invitesViewModel.inviteGroup(reservationId, friends.value)

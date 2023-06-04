@@ -2,6 +2,7 @@ package it.polito.mad.courtreservationapp.views.homeManager
 
 import android.Manifest
 import android.content.pm.PackageManager
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Filter
@@ -9,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat.requestPermissions
@@ -24,26 +26,12 @@ const val LOCATION_PERMISSION_REQUEST_CODE = 1001
 fun LocationFilter(
     ctx: MainActivity,
     viewModel: SportCenterViewModel,
+    isPopupOpen: MutableState<Boolean>,
     changeFragment:() -> Unit
 ) {
 
-    var isPopupOpen = viewModel.isPopupOpen.observeAsState()
-    Box(
-        modifier = Modifier
-            .width(25.dp)
-            .height(25.dp),
-    ) {
-        Button(
-            colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.red_button)),
-            onClick = {
-                viewModel.isPopupOpen.value = true
-            }) {
-            Icon(Icons.Default.Filter, "Add")
-        }
-    }
-
-    if (isPopupOpen?.value == true) {
-        MyPopup(viewModel, changeFragment, ctx)
+    if (isPopupOpen.value) {
+        MyPopup(viewModel, changeFragment, ctx, isPopupOpen)
         if (ContextCompat.checkSelfPermission(
                 ctx,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -64,17 +52,19 @@ fun LocationFilter(
 
 
 @Composable
-fun MyPopup(viewModel: SportCenterViewModel, changeFragment:() -> Unit, ctx: MainActivity) {
+fun MyPopup(viewModel: SportCenterViewModel, changeFragment:() -> Unit, ctx: MainActivity, isPopupOpen: MutableState<Boolean>) {
     var initialValue= viewModel.distanceFilterValue
     var sliderValue by remember { mutableStateOf(initialValue?.toInt()?:1) }
 
     AlertDialog(
         onDismissRequest = {
-            viewModel.isPopupOpen.value = false
+            isPopupOpen.value = false
         },
+        containerColor = Color.White,
         title = { Text("Look around you") },
         confirmButton = {
             Button(
+                colors = ButtonDefaults.buttonColors(Color(0xFFF16E64)),
                 onClick = {
                     if (ContextCompat.checkSelfPermission(
                             ctx,
@@ -86,7 +76,7 @@ fun MyPopup(viewModel: SportCenterViewModel, changeFragment:() -> Unit, ctx: Mai
                     }else{
                         // granted
                         getUserLocation(ctx){
-                            viewModel.isPopupOpen.value = false
+                            isPopupOpen.value = false
                             viewModel.distanceFilterValue = sliderValue.toDouble()
                             changeFragment()
                         }
@@ -97,14 +87,17 @@ fun MyPopup(viewModel: SportCenterViewModel, changeFragment:() -> Unit, ctx: Mai
             }
         },
         dismissButton = {
-            Button(
+            OutlinedButton(
+                border = BorderStroke(2.dp, Color(0xFFF16E64)),
                 onClick = {
-                    viewModel.isPopupOpen.value = false
+                    isPopupOpen.value = false
                     viewModel.distanceFilterValue = null
                     changeFragment()
                 }
             ) {
-                Text("Reset")
+                Text(text="Reset",
+                    color = Color(0xFFF16E64),
+                )
             }
         },
 
@@ -114,6 +107,10 @@ fun MyPopup(viewModel: SportCenterViewModel, changeFragment:() -> Unit, ctx: Mai
             ) {
                 Text("Search in a radius of $sliderValue KM")
                 Slider(
+                    colors = SliderDefaults.colors(
+                        thumbColor = colorResource(id = R.color.red_button),
+                        activeTrackColor = colorResource(id = R.color.red_button),
+                    ),
                     value = sliderValue.toFloat(),
                     onValueChange = { value -> sliderValue = value.toInt() },
                     valueRange = 1f..50f,
