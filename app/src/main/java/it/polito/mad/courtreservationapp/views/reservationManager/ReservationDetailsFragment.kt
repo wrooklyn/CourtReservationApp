@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.*
+import androidx.compose.ui.platform.ComposeView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
@@ -20,16 +22,13 @@ import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCe
 import it.polito.mad.courtreservationapp.models.TimeslotMap
 import it.polito.mad.courtreservationapp.utils.IconUtils
 import it.polito.mad.courtreservationapp.utils.ImageUtils
-import it.polito.mad.courtreservationapp.view_model.LeaveRatingViewModel
 import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
 import it.polito.mad.courtreservationapp.view_model.SportCenterViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
-import it.polito.mad.courtreservationapp.views.homeManager.HomeFragment
 import it.polito.mad.courtreservationapp.views.login.SavedPreference
 import it.polito.mad.courtreservationapp.views.ratings.LeaveRatingActivity
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-
 
 class ReservationDetailsFragment : Fragment() {
 
@@ -199,6 +198,7 @@ class ReservationDetailsFragment : Fragment() {
         val reviewsTv: TextView = view.findViewById(R.id.textView6)
         val totalTV: TextView = view.findViewById(R.id.totalTV)
         mainContainerCL = view.findViewById(R.id.mainContainerCL)
+
         mainContainerCL.foreground.alpha = 0
 
         centerNameTV.text = centerName
@@ -218,11 +218,6 @@ class ReservationDetailsFragment : Fragment() {
                 acc, el ->
             acc + el
         })
-//        val curText = servicesTitleTV.text
-//        servicesTitleTV.text = String.format("$curText - Total: %.2f", serviceCosts.fold(0.0){
-//                acc, el ->
-//            acc + el
-//        })
 
         val editReservationButton = view.findViewById<Button>(R.id.edit_reservation_button)
         editReservationButton.setOnClickListener {
@@ -231,18 +226,30 @@ class ReservationDetailsFragment : Fragment() {
             intent.putExtra("reservationId", reservationId)
             intent.putExtra("sportCenterId", sportCenterId)
             (context as MainActivity).registerForReservationActivityResult.launch(intent)
-//            startActivity(intent)
-//            Handler().postDelayed({
-//                (activity as MainActivity).replaceFragment(BrowseReservationsFragment())
-//            }, 1000)
+        }
+
+        val inflater =
+            (activity as MainActivity).getSystemService(AppCompatActivity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
+        var isDialogVisible = mutableStateOf(false)
+
+        val friends = mutableStateOf(listOf<String>())
+        val dialogComposeView = view.findViewById<ComposeView>(R.id.dialog_compose_view)
+
+        dialogComposeView.setContent {
+            if(isDialogVisible.value){
+                DialogSection(activity as MainActivity, friends, isDialogVisible, reservationId)
+            }
+        }
+
+        val addFriendsButton = view.findViewById<ImageView>(R.id.add_friends_button)
+        addFriendsButton.setOnClickListener {
+            isDialogVisible.value=true
         }
 
         val cancelReservationButton = view.findViewById<Button>(R.id.cancel_reserv_button)
         cancelReservationButton.setOnClickListener {
-            val inflater =
-                (activity as MainActivity).getSystemService(AppCompatActivity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val popupView = inflater.inflate(R.layout.popup_confirm_delete_reserv, null)
-            //val popupInviteFriendsView = inflater.inflate(R.layout.popup_invite_friends, null)
             val width = LinearLayout.LayoutParams.WRAP_CONTENT
             val height = LinearLayout.LayoutParams.WRAP_CONTENT
             val focusable = true // lets taps outside the popup also dismiss it
@@ -286,10 +293,7 @@ class ReservationDetailsFragment : Fragment() {
                 popupWindow.dismiss()
             }
         }
-        val addFriendsButton = view.findViewById<ImageView>(R.id.add_friends_button)
-        addFriendsButton.setOnClickListener {
 
-        }
 
         val leaveReviewButton = view.findViewById<Button>(R.id.leave_review_button)
 
