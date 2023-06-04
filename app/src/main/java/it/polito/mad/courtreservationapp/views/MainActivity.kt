@@ -160,7 +160,6 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.explore -> {
                     replaceFragment(ShowUnimplementedFragment())
-                    invitesViewModel.inviteUser("RpM5JSIqmLNzRT8cbtMt\n",SavedPreference.EMAIL ,"davide@mail.com")
                 }
 
                 R.id.calendar -> {

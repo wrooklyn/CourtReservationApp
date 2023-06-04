@@ -1,9 +1,6 @@
 package it.polito.mad.courtreservationapp.views.social
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,11 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.drawscope.translate
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -33,7 +25,8 @@ fun ListTile(
     leading: @Composable (() -> Unit)? = null,
     trailing: @Composable (() -> Unit)? = null,
     title: String,
-    subtitle: String? = null
+    subtitle: String? = null,
+    request: Boolean
 ) {
     Card(
         modifier = Modifier.padding(vertical = 8.dp),
@@ -50,18 +43,27 @@ fun ListTile(
                         painter = painterResource(R.drawable.defaultprofile), // Replace "profile" with your image name in the drawable folder
                         contentDescription = "Profile Image",
                         modifier = Modifier
-                            .size(50.dp) // Change size as per your need
+                            .size(40.dp) // Change size as per your need
                             .clip(CircleShape)
                     )
                 }
             }
             val paddingValue= if (leading!=null) 8.dp else 0.dp
             Column(modifier = Modifier.weight(1f).padding(start = paddingValue)) {
-                Text(text = title, style = TextStyle(
-                    fontFamily = FontFamily(Font(R.font.roboto_medium)),
-                    fontSize = 20.sp,
-                )
-                )
+                if(request){
+                    Text(text = title,
+                        fontFamily = FontFamily(Font(R.font.inter_semibold)),
+                        fontSize = 15.sp,)
+                    Spacer(modifier = Modifier.height(5.dp))
+                    Text(text = "Friend Request",
+                        fontFamily = FontFamily(Font(R.font.inter)),
+                        fontSize = 13.sp,)
+                }else{
+                    Text(text = title,
+                        fontFamily = FontFamily(Font(R.font.inter)),
+                        fontSize = 20.sp,)
+
+                }
 
                 if (subtitle != null) {
                     Text(text = subtitle, style = MaterialTheme.typography.body2)

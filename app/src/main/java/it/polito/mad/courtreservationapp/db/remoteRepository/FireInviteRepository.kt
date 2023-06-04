@@ -1,6 +1,7 @@
 package it.polito.mad.courtreservationapp.db.remoteRepository
 
 import android.app.Application
+import android.util.Log
 import androidx.room.util.query
 import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.mad.courtreservationapp.db.RemoteDataSource
@@ -48,6 +49,7 @@ class FireInviteRepository(val application: Application) {
                 .whereEqualTo("status", Status.PENDING.name).get().await()
         for (invite in invitesSentCollection.documents) {
             val reservationId = invite.data?.get("reservationId") as String
+            Log.d("reservationIdStronzo", reservationId)
             val status = Status.PENDING
             val inviter = invite.data?.get("inviter") as String
             val reservationData =
