@@ -51,6 +51,7 @@ class ReservationDetailsFragment : Fragment() {
     private var courtImage: String? = null
     private var rating: Double = 0.0
     private var reviews: String = "0 reviews"
+    private var courtCost: Double = 0.0
 
     lateinit var viewModel: ReservationBrowserViewModel
     private lateinit var sportCenterViewModel: SportCenterViewModel
@@ -87,6 +88,7 @@ class ReservationDetailsFragment : Fragment() {
                 "${reservWithSportCenter.courtWithSportCenter.court.sportName} Court"
             )
             args.putString("courtId", reservWithSportCenter.reservation.reservationCourtId)
+            args.putDouble("courtCost", reservWithSportCenter.courtWithSportCenter.court.cost)
             args.putString("reservationId", reservWithSportCenter.reservation.reservationId)
             args.putString("date", reservWithSportCenter.reservation.reservationDate)
             args.putLong("timeslotId", reservWithSportCenter.reservation.timeSlotId)
@@ -153,6 +155,7 @@ class ReservationDetailsFragment : Fragment() {
         courtImage = requireArguments().getString("courtImage")
         rating = requireArguments().getDouble("rating")
         reviews = requireArguments().getString("reviews") ?: "0 reviews"
+        courtCost = requireArguments().getDouble("courtCost")
     }
 
     override fun onCreateView(
@@ -211,7 +214,7 @@ class ReservationDetailsFragment : Fragment() {
         ratingBar.rating = rating.toFloat()
         reviewsTv.text = reviews
 
-        totalTV.text = String.format("Total: %.2f", serviceCosts.fold(0.0){
+        totalTV.text = String.format("Total: %.2f €", serviceCosts.fold(courtCost){
                 acc, el ->
             acc + el
         })

@@ -1,6 +1,7 @@
 package it.polito.mad.courtreservationapp.views.homeManager
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
+import it.polito.mad.courtreservationapp.db.relationships.SportCenterWIthCourtsAndReviewsAndUsers
 import it.polito.mad.courtreservationapp.models.SportCenter
 import it.polito.mad.courtreservationapp.utils.ImageUtils
 import it.polito.mad.courtreservationapp.view_model.SportCenterViewModel
@@ -25,7 +27,10 @@ class UnfilteredHomeFragment : Fragment() {
         viewModel.sportCentersLiveData.observe(this){
 //            viewModel.loadSportCenters(it)
             availableInitialize()
-            popularInitialize()
+
+        }
+        viewModel.sportCentersWithReviewsAndUsersLiveData.observe(this){
+            popularInitialize(it)
         }
 
     }
@@ -62,8 +67,35 @@ class UnfilteredHomeFragment : Fragment() {
 
 
     }
-    private fun popularInitialize(){
-        val popularCentersList = viewModel.sportCentersWithCourtsAndServices.map { center ->
+    private fun popularInitialize(sportCenterWIthCourtsAndReviewsAndUsers: List<SportCenterWIthCourtsAndReviewsAndUsers>) {
+        Log.i("UnfilteredHome", "$sportCenterWIthCourtsAndReviewsAndUsers")
+        val popularCentersList = sportCenterWIthCourtsAndReviewsAndUsers.filter { center ->
+            Log.i("UnfilteredHome", "center: ${center.sportCenter.name}")
+
+            val courtSum = center.courtsWithReviewsAndUsers.fold(0.0){ acc, court ->
+                Log.i("UnfilteredHome", "court: ${court.court.sportName}")
+//                Log.i("UnfilteredHome", "Acc: $acc")
+                Log.i("UnfilteredHome", "reviews: ${court.reviewsWithUser}")
+                if(court.reviewsWithUser.isNotEmpty()){
+                    acc + court.reviewsWithUser.sumOf { reviewWithUser ->
+                        Log.i("UnfilteredHome", "rating: ${reviewWithUser.review.rating}")
+                        reviewWithUser.review.rating
+                    }
+                } else {
+                    acc
+                }
+
+            }
+            val numReviews = center.courtsWithReviewsAndUsers.fold(0){ acc, court ->
+                acc + court.reviewsWithUser.size
+            }
+            Log.i("UnfilteredHome", "sum: $courtSum")
+            Log.i("UnfilteredHome", "num: $numReviews")
+            val centerAvg = courtSum/numReviews
+            Log.i("UnfilteredHome", "centerAvg: $centerAvg")
+            centerAvg >= 4
+        }.map { center ->
+            Log.i("UnfilteredHome", "$center")
             center.sportCenter
         }
 

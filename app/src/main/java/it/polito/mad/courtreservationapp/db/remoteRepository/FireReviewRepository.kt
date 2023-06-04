@@ -11,10 +11,15 @@ import it.polito.mad.courtreservationapp.models.Review
 import kotlinx.coroutines.tasks.await
 
 class FireReviewRepository(val application: Application) {
-
+    val db: FirebaseFirestore = RemoteDataSource.instance
 
     suspend fun insertReview(sportCenterId:String, courtId : String, username:String, reservationId :String, reviewText:String, selectedRating:Int, dateStr:String){
-        val db: FirebaseFirestore = RemoteDataSource.instance
+
+        val updates = hashMapOf<String, Any>()
+        updates["rating"] = selectedRating
+        updates["review_date"] = dateStr
+        if(reviewText.isNotEmpty())
+            updates["review_content"] = reviewText
 
         val reviewDocQuery = db.collection("sport-centers")
             .document(sportCenterId)
@@ -27,12 +32,12 @@ class FireReviewRepository(val application: Application) {
             .collection("courts")
             .document(courtId).collection("reservations")
             .document(docId)
-        val updates = hashMapOf<String, Any>()
-        updates["rating"] = selectedRating
-        updates["review_date"] = dateStr
-        if(!reviewText.isNullOrEmpty())
-            updates["review_content"] = reviewText
+
+        val reviewDocRef2 = db.collection("reservations").document(reservationId)
+
+
         reviewDocRef.update(updates).await()
+        reviewDocRef2.update(updates).await()
     }
 
 

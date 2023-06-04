@@ -18,7 +18,6 @@ import kotlinx.coroutines.runBlocking
 import java.util.*
 
 class CreateReservationViewModel(application: Application): AndroidViewModel(application) {
-    private val tag: String = "ReservationFragmentViewModel"
     val reservationRepo: FireReservationRepository = FireReservationRepository(application)
     val courtRepo: FireCourtRepository = FireCourtRepository(application)
     private val sportCenterRepo: FireSportCenterRepository = FireSportCenterRepository(application)
@@ -84,10 +83,10 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
     private fun initUser(email: String){
         runBlocking(Dispatchers.Default) {
             launch {
-                Log.i("initUser", "$email")
+                Log.i("initUser", email)
                 val res = userRepo.getUserWithMasteries(email)
                 userLiveData.postValue(res.user)
-                println("updated: hehe ${res}")
+                println("updated: hehe $res")
             }
         }
 
@@ -158,9 +157,9 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
     fun getServicesInfo(): String{
         var servStr: String = reservationServices.fold("") { acc, i ->
             if (acc.isNotEmpty()) {
-                "$acc, ${i.description}(${i.cost}€)"
+                "$acc, ${i.description}(${i.cost*reservationTimeSlots.size}€)"
             } else {
-                "${i.description} (${i.cost}€)"
+                "${i.description} (${i.cost*reservationTimeSlots.size}€)"
             }
         }
         Log.i("CreateReservationViewModel", "str: $servStr")
@@ -173,11 +172,15 @@ class CreateReservationViewModel(application: Application): AndroidViewModel(app
         return servStr
     }
     fun getTotalServiceCost(): String{
-        val total: Double = reservationServices.fold(0.0) { acc, i ->
+        val total: Double = reservationServices.fold(getCourtCost()) { acc, i ->
             Log.i("ServicePrices", "$acc + ${i.cost}")
-            acc + i.cost
+            acc + (i.cost * reservationTimeSlots.size)
         }
 
         return String.format("%.2f", total)
+    }
+
+    private fun getCourtCost(): Double {
+        return court.cost * reservationTimeSlots.size
     }
 }

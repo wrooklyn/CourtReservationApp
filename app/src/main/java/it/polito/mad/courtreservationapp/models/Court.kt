@@ -10,6 +10,7 @@ data class Court(
     val sportName: String = "",
     val fieldStatus: Int = 0,
     var courtId: String,
+    val cost: Double,
     val image: String?
 )
     //pictures are int because we will use resources (e.g. R.drawable.x which is an integer).

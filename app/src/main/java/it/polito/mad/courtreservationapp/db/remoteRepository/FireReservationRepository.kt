@@ -1,8 +1,9 @@
+
+
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.mad.courtreservationapp.db.RemoteDataSource
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithSportCenter
@@ -13,7 +14,6 @@ import it.polito.mad.courtreservationapp.models.*
 import it.polito.mad.courtreservationapp.utils.ServiceUtils
 import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
 import it.polito.mad.courtreservationapp.views.login.SavedPreference
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class FireReservationRepository(val application: Application) {
@@ -28,7 +28,7 @@ class FireReservationRepository(val application: Application) {
     suspend fun insertReservationWithServices(
         reservationWithServices: ReservationWithServices,
         sportCenterId: String
-    ) {
+    ){
         //optional reservationId reservationWithServices.reservation.reservationId
         val reservationId = reservationWithServices.reservation.reservationId
         var isEdit = !reservationWithServices.reservation.reservationId.isNullOrEmpty()
@@ -126,9 +126,11 @@ class FireReservationRepository(val application: Application) {
                 .document(courtId)
                 .get()
                 .await()
-        val sportName = courtRef.data?.get("sport_name") as String
-        val imageName = courtRef.data?.get("image_name") as String?
-        return Court(sportCenterId, sportName, 0, courtId, imageName)
+//        val sportName = courtRef.data?.get("sport_name") as String
+//        val imageName = courtRef.data?.get("image_name") as String?
+//        val cost: Double = courtRef.data?.get("cost") as Double
+//        return Court(sportCenterId, sportName, 0, courtId, cost, imageName)
+        return DbUtils.getCourt(courtRef, sportCenterId)
     }
 
     suspend fun getSportCenterItemBySportCenterId(sportCenterId: String): SportCenter? {
@@ -136,11 +138,12 @@ class FireReservationRepository(val application: Application) {
         val sportCenterRef = database.collection("sport-centers").document(sportCenterId)
             .get()
             .await()
-        val name = sportCenterRef.data?.get("name") as String
-        val address = sportCenterRef.data?.get("address") as String
-        val description = sportCenterRef.data?.get("description") as String
-        val image = sportCenterRef.data?.get("image_name") as String?
-        return SportCenter(name, address, description, sportCenterId, image)
+//        val name = sportCenterRef.data?.get("name") as String
+//        val address = sportCenterRef.data?.get("address") as String
+//        val description = sportCenterRef.data?.get("description") as String
+//        val image = sportCenterRef.data?.get("image_name") as String?
+//        return SportCenter(name, address, description, sportCenterId, image)
+        return DbUtils.getSportCenter(sportCenterRef)
     }
 
 
@@ -220,27 +223,23 @@ class FireReservationRepository(val application: Application) {
         //return reservationDao.getByIdWithServices(reservationId)
         val resLiveData = MutableLiveData<ReservationWithServices>()
         database.collection("reservations").document(reservationId).get().addOnSuccessListener {
-            if (it.exists()) {
-                val courtId = it.data?.get("courtId") as String?
-                val date = it.data?.get("date") as String
-                val timeslot = it.data?.get("timeslot") as Long
-                val requests = it.data?.get("request") as String
-                val servicesIds = it.data?.get("services") as ArrayList<*>
-                val serviceList = mutableListOf<Service>()
-                for (id in servicesIds) {
-                    val serv = serviceMap[id]
-                    if (serv != null)
-                        serviceList.add(serv)
-                }
-                val reservation = Reservation(
-                    date,
-                    timeslot,
-                    SavedPreference.EMAIL,
-                    courtId,
-                    requests,
-                    reservationId
-                )
-                val item = ReservationWithServices(reservation, serviceList)
+            if(it.exists()){
+//                val courtId = it.data?.get("courtId") as String?
+//                val date = it.data?.get("date") as String
+//                val timeslot = it.data?.get("timeslot") as Long
+//                val requests = it.data?.get("request") as String
+//                val reservation = Reservation(date, timeslot,SavedPreference.EMAIL, courtId, requests, reservationId)
+                val reservation = DbUtils.getReservation(it)
+
+//                val servicesIds = it.data?.get("services") as List<*>
+//                val serviceList = ServiceUtils.getServices(servicesIds)
+//                for (id in servicesIds) {
+//                    val serv = serviceMap[id]
+//                    if (serv != null)
+//                        serviceList.add(serv)
+//                }
+                val serviceList = DbUtils.getServices(it)
+                val item = ReservationWithServices(reservation,serviceList)
                 resLiveData.postValue(item)
             }
         }
