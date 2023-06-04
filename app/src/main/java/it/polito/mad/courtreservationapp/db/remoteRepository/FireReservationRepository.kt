@@ -132,11 +132,12 @@ class FireReservationRepository(val application: Application) {
         val sportCenterRef = database.collection("sport-centers").document(sportCenterId)
             .get()
             .await()
-        val name = sportCenterRef.data?.get("name") as String
-        val address = sportCenterRef.data?.get("address") as String
-        val description = sportCenterRef.data?.get("description") as String
-        val image = sportCenterRef.data?.get("image_name") as String?
-        return SportCenter(name, address, description, sportCenterId, image)
+//        val name = sportCenterRef.data?.get("name") as String
+//        val address = sportCenterRef.data?.get("address") as String
+//        val description = sportCenterRef.data?.get("description") as String
+//        val image = sportCenterRef.data?.get("image_name") as String?
+//        return SportCenter(name, address, description, sportCenterId, image)
+        return DbUtils.getSportCenter(sportCenterRef)
     }
 
 
@@ -212,18 +213,21 @@ class FireReservationRepository(val application: Application) {
         val resLiveData = MutableLiveData<ReservationWithServices>()
         database.collection("reservations").document(reservationId).get().addOnSuccessListener {
             if(it.exists()){
-                val courtId = it.data?.get("courtId") as String?
-                val date = it.data?.get("date") as String
-                val timeslot = it.data?.get("timeslot") as Long
-                val requests = it.data?.get("request") as String
-                val servicesIds = it.data?.get("services") as ArrayList<*>
-                val serviceList = mutableListOf<Service>()
-                for (id in servicesIds) {
-                    val serv = serviceMap[id]
-                    if (serv != null)
-                        serviceList.add(serv)
-                }
-                val reservation = Reservation(date, timeslot,SavedPreference.EMAIL, courtId, requests, reservationId)
+//                val courtId = it.data?.get("courtId") as String?
+//                val date = it.data?.get("date") as String
+//                val timeslot = it.data?.get("timeslot") as Long
+//                val requests = it.data?.get("request") as String
+//                val reservation = Reservation(date, timeslot,SavedPreference.EMAIL, courtId, requests, reservationId)
+                val reservation = DbUtils.getReservation(it)
+
+//                val servicesIds = it.data?.get("services") as List<*>
+//                val serviceList = ServiceUtils.getServices(servicesIds)
+//                for (id in servicesIds) {
+//                    val serv = serviceMap[id]
+//                    if (serv != null)
+//                        serviceList.add(serv)
+//                }
+                val serviceList = DbUtils.getServices(it)
                 val item = ReservationWithServices(reservation,serviceList)
                 resLiveData.postValue(item)
             }
@@ -240,11 +244,12 @@ class FireReservationRepository(val application: Application) {
             .addOnSuccessListener { querySnapshot ->
                 if(!querySnapshot.isEmpty) {
                     for(reservation in querySnapshot.documents) {
-                        val reservDate: String = reservation.data?.get("date") as String
-                        val request: String? = reservation.data?.get("request") as String?
-                        val timeslotId: Long = reservation.data?.get("timeslot") as Long
-                        val courtId: String = reservation.data?.get("courtDisplayName") as String
-                        val reservationItem = Reservation(reservDate, timeslotId, userEmail, courtId, request, reservation.id)
+//                        val reservDate: String = reservation.data?.get("date") as String
+//                        val request: String? = reservation.data?.get("request") as String?
+//                        val timeslotId: Long = reservation.data?.get("timeslot") as Long
+//                        val courtId: String = reservation.data?.get("courtDisplayName") as String
+//                        val reservationItem = Reservation(reservDate, timeslotId, userEmail, courtId, request, reservation.id)
+                        val reservationItem = DbUtils.getReservation(reservation)
                         result.add(reservationItem)
                     }
                 }
@@ -260,22 +265,24 @@ class FireReservationRepository(val application: Application) {
             .addOnSuccessListener { querySnapshot ->
                 if(!querySnapshot.isEmpty){
                     for(reservation in querySnapshot.documents) {
-                        val reservDate: String = reservation.data?.get("date") as String
-                        val request: String? = reservation.data?.get("request") as String?
-                        val timeslotId: Long = reservation.data?.get("timeslot") as Long
-                        val courtId: String = reservation.data?.get("courtId") as String
-                        val courtDisplayName: String = reservation.data?.get("courtDisplayName") as String
-                        val reservationItem = Reservation(reservDate, timeslotId, userEmail, courtId, request, reservation.id)
+//                        val reservDate: String = reservation.data?.get("date") as String
+//                        val request: String? = reservation.data?.get("request") as String?
+//                        val timeslotId: Long = reservation.data?.get("timeslot") as Long
+//                        val courtId: String = reservation.data?.get("courtId") as String
+//                        val courtDisplayName: String = reservation.data?.get("courtDisplayName") as String
+//                        val reservationItem = Reservation(reservDate, timeslotId, userEmail, courtId, request, reservation.id)
+                        val reservationItem = DbUtils.getReservation(reservation)
                         val sportCenterId: String = reservation.data?.get("sportCenterId") as String
                         val sportCenterRef = database.collection("sport-centers").document(sportCenterId)
                         sportCenterRef.get().addOnSuccessListener { sportCenterDoc ->
                             if(sportCenterDoc.exists()) {
-                                val sportCenterName: String = sportCenterDoc.data?.get("name") as String
-                                val sportCenterAddress: String = sportCenterDoc.data?.get("address") as String
-                                val sportCenterDescription: String = sportCenterDoc.data?.get("description") as String
-                                val sportCenterImageName: String = sportCenterDoc.data?.get("image_name") as String
-                                val sportCenterItem = SportCenter(sportCenterName, sportCenterAddress, sportCenterDescription, sportCenterId, sportCenterImageName)
-                                val courtRef = database.collection("sport-centers").document(sportCenterId).collection("courts").document(courtId)
+//                                val sportCenterName: String = sportCenterDoc.data?.get("name") as String
+//                                val sportCenterAddress: String = sportCenterDoc.data?.get("address") as String
+//                                val sportCenterDescription: String = sportCenterDoc.data?.get("description") as String
+//                                val sportCenterImageName: String = sportCenterDoc.data?.get("image_name") as String
+//                                val sportCenterItem = SportCenter(sportCenterName, sportCenterAddress, sportCenterDescription, sportCenterId, sportCenterImageName)
+                                val sportCenterItem = DbUtils.getSportCenter(sportCenterDoc)
+                                val courtRef = database.collection("sport-centers").document(sportCenterId).collection("courts").document(reservationItem.reservationCourtId!!)
                                 courtRef.get().addOnSuccessListener { courtDoc ->
                                     if(courtDoc.exists()) {
 //                                        val sportName: String = courtDoc.data?.get("sport_name") as String
@@ -304,20 +311,22 @@ class FireReservationRepository(val application: Application) {
             .addOnSuccessListener { querySnapshot ->
                 if(!querySnapshot.isEmpty){
                     for(reservation in querySnapshot.documents) {
-                        val reservDate: String = reservation.data?.get("date") as String
-                        val request: String? = reservation.data?.get("request") as String?
-                        val timeslotId: Long = reservation.data?.get("timeslot") as Long
-                        val courtId: String = reservation.data?.get("courtId") as String
-                        val reservationItem = Reservation(
-                            reservDate,
-                            timeslotId,
-                            userEmail,
-                            courtId,
-                            request,
-                            reservation.id
-                        )
-                        val services = reservation.data?.get("services") as ArrayList<*>
-                        val serviceList = ServiceUtils.getServices(services)
+//                        val reservDate: String = reservation.data?.get("date") as String
+//                        val request: String? = reservation.data?.get("request") as String?
+//                        val timeslotId: Long = reservation.data?.get("timeslot") as Long
+//                        val courtId: String = reservation.data?.get("courtId") as String
+//                        val reservationItem = Reservation(
+//                            reservDate,
+//                            timeslotId,
+//                            userEmail,
+//                            courtId,
+//                            request,
+//                            reservation.id
+//                        )
+                        val reservationItem = DbUtils.getReservation(reservation)
+                        val serviceList = DbUtils.getServices(reservation)
+//                        val services = reservation.data?.get("services") as ArrayList<*>
+//                        val serviceList = ServiceUtils.getServices(services)
 
 //                        for (service in services) {
 //                            Log.i("ReservationRepo", "$service")
@@ -344,26 +353,31 @@ class FireReservationRepository(val application: Application) {
             .addOnSuccessListener { querySnapshot ->
                 if(!querySnapshot.isEmpty) {
                     for(reservation in querySnapshot.documents) {
-                        val reservDate: String = reservation.data?.get("date") as String
-                        val request: String? = reservation.data?.get("request") as String?
-                        val timeslotId: Long = reservation.data?.get("timeslot") as Long
-                        val courtId: String = reservation.data?.get("courtId") as String
+//                        val reservDate: String = reservation.data?.get("date") as String
+//                        val request: String? = reservation.data?.get("request") as String?
+//                        val timeslotId: Long = reservation.data?.get("timeslot") as Long
+//                        val courtId: String = reservation.data?.get("courtId") as String
+//                        val reservationItem = Reservation(
+//                            reservDate,
+//                            timeslotId,
+//                            userEmail,
+//                            courtId,
+//                            request,
+//                            reservation.id
+//                        )
+                        val reservationItem = DbUtils.getReservation(reservation)
                         var review: Review? = null
-                        val reservationItem = Reservation(
-                            reservDate,
-                            timeslotId,
-                            userEmail,
-                            courtId,
-                            request,
-                            reservation.id
-                        )
-                        if(reservation.contains("review")) {
-                            val reviewMap = reservation.data?.get("review") as Map<*, *>
-                            val rating = reviewMap["rating"] as Int
-                            val reviewDate = reviewMap["date"] as String
-                            val reviewText = reviewMap["text"] as String
-                            val reviewId = reviewMap["id"] as String
-                            review = Review(courtId, userEmail, reservation.id, reviewText, rating, reviewDate, reviewId)
+                        if(reservation.contains("review_date")) {
+                            //TODO:
+                            // AS IS: reviews are in /sport-centers->courts->reservations
+                            // TO BE: reviews in /reservations
+//                            val reviewMap = reservation.data?.get("review") as Map<*, *>
+//                            val rating = reviewMap["rating"] as Int
+//                            val reviewDate = reviewMap["date"] as String
+//                            val reviewText = reviewMap["text"] as String
+//                            val reviewId = reviewMap["id"] as String
+//                            review = Review(reservationItem.reservationCourtId, userEmail, reservation.id, reviewText, rating, reviewDate, reviewId)
+                            review = DbUtils.getReview(reservation)
                         }
                         val reservWithReview = ReservationWithReview(reservationItem, review)
                         result.add(reservWithReview)

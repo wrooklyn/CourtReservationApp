@@ -25,11 +25,12 @@ class FireSportCenterRepository(val application: Application) {
     suspend fun getById(id: String): SportCenter {
 
         val sportCenterDoc = db.collection("sport-centers").document(id).get().await()
-        val scName = (sportCenterDoc.data?.get("name") as String?).toString()
-        val scAddress = (sportCenterDoc.data?.get("address") as String?).toString()
-        val scDescription = (sportCenterDoc.data?.get("description") as String?).toString()
-        val image: String? = sportCenterDoc.data?.get("image_name") as String?
-        return SportCenter(scName, scAddress, scDescription, sportCenterDoc.id, image)
+//        val scName = (sportCenterDoc.data?.get("name") as String?).toString()
+//        val scAddress = (sportCenterDoc.data?.get("address") as String?).toString()
+//        val scDescription = (sportCenterDoc.data?.get("description") as String?).toString()
+//        val image: String? = sportCenterDoc.data?.get("image_name") as String?
+//        return SportCenter(scName, scAddress, scDescription, sportCenterDoc.id, image)
+        return DbUtils.getSportCenter(sportCenterDoc)
     }
 
 
@@ -37,12 +38,13 @@ class FireSportCenterRepository(val application: Application) {
 
 
         val sportCenterDoc = db.collection("sport-centers").document(id).get().await()
-        val scName = (sportCenterDoc.data?.get("name") as String?).toString()
-        val scAddress = (sportCenterDoc.data?.get("address") as String?).toString()
-        val scDescription = (sportCenterDoc.data?.get("description") as String?).toString()
-//        val scId = sportCenterDoc.data?.get("id") as Long
-        val image: String? = sportCenterDoc.data?.get("image_name") as String?
-        val sportCenter = SportCenter(scName, scAddress, scDescription, sportCenterDoc.id, image)
+//        val scName = (sportCenterDoc.data?.get("name") as String?).toString()
+//        val scAddress = (sportCenterDoc.data?.get("address") as String?).toString()
+//        val scDescription = (sportCenterDoc.data?.get("description") as String?).toString()
+////        val scId = sportCenterDoc.data?.get("id") as Long
+//        val image: String? = sportCenterDoc.data?.get("image_name") as String?
+//        val sportCenter = SportCenter(scName, scAddress, scDescription, sportCenterDoc.id, image)
+        val sportCenter = DbUtils.getSportCenter(sportCenterDoc)
         val courtsOfCenterRef = db.collection("sport-centers").document(id).collection("courts")
         val courtsList = mutableListOf<Court>()
         val courtSnapshot = courtsOfCenterRef.get().await()
@@ -67,11 +69,12 @@ class FireSportCenterRepository(val application: Application) {
 
         val sportCenterSnapshot = sportCenterRef.get().await()
         for (document in sportCenterSnapshot.documents){
-            val scName = (document.data?.get("name") as String?).toString()
-            val scAddress = (document.data?.get("address") as String?).toString()
-            val scDescription = (document.data?.get("description") as String?).toString()
-            val image: String? = document.data?.get("image_name") as String?
-            val sportCenter = SportCenter(scName, scAddress, scDescription,document.id, image)
+//            val scName = (document.data?.get("name") as String?).toString()
+//            val scAddress = (document.data?.get("address") as String?).toString()
+//            val scDescription = (document.data?.get("description") as String?).toString()
+//            val image: String? = document.data?.get("image_name") as String?
+//            val sportCenter = SportCenter(scName, scAddress, scDescription,document.id, image)
+            val sportCenter = DbUtils.getSportCenter(document)
             val courtsOfCenterRef = sportCenterRef.document(document.id).collection("courts")
             val courtWithServices = mutableListOf<CourtWithServices>()
             val courtsSnapshot = courtsOfCenterRef.get().await()
@@ -82,8 +85,9 @@ class FireSportCenterRepository(val application: Application) {
 //                val cost: Double = courtDocument.data?.get("cost") as Double
 //                val c = Court(document.id, cSportName, 0, courtDocument.id, cost, image)
                 val c = DbUtils.getCourt(courtDocument, document.id)
-                val cServices = courtDocument.data?.get("services") as List<*>?
-                val s = cServices?.let { ServiceUtils.getServices(it) } ?: emptyList()
+//                val cServices = courtDocument.data?.get("services") as List<*>?
+//                val s = cServices?.let { ServiceUtils.getServices(it) } ?: emptyList()
+                val s = DbUtils.getServices(courtDocument)
                 courtWithServices.add(CourtWithServices(c, s))
             }
             dataList.add(SportCenterWithCourtsAndServices(sportCenter, courtWithServices))
@@ -103,16 +107,20 @@ class FireSportCenterRepository(val application: Application) {
 
         val sportCenterSnapshot = sportCenterRef.get().await()
         for (document in sportCenterSnapshot?.documents.orEmpty()) {
-            println("centerDoc: ${document.data}")
-            val scName: String = document.data?.get("name") as String
-            val scAddress = document.data?.get("address") as String
-            val scDescription = document.data?.get("description") as String
-            val coordinatesString = (document.data?.get("coordinates") as String).split(",")
-            val latitude = coordinatesString[0].toDouble()
-            val longitude = coordinatesString[1].toDouble()
-            val coordinates = Coordinates(latitude, longitude)
-            val image: String? = document.data?.get("image_name") as String?
-            val sportCenter = SportCenter(scName, scAddress, scDescription, document.id, image, coordinates)
+//            println("centerDoc: ${document.data}")
+//            val scName: String = document.data?.get("name") as String
+//            val scAddress = document.data?.get("address") as String
+//            val scDescription = document.data?.get("description") as String
+//            val image: String? = document.data?.get("image_name") as String?
+//
+//            val coordinatesString = (document.data?.get("coordinates") as String).split(",")
+//            val latitude = coordinatesString[0].toDouble()
+//            val longitude = coordinatesString[1].toDouble()
+//            val coordinates = Coordinates(latitude, longitude)
+//
+//            val sportCenter = SportCenter(scName, scAddress, scDescription, document.id, image, coordinates)
+            val sportCenter = DbUtils.getSportCenter(document)
+
             val courtsOfCenterRef = sportCenterRef.document(document.id).collection("courts")
             val courtWithReviewsAndUsersList = mutableListOf<CourtWithReviewsAndUsers>()
 
@@ -131,18 +139,25 @@ class FireSportCenterRepository(val application: Application) {
                 val reviewsWithUsers = mutableListOf<ReviewWithUser>()
                 val reservationSnapshot = reviewsOfCourtRef.get().await()
                 for (reservationDocument in reservationSnapshot?.documents.orEmpty()) {
-                    val rating = (reservationDocument.data?.get("rating") as Long?)?.toInt()
-                    if (rating != null) {
-                        val reviewText =
-                            reservationDocument.data?.get("review_content") as String?
-                        val reviewDate =
-                            reservationDocument.data?.get("review_content") as String
-                        val review = Review(courtDocument.id, null, reservationDocument.id, reviewText, rating, reviewDate, reservationDocument.id )
-
-                        val username = reservationDocument.data?.get("user") as String
-                        val user = User(username, "", "", "", "", 0, 0, 0, "", "")
+                    if(reservationDocument.contains("rating")){
+                        val review = DbUtils.getReview(reservationDocument)
+                        val usermail = reservationDocument.data?.get("user") as String
+                        val userDoc = db.collection("users").document(usermail).get().await()
+                        val user = DbUtils.getUser(userDoc)
                         reviewsWithUsers.add(ReviewWithUser(review, user))
                     }
+//                    val rating = (reservationDocument.data?.get("rating") as Long?)?.toInt()
+//                    if (rating != null) {
+//                        val reviewText =
+//                            reservationDocument.data?.get("review_content") as String?
+//                        val reviewDate =
+//                            reservationDocument.data?.get("review_content") as String
+//                        val review = Review(courtDocument.id, null, reservationDocument.id, reviewText, rating, reviewDate, reservationDocument.id )
+//
+//                        val username = reservationDocument.data?.get("user") as String
+//                        val user = User(username, "", "", "", "", 0, 0, 0, "", "")
+//                        reviewsWithUsers.add(ReviewWithUser(review, user))
+//                    }
                 }
                 val courtWithReviewsAndUsers = CourtWithReviewsAndUsers(c, reviewsWithUsers)
                 courtWithReviewsAndUsersList.add(courtWithReviewsAndUsers)

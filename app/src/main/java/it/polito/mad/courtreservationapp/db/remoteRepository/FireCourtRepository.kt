@@ -17,12 +17,12 @@ import kotlinx.coroutines.tasks.await
 
 class FireCourtRepository(val application: Application) {
 
-    private val serviceMap: Map<Long, Service> = mapOf(
-        Pair(0, Service("Safety shower", 0)),
-        Pair(1, Service("Equipment", 1)),
-        Pair(2, Service("Coach", 2)),
-        Pair(3, Service("Refreshment", 3))
-    )
+//    private val serviceMap: Map<Long, Service> = mapOf(
+//        Pair(0, Service("Safety shower", 0)),
+//        Pair(1, Service("Equipment", 1)),
+//        Pair(2, Service("Coach", 2)),
+//        Pair(3, Service("Refreshment", 3))
+//    )
 
     private val db: FirebaseFirestore = RemoteDataSource.instance
 
@@ -96,10 +96,11 @@ class FireCourtRepository(val application: Application) {
                         val reservationsRef = snapshot.reference.collection("reservations")
                         reservationsRef.get().addOnSuccessListener { reservationsSnapshot ->
                             val reservations = reservationsSnapshot.documents.mapNotNull {
-                                val reservDate: String = it.data?.get("date") as String
-                                val request: String? = it.data?.get("request") as String?
-                                val timeslotId: Long = it.data?.get("timeslot") as Long
-                                Reservation(reservDate, timeslotId, null, centerId, request, it.id)
+                                DbUtils.getReservation(it)
+//                                val reservDate: String = it.data?.get("date") as String
+//                                val request: String? = it.data?.get("request") as String?
+//                                val timeslotId: Long = it.data?.get("timeslot") as Long
+//                                Reservation(reservDate, timeslotId, null, centerId, request, it.id)
                             }
                             val courtWithReservations = courtItem?.let { CourtWithReservations(it, reservations) }
                             value = courtWithReservations
@@ -126,11 +127,12 @@ class FireCourtRepository(val application: Application) {
         db.collection("sport-centers").document(sportCenterId).get()
             .addOnSuccessListener { centerSnapshot ->
                 if (centerSnapshot.exists()) {
-                    val centerName = centerSnapshot.data?.get("name") as String
-                    val address = centerSnapshot.data?.get("address") as String
-                    val description = centerSnapshot.data?.get("description") as String
-                    val centerImage = centerSnapshot.data?.get("image_name") as String?
-                    val centerItem = SportCenter(centerName, address, description, sportCenterId, centerImage)
+//                    val centerName = centerSnapshot.data?.get("name") as String
+//                    val address = centerSnapshot.data?.get("address") as String
+//                    val description = centerSnapshot.data?.get("description") as String
+//                    val centerImage = centerSnapshot.data?.get("image_name") as String?
+//                    val centerItem = SportCenter(centerName, address, description, sportCenterId, centerImage)
+                    val centerItem = DbUtils.getSportCenter(centerSnapshot)
                     db.collection("sport-centers")
                         .document(sportCenterId)
                         .collection("courts")
@@ -177,10 +179,11 @@ class FireCourtRepository(val application: Application) {
                 //val reservReference: DocumentReference =
                    // reservation.data?.get("ref") as DocumentReference? ?: continue
                 //val reservItem = reservReference.get().await()
-                val reservDate: String = reservation.data?.get("date") as String
-                val request: String? = reservation.data?.get("request") as String?
-                val timeslotId: Long = reservation.data?.get("timeslot") as Long
-                val reservationItem = Reservation(reservDate, timeslotId, null, centerId, request, reservation.id)
+//                val reservDate: String = reservation.data?.get("date") as String
+//                val request: String? = reservation.data?.get("request") as String?
+//                val timeslotId: Long = reservation.data?.get("timeslot") as Long
+//                val reservationItem = Reservation(reservDate, timeslotId, null, centerId, request, reservation.id)
+                val reservationItem = DbUtils.getReservation(reservation)
                 reservList.add(reservationItem)
             }
         }
