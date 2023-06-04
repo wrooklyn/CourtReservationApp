@@ -14,6 +14,7 @@ data class Reservation(
 
     val request: String? = null,
     var reservationId: String,
+    var isGuest:Boolean = false
 )
 
 //there will be a mapping of time slots in the form:

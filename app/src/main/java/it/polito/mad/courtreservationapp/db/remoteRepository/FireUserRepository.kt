@@ -10,6 +10,7 @@ import it.polito.mad.courtreservationapp.models.User
 import it.polito.mad.courtreservationapp.db.relationships.UserWithSportMasteriesAndName
 import it.polito.mad.courtreservationapp.models.Sport
 import it.polito.mad.courtreservationapp.models.SportMastery
+import it.polito.mad.courtreservationapp.utils.DbUtils
 import kotlinx.coroutines.tasks.await
 
 //import it.polito.mad.courtreservationapp.db.relationships.UserWithReservations
@@ -39,32 +40,34 @@ class FireUserRepository(private val application: Application) {
 //        return userDao.getByIdWithSportMasteries(1)
         val db: FirebaseFirestore = RemoteDataSource.instance
         val userDoc = db.collection("users").document(email).get().await()
-        val username = userDoc.data?.get("username") as String? ?: ""
-        val firstName = userDoc.data?.get("firstName") as String? ?: ""
-        val lastName = userDoc.data?.get("lastName") as String? ?: ""
-        val address = userDoc.data?.get("address") as String? ?: ""
-        val gender = userDoc.data?.get("gender") as Long? ?: 0L
-        val height = userDoc.data?.get("height") as Long? ?: 0L
-        val weight = userDoc.data?.get("weight") as Long? ?: 0L
-        val phone = userDoc.data?.get("phone") as String? ?: ""
-
-        val user = User(username, firstName, lastName, email, address, gender.toInt(), height.toInt(), weight.toInt(), phone, email)
+//        val username = userDoc.data?.get("username") as String? ?: ""
+//        val firstName = userDoc.data?.get("firstName") as String? ?: ""
+//        val lastName = userDoc.data?.get("lastName") as String? ?: ""
+//        val address = userDoc.data?.get("address") as String? ?: ""
+//        val gender = userDoc.data?.get("gender") as Long? ?: 0L
+//        val height = userDoc.data?.get("height") as Long? ?: 0L
+//        val weight = userDoc.data?.get("weight") as Long? ?: 0L
+//        val phone = userDoc.data?.get("phone") as String? ?: ""
+//
+//        val user = User(username, firstName, lastName, email, address, gender.toInt(), height.toInt(), weight.toInt(), phone, email)
+        val user = DbUtils.getUser(userDoc)
         Log.i("getUser", "$user")
         val masterySnap = db.collection("users").document(email).collection("mastery").get().await()
         val masteries = mutableListOf<SportMasteryWithName>()
         for(mastery in masterySnap){
-            Log.i("FireUserRepo", "i'm reading $mastery")
-            val achievements = mastery.data?.get("achievements")  as ArrayList<String>
-            Log.i("FireUserRepo", "achievements $achievements")
-            val string =
-                if(achievements.isNullOrEmpty()) ""
-                else {
-                    achievements.filter { s -> !s.isNullOrEmpty() }.toString().replace("[", "").replace("]", "")
-                }
-            Log.i("FireUserRepo", "str $string")
-            val sportMastery = SportMastery(0L, email, (mastery.data?.get("level") as Long).toInt(), string)
-            Log.i("FireUserRepo", "sportMastery created: $sportMastery")
-            val sport = Sport(mastery.id, 0L)
+//            Log.i("FireUserRepo", "i'm reading $mastery")
+//            val achievements = mastery.data?.get("achievements")  as ArrayList<String>
+//            Log.i("FireUserRepo", "achievements $achievements")
+//            val string =
+//                if(achievements.isNullOrEmpty()) ""
+//                else {
+//                    achievements.filter { s -> !s.isNullOrEmpty() }.toString().replace("[", "").replace("]", "")
+//                }
+//            Log.i("FireUserRepo", "str $string")
+//            val sportMastery = SportMastery(0L, email, (mastery.data?.get("level") as Long).toInt(), string)
+//            Log.i("FireUserRepo", "sportMastery created: $sportMastery")
+            val sportMastery = DbUtils.getMastery(mastery, user.email)
+            val sport = Sport(mastery.id)
             val sportMasteryWithName = SportMasteryWithName(sportMastery, sport)
             masteries.add(sportMasteryWithName)
         }

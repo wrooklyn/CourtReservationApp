@@ -32,12 +32,6 @@ class InvitesManagerViewModel(application: Application): AndroidViewModel(applic
         }
     }
 
-    fun getPendingReceived(userId: String) { //TODO moved to friendlist
-        viewModelScope.launch {
-            val invitesReceived = inviteRepository.getPendingReceivedByUserId(userId)
-            _pendingReceivedInvites.postValue(invitesReceived)
-        }
-    }
 
     fun getParticipantsByReservationId(reservationId: String) {
         viewModelScope.launch{
@@ -50,13 +44,7 @@ class InvitesManagerViewModel(application: Application): AndroidViewModel(applic
         inviteRepository.inviteUser(reservationId, invitedUserEmail, inviterEmail)
     }
 
-    fun acceptInvite(reservationId: String, invitedUserEmail: String, inviterEmail: String) { //TODO moved to friendlist
-        inviteRepository.acceptInvite(reservationId, invitedUserEmail, inviterEmail)
-    }
 
-    fun declineInvite(reservationId: String, invitedUserEmail: String, inviterEmail: String) { //TODO moved to friendlist
-        inviteRepository.declineInvite(reservationId, invitedUserEmail, inviterEmail)
-    }
     fun getFriends(inviterEmail: String) {
         viewModelScope.launch {
             val friendList = inviteRepository.getFriendsByEmail(inviterEmail)
