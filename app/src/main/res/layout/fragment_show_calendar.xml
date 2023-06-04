@@ -8,6 +8,15 @@
     android:layout_height="match_parent"
     android:background="@color/light_blue_background"
     tools:context=".views.reservationManager.ShowCalendarFragment">
+    <ImageView
+        android:id="@+id/close_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
+        android:src="@drawable/cross"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout13"
@@ -20,13 +29,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/close_button"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/cross"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+
 
             <TextView
                 android:id="@+id/textView10"
@@ -35,7 +38,7 @@
                 android:autoSizePresetSizes="@array/autosize_title_sizes"
                 android:autoSizeTextType="uniform"
                 android:fontFamily="@font/red_hat_display_black"
-                android:text="Schedule"
+                android:text="@string/schedule"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display2"
                 android:textColor="#192E34"
                 app:layout_constraintStart_toStartOf="parent"
