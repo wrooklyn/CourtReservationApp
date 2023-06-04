@@ -1,19 +1,15 @@
 package it.polito.mad.courtreservationapp.views.reservationManager
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material3.*
-import androidx.compose.material3.AlertDialogDefaults.containerColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import it.polito.mad.courtreservationapp.views.InterSemiBold
@@ -24,16 +20,16 @@ fun DialogSection(
     ctx: MainActivity,
     friends: MutableState<List<String>>,
     isDialogVisible: MutableState<Boolean>,
+    reservationId: String,
 ){
 
-    val friendsPlaceHolder = listOf<String>("test1@gmail.com", "test2@gmail.com", "test3@gmail.com")
     AlertDialog(
         onDismissRequest = {
             isDialogVisible.value = false
         },
         shape = RoundedCornerShape(size = 12.dp),
         title = {
-            PopUpContent(ctx, friends, isDialogVisible)
+            PopUpContent(ctx, friends, isDialogVisible, reservationId)
         },
         containerColor = Color.White,
         confirmButton = {
@@ -47,6 +43,7 @@ fun PopUpContent(
     ctx: MainActivity,
     friends: MutableState<List<String>>,
     isDialogVisible: MutableState<Boolean>,
+    reservationId: String,
 ){
     Column(modifier = Modifier
         .fillMaxWidth()
@@ -87,6 +84,7 @@ fun PopUpContent(
                     colors = androidx.compose.material3.ButtonDefaults.buttonColors(Color(0xFFF16E64)),
                     onClick = {
                         isDialogVisible.value = false
+                        ctx.invitesViewModel.inviteGroup(reservationId, friends.value)
                     }
                 ) {
                     Text(text = "Confirm",

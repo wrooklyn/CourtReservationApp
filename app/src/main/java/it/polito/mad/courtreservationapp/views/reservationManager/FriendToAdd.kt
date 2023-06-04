@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,14 +27,26 @@ import it.polito.mad.courtreservationapp.views.InterRegular
 fun FriendToAddSection(
     ctx: MainActivity,
     friends: MutableState<List<String>>,
-){
+) {
 
-    val friendsPlaceHolder = listOf<String>("test1@gmail.com", "test2@gmail.com", "test3@gmail.com")
-    Column(modifier = Modifier
-        .fillMaxWidth()){
-        for(s in friendsPlaceHolder){
-//            imageId[s.sport.name]?.let { sportCard(s, it, ctx, mainLL) }
-            FriendToAddCard(s, friends)
+    val friendListState = ctx.friendListViewModel.friendList.observeAsState()
+    val friendList = friendListState.value ?: listOf()
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        if(friendList.isEmpty()){
+            Text(
+                text="No friends to add.",
+                fontSize = 15.sp,
+                fontFamily = InterRegular,
+                modifier = Modifier.padding(bottom = 15.dp)
+            )
+        }
+        for (s in friendList) {
+            if (friends.value.contains(s.username)) continue
+            FriendToAddCard(s.username, friends)
             Spacer(modifier = Modifier.height(15.dp))
         }
 
@@ -42,7 +55,7 @@ fun FriendToAddSection(
 
 
 @Composable
-fun FriendToAddCard(friendEmail: String, friends: MutableState<List<String>>){
+fun FriendToAddCard(friendEmail: String, friends: MutableState<List<String>>) {
 
     androidx.compose.material.Card(
         elevation = 4.dp,
@@ -75,7 +88,7 @@ fun FriendToAddCard(friendEmail: String, friends: MutableState<List<String>>){
             )
 
             //Spacer(modifier = Modifier.width(width = 8.dp)) // gap between image and text
-            Box(modifier = Modifier.size(20.dp)){
+            Box(modifier = Modifier.size(20.dp)) {
                 androidx.compose.material.FloatingActionButton(
                     backgroundColor = colorResource(id = R.color.green_500),
                     onClick = {

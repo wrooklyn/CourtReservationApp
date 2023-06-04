@@ -238,7 +238,7 @@ class ReservationDetailsFragment : Fragment() {
 
         dialogComposeView.setContent {
             if(isDialogVisible.value){
-                DialogSection(activity as MainActivity, friends, isDialogVisible)
+                DialogSection(activity as MainActivity, friends, isDialogVisible, reservationId)
             }
         }
 
