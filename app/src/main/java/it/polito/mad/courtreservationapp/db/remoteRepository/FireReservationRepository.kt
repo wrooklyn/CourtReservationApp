@@ -254,12 +254,13 @@ class FireReservationRepository(val application: Application) {
         val reservationsQuery = database.collection("reservations").whereEqualTo("user", userEmail)
         val reservationData = reservationsQuery.get().await()
         for (reservation in reservationData) {
-            val reservDate: String = reservation.data?.get("date") as String
-            val request: String? = reservation.data?.get("request") as String?
-            val timeslotId: Long = reservation.data?.get("timeslot") as Long
-            val courtId: String = reservation.data?.get("courtDisplayName") as String
-            val reservationItem =
-                Reservation(reservDate, timeslotId, userEmail, courtId, request, reservation.id)
+//            val reservDate: String = reservation.data?.get("date") as String
+//            val request: String? = reservation.data?.get("request") as String?
+//            val timeslotId: Long = reservation.data?.get("timeslot") as Long
+//            val courtId: String = reservation.data?.get("courtDisplayName") as String
+//            val reservationItem =
+//                Reservation(reservDate, timeslotId, userEmail, courtId, request, reservation.id)
+            val reservationItem = DbUtils.getReservation(reservation)
             result.add(reservationItem)
         }
         return result
@@ -271,19 +272,20 @@ class FireReservationRepository(val application: Application) {
         for (invite in invites) {
             val reservation =
                 database.collection("reservations").document(invite.reservationId).get().await()
-            val reservDate: String = reservation.data?.get("date") as String
-            val request: String? = reservation.data?.get("request") as String?
-            val timeslotId: Long = reservation.data?.get("timeslot") as Long
-            val courtId: String = reservation.data?.get("courtDisplayName") as String
-            val reservationItem = Reservation(
-                reservDate,
-                timeslotId,
-                invite.inviter,
-                courtId,
-                request,
-                reservation.id,
-                true,
-            )
+//            val reservDate: String = reservation.data?.get("date") as String
+//            val request: String? = reservation.data?.get("request") as String?
+//            val timeslotId: Long = reservation.data?.get("timeslot") as Long
+//            val courtId: String = reservation.data?.get("courtDisplayName") as String
+//            val reservationItem = Reservation(
+//                reservDate,
+//                timeslotId,
+//                invite.inviter,
+//                courtId,
+//                request,
+//                reservation.id,
+//                true,
+//            )
+            val reservationItem = DbUtils.getReservation(reservation)
             result.add(reservationItem)
         }
         return result
@@ -297,39 +299,42 @@ class FireReservationRepository(val application: Application) {
             database.collection("reservations").whereEqualTo("user", userEmail).get().await()
 
         for (reservation in reservationsData.documents) {
-            val reservDate: String = reservation.data?.get("date") as String
-            val request: String? = reservation.data?.get("request") as String?
-            val timeslotId: Long = reservation.data?.get("timeslot") as Long
-            val courtId: String = reservation.data?.get("courtId") as String
-
-            val reservationItem =
-                Reservation(reservDate, timeslotId, userEmail, courtId, request, reservation.id)
+//            val reservDate: String = reservation.data?.get("date") as String
+//            val request: String? = reservation.data?.get("request") as String?
+//            val timeslotId: Long = reservation.data?.get("timeslot") as Long
+//            val courtId: String = reservation.data?.get("courtId") as String
+//
+//            val reservationItem =
+//                Reservation(reservDate, timeslotId, userEmail, courtId, request, reservation.id)
+            val reservationItem = DbUtils.getReservation(reservation)
             val sportCenterId: String = reservation.data?.get("sportCenterId") as String
             val sportCenterDoc =
                 database.collection("sport-centers").document(sportCenterId).get().await()
 
             if (sportCenterDoc.exists()) {
-                val sportCenterName: String = sportCenterDoc.data?.get("name") as String
-                val sportCenterAddress: String = sportCenterDoc.data?.get("address") as String
-                val sportCenterDescription: String =
-                    sportCenterDoc.data?.get("description") as String
-                val sportCenterImageName: String =
-                    sportCenterDoc.data?.get("image_name") as String
-                val sportCenterItem = SportCenter(
-                    sportCenterName,
-                    sportCenterAddress,
-                    sportCenterDescription,
-                    sportCenterId,
-                    sportCenterImageName
-                )
+//                val sportCenterName: String = sportCenterDoc.data?.get("name") as String
+//                val sportCenterAddress: String = sportCenterDoc.data?.get("address") as String
+//                val sportCenterDescription: String =
+//                    sportCenterDoc.data?.get("description") as String
+//                val sportCenterImageName: String =
+//                    sportCenterDoc.data?.get("image_name") as String
+//                val sportCenterItem = SportCenter(
+//                    sportCenterName,
+//                    sportCenterAddress,
+//                    sportCenterDescription,
+//                    sportCenterId,
+//                    sportCenterImageName
+//                )
+                val sportCenterItem = DbUtils.getSportCenter(sportCenterDoc)
                 val courtDoc = database.collection("sport-centers").document(sportCenterId)
-                    .collection("courts").document(courtId).get().await()
+                    .collection("courts").document(reservationItem.reservationCourtId!!).get().await()
 
                 if (courtDoc.exists()) {
-                    val sportName: String = courtDoc.data?.get("sport_name") as String
-                    val imageName: String? = courtDoc.data?.get("image_name") as String?
-                    val cost: Double = courtDoc.data?.get("cost") as Double
-                    val courtItem = Court(sportCenterId, sportName, 0, courtId, cost, imageName)
+//                    val sportName: String = courtDoc.data?.get("sport_name") as String
+//                    val imageName: String? = courtDoc.data?.get("image_name") as String?
+//                    val cost: Double = courtDoc.data?.get("cost") as Double
+//                    val courtItem = Court(sportCenterId, sportName, 0, courtId, cost, imageName)
+                    val courtItem = DbUtils.getCourt(courtDoc, sportCenterItem.centerId)
                     val courtWithSc = CourtWithSportCenter(courtItem, sportCenterItem)
                     val reservationWithSc =
                         ReservationWithSportCenter(reservationItem, courtWithSc)
@@ -346,47 +351,50 @@ class FireReservationRepository(val application: Application) {
         for (invite in invites) {
             val reservation =
                 database.collection("reservations").document(invite.reservationId).get().await()
-            val reservDate: String = reservation.data?.get("date") as String
-            val request: String? = reservation.data?.get("request") as String?
-            val timeslotId: Long = reservation.data?.get("timeslot") as Long
-            val courtId: String = reservation.data?.get("courtId") as String
-
-            val reservationItem =
-                Reservation(
-                    reservDate,
-                    timeslotId,
-                    invite.inviter,
-                    courtId,
-                    request,
-                    reservation.id,
-                    true,
-                )
+//            val reservDate: String = reservation.data?.get("date") as String
+//            val request: String? = reservation.data?.get("request") as String?
+//            val timeslotId: Long = reservation.data?.get("timeslot") as Long
+//            val courtId: String = reservation.data?.get("courtId") as String
+//
+//            val reservationItem =
+//                Reservation(
+//                    reservDate,
+//                    timeslotId,
+//                    invite.inviter,
+//                    courtId,
+//                    request,
+//                    reservation.id,
+//                    true,
+//                )
+            val reservationItem = DbUtils.getReservation(reservation)
             val sportCenterId: String = reservation.data?.get("sportCenterId") as String
             val sportCenterDoc =
                 database.collection("sport-centers").document(sportCenterId).get().await()
 
             if (sportCenterDoc.exists()) {
-                val sportCenterName: String = sportCenterDoc.data?.get("name") as String
-                val sportCenterAddress: String = sportCenterDoc.data?.get("address") as String
-                val sportCenterDescription: String =
-                    sportCenterDoc.data?.get("description") as String
-                val sportCenterImageName: String =
-                    sportCenterDoc.data?.get("image_name") as String
-                val sportCenterItem = SportCenter(
-                    sportCenterName,
-                    sportCenterAddress,
-                    sportCenterDescription,
-                    sportCenterId,
-                    sportCenterImageName
-                )
+//                val sportCenterName: String = sportCenterDoc.data?.get("name") as String
+//                val sportCenterAddress: String = sportCenterDoc.data?.get("address") as String
+//                val sportCenterDescription: String =
+//                    sportCenterDoc.data?.get("description") as String
+//                val sportCenterImageName: String =
+//                    sportCenterDoc.data?.get("image_name") as String
+//                val sportCenterItem = SportCenter(
+//                    sportCenterName,
+//                    sportCenterAddress,
+//                    sportCenterDescription,
+//                    sportCenterId,
+//                    sportCenterImageName
+//                )
+                val sportCenterItem = DbUtils.getSportCenter(sportCenterDoc)
                 val courtDoc = database.collection("sport-centers").document(sportCenterId)
-                    .collection("courts").document(courtId).get().await()
+                    .collection("courts").document(reservationItem.reservationCourtId!!).get().await()
 
                 if (courtDoc.exists()) {
-                    val sportName: String = courtDoc.data?.get("sport_name") as String
-                    val imageName: String? = courtDoc.data?.get("image_name") as String?
-                    val cost: Double = courtDoc.data?.get("cost") as Double
-                    val courtItem = Court(sportCenterId, sportName, 0, courtId,cost, imageName)
+//                    val sportName: String = courtDoc.data?.get("sport_name") as String
+//                    val imageName: String? = courtDoc.data?.get("image_name") as String?
+//                    val cost: Double = courtDoc.data?.get("cost") as Double
+//                    val courtItem = Court(sportCenterId, sportName, 0, courtId,cost, imageName)
+                    val courtItem = DbUtils.getCourt(courtDoc, sportCenterItem.centerId)
                     val courtWithSc = CourtWithSportCenter(courtItem, sportCenterItem)
                     val reservationWithSc =
                         ReservationWithSportCenter(reservationItem, courtWithSc)
@@ -405,20 +413,22 @@ class FireReservationRepository(val application: Application) {
 
         if (!reservationsData.isEmpty) {
             for (reservation in reservationsData.documents) {
-                val reservDate: String = reservation.data?.get("date") as String
-                val request: String? = reservation.data?.get("request") as String?
-                val timeslotId: Long = reservation.data?.get("timeslot") as Long
-                val courtId: String = reservation.data?.get("courtId") as String
-                val reservationItem = Reservation(
-                    reservDate,
-                    timeslotId,
-                    userEmail,
-                    courtId,
-                    request,
-                    reservation.id
-                )
-                val services = reservation.data?.get("services") as ArrayList<*>
-                val serviceList = ServiceUtils.getServices(services)
+//                val reservDate: String = reservation.data?.get("date") as String
+//                val request: String? = reservation.data?.get("request") as String?
+//                val timeslotId: Long = reservation.data?.get("timeslot") as Long
+//                val courtId: String = reservation.data?.get("courtId") as String
+//                val reservationItem = Reservation(
+//                    reservDate,
+//                    timeslotId,
+//                    userEmail,
+//                    courtId,
+//                    request,
+//                    reservation.id
+//                )
+                val reservationItem = DbUtils.getReservation(reservation)
+//                val services = reservation.data?.get("services") as ArrayList<*>
+//                val serviceList = ServiceUtils.getServices(services)
+                val serviceList = DbUtils.getServices(reservation)
 
                 val reservWithServices =
                     ReservationWithServices(reservationItem, serviceList)
@@ -435,22 +445,23 @@ class FireReservationRepository(val application: Application) {
         for (invite in invites) {
             val reservation =
                 database.collection("reservations").document(invite.reservationId).get().await()
-            val reservDate: String = reservation.data?.get("date") as String
-            val request: String? = reservation.data?.get("request") as String?
-            val timeslotId: Long = reservation.data?.get("timeslot") as Long
-            val courtId: String = reservation.data?.get("courtId") as String
-            val reservationItem = Reservation(
-                reservDate,
-                timeslotId,
-                invite.inviter,
-                courtId,
-                request,
-                reservation.id,
-                true,
-            )
-            val services = reservation.data?.get("services") as ArrayList<*>
-            val serviceList = ServiceUtils.getServices(services)
-
+//            val reservDate: String = reservation.data?.get("date") as String
+//            val request: String? = reservation.data?.get("request") as String?
+//            val timeslotId: Long = reservation.data?.get("timeslot") as Long
+//            val courtId: String = reservation.data?.get("courtId") as String
+//            val reservationItem = Reservation(
+//                reservDate,
+//                timeslotId,
+//                invite.inviter,
+//                courtId,
+//                request,
+//                reservation.id,
+//                true,
+//            )
+            val reservationItem = DbUtils.getReservation(reservation)
+//            val services = reservation.data?.get("services") as ArrayList<*>
+//            val serviceList = ServiceUtils.getServices(services)
+            val serviceList = DbUtils.getServices(reservation)
             val reservWithServices =
                 ReservationWithServices(reservationItem, serviceList)
             result.add(reservWithServices)
@@ -466,34 +477,36 @@ class FireReservationRepository(val application: Application) {
 
         if (!reservationsData.isEmpty) {
             for (reservation in reservationsData.documents) {
-                val reservDate: String = reservation.data?.get("date") as String
-                val request: String? = reservation.data?.get("request") as String?
-                val timeslotId: Long = reservation.data?.get("timeslot") as Long
-                val courtId: String = reservation.data?.get("courtId") as String
+//                val reservDate: String = reservation.data?.get("date") as String
+//                val request: String? = reservation.data?.get("request") as String?
+//                val timeslotId: Long = reservation.data?.get("timeslot") as Long
+//                val courtId: String = reservation.data?.get("courtId") as String
                 var review: Review? = null
-                val reservationItem = Reservation(
-                    reservDate,
-                    timeslotId,
-                    userEmail,
-                    courtId,
-                    request,
-                    reservation.id
-                )
-                if (reservation.contains("review")) {
-                    val reviewMap = reservation.data?.get("review") as Map<*, *>
-                    val rating = reviewMap["rating"] as Int
-                    val reviewDate = reviewMap["date"] as String
-                    val reviewText = reviewMap["text"] as String
-                    val reviewId = reviewMap["id"] as String
-                    review = Review(
-                        courtId,
-                        userEmail,
-                        reservation.id,
-                        reviewText,
-                        rating,
-                        reviewDate,
-                        reviewId
-                    )
+//                val reservationItem = Reservation(
+//                    reservDate,
+//                    timeslotId,
+//                    userEmail,
+//                    courtId,
+//                    request,
+//                    reservation.id
+//                )
+                val reservationItem = DbUtils.getReservation(reservation)
+                if (reservation.contains("rating")) {
+                    review = DbUtils.getReview(reservation)
+//                    val reviewMap = reservation.data?.get("review") as Map<*, *>
+//                    val rating = reviewMap["rating"] as Int
+//                    val reviewDate = reviewMap["date"] as String
+//                    val reviewText = reviewMap["text"] as String
+//                    val reviewId = reviewMap["id"] as String
+//                    review = Review(
+//                        courtId,
+//                        userEmail,
+//                        reservation.id,
+//                        reviewText,
+//                        rating,
+//                        reviewDate,
+//                        reviewId
+//                    )
                 }
                 val reservWithReview = ReservationWithReview(reservationItem, review)
                 result.add(reservWithReview)
@@ -509,35 +522,37 @@ class FireReservationRepository(val application: Application) {
         for (invite in invites) {
             val reservation =
                 database.collection("reservations").document(invite.reservationId).get().await()
-            val reservDate: String = reservation.data?.get("date") as String
-            val request: String? = reservation.data?.get("request") as String?
-            val timeslotId: Long = reservation.data?.get("timeslot") as Long
-            val courtId: String = reservation.data?.get("courtId") as String
+//            val reservDate: String = reservation.data?.get("date") as String
+//            val request: String? = reservation.data?.get("request") as String?
+//            val timeslotId: Long = reservation.data?.get("timeslot") as Long
+//            val courtId: String = reservation.data?.get("courtId") as String
             var review: Review? = null
-            val reservationItem = Reservation(
-                reservDate,
-                timeslotId,
-                invite.inviter,
-                courtId,
-                request,
-                reservation.id,
-                true,
-            )
-            if (reservation.contains("review")) {
-                val reviewMap = reservation.data?.get("review") as Map<*, *>
-                val rating = reviewMap["rating"] as Int
-                val reviewDate = reviewMap["date"] as String
-                val reviewText = reviewMap["text"] as String
-                val reviewId = reviewMap["id"] as String
-                review = Review(
-                    courtId,
-                    invite.inviter,
-                    reservation.id,
-                    reviewText,
-                    rating,
-                    reviewDate,
-                    reviewId
-                )
+//            val reservationItem = Reservation(
+//                reservDate,
+//                timeslotId,
+//                invite.inviter,
+//                courtId,
+//                request,
+//                reservation.id,
+//                true,
+//            )
+            val reservationItem = DbUtils.getReservation(reservation)
+            if (reservation.contains("rating")) {
+                review = DbUtils.getReview(reservation)
+//                val reviewMap = reservation.data?.get("review") as Map<*, *>
+//                val rating = reviewMap["rating"] as Int
+//                val reviewDate = reviewMap["date"] as String
+//                val reviewText = reviewMap["text"] as String
+//                val reviewId = reviewMap["id"] as String
+//                review = Review(
+//                    courtId,
+//                    invite.inviter,
+//                    reservation.id,
+//                    reviewText,
+//                    rating,
+//                    reviewDate,
+//                    reviewId
+//                )
             }
             val reservWithReview = ReservationWithReview(reservationItem, review)
             result.add(reservWithReview)
