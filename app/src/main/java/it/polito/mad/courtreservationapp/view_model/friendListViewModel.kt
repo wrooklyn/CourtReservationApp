@@ -42,6 +42,14 @@ class FriendListViewModel(application: Application) : AndroidViewModel(applicati
 
         }
 
+    private val l2: ListenerRegistration = RemoteDataSource.instance
+        .collection("users")
+        .document(SavedPreference.EMAIL)
+        .collection("invites_received")
+        .addSnapshotListener { _,_ ->
+                getPendingReceived()
+        }
+
     fun getPendingReceived() {
         viewModelScope.launch {
             val invitesReceived = inviteRepository.getPendingReceivedByUserId(SavedPreference.EMAIL)
@@ -161,6 +169,6 @@ class FriendListViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     override fun onCleared() {
-        super.onCleared(); l.remove(); }
+        super.onCleared(); l.remove(); l2.remove()}
 
 }

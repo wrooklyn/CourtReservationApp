@@ -267,6 +267,46 @@
                         app:layout_constraintVertical_bias="0.545" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/guestCL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/totalCL">
+
+                    <ImageView
+                        android:id="@+id/guestIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="3dp"
+                        android:adjustViewBounds="true"
+                        android:maxWidth="25dp"
+                        android:maxHeight="25dp"
+                        android:src="@drawable/social_nav"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/guestTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:autoSizePresetSizes="@array/autosize_text_sizes"
+                        android:autoSizeTextType="uniform"
+                        android:fontFamily="@font/roboto"
+                        android:text="Guest1"
+                        android:textColor="#000000"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0"
+                        app:layout_constraintStart_toEndOf="@+id/guestIcon"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.545" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
                 <TextView
                     android:id="@+id/specialRequestsTitle"
                     android:layout_width="wrap_content"
@@ -466,7 +506,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/totalCL">
+                    app:layout_constraintTop_toBottomOf="@+id/guestCL">
 
                     <TextView
                         android:id="@+id/servicesTitle"

@@ -286,6 +286,7 @@ class FireReservationRepository(val application: Application) {
 //                true,
 //            )
             val reservationItem = DbUtils.getReservation(reservation)
+            reservationItem.isGuest=true
             result.add(reservationItem)
         }
         return result
@@ -367,6 +368,7 @@ class FireReservationRepository(val application: Application) {
 //                    true,
 //                )
             val reservationItem = DbUtils.getReservation(reservation)
+            reservationItem.isGuest=true
             val sportCenterId: String = reservation.data?.get("sportCenterId") as String
             val sportCenterDoc =
                 database.collection("sport-centers").document(sportCenterId).get().await()
@@ -459,6 +461,7 @@ class FireReservationRepository(val application: Application) {
 //                true,
 //            )
             val reservationItem = DbUtils.getReservation(reservation)
+            reservationItem.isGuest=true
 //            val services = reservation.data?.get("services") as ArrayList<*>
 //            val serviceList = ServiceUtils.getServices(services)
             val serviceList = DbUtils.getServices(reservation)
@@ -537,6 +540,7 @@ class FireReservationRepository(val application: Application) {
 //                true,
 //            )
             val reservationItem = DbUtils.getReservation(reservation)
+            reservationItem.isGuest=true
             if (reservation.contains("rating")) {
                 review = DbUtils.getReview(reservation)
 //                val reviewMap = reservation.data?.get("review") as Map<*, *>

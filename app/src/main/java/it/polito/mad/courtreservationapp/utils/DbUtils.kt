@@ -40,7 +40,9 @@ object DbUtils {
         val courtId: String = reservationSnapshot.data?.get("courtId") as String
         val user: String = reservationSnapshot.data?.get("user") as String
 
-        return Reservation(reservDate, timeslotId, user, courtId, request, reservationSnapshot.id)
+        val participants: MutableList<String> = (reservationSnapshot.data?.get("participants") as MutableList<String>?)?: mutableListOf()
+        participants.add(0, user)
+        return Reservation(reservDate, timeslotId, user, courtId, request, reservationSnapshot.id, participants=participants)
     }
 
     fun getServices(documentSnapshot: DocumentSnapshot): List<Service> {

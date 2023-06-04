@@ -51,7 +51,8 @@ class ReservationDetailsFragment : Fragment() {
     private var rating: Double = 0.0
     private var reviews: String = "0 reviews"
     private var courtCost: Double = 0.0
-
+    private var isGuest = false
+    private var participants = arrayOf<String>()
     lateinit var viewModel: ReservationBrowserViewModel
     private lateinit var sportCenterViewModel: SportCenterViewModel
 
@@ -109,33 +110,39 @@ class ReservationDetailsFragment : Fragment() {
                 "serviceCosts",
                 reservWithServices.services.map { it.cost }.toTypedArray().toDoubleArray()
             )
+            args.putStringArray(
+                "participants",
+                reservWithServices.reservation.participants.toTypedArray()
+            )
             args.putBoolean("reviewed", reviewed)
             args.putString("courtImage", reservWithSportCenter.courtWithSportCenter.court.image)
             args.putDouble("rating", averageRating)
             args.putString("reviews", currentReview)
+            args.putBoolean("isGuest", reservWithServices.reservation.isGuest)
             fragment.arguments = args
             return fragment
         }
     }
 
-    private val reviewActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val data = result.data
-            val reviewSubmitted = data?.getBooleanExtra("review_submitted", false)
-            Log.i("REVIEW", "Review submitted is $reviewSubmitted")
-            if (reviewSubmitted == true) {
-                val leaveReviewButton = view?.findViewById<Button>(R.id.leave_review_button)
-                leaveReviewButton?.visibility = View.GONE
+    private val reviewActivityResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data
+                val reviewSubmitted = data?.getBooleanExtra("review_submitted", false)
+                Log.i("REVIEW", "Review submitted is $reviewSubmitted")
+                if (reviewSubmitted == true) {
+                    val leaveReviewButton = view?.findViewById<Button>(R.id.leave_review_button)
+                    leaveReviewButton?.visibility = View.GONE
+                }
+                sportCenterViewModel.initData()
             }
-            sportCenterViewModel.initData()
         }
-    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = (activity as MainActivity).reservationBrowserViewModel
-        sportCenterViewModel =(activity as MainActivity).sportCenterViewModel
+        sportCenterViewModel = (activity as MainActivity).sportCenterViewModel
         centerName = requireArguments().getString("centerName")!!
         username = requireArguments().getString("username")!!
         sportCenterAddress = requireArguments().getString("sportCenterAddress")!!
@@ -155,6 +162,8 @@ class ReservationDetailsFragment : Fragment() {
         rating = requireArguments().getDouble("rating")
         reviews = requireArguments().getString("reviews") ?: "0 reviews"
         courtCost = requireArguments().getDouble("courtCost")
+        isGuest = requireArguments().getBoolean("isGuest")
+        participants = requireArguments().getStringArray("participants")!!
     }
 
     override fun onCreateView(
@@ -197,6 +206,7 @@ class ReservationDetailsFragment : Fragment() {
         val ratingBar: RatingBar = view.findViewById(R.id.ratingBar)
         val reviewsTv: TextView = view.findViewById(R.id.textView6)
         val totalTV: TextView = view.findViewById(R.id.totalTV)
+        val guestTV: TextView = view.findViewById(R.id.guestTV)
         mainContainerCL = view.findViewById(R.id.mainContainerCL)
 
         mainContainerCL.foreground.alpha = 0
@@ -213,11 +223,15 @@ class ReservationDetailsFragment : Fragment() {
         ImageUtils.setImage("courts", courtImage, courtImageIV)
         ratingBar.rating = rating.toFloat()
         reviewsTv.text = reviews
-
-        totalTV.text = String.format("Total: %.2f €", serviceCosts.fold(courtCost){
-                acc, el ->
+        var guests = participants.fold(""){
+            acc, user ->
+            "$acc$user, "
+        }
+        guestTV.text = guests.substring(0, guests.length-2)
+        totalTV.text = String.format("Total: %.2f €", serviceCosts.fold(courtCost) { acc, el ->
             acc + el
         })
+
 
         val editReservationButton = view.findViewById<Button>(R.id.edit_reservation_button)
         editReservationButton.setOnClickListener {
@@ -237,17 +251,20 @@ class ReservationDetailsFragment : Fragment() {
         val dialogComposeView = view.findViewById<ComposeView>(R.id.dialog_compose_view)
 
         dialogComposeView.setContent {
-            if(isDialogVisible.value){
+            if (isDialogVisible.value) {
                 DialogSection(activity as MainActivity, friends, isDialogVisible, reservationId)
             }
         }
 
+
         val addFriendsButton = view.findViewById<ImageView>(R.id.add_friends_button)
         addFriendsButton.setOnClickListener {
-            isDialogVisible.value=true
+            isDialogVisible.value = true
         }
 
         val cancelReservationButton = view.findViewById<Button>(R.id.cancel_reserv_button)
+
+
         cancelReservationButton.setOnClickListener {
             val popupView = inflater.inflate(R.layout.popup_confirm_delete_reserv, null)
             val width = LinearLayout.LayoutParams.WRAP_CONTENT
@@ -297,7 +314,7 @@ class ReservationDetailsFragment : Fragment() {
 
         val leaveReviewButton = view.findViewById<Button>(R.id.leave_review_button)
 
-        leaveReviewButton.setOnClickListener{
+        leaveReviewButton.setOnClickListener {
             val intent = Intent(activity, LeaveRatingActivity::class.java)
             intent.putExtra("courtId", courtId)
             intent.putExtra("reservationId", reservationId)
@@ -316,18 +333,23 @@ class ReservationDetailsFragment : Fragment() {
             editReservationButton.visibility = View.GONE
             addFriendsButton.visibility = View.GONE
             cancelReservationButton.visibility = View.GONE
-            if(reviewed) {
+            if (reviewed) {
                 Log.i("REVIEW", "Reservation $reservationId is already rated")
                 leaveReviewButton.visibility = View.GONE
-            }
-            else {
+            } else {
                 Log.i("REVIEW", "Reservation $reservationId is not already rated")
                 leaveReviewButton.visibility = View.VISIBLE
             }
         }
         val isReviewed = viewModel.hasAlreadyReviewed(sportCenterId, courtId, reservationId)
-        if(isReviewed){
-            leaveReviewButton.visibility=View.GONE
+        if (isReviewed) {
+            leaveReviewButton.visibility = View.GONE
+        }
+        if (isGuest) {
+            addFriendsButton.visibility = View.GONE
+            cancelReservationButton.visibility = View.GONE
+            editReservationButton.visibility = View.GONE
+            leaveReviewButton.visibility = View.GONE
         }
     }
 
