@@ -2,6 +2,7 @@ package it.polito.mad.courtreservationapp.utils
 
 import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.mad.courtreservationapp.models.*
 
 object DbUtils {
@@ -90,5 +91,13 @@ object DbUtils {
         return SportMastery(0L, email, level.toInt(), achievementsString)
 
     }
+
+    fun getInvite(inviteSnapshot: DocumentSnapshot): Invite{
+        val reservationId = inviteSnapshot.data?.get("reservationId") as String
+        val status = Status.PENDING
+        val inviter = inviteSnapshot.data?.get("inviter") as String
+        return Invite(reservationId, status, inviter)
+    }
+
 
 }

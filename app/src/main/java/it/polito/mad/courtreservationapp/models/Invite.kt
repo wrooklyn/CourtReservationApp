@@ -10,9 +10,9 @@ data class Invite(
     val reservationId: String,
     val status: Status,
     val inviter:String,
-    val additionalInfo: AdditionalInfo?=null,
+    var additionalInfo: AdditionalInfo?=null,
 
-)
+    )
 
 data class AdditionalInfo(
     var date: String,

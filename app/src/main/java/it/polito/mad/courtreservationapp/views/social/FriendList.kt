@@ -1,16 +1,10 @@
 package it.polito.mad.courtreservationapp.views.social
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -18,10 +12,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -32,7 +30,6 @@ import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.models.Friend
 import it.polito.mad.courtreservationapp.models.Invite
 import it.polito.mad.courtreservationapp.models.TimeslotMap
-import it.polito.mad.courtreservationapp.view_model.FriendListViewModel
 import it.polito.mad.courtreservationapp.views.MainActivity
 import kotlinx.coroutines.launch
 import java.util.*
@@ -142,8 +139,9 @@ fun TabFriendList(
         ) {
             friendList.map {
                 ListTile(
-                    title = it.username,
+                    title = "${it.username}",
                     leading = { Icon(Icons.Default.ArrowDropDown, "profile pic") },
+                    request = false
                 )
             }
             if (showDialog) {
@@ -192,7 +190,7 @@ fun TabFriendRequests(
         Column() {
             playInvitesList.map {
                 ExpandableListTile(
-                    title = "${it.inviter} has invited you to play",
+                    title = "${it.inviter}",
                     leading = {
                         Icon(Icons.Default.ArrowDropDown, "profile pic")
                     },
@@ -203,7 +201,7 @@ fun TabFriendRequests(
                                 modifier = Modifier
                                     .padding(end = 8.dp)
                                     .clickable {
-                                        viewModel.acceptInvite(it){
+                                        viewModel.acceptInvite(it) {
                                             activity.reservationBrowserViewModel.initUserReservations()
                                         }
                                     }
@@ -223,17 +221,24 @@ fun TabFriendRequests(
                     content = {
                         val infos = it.additionalInfo!!
 
+                        val text = buildAnnotatedString {
+                            withStyle(style = MaterialTheme.typography.body2.toSpanStyle()) {
+                                append("You've been invited to a ")
+                            }
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.SemiBold, color = Color.Black)) {
+                                append(infos.sport.toLowerCase())
+                            }
+                            withStyle(style = MaterialTheme.typography.body2.toSpanStyle()) {
+                                append(" activity, at ")
+                            }
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.SemiBold, color = Color.Black)) {
+                                append("${infos.centerName}, ${infos.address}, on ${infos.date} at ${TimeslotMap.getTimeslotString(infos.timeslot).toString()}")
+                            }
+                        }
+
                         Column() {
                             Text(
-                                text = "You'll join the activity: ${infos.sport}",
-                                style = MaterialTheme.typography.body2
-                            )
-                            Text(
-                                text = "At ${infos.centerName}, ${infos.address}",
-                                style = MaterialTheme.typography.body2
-                            )
-                            Text(
-                                text = "On ${infos.date} at ${TimeslotMap.getTimeslotString(infos.timeslot)}",
+                                text = text,
                                 style = MaterialTheme.typography.body2
                             )
                         }
@@ -243,10 +248,11 @@ fun TabFriendRequests(
             }
             friendList.map {
                 ListTile(
-                    title = "${it.username} wants to be your friend",
+                    title = "${it.username}",
                     leading = {
                         Icon(Icons.Default.ArrowDropDown, "profile pic")
                     },
+                    request = true,
                     trailing = {
                         Row() {
                             Icon(Icons.Default.Done, "Accept",
@@ -272,6 +278,7 @@ fun TabFriendRequests(
         }
     }
 }
+
 
 val tabRowItems = listOf(
     TabRowItem(
