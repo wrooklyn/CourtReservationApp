@@ -5,6 +5,7 @@ import androidx.room.util.query
 import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.mad.courtreservationapp.db.RemoteDataSource
 import it.polito.mad.courtreservationapp.models.*
+import it.polito.mad.courtreservationapp.utils.DbUtils
 import kotlinx.coroutines.tasks.await
 
 class FireInviteRepository(val application: Application) {
@@ -17,10 +18,11 @@ class FireInviteRepository(val application: Application) {
             db.collection("users").document(userId).collection("invites_sent")
                 .whereEqualTo("state", "pending").get().await()
         for (invite in invitesSentCollection.documents) {
-            val reservationId = invite.data?.get("reference_id") as String
-            val status = Status.PENDING
-            val inviter = invite.data?.get("inviter") as String
-            val inviteItem = Invite(reservationId, status, inviter)
+//            val reservationId = invite.data?.get("reference_id") as String
+//            val status = Status.PENDING
+//            val inviter = invite.data?.get("inviter") as String
+//            val inviteItem = Invite(reservationId, status, inviter)
+            val inviteItem = DbUtils.getInvite(invite)
             result.add(inviteItem)
         }
         return result
@@ -32,10 +34,11 @@ class FireInviteRepository(val application: Application) {
             db.collection("users").document(userId).collection("invites_received")
                 .whereEqualTo("status", Status.ACCEPTED.name).get().await()
         for (invite in invitesSentCollection.documents) {
-            val reservationId = invite.data?.get("reservationId") as String
-            val status = Status.PENDING
-            val inviter = invite.data?.get("inviter") as String
-            val inviteItem = Invite(reservationId, status, inviter)
+//            val reservationId = invite.data?.get("reservationId") as String
+//            val status = Status.PENDING
+//            val inviter = invite.data?.get("inviter") as String
+//            val inviteItem = Invite(reservationId, status, inviter)
+            val inviteItem = DbUtils.getInvite(invite)
             result.add(inviteItem)
         }
         return result
@@ -47,11 +50,13 @@ class FireInviteRepository(val application: Application) {
             db.collection("users").document(userId).collection("invites_received")
                 .whereEqualTo("status", Status.PENDING.name).get().await()
         for (invite in invitesSentCollection.documents) {
-            val reservationId = invite.data?.get("reservationId") as String
-            val status = Status.PENDING
-            val inviter = invite.data?.get("inviter") as String
+//            val reservationId = invite.data?.get("reservationId") as String
+//            val status = Status.PENDING
+//            val inviter = invite.data?.get("inviter") as String
+            val inviteItem = DbUtils.getInvite(invite)
+
             val reservationData =
-                db.collection("reservations").document(reservationId).get().await()
+                db.collection("reservations").document(inviteItem.reservationId).get().await()
             val courtId = reservationData.data?.get("courtId") as String
             val date = reservationData.data?.get("date") as String
             val timeslot = reservationData.data?.get("timeslot") as Long
@@ -64,8 +69,10 @@ class FireInviteRepository(val application: Application) {
                 db.collection("sport-centers").document(sportCenterId).collection("courts")
                     .document(courtId).get().await()
             val sport = courtData.data?.get("sport_name") as String
+
             val additionalInfo = AdditionalInfo(date, timeslot, sport, name, address)
-            val inviteItem = Invite(reservationId, status, inviter, additionalInfo)
+//            val inviteItem = Invite(reservationId, status, inviter, additionalInfo)
+            inviteItem.additionalInfo = additionalInfo
             result.add(inviteItem)
         }
         return result
