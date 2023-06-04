@@ -71,7 +71,6 @@ class ReservationBrowserViewModel(application: Application) : AndroidViewModel(a
                 val userReservLocations = reservationRepo.getReservationLocationsByUserId(userEmail)
                 _userReservationsLocations.postValue(userReservLocations + invitedReservLocations)
 
-
                 val invitedReservServices = reservationRepo.getReservationServicesFromInvites(invitesReceived)
                 val userReservServices = reservationRepo.getReservationServicesByUserId(userEmail)
                 _userReservationsServices.postValue(userReservServices + invitedReservServices)
