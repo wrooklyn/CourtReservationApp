@@ -11,6 +11,7 @@ import it.polito.mad.courtreservationapp.db.relationships.ReservationWithService
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithSportCenter
 import it.polito.mad.courtreservationapp.db.relationships.ReservationWithReview
 import it.polito.mad.courtreservationapp.models.*
+import it.polito.mad.courtreservationapp.utils.DbUtils
 import it.polito.mad.courtreservationapp.utils.ServiceUtils
 import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
 import it.polito.mad.courtreservationapp.views.login.SavedPreference
@@ -327,7 +328,8 @@ class FireReservationRepository(val application: Application) {
                 if (courtDoc.exists()) {
                     val sportName: String = courtDoc.data?.get("sport_name") as String
                     val imageName: String? = courtDoc.data?.get("image_name") as String?
-                    val courtItem = Court(sportCenterId, sportName, 0, courtId, imageName)
+                    val cost: Double = courtDoc.data?.get("cost") as Double
+                    val courtItem = Court(sportCenterId, sportName, 0, courtId, cost, imageName)
                     val courtWithSc = CourtWithSportCenter(courtItem, sportCenterItem)
                     val reservationWithSc =
                         ReservationWithSportCenter(reservationItem, courtWithSc)
@@ -383,7 +385,8 @@ class FireReservationRepository(val application: Application) {
                 if (courtDoc.exists()) {
                     val sportName: String = courtDoc.data?.get("sport_name") as String
                     val imageName: String? = courtDoc.data?.get("image_name") as String?
-                    val courtItem = Court(sportCenterId, sportName, 0, courtId, imageName)
+                    val cost: Double = courtDoc.data?.get("cost") as Double
+                    val courtItem = Court(sportCenterId, sportName, 0, courtId,cost, imageName)
                     val courtWithSc = CourtWithSportCenter(courtItem, sportCenterItem)
                     val reservationWithSc =
                         ReservationWithSportCenter(reservationItem, courtWithSc)
