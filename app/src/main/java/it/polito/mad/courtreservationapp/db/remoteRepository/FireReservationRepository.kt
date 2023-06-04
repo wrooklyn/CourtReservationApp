@@ -1,9 +1,8 @@
-
-
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FirebaseFirestore
 import it.polito.mad.courtreservationapp.db.RemoteDataSource
 import it.polito.mad.courtreservationapp.db.relationships.CourtWithSportCenter
@@ -14,6 +13,7 @@ import it.polito.mad.courtreservationapp.models.*
 import it.polito.mad.courtreservationapp.utils.ServiceUtils
 import it.polito.mad.courtreservationapp.view_model.ReservationBrowserViewModel
 import it.polito.mad.courtreservationapp.views.login.SavedPreference
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class FireReservationRepository(val application: Application) {
@@ -28,7 +28,7 @@ class FireReservationRepository(val application: Application) {
     suspend fun insertReservationWithServices(
         reservationWithServices: ReservationWithServices,
         sportCenterId: String
-    ){
+    ) {
         //optional reservationId reservationWithServices.reservation.reservationId
         val reservationId = reservationWithServices.reservation.reservationId
         var isEdit = !reservationWithServices.reservation.reservationId.isNullOrEmpty()
@@ -70,19 +70,23 @@ class FireReservationRepository(val application: Application) {
         ) as Map<String, Any>
 
 
-        if(isEdit){
+        if (isEdit) {
             database.collection("reservations").document(reservationId).set(content)
                 .addOnSuccessListener { documentReference ->
                     //content["reservationId"] = reservationId
-                    database.collection("sport-centers").document(sportCenterId).collection("courts")
-                        .document(reservationWithServices.reservation.reservationCourtId).collection("reservations")
+                    database.collection("sport-centers").document(sportCenterId)
+                        .collection("courts")
+                        .document(reservationWithServices.reservation.reservationCourtId)
+                        .collection("reservations")
                         .whereEqualTo("reservationId", reservationId).get().addOnSuccessListener {
                             for (document in it.documents) {
                                 document.reference.set(content)
                             }
                         }
-                    database.collection("sport-centers").document(sportCenterId).collection("courts")
-                        .document(reservationWithServices.reservation.reservationCourtId!!).update(flag)
+                    database.collection("sport-centers").document(sportCenterId)
+                        .collection("courts")
+                        .document(reservationWithServices.reservation.reservationCourtId!!)
+                        .update(flag)
                     database.collection("users")
                         .document(reservationWithServices.reservation.reservationUserId!!)
                         .collection("reservations")
@@ -92,16 +96,19 @@ class FireReservationRepository(val application: Application) {
                             }
                         }
                 }
-        }else{
+        } else {
             database.collection("reservations").add(content)
                 .addOnSuccessListener { documentReference ->
                     val id = documentReference.id
                     content["reservationId"] = id
-                    database.collection("sport-centers").document(sportCenterId).collection("courts")
+                    database.collection("sport-centers").document(sportCenterId)
+                        .collection("courts")
                         .document(reservationWithServices.reservation.reservationCourtId!!)
                         .collection("reservations").add(content)
-                    database.collection("sport-centers").document(sportCenterId).collection("courts")
-                        .document(reservationWithServices.reservation.reservationCourtId!!).update(flag)
+                    database.collection("sport-centers").document(sportCenterId)
+                        .collection("courts")
+                        .document(reservationWithServices.reservation.reservationCourtId!!)
+                        .update(flag)
                     database.collection("users")
                         .document(reservationWithServices.reservation.reservationUserId!!)
                         .collection("reservations").add(content)
@@ -137,8 +144,12 @@ class FireReservationRepository(val application: Application) {
     }
 
 
-
-    fun deleteReservationById(reservationId: String, userEmail: String, sportCenterId: String, courtId: String) {
+    fun deleteReservationById(
+        reservationId: String,
+        userEmail: String,
+        sportCenterId: String,
+        courtId: String
+    ) {
         deleteFromReservations(reservationId)
         deleteFromUsersReservations(reservationId, userEmail)
         deleteFromSportCenterCourtReservations(reservationId, sportCenterId, courtId)
@@ -150,7 +161,7 @@ class FireReservationRepository(val application: Application) {
             .addOnSuccessListener {
                 println("Successfully deleted reservation $reservationId from reservations")
             }
-            .addOnFailureListener{
+            .addOnFailureListener {
                 println("Error deleting reservation $reservationId from reservations")
             }
     }
@@ -162,8 +173,8 @@ class FireReservationRepository(val application: Application) {
             .collection("reservations")
             .whereEqualTo("reservationId", reservationId)
             .get()
-            .addOnSuccessListener{
-                for(document in it.documents) {
+            .addOnSuccessListener {
+                for (document in it.documents) {
                     document.reference.delete()
                         .addOnSuccessListener {
                             println("Successfully deleted reservation $reservationId from users/$userEmail/reservations/$reservationId")
@@ -175,7 +186,11 @@ class FireReservationRepository(val application: Application) {
             }
     }
 
-    private fun deleteFromSportCenterCourtReservations(reservationId: String, sportCenterId: String, courtId: String) {
+    private fun deleteFromSportCenterCourtReservations(
+        reservationId: String,
+        sportCenterId: String,
+        courtId: String
+    ) {
         database
             .collection("sport-centers")
             .document(sportCenterId)
@@ -184,8 +199,8 @@ class FireReservationRepository(val application: Application) {
             .collection("reservations")
             .whereEqualTo("reservationId", reservationId)
             .get()
-            .addOnSuccessListener{
-                for(document in it.documents) {
+            .addOnSuccessListener {
+                for (document in it.documents) {
                     document.reference.delete()
                         .addOnSuccessListener {
                             println("Successfully deleted reservation $reservationId from sport-centers/$sportCenterId/courts/$courtId/reservations")
@@ -195,20 +210,17 @@ class FireReservationRepository(val application: Application) {
                         }
                 }
             }
-            .addOnFailureListener{
+            .addOnFailureListener {
                 println("Error getting reservation from sport-centers/$sportCenterId/courts/$courtId/reservations/")
             }
     }
 
 
-
-
-
-     fun getByIdWithServices(reservationId: String): LiveData<ReservationWithServices>{
+    fun getByIdWithServices(reservationId: String): LiveData<ReservationWithServices> {
         //return reservationDao.getByIdWithServices(reservationId)
         val resLiveData = MutableLiveData<ReservationWithServices>()
         database.collection("reservations").document(reservationId).get().addOnSuccessListener {
-            if(it.exists()){
+            if (it.exists()) {
                 val courtId = it.data?.get("courtId") as String?
                 val date = it.data?.get("date") as String
                 val timeslot = it.data?.get("timeslot") as Long
@@ -220,8 +232,15 @@ class FireReservationRepository(val application: Application) {
                     if (serv != null)
                         serviceList.add(serv)
                 }
-                val reservation = Reservation(date, timeslot,SavedPreference.EMAIL, courtId, requests, reservationId)
-                val item = ReservationWithServices(reservation,serviceList)
+                val reservation = Reservation(
+                    date,
+                    timeslot,
+                    SavedPreference.EMAIL,
+                    courtId,
+                    requests,
+                    reservationId
+                )
+                val item = ReservationWithServices(reservation, serviceList)
                 resLiveData.postValue(item)
             }
         }
@@ -229,142 +248,298 @@ class FireReservationRepository(val application: Application) {
     }
 
 
-    fun getReservationsByUser(userEmail: String): List<Reservation> {
+    suspend fun getReservationsByUser(userEmail: String): List<Reservation> {
         val result: MutableList<Reservation> = mutableListOf()
 
         val reservationsQuery = database.collection("reservations").whereEqualTo("user", userEmail)
-        reservationsQuery.get()
-            .addOnSuccessListener { querySnapshot ->
-                if(!querySnapshot.isEmpty) {
-                    for(reservation in querySnapshot.documents) {
-                        val reservDate: String = reservation.data?.get("date") as String
-                        val request: String? = reservation.data?.get("request") as String?
-                        val timeslotId: Long = reservation.data?.get("timeslot") as Long
-                        val courtId: String = reservation.data?.get("courtDisplayName") as String
-                        val reservationItem = Reservation(reservDate, timeslotId, userEmail, courtId, request, reservation.id)
-                        result.add(reservationItem)
-                    }
-                }
-            }
+        val reservationData = reservationsQuery.get().await()
+        for (reservation in reservationData) {
+            val reservDate: String = reservation.data?.get("date") as String
+            val request: String? = reservation.data?.get("request") as String?
+            val timeslotId: Long = reservation.data?.get("timeslot") as Long
+            val courtId: String = reservation.data?.get("courtDisplayName") as String
+            val reservationItem =
+                Reservation(reservDate, timeslotId, userEmail, courtId, request, reservation.id)
+            result.add(reservationItem)
+        }
         return result
     }
 
-    fun getReservationLocationsByUserId(userEmail: String): List<ReservationWithSportCenter> {
+    suspend fun getReservationsFromInvites(invites: List<Invite>): List<Reservation> {
+        val result: MutableList<Reservation> = mutableListOf()
+
+        for (invite in invites) {
+            val reservation =
+                database.collection("reservations").document(invite.reservationId).get().await()
+            val reservDate: String = reservation.data?.get("date") as String
+            val request: String? = reservation.data?.get("request") as String?
+            val timeslotId: Long = reservation.data?.get("timeslot") as Long
+            val courtId: String = reservation.data?.get("courtDisplayName") as String
+            val reservationItem = Reservation(
+                reservDate,
+                timeslotId,
+                invite.inviter,
+                courtId,
+                request,
+                reservation.id,
+                true,
+            )
+            result.add(reservationItem)
+        }
+        return result
+    }
+
+
+    suspend fun getReservationLocationsByUserId(userEmail: String): List<ReservationWithSportCenter> {
         val result: MutableList<ReservationWithSportCenter> = mutableListOf()
         val database: FirebaseFirestore = RemoteDataSource.instance
-        val reservationsQuery = database.collection("reservations").whereEqualTo("user", userEmail)
-        reservationsQuery.get()
-            .addOnSuccessListener { querySnapshot ->
-                if(!querySnapshot.isEmpty){
-                    for(reservation in querySnapshot.documents) {
-                        val reservDate: String = reservation.data?.get("date") as String
-                        val request: String? = reservation.data?.get("request") as String?
-                        val timeslotId: Long = reservation.data?.get("timeslot") as Long
-                        val courtId: String = reservation.data?.get("courtId") as String
-                        val courtDisplayName: String = reservation.data?.get("courtDisplayName") as String
-                        val reservationItem = Reservation(reservDate, timeslotId, userEmail, courtId, request, reservation.id)
-                        val sportCenterId: String = reservation.data?.get("sportCenterId") as String
-                        val sportCenterRef = database.collection("sport-centers").document(sportCenterId)
-                        sportCenterRef.get().addOnSuccessListener { sportCenterDoc ->
-                            if(sportCenterDoc.exists()) {
-                                val sportCenterName: String = sportCenterDoc.data?.get("name") as String
-                                val sportCenterAddress: String = sportCenterDoc.data?.get("address") as String
-                                val sportCenterDescription: String = sportCenterDoc.data?.get("description") as String
-                                val sportCenterImageName: String = sportCenterDoc.data?.get("image_name") as String
-                                val sportCenterItem = SportCenter(sportCenterName, sportCenterAddress, sportCenterDescription, sportCenterId, sportCenterImageName)
-                                val courtRef = database.collection("sport-centers").document(sportCenterId).collection("courts").document(courtId)
-                                courtRef.get().addOnSuccessListener { courtDoc ->
-                                    if(courtDoc.exists()) {
-                                        val sportName: String = courtDoc.data?.get("sport_name") as String
-                                        val imageName: String? = courtDoc.data?.get("image_name") as String?
-                                        val courtItem = Court(sportCenterId, sportName, 0, courtId, imageName)
-                                        val courtWithSc = CourtWithSportCenter(courtItem, sportCenterItem)
-                                        val reservationWithSc = ReservationWithSportCenter(reservationItem, courtWithSc)
-                                        result.add(reservationWithSc)
-                                    }
-                                }
-                            }
-                        }
-                    }
+        val reservationsData =
+            database.collection("reservations").whereEqualTo("user", userEmail).get().await()
+
+        for (reservation in reservationsData.documents) {
+            val reservDate: String = reservation.data?.get("date") as String
+            val request: String? = reservation.data?.get("request") as String?
+            val timeslotId: Long = reservation.data?.get("timeslot") as Long
+            val courtId: String = reservation.data?.get("courtId") as String
+
+            val reservationItem =
+                Reservation(reservDate, timeslotId, userEmail, courtId, request, reservation.id)
+            val sportCenterId: String = reservation.data?.get("sportCenterId") as String
+            val sportCenterDoc =
+                database.collection("sport-centers").document(sportCenterId).get().await()
+
+            if (sportCenterDoc.exists()) {
+                val sportCenterName: String = sportCenterDoc.data?.get("name") as String
+                val sportCenterAddress: String = sportCenterDoc.data?.get("address") as String
+                val sportCenterDescription: String =
+                    sportCenterDoc.data?.get("description") as String
+                val sportCenterImageName: String =
+                    sportCenterDoc.data?.get("image_name") as String
+                val sportCenterItem = SportCenter(
+                    sportCenterName,
+                    sportCenterAddress,
+                    sportCenterDescription,
+                    sportCenterId,
+                    sportCenterImageName
+                )
+                val courtDoc = database.collection("sport-centers").document(sportCenterId)
+                    .collection("courts").document(courtId).get().await()
+
+                if (courtDoc.exists()) {
+                    val sportName: String = courtDoc.data?.get("sport_name") as String
+                    val imageName: String? = courtDoc.data?.get("image_name") as String?
+                    val courtItem = Court(sportCenterId, sportName, 0, courtId, imageName)
+                    val courtWithSc = CourtWithSportCenter(courtItem, sportCenterItem)
+                    val reservationWithSc =
+                        ReservationWithSportCenter(reservationItem, courtWithSc)
+                    result.add(reservationWithSc)
                 }
-            }
-        return result
-    }
-
-    fun getReservationServicesByUserId(userEmail: String): List<ReservationWithServices> {
-        val result: MutableList<ReservationWithServices> = mutableListOf()
-        val database: FirebaseFirestore = RemoteDataSource.instance
-        val reservationsQuery = database.collection("reservations").whereEqualTo("user", userEmail)
-        reservationsQuery.get()
-            .addOnSuccessListener { querySnapshot ->
-                if(!querySnapshot.isEmpty){
-                    for(reservation in querySnapshot.documents) {
-                        val reservDate: String = reservation.data?.get("date") as String
-                        val request: String? = reservation.data?.get("request") as String?
-                        val timeslotId: Long = reservation.data?.get("timeslot") as Long
-                        val courtId: String = reservation.data?.get("courtId") as String
-                        val reservationItem = Reservation(
-                            reservDate,
-                            timeslotId,
-                            userEmail,
-                            courtId,
-                            request,
-                            reservation.id
-                        )
-                        val services = reservation.data?.get("services") as ArrayList<*>
-                        val serviceList = ServiceUtils.getServices(services)
-
-//                        for (service in services) {
-//                            Log.i("ReservationRepo", "$service")
-//                            val id = (service as HashMap<*,*>)["serviceId"]
-////                            Log.i("ReservationRepo", "id: ${(service as Service).serviceId}")
-//                            val serv = serviceMap[id]
-//                            if (serv != null)
-//                                serviceList.add(serv)
-//                        }
-                        val reservWithServices =
-                            ReservationWithServices(reservationItem, serviceList)
-                        result.add(reservWithServices)
-                    }
             }
         }
         return result
     }
 
-    fun getReservationsReviewsByUserId(userEmail: String): List<ReservationWithReview> {
-        val result: MutableList<ReservationWithReview> = mutableListOf()
-        val database: FirebaseFirestore = RemoteDataSource.instance
-        val reservationsQuery = database.collection("reservations").whereEqualTo("user", userEmail)
-        reservationsQuery.get()
-            .addOnSuccessListener { querySnapshot ->
-                if(!querySnapshot.isEmpty) {
-                    for(reservation in querySnapshot.documents) {
-                        val reservDate: String = reservation.data?.get("date") as String
-                        val request: String? = reservation.data?.get("request") as String?
-                        val timeslotId: Long = reservation.data?.get("timeslot") as Long
-                        val courtId: String = reservation.data?.get("courtId") as String
-                        var review: Review? = null
-                        val reservationItem = Reservation(
-                            reservDate,
-                            timeslotId,
-                            userEmail,
-                            courtId,
-                            request,
-                            reservation.id
-                        )
-                        if(reservation.contains("review")) {
-                            val reviewMap = reservation.data?.get("review") as Map<*, *>
-                            val rating = reviewMap["rating"] as Int
-                            val reviewDate = reviewMap["date"] as String
-                            val reviewText = reviewMap["text"] as String
-                            val reviewId = reviewMap["id"] as String
-                            review = Review(courtId, userEmail, reservation.id, reviewText, rating, reviewDate, reviewId)
-                        }
-                        val reservWithReview = ReservationWithReview(reservationItem, review)
-                        result.add(reservWithReview)
-                    }
+    suspend fun getReservationLocationsFromInvites(invites: List<Invite>): List<ReservationWithSportCenter> {
+        val result: MutableList<ReservationWithSportCenter> = mutableListOf()
+
+        for (invite in invites) {
+            val reservation =
+                database.collection("reservations").document(invite.reservationId).get().await()
+            val reservDate: String = reservation.data?.get("date") as String
+            val request: String? = reservation.data?.get("request") as String?
+            val timeslotId: Long = reservation.data?.get("timeslot") as Long
+            val courtId: String = reservation.data?.get("courtId") as String
+
+            val reservationItem =
+                Reservation(
+                    reservDate,
+                    timeslotId,
+                    invite.inviter,
+                    courtId,
+                    request,
+                    reservation.id,
+                    true,
+                )
+            val sportCenterId: String = reservation.data?.get("sportCenterId") as String
+            val sportCenterDoc =
+                database.collection("sport-centers").document(sportCenterId).get().await()
+
+            if (sportCenterDoc.exists()) {
+                val sportCenterName: String = sportCenterDoc.data?.get("name") as String
+                val sportCenterAddress: String = sportCenterDoc.data?.get("address") as String
+                val sportCenterDescription: String =
+                    sportCenterDoc.data?.get("description") as String
+                val sportCenterImageName: String =
+                    sportCenterDoc.data?.get("image_name") as String
+                val sportCenterItem = SportCenter(
+                    sportCenterName,
+                    sportCenterAddress,
+                    sportCenterDescription,
+                    sportCenterId,
+                    sportCenterImageName
+                )
+                val courtDoc = database.collection("sport-centers").document(sportCenterId)
+                    .collection("courts").document(courtId).get().await()
+
+                if (courtDoc.exists()) {
+                    val sportName: String = courtDoc.data?.get("sport_name") as String
+                    val imageName: String? = courtDoc.data?.get("image_name") as String?
+                    val courtItem = Court(sportCenterId, sportName, 0, courtId, imageName)
+                    val courtWithSc = CourtWithSportCenter(courtItem, sportCenterItem)
+                    val reservationWithSc =
+                        ReservationWithSportCenter(reservationItem, courtWithSc)
+                    result.add(reservationWithSc)
                 }
             }
+        }
+        return result
+    }
+
+    suspend fun getReservationServicesByUserId(userEmail: String): List<ReservationWithServices> {
+        val result: MutableList<ReservationWithServices> = mutableListOf()
+        val database: FirebaseFirestore = RemoteDataSource.instance
+        val reservationsData =
+            database.collection("reservations").whereEqualTo("user", userEmail).get().await()
+
+        if (!reservationsData.isEmpty) {
+            for (reservation in reservationsData.documents) {
+                val reservDate: String = reservation.data?.get("date") as String
+                val request: String? = reservation.data?.get("request") as String?
+                val timeslotId: Long = reservation.data?.get("timeslot") as Long
+                val courtId: String = reservation.data?.get("courtId") as String
+                val reservationItem = Reservation(
+                    reservDate,
+                    timeslotId,
+                    userEmail,
+                    courtId,
+                    request,
+                    reservation.id
+                )
+                val services = reservation.data?.get("services") as ArrayList<*>
+                val serviceList = ServiceUtils.getServices(services)
+
+                val reservWithServices =
+                    ReservationWithServices(reservationItem, serviceList)
+                result.add(reservWithServices)
+            }
+        }
+
+        return result
+    }
+
+    suspend fun getReservationServicesFromInvites(invites: List<Invite>): List<ReservationWithServices> {
+        val result: MutableList<ReservationWithServices> = mutableListOf()
+
+        for (invite in invites) {
+            val reservation =
+                database.collection("reservations").document(invite.reservationId).get().await()
+            val reservDate: String = reservation.data?.get("date") as String
+            val request: String? = reservation.data?.get("request") as String?
+            val timeslotId: Long = reservation.data?.get("timeslot") as Long
+            val courtId: String = reservation.data?.get("courtId") as String
+            val reservationItem = Reservation(
+                reservDate,
+                timeslotId,
+                invite.inviter,
+                courtId,
+                request,
+                reservation.id,
+                true,
+            )
+            val services = reservation.data?.get("services") as ArrayList<*>
+            val serviceList = ServiceUtils.getServices(services)
+
+            val reservWithServices =
+                ReservationWithServices(reservationItem, serviceList)
+            result.add(reservWithServices)
+        }
+        return result
+    }
+
+    suspend fun getReservationsReviewsByUserId(userEmail: String): List<ReservationWithReview> {
+        val result: MutableList<ReservationWithReview> = mutableListOf()
+        val database: FirebaseFirestore = RemoteDataSource.instance
+        val reservationsData =
+            database.collection("reservations").whereEqualTo("user", userEmail).get().await()
+
+        if (!reservationsData.isEmpty) {
+            for (reservation in reservationsData.documents) {
+                val reservDate: String = reservation.data?.get("date") as String
+                val request: String? = reservation.data?.get("request") as String?
+                val timeslotId: Long = reservation.data?.get("timeslot") as Long
+                val courtId: String = reservation.data?.get("courtId") as String
+                var review: Review? = null
+                val reservationItem = Reservation(
+                    reservDate,
+                    timeslotId,
+                    userEmail,
+                    courtId,
+                    request,
+                    reservation.id
+                )
+                if (reservation.contains("review")) {
+                    val reviewMap = reservation.data?.get("review") as Map<*, *>
+                    val rating = reviewMap["rating"] as Int
+                    val reviewDate = reviewMap["date"] as String
+                    val reviewText = reviewMap["text"] as String
+                    val reviewId = reviewMap["id"] as String
+                    review = Review(
+                        courtId,
+                        userEmail,
+                        reservation.id,
+                        reviewText,
+                        rating,
+                        reviewDate,
+                        reviewId
+                    )
+                }
+                val reservWithReview = ReservationWithReview(reservationItem, review)
+                result.add(reservWithReview)
+            }
+
+        }
+        return result
+    }
+
+    suspend fun getReservationReviewsFromInvites(invites: List<Invite>): List<ReservationWithReview> {
+        val result: MutableList<ReservationWithReview> = mutableListOf()
+
+        for (invite in invites) {
+            val reservation =
+                database.collection("reservations").document(invite.reservationId).get().await()
+            val reservDate: String = reservation.data?.get("date") as String
+            val request: String? = reservation.data?.get("request") as String?
+            val timeslotId: Long = reservation.data?.get("timeslot") as Long
+            val courtId: String = reservation.data?.get("courtId") as String
+            var review: Review? = null
+            val reservationItem = Reservation(
+                reservDate,
+                timeslotId,
+                invite.inviter,
+                courtId,
+                request,
+                reservation.id,
+                true,
+            )
+            if (reservation.contains("review")) {
+                val reviewMap = reservation.data?.get("review") as Map<*, *>
+                val rating = reviewMap["rating"] as Int
+                val reviewDate = reviewMap["date"] as String
+                val reviewText = reviewMap["text"] as String
+                val reviewId = reviewMap["id"] as String
+                review = Review(
+                    courtId,
+                    invite.inviter,
+                    reservation.id,
+                    reviewText,
+                    rating,
+                    reviewDate,
+                    reviewId
+                )
+            }
+            val reservWithReview = ReservationWithReview(reservationItem, review)
+            result.add(reservWithReview)
+        }
         return result
     }
 }

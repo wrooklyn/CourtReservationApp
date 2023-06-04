@@ -22,7 +22,7 @@ import kotlinx.coroutines.tasks.await
 
 class FriendListViewModel(application: Application) : AndroidViewModel(application) {
     private val inviteRepository: FireInviteRepository = FireInviteRepository(application)
-    val reservationRepository =  FireReservationRepository(application)
+    val reservationRepository = FireReservationRepository(application)
     private val _friendList = MutableLiveData<List<Friend>>()
     val friendList: LiveData<List<Friend>> = _friendList
     val invitesToPlay: MutableLiveData<List<Invite>> = MutableLiveData()
@@ -34,16 +34,15 @@ class FriendListViewModel(application: Application) : AndroidViewModel(applicati
             runBlocking(Dispatchers.Default) {
                 launch {
                     val res = if (e != null)
-                    emptyList()
+                        emptyList()
                     else r?.mapNotNull { d -> Friend.fromSnapshot(d) }
-                    _friendList.postValue(res?: listOf())
+                    _friendList.postValue(res ?: listOf())
                 }
             }
 
         }
 
-    fun getPendingReceived() { //TODO updates real time
-
+    fun getPendingReceived() {
         viewModelScope.launch {
             val invitesReceived = inviteRepository.getPendingReceivedByUserId(SavedPreference.EMAIL)
             invitesToPlay.postValue(invitesReceived)
@@ -51,39 +50,59 @@ class FriendListViewModel(application: Application) : AndroidViewModel(applicati
         }
     }
 
-    fun acceptInvite(invite: Invite) {
-        inviteRepository.acceptInvite(invite.reservationId, SavedPreference.EMAIL, invite.inviter)
+    fun acceptInvite(invite: Invite, onSuccess: () -> Unit) {
+
+        viewModelScope.launch {
+            inviteRepository.acceptInvite(
+                invite.reservationId,
+                SavedPreference.EMAIL,
+                invite.inviter,
+                onSuccess
+            )
+            getPendingReceived() //update the list
+        }
+
     }
 
     fun declineInvite(invite: Invite) {
-        inviteRepository.declineInvite(invite.reservationId, SavedPreference.EMAIL, invite.inviter)
+
+        viewModelScope.launch {
+            inviteRepository.declineInvite(
+                invite.reservationId,
+                SavedPreference.EMAIL,
+                invite.inviter,
+            )
+            getPendingReceived() //update the list
+        }
     }
 
-    fun acceptFriend(id : String){
-        val friendsCollectionRef= RemoteDataSource.instance
+    fun acceptFriend(id: String) {
+        val friendsCollectionRef = RemoteDataSource.instance
             .collection("users")
             .document(SavedPreference.EMAIL)
             .collection("friend_list")
-        val fields : HashMap<String, Any> = hashMapOf("accepted" to true)
+        val fields: HashMap<String, Any> = hashMapOf("accepted" to true)
         friendsCollectionRef.document(id).update(fields)
-        RemoteDataSource.instance.collection("users").document(id).collection("friend_list").document(SavedPreference.EMAIL).set(fields)
+        RemoteDataSource.instance.collection("users").document(id).collection("friend_list")
+            .document(SavedPreference.EMAIL).set(fields)
     }
 
-    fun declineFriend(id : String){
-        val friendsCollectionRef= RemoteDataSource.instance
+    fun declineFriend(id: String) {
+        val friendsCollectionRef = RemoteDataSource.instance
             .collection("users")
             .document(SavedPreference.EMAIL)
             .collection("friend_list")
         friendsCollectionRef.document(id).delete()
     }
 
-    fun addNewFriend(email:String){
-        val usersCollectionRef= RemoteDataSource.instance
+    fun addNewFriend(email: String) {
+        val usersCollectionRef = RemoteDataSource.instance
             .collection("users")
 
         var found = false
         var newFriend = true
-        val friendRef = usersCollectionRef.document(SavedPreference.EMAIL).collection("friend_list").document(email)
+        val friendRef = usersCollectionRef.document(SavedPreference.EMAIL).collection("friend_list")
+            .document(email)
         var friend: DocumentSnapshot
         var alreadyFriend = false
         var requestSent = false
@@ -94,23 +113,23 @@ class FriendListViewModel(application: Application) : AndroidViewModel(applicati
             launch {
                 val users = usersCollectionRef.get().await().documents
                 friend = friendRef.get().await()
-                for(user in users){
-                    if(user.id == email) {
+                for (user in users) {
+                    if (user.id == email) {
                         found = true
                     }
                 }
 
 
-                if (friend.exists() && !(friend.get("accepted") as Boolean)){ // if document of new friend is present && accepted = false
+                if (friend.exists() && !(friend.get("accepted") as Boolean)) { // if document of new friend is present && accepted = false
                     newFriend = false
-                }else if(!found){
+                } else if (!found) {
                     userNotFound = true
 
-                }else if(friend.exists() && friend.get("accepted") as Boolean){
+                } else if (friend.exists() && friend.get("accepted") as Boolean) {
                     alreadyFriend = true
                 }
 
-                if(found && newFriend){
+                if (found && newFriend) {
                     val newFriendRef = RemoteDataSource.instance
                         .collection("users")
                         .document(email)
@@ -122,16 +141,20 @@ class FriendListViewModel(application: Application) : AndroidViewModel(applicati
                     newFriendRef.set(data)
                     successful = true
                 }
-                if(found && successful && !friend.exists()){ // if accepted = false --> true
+                if (found && successful && !friend.exists()) { // if accepted = false --> true
                     requestSent = true
                 }
             }
         }
-        if(userNotFound){
-            Toast.makeText(getApplication(), "Unable to find a player with that name", Toast.LENGTH_LONG).show()
-        }else if(!userNotFound && requestSent){
+        if (userNotFound) {
+            Toast.makeText(
+                getApplication(),
+                "Unable to find a player with that name",
+                Toast.LENGTH_LONG
+            ).show()
+        } else if (!userNotFound && requestSent) {
             Toast.makeText(getApplication(), "Friend request sent", Toast.LENGTH_LONG).show()
-        }else if(!userNotFound && !requestSent && alreadyFriend){
+        } else if (!userNotFound && !requestSent && alreadyFriend) {
             Toast.makeText(getApplication(), "Already friends", Toast.LENGTH_LONG).show()
         }
 

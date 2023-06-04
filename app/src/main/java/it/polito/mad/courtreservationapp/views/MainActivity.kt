@@ -57,22 +57,22 @@ class MainActivity : AppCompatActivity() {
             println("$it")
             Log.d("registerActivityReservation", "$it")
             if (it.resultCode == Activity.RESULT_OK) {
-                reservationBrowserViewModel.initUserReservations(SavedPreference.EMAIL)
+                reservationBrowserViewModel.initUserReservations()
             }
         }
 
     //    lateinit var user: User
 //    lateinit var userWithSportMasteriesAndName: UserWithSportMasteriesAndName
-    lateinit var userReservations: List<Reservation>
-    lateinit var userReservationsLocations: List<ReservationWithSportCenter>
-    lateinit var userReservationsServices: List<ReservationWithServices>
-    lateinit var userReservationsReviews: List<ReservationWithReview>
+     var userReservations: List<Reservation> = listOf()
+     var userReservationsLocations: List<ReservationWithSportCenter> = listOf()
+     var userReservationsServices: List<ReservationWithServices> = listOf()
+     var userReservationsReviews: List<ReservationWithReview> = listOf()
     lateinit var binding: ActivityMainBinding
 
-    lateinit var sportCenters: List<SportCenterWithCourtsAndServices>
+     var sportCenters: List<SportCenterWithCourtsAndServices> = listOf()
 
-    lateinit var userInvitesSent: List<Invite>
-    lateinit var userInvitesReceived: List<Invite>
+     var userInvitesSent: List<Invite> = listOf()
+     var userInvitesReceived: List<Invite> = listOf()
 
     // declare the GoogleSignInClient
     lateinit var mGoogleSignInClient: GoogleSignInClient
@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity() {
         editor.putLong("UserId", 1).apply()
 
         /* Getting current user's reservations */
-        reservationBrowserViewModel.initUserReservations(SavedPreference.EMAIL)
+        reservationBrowserViewModel.initUserReservations()
 
         reservationBrowserViewModel.userReservations.observe(this) {
             userReservations = it
@@ -160,6 +160,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.explore -> {
                     replaceFragment(ShowUnimplementedFragment())
+                    invitesViewModel.inviteUser("RpM5JSIqmLNzRT8cbtMt\n",SavedPreference.EMAIL ,"davide@mail.com")
                 }
 
                 R.id.calendar -> {

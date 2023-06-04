@@ -33,13 +33,15 @@ import it.polito.mad.courtreservationapp.models.Friend
 import it.polito.mad.courtreservationapp.models.Invite
 import it.polito.mad.courtreservationapp.models.TimeslotMap
 import it.polito.mad.courtreservationapp.view_model.FriendListViewModel
+import it.polito.mad.courtreservationapp.views.MainActivity
 import kotlinx.coroutines.launch
 import java.util.*
 
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun FriendList(viewModel: FriendListViewModel) {
+fun FriendList(activity: MainActivity) {
+    val viewModel =activity.friendListViewModel
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     val friendListState = viewModel.friendList.observeAsState()
@@ -110,7 +112,7 @@ fun FriendList(viewModel: FriendListViewModel) {
                 count = tabRowItems.size,
                 state = pagerState,
             ) {
-                tabRowItems[pagerState.currentPage].screen(viewModel)
+                tabRowItems[pagerState.currentPage].screen(activity)
             }
         }
     }
@@ -119,8 +121,9 @@ fun FriendList(viewModel: FriendListViewModel) {
 
 @Composable
 fun TabFriendList(
-    viewModel: FriendListViewModel
+    activity: MainActivity
 ) {
+    val viewModel =activity.friendListViewModel
     val friendListState = viewModel.friendList.observeAsState()
     var friendList: List<Friend> = friendListState.value ?: listOf()
     friendList = friendList.filter { friend -> friend.accepted }
@@ -172,8 +175,9 @@ fun TabFriendList(
 
 @Composable
 fun TabFriendRequests(
-    viewModel: FriendListViewModel
+    activity: MainActivity
 ) {
+    val viewModel =activity.friendListViewModel
     val friendListState = viewModel.friendList.observeAsState()
     var friendList: List<Friend> = friendListState.value ?: listOf()
     friendList = friendList.filter { friend -> !friend.accepted }
@@ -199,7 +203,9 @@ fun TabFriendRequests(
                                 modifier = Modifier
                                     .padding(end = 8.dp)
                                     .clickable {
-                                        //viewModel.acceptInvite(it)
+                                        viewModel.acceptInvite(it){
+                                            activity.reservationBrowserViewModel.initUserReservations()
+                                        }
                                     }
                             )
                             Icon(
@@ -209,7 +215,7 @@ fun TabFriendRequests(
                                 modifier = Modifier
                                     .padding(end = 8.dp)
                                     .clickable {
-                                        //viewModel.declineInvite(it)
+                                        viewModel.declineInvite(it)
                                     },
                             )
                         }
@@ -280,5 +286,5 @@ val tabRowItems = listOf(
 
 data class TabRowItem(
     val title: String,
-    val screen: @Composable (viewModel: FriendListViewModel) -> Unit,
+    val screen: @Composable (activity: MainActivity) -> Unit,
 )
