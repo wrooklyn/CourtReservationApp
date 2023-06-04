@@ -156,6 +156,7 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigation.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> {
+                    resetFilters()
                     replaceFragment(HomeFragment())
                 }
                 R.id.explore -> {
@@ -260,5 +261,10 @@ class MainActivity : AppCompatActivity() {
         editor.putInt("weight", userViewModel.user.weight)
         editor.putString("phone", userViewModel.user.phone)
         editor.apply()
+    }
+
+    private fun resetFilters(){
+        sportCenterViewModel.sportFilters.removeAll(){ true}
+        sportCenterViewModel.distanceFilterValue = null
     }
 }

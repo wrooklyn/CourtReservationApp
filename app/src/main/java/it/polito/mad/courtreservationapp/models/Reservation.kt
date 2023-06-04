@@ -14,7 +14,8 @@ data class Reservation(
 
     val request: String? = null,
     var reservationId: String,
-    var isGuest:Boolean = false
+    var isGuest:Boolean = false,
+    var participants:MutableList<String> = mutableListOf()
 )
 
 //there will be a mapping of time slots in the form:

@@ -1,5 +1,7 @@
 package it.polito.mad.courtreservationapp.views.reservationManager
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -22,7 +24,6 @@ fun DialogSection(
     isDialogVisible: MutableState<Boolean>,
     reservationId: String,
 ){
-
     AlertDialog(
         onDismissRequest = {
             isDialogVisible.value = false
@@ -85,6 +86,8 @@ fun PopUpContent(
                     onClick = {
                         isDialogVisible.value = false
                         ctx.invitesViewModel.inviteGroup(reservationId, friends.value)
+                        val text = if(friends.value.size > 1) "Invitations" else "Invitation"
+                        Toast.makeText(ctx, "$text sent", Toast.LENGTH_LONG).show()
                     }
                 ) {
                     Text(text = "Confirm",

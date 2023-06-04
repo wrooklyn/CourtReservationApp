@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -130,12 +131,20 @@ class ReservListFragment: Fragment() {
         private var reservDatetimeTV: TextView = view.findViewById(R.id.reservation_datetimeTV)
         private var reservImageIV: ImageView = view.findViewById(R.id.reservCardImage)
         private var reservCourtTitle: TextView = view.findViewById(R.id.reservedCourtId)
+        private val overlayContainer = view.findViewById<ConstraintLayout>(R.id.isGuestCl)
+        private val overlayText = view.findViewById<TextView>(R.id.isGuestTv)
 
         fun bind(reservationWithSportCenter: ReservationWithSportCenter) {
             reservCourtTitle.text = reservationWithSportCenter.courtWithSportCenter.court.sportName + " Court"
             reservLocationTV.text = reservationWithSportCenter.courtWithSportCenter.sportCenter.address
             reservDatetimeTV.text = reservationWithSportCenter.reservation.reservationDate + " - " + TimeslotMap.getTimeslotString(reservationWithSportCenter.reservation.timeSlotId)
             ImageUtils.setImage("courts", reservationWithSportCenter.courtWithSportCenter.court.image, reservImageIV)
+
+            if(reservationWithSportCenter.reservation.isGuest){
+                overlayContainer.visibility = View.VISIBLE
+                overlayText.visibility = View.VISIBLE
+            }
+
         }
 
         init{
