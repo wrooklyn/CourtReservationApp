@@ -3,7 +3,6 @@ package it.polito.mad.courtreservationapp.views.homeManager.tabFragments
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Bundle
- import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,11 +28,16 @@ class DescriptionFragment : Fragment() {
     var position: Int = -1
     lateinit var viewModel: SportCenterViewModel
     lateinit var sportCenterWithCourtsAndServices: SportCenterWithCourtsAndServices
+    private var type:Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = (activity as MainActivity).sportCenterViewModel
         position = requireArguments().getInt("position", -1)
+        type = requireArguments().getInt("type")
         sportCenterWithCourtsAndServices = viewModel.sportCentersWithCourtsAndServices[position]
+        if(type == 2) {
+            sportCenterWithCourtsAndServices = viewModel.sportCentersWithCourtsAndServices.first(){center -> center.sportCenter == viewModel.popularSportCenters[position]}
+        }
         sportCenterWithCourtsAndServices.courtsWithServices.forEach(){courtWithServices ->
             courtWithServices.services.forEach(){service ->
                 if(!serviceIds.contains(service.serviceId)){
@@ -107,11 +110,11 @@ class DescriptionFragment : Fragment() {
     }
 
     companion object{
-        fun newInstance(position: Int): DescriptionFragment {
+        fun newInstance(position: Int, type: Int): DescriptionFragment {
             val fragment = DescriptionFragment()
             val args = Bundle()
             args.putInt("position", position)
-
+            args.putInt("type", type)
             fragment.arguments = args
             return fragment
         }

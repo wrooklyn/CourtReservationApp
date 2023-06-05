@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWIthCourtsAndReviewsAndUsers
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
+import it.polito.mad.courtreservationapp.models.SportCenter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -19,10 +20,13 @@ class SportCenterViewModel(application: Application) : AndroidViewModel(applicat
     lateinit var sportCentersWithCourtsAndServices: List<SportCenterWithCourtsAndServices>
     lateinit var sportCentersWithCourtsAndReviewsAndUsers: List<SportCenterWIthCourtsAndReviewsAndUsers>
 
+
     val isPopupOpen = MutableLiveData(false)
     var distanceFilterValue : Double? = null
     var sportFilters : MutableList<String> = mutableListOf()
     var allSports: MutableList<String> = mutableListOf()
+    var popularSportCenters: MutableList<SportCenter> = mutableListOf()
+
      fun initData(){
          runBlocking(Dispatchers.Default) {
              launch {/*

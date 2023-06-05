@@ -25,6 +25,7 @@ import it.polito.mad.courtreservationapp.views.reservationManager.CreateReservat
 class CourtFragment : Fragment() {
 
     var position: Int = -1
+    private var type:Int = 0
     lateinit var viewModel: SportCenterViewModel
     lateinit var sportCenterWithCourtsAndServices: SportCenterWithCourtsAndServices
 //    lateinit var sportCenterWithCourtsAndReviews: SportCenterWithCourtsAndReviews
@@ -35,9 +36,15 @@ class CourtFragment : Fragment() {
         super.onCreate(savedInstanceState)
         viewModel = (activity as MainActivity).sportCenterViewModel
         position = requireArguments().getInt("position", -1)
+        type = requireArguments().getInt("type")
         sportCenterWithCourtsAndServices = viewModel.sportCentersWithCourtsAndServices[position]
-        courtsWithReviewsAndUsers = viewModel.sportCentersWithCourtsAndReviewsAndUsers[position].courtsWithReviewsAndUsers
 
+        courtsWithReviewsAndUsers = viewModel.sportCentersWithCourtsAndReviewsAndUsers[position].courtsWithReviewsAndUsers
+        if(type == 2) {
+            sportCenterWithCourtsAndServices = viewModel.sportCentersWithCourtsAndServices.first(){center -> center.sportCenter == viewModel.popularSportCenters[position]}
+            courtsWithReviewsAndUsers = viewModel.sportCentersWithCourtsAndReviewsAndUsers.first(){center -> center.sportCenter == viewModel.popularSportCenters[position]}.courtsWithReviewsAndUsers
+
+        }
         sportCenterWithCourtsAndServices.courtsWithServices.forEach{courtWithServices ->
             if(!courts.contains(courtWithServices.court)){
                 courts.add(courtWithServices.court)
@@ -114,11 +121,11 @@ class CourtFragment : Fragment() {
         }
     }
     companion object{
-        fun newInstance(position: Int): CourtFragment {
+        fun newInstance(position: Int, type: Int): CourtFragment {
             val fragment = CourtFragment()
             val args = Bundle()
             args.putInt("position", position)
-
+            args.putInt("type", type)
             fragment.arguments = args
             return fragment
         }

@@ -19,6 +19,7 @@ import it.polito.mad.courtreservationapp.views.MainActivity
 class ReviewsFragment : Fragment() {
 
     var position: Int = -1
+    private var type:Int = 0
     lateinit var viewModel: SportCenterViewModel
     private lateinit var sportCenterWithCourtsAndServices: SportCenterWithCourtsAndServices
     lateinit var sportCenterWithCourtsAndReviews: SportCenterWIthCourtsAndReviewsAndUsers
@@ -29,8 +30,12 @@ class ReviewsFragment : Fragment() {
         Log.i("ReviewsFragment", "OnCreate")
         viewModel = (activity as MainActivity).sportCenterViewModel
         position = requireArguments().getInt("position", -1)
+        type = requireArguments().getInt("type")
 //        sportCenterWithCourtsAndServices = viewModel.sportCentersWithCourtsAndServices[position]
         sportCenterWithCourtsAndReviews = viewModel.sportCentersWithCourtsAndReviewsAndUsers[position]
+        if(type == 2) {
+            sportCenterWithCourtsAndReviews = viewModel.sportCentersWithCourtsAndReviewsAndUsers.first(){center -> center.sportCenter == viewModel.popularSportCenters[position]}
+        }
 //        courtsWithReviews = viewModel.sportCentersWithCourtsAndReviewsAndUsers[position].courtsWithReviews
 //        users = viewModelUser.
 
@@ -98,11 +103,11 @@ class ReviewsFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(position: Int): ReviewsFragment {
+        fun newInstance(position: Int, type: Int): ReviewsFragment {
             val fragment = ReviewsFragment()
             val args = Bundle()
             args.putInt("position", position)
-
+            args.putInt("type", type)
             fragment.arguments = args
             return fragment
         }

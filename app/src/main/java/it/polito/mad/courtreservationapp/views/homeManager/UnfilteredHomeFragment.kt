@@ -43,6 +43,7 @@ class UnfilteredHomeFragment : Fragment() {
     }
 
     private fun availableInitialize(){
+        val type = 1
         val centers = viewModel.sportCentersWithCourtsAndServices.map { center ->
             center.sportCenter
         }/*.filter{
@@ -57,7 +58,7 @@ class UnfilteredHomeFragment : Fragment() {
         recyclerView?.isNestedScrollingEnabled = false
         adapter.setOnItemClickListener(object : AvailableAdapter.OnItemClickListener{
             override fun onItemClick(position: Int) {
-                val fragmentB = CenterDetailFragment.newInstance(position)
+                val fragmentB = CenterDetailFragment.newInstance(position, type)
                 activity?.supportFragmentManager?.beginTransaction()
                     ?.replace(R.id.fragmentContainer, fragmentB, "fragmentId")
                     ?.commit();
@@ -69,6 +70,7 @@ class UnfilteredHomeFragment : Fragment() {
     }
     private fun popularInitialize(sportCenterWIthCourtsAndReviewsAndUsers: List<SportCenterWIthCourtsAndReviewsAndUsers>) {
         Log.i("UnfilteredHome", "$sportCenterWIthCourtsAndReviewsAndUsers")
+        val type = 2
         val popularCentersList = sportCenterWIthCourtsAndReviewsAndUsers.filter { center ->
             Log.i("UnfilteredHome", "center: ${center.sportCenter.name}")
 
@@ -98,6 +100,7 @@ class UnfilteredHomeFragment : Fragment() {
             Log.i("UnfilteredHome", "$center")
             center.sportCenter
         }
+        viewModel.popularSportCenters = popularCentersList.toMutableList()
 
         val adapter= PopularAdapter(popularCentersList)
         val recyclerView: RecyclerView? = view?.findViewById(R.id.popular_recycler)
@@ -106,7 +109,7 @@ class UnfilteredHomeFragment : Fragment() {
         recyclerView?.isNestedScrollingEnabled = false
         adapter.setOnItemClickListener(object : PopularAdapter.OnItemClickListener{
             override fun onItemClick(position: Int) {
-                val fragmentB = CenterDetailFragment.newInstance(position)
+                val fragmentB = CenterDetailFragment.newInstance(position, type)
                 activity?.supportFragmentManager?.beginTransaction()
                     ?.replace(R.id.fragmentContainer, fragmentB, "fragmentId")
                     ?.commit();

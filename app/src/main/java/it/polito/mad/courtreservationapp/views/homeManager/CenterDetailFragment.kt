@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.viewpager2.widget.ViewPager2
@@ -16,7 +15,6 @@ import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import it.polito.mad.courtreservationapp.R
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWIthCourtsAndReviewsAndUsers
-import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndReviews
 import it.polito.mad.courtreservationapp.db.relationships.SportCenterWithCourtsAndServices
 import it.polito.mad.courtreservationapp.models.Review
 import it.polito.mad.courtreservationapp.utils.ImageUtils
@@ -37,6 +35,7 @@ class CenterDetailFragment : Fragment() {
     private lateinit var sportCenterWithCourtsAndServices: SportCenterWithCourtsAndServices
     private lateinit var sportCenterWithCourtsAndReviewsAndUsers: SportCenterWIthCourtsAndReviewsAndUsers
     private var reviews= MutableLiveData<List<Review>>()
+    private var type:Int = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,16 +45,27 @@ class CenterDetailFragment : Fragment() {
 
     private fun init() {
         sportCenterPosition = requireArguments().getInt("position", -1)
+        type = requireArguments().getInt("type")
         viewModel = (activity as MainActivity).sportCenterViewModel
-        sportCenterWithCourtsAndServices =
-            viewModel.sportCentersWithCourtsAndServices[sportCenterPosition]
+        if(type == 1){
+            sportCenterWithCourtsAndServices =
+                viewModel.sportCentersWithCourtsAndServices[sportCenterPosition]
+        } else if(type == 2) {
+            sportCenterWithCourtsAndServices = viewModel.sportCentersWithCourtsAndServices.first(){center -> center.sportCenter == viewModel.popularSportCenters[sportCenterPosition]}
+        }
+
 
         centerName = sportCenterWithCourtsAndServices.sportCenter.name
         location = sportCenterWithCourtsAndServices.sportCenter.address
         viewModel.sportCentersWithReviewsAndUsersLiveData.observe(this){
             val newList = mutableListOf<Review>()
             println("number of sportcenters ${it.size}")
-            sportCenterWithCourtsAndReviewsAndUsers = it[sportCenterPosition]
+            if(type == 1){
+                sportCenterWithCourtsAndReviewsAndUsers = it[sportCenterPosition]
+            } else if(type == 2){
+                sportCenterWithCourtsAndReviewsAndUsers = it.first(){center -> center.sportCenter == viewModel.popularSportCenters[sportCenterPosition]}
+            }
+
             sportCenterWithCourtsAndReviewsAndUsers.courtsWithReviewsAndUsers.forEach() { court ->
                 println("   number of courts ${court.court.courtId}")
                 court.reviewsWithUser.forEach { r->
@@ -97,7 +107,7 @@ class CenterDetailFragment : Fragment() {
         val imageSrc = sportCenterWithCourtsAndServices.sportCenter.image
         ImageUtils.setImage("centers", imageSrc, banner)
 
-        val adapter = ViewPagerAdapter(childFragmentManager, lifecycle, sportCenterPosition)
+        val adapter = ViewPagerAdapter(childFragmentManager, lifecycle, sportCenterPosition, type)
 
         myViewPager?.adapter = adapter
 
@@ -126,10 +136,11 @@ class CenterDetailFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(position: Int): CenterDetailFragment {
+        fun newInstance(position: Int, type: Int): CenterDetailFragment {
             val fragment = CenterDetailFragment()
             val args = Bundle()
             args.putInt("position", position)
+            args.putInt("type", type)
             fragment.arguments = args
             return fragment
         }
