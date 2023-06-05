@@ -98,18 +98,9 @@ class MainActivity : AppCompatActivity() {
             .build()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        /* Setting the logged user */
-        //hardcoded user
-        /* Load user's info in both the User object and the shared preferences */
-        Log.i("MainActivity, OnCreate", "${SavedPreference.EMAIL}")
         userViewModel.setCurrentUser(SavedPreference.EMAIL)
-//        userViewModel.userLiveData.observe(this) {
-//            userViewModel.user = it
-//            loadUserInfo()
-//        }
+
         userViewModel.userWithSportMasteriesAndNameLiveData.observe(this) {
-            println("observer got: $it")
-            println("Observer")
             userViewModel.user = it.user
             userViewModel.userWithSportMasteriesAndName = it
             loadUserInfo()
@@ -187,38 +178,13 @@ class MainActivity : AppCompatActivity() {
             moveTaskToBack(true)
             binding.bottomNavigation.selectedItemId = R.id.home
         } ?: run {
-            if (supportFragmentManager.backStackEntryCount > 1) {  // check if there are more than one fragment in the back stack
-                supportFragmentManager.popBackStack()
-                val lastFragment = supportFragmentManager.fragments.lastOrNull()
-                when (lastFragment) {
-                    is HomeFragment -> {
-                        binding.bottomNavigation.selectedItemId = R.id.home
-                    }
-                    is ShowUnimplementedFragment -> {
-                        binding.bottomNavigation.selectedItemId = R.id.explore
-                    }
-                    is BrowseReservationsFragment -> {
-                        binding.bottomNavigation.selectedItemId = R.id.calendar
-                    }
-                    is ShowSocialPageFragment -> {
-                        binding.bottomNavigation.selectedItemId = R.id.chat
-                    }
-                    is ShowProfileFragment -> {
-                        binding.bottomNavigation.selectedItemId = R.id.profile
-                    }
-                    else -> {
-                        binding.bottomNavigation.selectedItemId = R.id.home
-                    }
-                }
-            } else {
-                replaceFragment(HomeFragment())  // load HomeFragment if back stack is empty
-                binding.bottomNavigation.selectedItemId = R.id.home
-                clearBackStack() // Clear the back stack
-            }
+            replaceFragment(HomeFragment())  // load HomeFragment if back stack is empty
+            binding.bottomNavigation.selectedItemId = R.id.home
+            clearBackStack() // Clear the back stack
         }
     }
 
-    fun clearBackStack() {
+    private fun clearBackStack() {
         val manager = supportFragmentManager
         if (manager.backStackEntryCount > 0) {
             val first = manager.getBackStackEntryAt(0)
@@ -239,13 +205,6 @@ class MainActivity : AppCompatActivity() {
         transaction.commit()
     }
 
-
-    /*    fun replaceHomeFragment(fragment: Fragment) {
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.fragmentContainer, fragment)
-        fragmentTransaction.commit()
-    }*/
     private fun loadUserInfo() {
         val sharedPreferences = this.getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
