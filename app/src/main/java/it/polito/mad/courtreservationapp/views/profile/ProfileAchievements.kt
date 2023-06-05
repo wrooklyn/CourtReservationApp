@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -190,19 +191,36 @@ fun SportCard(sport: SportMasteryWithName, imageId: Int, viewModel: UserViewMode
 fun AchievementPopup(viewModel: UserViewModel) {
     val sport = viewModel.sport.value
     AlertDialog(
+        containerColor = Color.White,
         onDismissRequest = {
             viewModel.isPopupOpen.value = false
         },
-        title = { 
-            Row() {
-                Log.i("Popup", "$sport")
-                Image(painter = painterResource(id = IconUtils.getSportIcon(sport?.sport?.name ?: "")), contentDescription = sport?.sport?.name)
-                Text("${sport?.sport?.name?.uppercase()} - ${mapMastery(sport?.sportMastery?.level ?: -1)}")
+        title = {
+            Column(){
+                Row() {
+                    Log.i("Popup", "$sport")
+                    Image(painter = painterResource(id = IconUtils.getSportIcon(sport?.sport?.name ?: "")), contentDescription = sport?.sport?.name)
+                    Spacer(modifier = Modifier.width(5.dp))
+                    Text("${sport?.sport?.name?.uppercase()}",
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.inter_semibold)),
+                            fontSize = 23.sp
+                    ))
+                }
+                Text(
+                    modifier = Modifier.padding(top=5.dp),
+                    text="${mapMastery(sport?.sportMastery?.level ?: -1)}",
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.inter_semibold)),
+                        fontSize = 19.sp,
+                    )
+
+                    )
             }
-            
                 },
         confirmButton = {
             Button(
+                colors = ButtonDefaults.buttonColors(Color(0xFFF16E64)),
                 onClick = {
                     viewModel.isPopupOpen.value = false
                 }
@@ -213,9 +231,13 @@ fun AchievementPopup(viewModel: UserViewModel) {
 
         text = {
             Column(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(6.dp)
             ) {
-                Text("${sport?.sportMastery?.achievement}")
+                if(sport?.sportMastery?.achievement?.isNotEmpty() == true){
+                    Text("${sport?.sportMastery?.achievement}")
+                }else{
+                    Text("No achievements added.")
+                }
 
             }
         }
