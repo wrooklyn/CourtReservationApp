@@ -34,18 +34,22 @@
             android:name=".views.profile.AddEditInterestActivity"
             android:exported="false"
             android:label="@string/title_activity_add_edit_interest"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.CourtReservationApp" />
         <activity
             android:name=".views.ratings.LeaveRatingActivity"
             android:exported="false"
             android:label="@string/title_activity_leave_rating"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.CourtReservationApp" />
 
         <activity
             android:name=".views.reservationManager.ReservationBrowserActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".views.reservationManager.CreateReservationActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
 
             <!--
@@ -64,6 +68,7 @@
         <activity
             android:name=".views.EditProfileActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:label="@string/edit_profile">
             <meta-data
                 android:name="android.app.lib_name"
@@ -73,6 +78,7 @@
             android:name=".views.login.Login"
             android:exported="true"
             android:label="TouchGrass"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.CourtReservationApp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
