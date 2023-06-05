@@ -173,15 +173,15 @@ class ShowProfileFragment : Fragment(R.layout.fragment_profile) {
             photoPath = userInfo.getString("photoPath", "")!!
         }
 
-        activity?.findViewById<TextView>(R.id.usernameTV)?.text  = "@$username"
+        activity?.findViewById<TextView>(R.id.usernameTV)?.text  = if(username.isNotEmpty()) "@$username" else "No information available"
         activity?.findViewById<TextView>(R.id.firstnameTV)?.text = firstName
         activity?.findViewById<TextView>(R.id.lastnameTV)?.text = lastName
-        activity?.findViewById<TextView>(R.id.emailTV)?.text = email
-        activity?.findViewById<TextView>(R.id.addressTV)?.text = address
+        activity?.findViewById<TextView>(R.id.emailTV)?.text = email.ifEmpty {"No information available" }
+        activity?.findViewById<TextView>(R.id.addressTV)?.text = address.ifEmpty {"No information available" }
         activity?.findViewById<TextView>(R.id.genderTV)?.text = newGender
         activity?.findViewById<TextView>(R.id.heightTV)?.text = if(height == Int.MIN_VALUE) null else "$height cm"
         activity?.findViewById<TextView>(R.id.weightTV)?.text = if(weight == Int.MIN_VALUE) null else "$weight kg"
-        activity?.findViewById<TextView>(R.id.phoneTV)?.text = phone
+        activity?.findViewById<TextView>(R.id.phoneTV)?.text = phone?.ifEmpty {"No information available" }
 
         val pfpElement = activity?.findViewById<ImageView>(R.id.imageView2)
         val photoUri = DiskUtil.getUriFromPath(photoPath)
