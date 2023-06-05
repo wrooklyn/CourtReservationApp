@@ -150,9 +150,6 @@ class MainActivity : AppCompatActivity() {
                     resetFilters()
                     replaceFragment(HomeFragment())
                 }
-                R.id.explore -> {
-                    replaceFragment(ShowUnimplementedFragment())
-                }
 
                 R.id.calendar -> {
                     replaceFragment(BrowseReservationsFragment())

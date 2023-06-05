@@ -7,10 +7,6 @@
         android:title="@string/home_button_title"
         android:icon="@drawable/home"/>
     <item
-        android:id="@+id/explore"
-        android:title="@string/explore_button_title"
-        android:icon="@drawable/compass"/>
-    <item
         android:id="@+id/calendar"
         android:title="@string/calendar_button_title"
         android:icon="@drawable/calendar"/>

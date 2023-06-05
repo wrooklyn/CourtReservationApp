@@ -34,7 +34,7 @@ class ShowSocialPageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val composeView = view.findViewById<ComposeView>(R.id.composeContainer) //TODO check
+        val composeView = view.findViewById<ComposeView>(R.id.composeContainer)
         composeView.setContent {
             FriendList(activity as MainActivity)
         }

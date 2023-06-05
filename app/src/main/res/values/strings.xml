@@ -55,7 +55,7 @@
     <string name="phone_example">+39 331 12345678</string>
     <string name="logout">Log out</string>
     <string name="confirm">Confirm</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="discover_heading">Discover</string>
     <string name="category_subheading">Categories</string>
@@ -71,7 +71,7 @@
     <string name="link_seeall">See All</string>
     <string name="sportsplex">Sportsplex</string>
     <string name="popular_heading">Popular Centers</string>
-    <string name="description2_subheading">Discover popular sports centers </string>
+    <string name="description2_subheading">Discover popular centers </string>
     <string name="location_center">Oak Park</string>
     <string name="my_reservations_heading">Reservations</string>
     <string name="my_reservations_subheading">Browse your reservations</string>
