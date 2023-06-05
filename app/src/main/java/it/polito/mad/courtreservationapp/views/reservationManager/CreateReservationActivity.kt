@@ -37,7 +37,7 @@ class CreateReservationActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        //TODO: get data from main activity
+
         viewModel.courtId = intent.getStringExtra("courtId")  ?: ""
         viewModel.reservationId = intent.getStringExtra("reservationId") ?: ""
         viewModel.sportCenterId = intent.getStringExtra("sportCenterId") ?: ""

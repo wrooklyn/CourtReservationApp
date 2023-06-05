@@ -11,4 +11,3 @@ data class Service(
     val serviceId: Long = 0,
     val cost: Double = 0.0
 )
-//TODO: add notification service icon

@@ -1,5 +1,7 @@
 package it.polito.mad.courtreservationapp.views.homeManager.tabFragments
 
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.os.Bundle
  import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,6 +11,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.polito.mad.courtreservationapp.R
@@ -54,9 +58,9 @@ class DescriptionFragment : Fragment() {
         view.findViewById<TextView>(R.id.descriptionView).text = sportCenterWithCourtsAndServices.sportCenter.description
         serviceInitialize()
         view.findViewById<TextView>(R.id.location_info).text = sportCenterWithCourtsAndServices.sportCenter.address
-        //TODO: get phone number and time from firebase
-        view.findViewById<TextView>(R.id.phone_info).text = "+(555) 123-123${sportCenterWithCourtsAndServices.sportCenter.centerId}"
-        view.findViewById<TextView>(R.id.time_info).text = "10:00AM - 9.00PM"
+
+        view.findViewById<TextView>(R.id.phone_info).text = "+(555) 123-123"
+        view.findViewById<TextView>(R.id.time_info).text = "9:00AM - 6.00PM"
     }
 
     private fun serviceInitialize(){
@@ -92,7 +96,12 @@ class DescriptionFragment : Fragment() {
         private val titleImage: ImageView = itemView.findViewById(R.id.service_description_image)
         private val serviceName: TextView = itemView.findViewById(R.id.service_description_name)
         fun bind(service: Service){
-            titleImage.setImageResource(IconUtils.getServiceIcon(service.serviceId))
+            var drawable: Drawable? = ContextCompat.getDrawable(itemView.context, IconUtils.getServiceIcon(service.serviceId))
+            drawable?.setColorFilter(
+                ContextCompat.getColor(itemView.context, R.color.white),
+                PorterDuff.Mode.SRC_IN
+            )
+            titleImage.setImageDrawable(drawable)
             serviceName.text= service.description
         }
     }

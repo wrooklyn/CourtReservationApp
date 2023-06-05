@@ -11,7 +11,7 @@ object IconUtils {
         Pair("tennis", R.drawable.tennis),
         Pair("volley", R.drawable.volleyball),
         Pair("rugby", R.drawable.rugby),
-        Pair("swimming", R.drawable.swimming) //TODO: better visibility icon
+        Pair("swimming", R.drawable.swimming)
     )
     private val servicesIcons: Map<Long, Int> = mapOf(
         Pair(0, R.drawable.safety_shower),
@@ -19,7 +19,7 @@ object IconUtils {
         Pair(2, R.drawable.coach),
         Pair(3, R.drawable.refreshment),
         Pair(4, R.drawable.wifi),
-        Pair(5, R.drawable.lockers) //TODO: locker icon
+        Pair(5, R.drawable.lockers)
     )
 
     fun getSportIcon(sportName: String): Int{
